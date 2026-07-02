@@ -1,4 +1,4 @@
-
+```mermaid
     USERS {
         int id PK
         string name
@@ -132,3 +132,4 @@
     USERS ||--o{ ACTIVITY_LOG : "performed"
     
     USERS ||--o{ NOTIFICATIONS : "receives"
+```
