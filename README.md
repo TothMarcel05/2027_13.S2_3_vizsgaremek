@@ -1,4 +1,4 @@
-erDiagram
+
     USERS {
         int id PK
         string name
