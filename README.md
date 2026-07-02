@@ -1,4 +1,5 @@
 ```mermaid
+erDiagram
     USERS {
         int id PK
         string name
@@ -52,9 +53,8 @@
     }
 
     SUBTASKS {
-        int id PK
-        int parent_task_id FK
-        int child_task_id FK
+        int parent_task_id PK, FK
+        int child_task_id PK, FK
         string type
     }
 
