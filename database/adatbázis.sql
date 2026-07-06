@@ -9,9 +9,9 @@ SET NAMES utf8mb4;
 SET FOREIGN_KEY_CHECKS = 0;
 
 -- ------------------------------------------------------------
--- Users
+-- AppUsers (régi: users)
 -- ------------------------------------------------------------
-CREATE TABLE users (
+CREATE TABLE app_users (
     id              CHAR(36)     PRIMARY KEY DEFAULT (UUID()),
     name            VARCHAR(255) NOT NULL,
     email           VARCHAR(255) NOT NULL UNIQUE,
@@ -22,20 +22,20 @@ CREATE TABLE users (
 ) ENGINE=InnoDB;
 
 -- ------------------------------------------------------------
--- Workspaces
+-- UserWorkspaces (régi: workspaces)
 -- ------------------------------------------------------------
-CREATE TABLE workspaces (
+CREATE TABLE user_workspaces (
     id              CHAR(36)     PRIMARY KEY DEFAULT (UUID()),
     name            VARCHAR(255) NOT NULL,
     owner_id        CHAR(36)     NOT NULL,
     created_at      TIMESTAMP    DEFAULT CURRENT_TIMESTAMP,
 
-    CONSTRAINT fk_workspaces_owner
-        FOREIGN KEY (owner_id) REFERENCES users(id)
+    CONSTRAINT fk_user_workspaces_owner
+        FOREIGN KEY (owner_id) REFERENCES app_users(id)
         ON DELETE CASCADE
 ) ENGINE=InnoDB;
 
-CREATE INDEX idx_workspaces_owner ON workspaces(owner_id);
+CREATE INDEX idx_user_workspaces_owner ON user_workspaces(owner_id);
 
 -- ------------------------------------------------------------
 -- WorkspaceMembers
@@ -48,18 +48,18 @@ CREATE TABLE workspace_members (
 
     PRIMARY KEY (workspace_id, user_id),
 
-    CONSTRAINT fk_wm_workspace
-        FOREIGN KEY (workspace_id) REFERENCES workspaces(id)
+    CONSTRAINT fk_wm_user_workspace
+        FOREIGN KEY (workspace_id) REFERENCES user_workspaces(id)
         ON DELETE CASCADE,
     CONSTRAINT fk_wm_user
-        FOREIGN KEY (user_id) REFERENCES users(id)
+        FOREIGN KEY (user_id) REFERENCES app_users(id)
         ON DELETE CASCADE
 ) ENGINE=InnoDB;
 
 -- ------------------------------------------------------------
--- Projects
+-- AppProjects (régi: projects)
 -- ------------------------------------------------------------
-CREATE TABLE projects (
+CREATE TABLE app_projects (
     id              CHAR(36)     PRIMARY KEY DEFAULT (UUID()),
     workspace_id    CHAR(36)     NOT NULL,
     name            VARCHAR(255) NOT NULL,
@@ -69,13 +69,13 @@ CREATE TABLE projects (
     created_at      TIMESTAMP    DEFAULT CURRENT_TIMESTAMP,
     updated_at      TIMESTAMP    DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
 
-    CONSTRAINT fk_projects_workspace
-        FOREIGN KEY (workspace_id) REFERENCES workspaces(id)
+    CONSTRAINT fk_app_projects_user_workspace
+        FOREIGN KEY (workspace_id) REFERENCES user_workspaces(id)
         ON DELETE CASCADE
 ) ENGINE=InnoDB;
 
-CREATE INDEX idx_projects_workspace ON projects(workspace_id);
-CREATE INDEX idx_projects_status ON projects(status);
+CREATE INDEX idx_app_projects_workspace ON app_projects(workspace_id);
+CREATE INDEX idx_app_projects_status ON app_projects(status);
 
 -- ------------------------------------------------------------
 -- ProjectMembers
@@ -89,15 +89,15 @@ CREATE TABLE project_members (
     PRIMARY KEY (project_id, user_id),
 
     CONSTRAINT fk_pm_project
-        FOREIGN KEY (project_id) REFERENCES projects(id)
+        FOREIGN KEY (project_id) REFERENCES app_projects(id)
         ON DELETE CASCADE,
     CONSTRAINT fk_pm_user
-        FOREIGN KEY (user_id) REFERENCES users(id)
+        FOREIGN KEY (user_id) REFERENCES app_users(id)
         ON DELETE CASCADE
 ) ENGINE=InnoDB;
 
 -- ------------------------------------------------------------
--- ProjectTasks
+-- ProjectTasks (régi: tasks)
 -- ------------------------------------------------------------
 CREATE TABLE project_tasks (
     id              CHAR(36)     PRIMARY KEY DEFAULT (UUID()),
@@ -113,13 +113,13 @@ CREATE TABLE project_tasks (
     updated_at      TIMESTAMP    DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
 
     CONSTRAINT fk_project_tasks_project
-        FOREIGN KEY (project_id) REFERENCES projects(id)
+        FOREIGN KEY (project_id) REFERENCES app_projects(id)
         ON DELETE CASCADE,
     CONSTRAINT fk_project_tasks_assignee
-        FOREIGN KEY (assignee_id) REFERENCES users(id)
+        FOREIGN KEY (assignee_id) REFERENCES app_users(id)
         ON DELETE SET NULL,
     CONSTRAINT fk_project_tasks_reporter
-        FOREIGN KEY (reporter_id) REFERENCES users(id)
+        FOREIGN KEY (reporter_id) REFERENCES app_users(id)
         ON DELETE SET NULL
 ) ENGINE=InnoDB;
 
@@ -129,7 +129,7 @@ CREATE INDEX idx_project_tasks_status ON project_tasks(status);
 CREATE INDEX idx_project_tasks_due_date ON project_tasks(due_date);
 
 -- ------------------------------------------------------------
--- ProjectTaskDependencies 
+-- ProjectTaskDependencies (régi: task_dependencies)
 -- ------------------------------------------------------------
 CREATE TABLE project_task_dependencies (
     id              CHAR(36)     PRIMARY KEY DEFAULT (UUID()),
@@ -147,9 +147,9 @@ CREATE TABLE project_task_dependencies (
 ) ENGINE=InnoDB;
 
 -- ------------------------------------------------------------
--- Comments 
+-- ProjectComments (régi: comments)
 -- ------------------------------------------------------------
-CREATE TABLE comments (
+CREATE TABLE project_comments (
     id              CHAR(36)     PRIMARY KEY DEFAULT (UUID()),
     task_id         CHAR(36)     NOT NULL,
     user_id         CHAR(36)     NOT NULL,
@@ -157,20 +157,20 @@ CREATE TABLE comments (
     created_at      TIMESTAMP    DEFAULT CURRENT_TIMESTAMP,
     updated_at      TIMESTAMP    DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
 
-    CONSTRAINT fk_comments_project_task
+    CONSTRAINT fk_project_comments_task
         FOREIGN KEY (task_id) REFERENCES project_tasks(id)
         ON DELETE CASCADE,
-    CONSTRAINT fk_comments_user
-        FOREIGN KEY (user_id) REFERENCES users(id)
+    CONSTRAINT fk_project_comments_user
+        FOREIGN KEY (user_id) REFERENCES app_users(id)
         ON DELETE CASCADE
 ) ENGINE=InnoDB;
 
-CREATE INDEX idx_comments_task ON comments(task_id);
+CREATE INDEX idx_project_comments_task ON project_comments(task_id);
 
 -- ------------------------------------------------------------
--- Attachments
+-- ProjectAttachments (régi: attachments)
 -- ------------------------------------------------------------
-CREATE TABLE attachments (
+CREATE TABLE project_attachments (
     id              CHAR(36)     PRIMARY KEY DEFAULT (UUID()),
     task_id         CHAR(36)     NOT NULL,
     file_url        VARCHAR(500) NOT NULL,
@@ -179,33 +179,33 @@ CREATE TABLE attachments (
     uploaded_by     CHAR(36),
     created_at      TIMESTAMP    DEFAULT CURRENT_TIMESTAMP,
 
-    CONSTRAINT fk_attachments_project_task
+    CONSTRAINT fk_project_attachments_task
         FOREIGN KEY (task_id) REFERENCES project_tasks(id)
         ON DELETE CASCADE,
-    CONSTRAINT fk_attachments_uploader
-        FOREIGN KEY (uploaded_by) REFERENCES users(id)
+    CONSTRAINT fk_project_attachments_uploader
+        FOREIGN KEY (uploaded_by) REFERENCES app_users(id)
         ON DELETE SET NULL
 ) ENGINE=InnoDB;
 
-CREATE INDEX idx_attachments_task ON attachments(task_id);
+CREATE INDEX idx_project_attachments_task ON project_attachments(task_id);
 
 -- ------------------------------------------------------------
--- Labels
+-- ProjectLabels (régi: labels)
 -- ------------------------------------------------------------
-CREATE TABLE labels (
+CREATE TABLE project_labels (
     id              CHAR(36)     PRIMARY KEY DEFAULT (UUID()),
     project_id      CHAR(36)     NOT NULL,
     name            VARCHAR(100) NOT NULL,
     color           VARCHAR(7)   NOT NULL DEFAULT '#888888',
 
-    CONSTRAINT fk_labels_project
-        FOREIGN KEY (project_id) REFERENCES projects(id)
+    CONSTRAINT fk_project_labels_project
+        FOREIGN KEY (project_id) REFERENCES app_projects(id)
         ON DELETE CASCADE,
-    CONSTRAINT uq_label_per_project UNIQUE (project_id, name)
+    CONSTRAINT uq_project_label_per_project UNIQUE (project_id, name)
 ) ENGINE=InnoDB;
 
 -- ------------------------------------------------------------
--- ProjectTaskLabels
+-- ProjectTaskLabels (régi: task_labels)
 -- ------------------------------------------------------------
 CREATE TABLE project_task_labels (
     task_id         CHAR(36)     NOT NULL,
@@ -217,14 +217,14 @@ CREATE TABLE project_task_labels (
         FOREIGN KEY (task_id) REFERENCES project_tasks(id)
         ON DELETE CASCADE,
     CONSTRAINT fk_ptl_label
-        FOREIGN KEY (label_id) REFERENCES labels(id)
+        FOREIGN KEY (label_id) REFERENCES project_labels(id)
         ON DELETE CASCADE
 ) ENGINE=InnoDB;
 
 -- ------------------------------------------------------------
--- ActivityLog
+-- ProjectActivityLog (régi: activity_log)
 -- ------------------------------------------------------------
-CREATE TABLE activity_log (
+CREATE TABLE project_activity_log (
     id              CHAR(36)     PRIMARY KEY DEFAULT (UUID()),
     task_id         CHAR(36)     NULL,
     user_id         CHAR(36)     NULL,
@@ -232,32 +232,32 @@ CREATE TABLE activity_log (
     details         JSON,
     created_at      TIMESTAMP    DEFAULT CURRENT_TIMESTAMP,
 
-    CONSTRAINT fk_activity_project_task
+    CONSTRAINT fk_project_activity_task
         FOREIGN KEY (task_id) REFERENCES project_tasks(id)
         ON DELETE CASCADE,
-    CONSTRAINT fk_activity_user
-        FOREIGN KEY (user_id) REFERENCES users(id)
+    CONSTRAINT fk_project_activity_user
+        FOREIGN KEY (user_id) REFERENCES app_users(id)
         ON DELETE SET NULL
 ) ENGINE=InnoDB;
 
-CREATE INDEX idx_activity_task ON activity_log(task_id);
-CREATE INDEX idx_activity_created ON activity_log(created_at);
+CREATE INDEX idx_project_activity_task ON project_activity_log(task_id);
+CREATE INDEX idx_project_activity_created ON project_activity_log(created_at);
 
 -- ------------------------------------------------------------
--- Notifications
+-- UserNotifications (régi: notifications)
 -- ------------------------------------------------------------
-CREATE TABLE notifications (
+CREATE TABLE user_notifications (
     id              CHAR(36)     PRIMARY KEY DEFAULT (UUID()),
     user_id         CHAR(36)     NOT NULL,
     content         VARCHAR(500) NOT NULL,
     is_read         BOOLEAN      NOT NULL DEFAULT FALSE,
     created_at      TIMESTAMP    DEFAULT CURRENT_TIMESTAMP,
 
-    CONSTRAINT fk_notifications_user
-        FOREIGN KEY (user_id) REFERENCES users(id)
+    CONSTRAINT fk_user_notifications_user
+        FOREIGN KEY (user_id) REFERENCES app_users(id)
         ON DELETE CASCADE
 ) ENGINE=InnoDB;
 
-CREATE INDEX idx_notifications_user ON notifications(user_id, is_read);
+CREATE INDEX idx_user_notifications_user ON user_notifications(user_id, is_read);
 
 SET FOREIGN_KEY_CHECKS = 1;
