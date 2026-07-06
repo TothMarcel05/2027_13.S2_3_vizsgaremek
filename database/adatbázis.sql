@@ -1,7 +1,16 @@
+DROP DATABASE IF EXISTS TDM_KM_ProjectManagerApp;
+CREATE DATABASE TDM_KM_ProjectManagerApp
+CHARACTER SET utf8mb4
+COLLATE utf8mb4_unicode_ci;
+
+USE TDM_KM_ProjectManagerApp;
+
 -- ============================================================
 -- Projektmenedzsment alkalmazás adatbázis-sémája
 -- MySQL 8.0+
 -- ============================================================
+
+
 
 SET NAMES utf8mb4;
 SET FOREIGN_KEY_CHECKS = 0;
