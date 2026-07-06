@@ -5,18 +5,11 @@ COLLATE utf8mb4_unicode_ci;
 
 USE TDM_KM_ProjectManagerApp;
 
--- ============================================================
--- Projektmenedzsment alkalmazás adatbázis-sémája
--- MySQL 8.0+
--- ============================================================
-
-
-
 SET NAMES utf8mb4;
 SET FOREIGN_KEY_CHECKS = 0;
 
 -- ------------------------------------------------------------
--- users
+-- Users
 -- ------------------------------------------------------------
 CREATE TABLE users (
     id              CHAR(36)     PRIMARY KEY DEFAULT (UUID()),
@@ -29,7 +22,7 @@ CREATE TABLE users (
 ) ENGINE=InnoDB;
 
 -- ------------------------------------------------------------
--- workspaces
+-- Workspaces
 -- ------------------------------------------------------------
 CREATE TABLE workspaces (
     id              CHAR(36)     PRIMARY KEY DEFAULT (UUID()),
@@ -45,7 +38,7 @@ CREATE TABLE workspaces (
 CREATE INDEX idx_workspaces_owner ON workspaces(owner_id);
 
 -- ------------------------------------------------------------
--- workspace_members (N:M users <-> workspaces)
+-- WorkspaceMembers
 -- ------------------------------------------------------------
 CREATE TABLE workspace_members (
     workspace_id    CHAR(36)     NOT NULL,
@@ -64,7 +57,7 @@ CREATE TABLE workspace_members (
 ) ENGINE=InnoDB;
 
 -- ------------------------------------------------------------
--- projects
+-- Projects
 -- ------------------------------------------------------------
 CREATE TABLE projects (
     id              CHAR(36)     PRIMARY KEY DEFAULT (UUID()),
@@ -85,7 +78,7 @@ CREATE INDEX idx_projects_workspace ON projects(workspace_id);
 CREATE INDEX idx_projects_status ON projects(status);
 
 -- ------------------------------------------------------------
--- project_members (N:M users <-> projects)
+-- ProjectMembers
 -- ------------------------------------------------------------
 CREATE TABLE project_members (
     project_id      CHAR(36)     NOT NULL,
@@ -104,9 +97,9 @@ CREATE TABLE project_members (
 ) ENGINE=InnoDB;
 
 -- ------------------------------------------------------------
--- tasks
+-- ProjectTasks
 -- ------------------------------------------------------------
-CREATE TABLE tasks (
+CREATE TABLE project_tasks (
     id              CHAR(36)     PRIMARY KEY DEFAULT (UUID()),
     project_id      CHAR(36)     NOT NULL,
     title           VARCHAR(255) NOT NULL,
@@ -119,42 +112,42 @@ CREATE TABLE tasks (
     created_at      TIMESTAMP    DEFAULT CURRENT_TIMESTAMP,
     updated_at      TIMESTAMP    DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
 
-    CONSTRAINT fk_tasks_project
+    CONSTRAINT fk_project_tasks_project
         FOREIGN KEY (project_id) REFERENCES projects(id)
         ON DELETE CASCADE,
-    CONSTRAINT fk_tasks_assignee
+    CONSTRAINT fk_project_tasks_assignee
         FOREIGN KEY (assignee_id) REFERENCES users(id)
         ON DELETE SET NULL,
-    CONSTRAINT fk_tasks_reporter
+    CONSTRAINT fk_project_tasks_reporter
         FOREIGN KEY (reporter_id) REFERENCES users(id)
         ON DELETE SET NULL
 ) ENGINE=InnoDB;
 
-CREATE INDEX idx_tasks_project ON tasks(project_id);
-CREATE INDEX idx_tasks_assignee ON tasks(assignee_id);
-CREATE INDEX idx_tasks_status ON tasks(status);
-CREATE INDEX idx_tasks_due_date ON tasks(due_date);
+CREATE INDEX idx_project_tasks_project ON project_tasks(project_id);
+CREATE INDEX idx_project_tasks_assignee ON project_tasks(assignee_id);
+CREATE INDEX idx_project_tasks_status ON project_tasks(status);
+CREATE INDEX idx_project_tasks_due_date ON project_tasks(due_date);
 
 -- ------------------------------------------------------------
--- task_dependencies (pl. "blocks" / "depends_on")
+-- ProjectTaskDependencies 
 -- ------------------------------------------------------------
-CREATE TABLE task_dependencies (
+CREATE TABLE project_task_dependencies (
     id              CHAR(36)     PRIMARY KEY DEFAULT (UUID()),
     task_id         CHAR(36)     NOT NULL,
     depends_on_id   CHAR(36)     NOT NULL,
     type            ENUM('blocks', 'related_to') NOT NULL DEFAULT 'blocks',
 
-    CONSTRAINT fk_td_task
-        FOREIGN KEY (task_id) REFERENCES tasks(id)
+    CONSTRAINT fk_ptd_task
+        FOREIGN KEY (task_id) REFERENCES project_tasks(id)
         ON DELETE CASCADE,
-    CONSTRAINT fk_td_depends_on
-        FOREIGN KEY (depends_on_id) REFERENCES tasks(id)
+    CONSTRAINT fk_ptd_depends_on
+        FOREIGN KEY (depends_on_id) REFERENCES project_tasks(id)
         ON DELETE CASCADE,
-    CONSTRAINT uq_task_dependency UNIQUE (task_id, depends_on_id)
+    CONSTRAINT uq_project_task_dependency UNIQUE (task_id, depends_on_id)
 ) ENGINE=InnoDB;
 
 -- ------------------------------------------------------------
--- comments
+-- Comments 
 -- ------------------------------------------------------------
 CREATE TABLE comments (
     id              CHAR(36)     PRIMARY KEY DEFAULT (UUID()),
@@ -164,8 +157,8 @@ CREATE TABLE comments (
     created_at      TIMESTAMP    DEFAULT CURRENT_TIMESTAMP,
     updated_at      TIMESTAMP    DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
 
-    CONSTRAINT fk_comments_task
-        FOREIGN KEY (task_id) REFERENCES tasks(id)
+    CONSTRAINT fk_comments_project_task
+        FOREIGN KEY (task_id) REFERENCES project_tasks(id)
         ON DELETE CASCADE,
     CONSTRAINT fk_comments_user
         FOREIGN KEY (user_id) REFERENCES users(id)
@@ -175,7 +168,7 @@ CREATE TABLE comments (
 CREATE INDEX idx_comments_task ON comments(task_id);
 
 -- ------------------------------------------------------------
--- attachments
+-- Attachments
 -- ------------------------------------------------------------
 CREATE TABLE attachments (
     id              CHAR(36)     PRIMARY KEY DEFAULT (UUID()),
@@ -186,8 +179,8 @@ CREATE TABLE attachments (
     uploaded_by     CHAR(36),
     created_at      TIMESTAMP    DEFAULT CURRENT_TIMESTAMP,
 
-    CONSTRAINT fk_attachments_task
-        FOREIGN KEY (task_id) REFERENCES tasks(id)
+    CONSTRAINT fk_attachments_project_task
+        FOREIGN KEY (task_id) REFERENCES project_tasks(id)
         ON DELETE CASCADE,
     CONSTRAINT fk_attachments_uploader
         FOREIGN KEY (uploaded_by) REFERENCES users(id)
@@ -197,7 +190,7 @@ CREATE TABLE attachments (
 CREATE INDEX idx_attachments_task ON attachments(task_id);
 
 -- ------------------------------------------------------------
--- labels
+-- Labels
 -- ------------------------------------------------------------
 CREATE TABLE labels (
     id              CHAR(36)     PRIMARY KEY DEFAULT (UUID()),
@@ -212,35 +205,35 @@ CREATE TABLE labels (
 ) ENGINE=InnoDB;
 
 -- ------------------------------------------------------------
--- task_labels (N:M tasks <-> labels)
+-- ProjectTaskLabels
 -- ------------------------------------------------------------
-CREATE TABLE task_labels (
+CREATE TABLE project_task_labels (
     task_id         CHAR(36)     NOT NULL,
     label_id        CHAR(36)     NOT NULL,
 
     PRIMARY KEY (task_id, label_id),
 
-    CONSTRAINT fk_tl_task
-        FOREIGN KEY (task_id) REFERENCES tasks(id)
+    CONSTRAINT fk_ptl_task
+        FOREIGN KEY (task_id) REFERENCES project_tasks(id)
         ON DELETE CASCADE,
-    CONSTRAINT fk_tl_label
+    CONSTRAINT fk_ptl_label
         FOREIGN KEY (label_id) REFERENCES labels(id)
         ON DELETE CASCADE
 ) ENGINE=InnoDB;
 
 -- ------------------------------------------------------------
--- activity_log
+-- ActivityLog
 -- ------------------------------------------------------------
 CREATE TABLE activity_log (
     id              CHAR(36)     PRIMARY KEY DEFAULT (UUID()),
-    task_id         CHAR(36),
-    user_id         CHAR(36),
+    task_id         CHAR(36)     NULL,
+    user_id         CHAR(36)     NULL,
     action          VARCHAR(100) NOT NULL,
     details         JSON,
     created_at      TIMESTAMP    DEFAULT CURRENT_TIMESTAMP,
 
-    CONSTRAINT fk_activity_task
-        FOREIGN KEY (task_id) REFERENCES tasks(id)
+    CONSTRAINT fk_activity_project_task
+        FOREIGN KEY (task_id) REFERENCES project_tasks(id)
         ON DELETE CASCADE,
     CONSTRAINT fk_activity_user
         FOREIGN KEY (user_id) REFERENCES users(id)
@@ -251,7 +244,7 @@ CREATE INDEX idx_activity_task ON activity_log(task_id);
 CREATE INDEX idx_activity_created ON activity_log(created_at);
 
 -- ------------------------------------------------------------
--- notifications
+-- Notifications
 -- ------------------------------------------------------------
 CREATE TABLE notifications (
     id              CHAR(36)     PRIMARY KEY DEFAULT (UUID()),
