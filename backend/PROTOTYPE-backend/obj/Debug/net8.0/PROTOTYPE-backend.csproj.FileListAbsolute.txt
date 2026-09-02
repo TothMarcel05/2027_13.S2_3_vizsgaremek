@@ -1,0 +1,8 @@
+C:\Users\KecskemetiMilan\source\repos\PROTOTYPE-backend\PROTOTYPE-backend\obj\Debug\net8.0\PROTOTYPE-backend.csproj.AssemblyReference.cache
+C:\Users\KecskemetiMilan\source\repos\PROTOTYPE-backend\PROTOTYPE-backend\obj\Debug\net8.0\rpswa.dswa.cache.json
+C:\Users\KecskemetiMilan\source\repos\PROTOTYPE-backend\PROTOTYPE-backend\obj\Debug\net8.0\PROTOTYPE-backend.GeneratedMSBuildEditorConfig.editorconfig
+C:\Users\KecskemetiMilan\source\repos\PROTOTYPE-backend\PROTOTYPE-backend\obj\Debug\net8.0\PROTOTYPE-backend.AssemblyInfoInputs.cache
+C:\Users\KecskemetiMilan\source\repos\PROTOTYPE-backend\PROTOTYPE-backend\obj\Debug\net8.0\PROTOTYPE-backend.AssemblyInfo.cs
+C:\Users\KecskemetiMilan\source\repos\PROTOTYPE-backend\PROTOTYPE-backend\obj\Debug\net8.0\PROTOTYPE-backend.csproj.CoreCompileInputs.cache
+C:\Users\KecskemetiMilan\source\repos\PROTOTYPE-backend\PROTOTYPE-backend\obj\Debug\net8.0\PROTOTYPE-backend.MvcApplicationPartsAssemblyInfo.cs
+C:\Users\KecskemetiMilan\source\repos\PROTOTYPE-backend\PROTOTYPE-backend\obj\Debug\net8.0\PROTOTYPE-backend.MvcApplicationPartsAssemblyInfo.cache
