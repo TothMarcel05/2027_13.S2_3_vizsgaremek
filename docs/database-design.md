@@ -9,6 +9,10 @@ erDiagram
         datetime created_at
     }
 
+    CHAT {
+        
+    }
+
     WORKSPACES {
         int id PK
         string name
