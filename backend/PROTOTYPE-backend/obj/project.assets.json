@@ -453,11 +453,11 @@
   "project": {
     "version": "1.0.0",
     "restore": {
-      "projectUniqueName": "C:\\Users\\KecskemetiMilan\\source\\repos\\PROTOTYPE-backend\\PROTOTYPE-backend\\PROTOTYPE-backend.csproj",
+      "projectUniqueName": "C:\\Users\\KecskemetiMilan\\Documents\\Github\\TMD_KM_TO-DO_Project\\backend\\PROTOTYPE-backend\\PROTOTYPE-backend.csproj",
       "projectName": "PROTOTYPE-backend",
-      "projectPath": "C:\\Users\\KecskemetiMilan\\source\\repos\\PROTOTYPE-backend\\PROTOTYPE-backend\\PROTOTYPE-backend.csproj",
+      "projectPath": "C:\\Users\\KecskemetiMilan\\Documents\\Github\\TMD_KM_TO-DO_Project\\backend\\PROTOTYPE-backend\\PROTOTYPE-backend.csproj",
       "packagesPath": "C:\\Users\\KecskemetiMilan\\.nuget\\packages\\",
-      "outputPath": "C:\\Users\\KecskemetiMilan\\source\\repos\\PROTOTYPE-backend\\PROTOTYPE-backend\\obj\\",
+      "outputPath": "C:\\Users\\KecskemetiMilan\\Documents\\Github\\TMD_KM_TO-DO_Project\\backend\\PROTOTYPE-backend\\obj\\",
       "projectStyle": "PackageReference",
       "fallbackFolders": [
         "C:\\Program Files (x86)\\Microsoft Visual Studio\\Shared\\NuGetPackages"
