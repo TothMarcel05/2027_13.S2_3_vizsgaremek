@@ -1,8 +1,8 @@
 {
   "version": 2,
-  "dgSpecHash": "pFUJHLAAh8s=",
+  "dgSpecHash": "QN5vcsMDDwA=",
   "success": true,
-  "projectFilePath": "C:\\Users\\KecskemetiMilan\\source\\repos\\PROTOTYPE-backend\\PROTOTYPE-backend\\PROTOTYPE-backend.csproj",
+  "projectFilePath": "C:\\Users\\KecskemetiMilan\\Documents\\Github\\TMD_KM_TO-DO_Project\\backend\\PROTOTYPE-backend\\PROTOTYPE-backend.csproj",
   "expectedPackageFiles": [
     "C:\\Users\\KecskemetiMilan\\.nuget\\packages\\microsoft.extensions.apidescription.server\\6.0.5\\microsoft.extensions.apidescription.server.6.0.5.nupkg.sha512",
     "C:\\Users\\KecskemetiMilan\\.nuget\\packages\\microsoft.openapi\\1.6.14\\microsoft.openapi.1.6.14.nupkg.sha512",
