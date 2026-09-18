@@ -1,0 +1,3 @@
+Adatbázis letérképezése és átalakítása C# kódra
+
+dotnet ef dbcontext scaffold "server=127.0.0.1;uid=root;pwd=mysql;database=tdm_km_projectmanagerapp;" Pomelo.EntityFrameworkCore.MySql -o Models -c AppDbContext --force --no-onconfiguring --context-dir Data   
