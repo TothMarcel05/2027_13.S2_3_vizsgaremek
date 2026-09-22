@@ -1,92 +1,83 @@
 erDiagram
 
-    %% ----------------------------------------------------
-    %% 1. APP USERS & CORE IAM
-    %% ----------------------------------------------------
     app_users {
-        CHAR_36 id PK
-        VARCHAR_255 name
-        VARCHAR_255 email UK
-        VARCHAR_255 password_hash
-        VARCHAR_500 avatar_url
-        TIMESTAMP created_at
-        TIMESTAMP updated_at
+        string id PK
+        string name
+        string email UK
+        string password_hash
+        string avatar_url
+        datetime created_at
+        datetime updated_at
     }
 
     user_workspaces {
-        CHAR_36 id PK
-        VARCHAR_255 name
-        CHAR_36 owner_id FK
-        TIMESTAMP created_at
+        string id PK
+        string name
+        string owner_id FK
+        datetime created_at
     }
 
     app_users ||--o{ user_workspaces : "owners"
 
-    %% ----------------------------------------------------
-    %% 2. DINAMIKUS RBAC
-    %% ----------------------------------------------------
     permissions {
-        CHAR_36 id PK
-        VARCHAR_100 code UK
-        VARCHAR_255 name
-        TEXT description
-        TIMESTAMP created_at
+        string id PK
+        string code UK
+        string name
+        text description
+        datetime created_at
     }
 
     roles {
-        CHAR_36 id PK
-        CHAR_36 workspace_id FK
-        VARCHAR_100 name
-        TEXT description
-        BOOLEAN is_system
-        TIMESTAMP created_at
+        string id PK
+        string workspace_id FK
+        string name
+        text description
+        boolean is_system
+        datetime created_at
     }
 
     role_permissions {
-        CHAR_36 role_id PK, FK
-        CHAR_36 permission_id PK, FK
+        string role_id PK
+        string permission_id PK
     }
 
     user_workspaces ||--o{ roles : "contains"
     roles ||--o{ role_permissions : "has"
     permissions ||--o{ role_permissions : "granted_to"
 
-    %% ----------------------------------------------------
-    %% 3. WORKSPACE & PROJECT MEMBERSHIPS
-    %% ----------------------------------------------------
     workspace_members {
-        CHAR_36 workspace_id PK, FK
-        CHAR_36 user_id PK, FK
-        TIMESTAMP joined_at
+        string workspace_id PK
+        string user_id PK
+        datetime joined_at
     }
 
     user_workspace_roles {
-        CHAR_36 workspace_id PK, FK
-        CHAR_36 user_id PK, FK
-        CHAR_36 role_id PK, FK
+        string workspace_id PK
+        string user_id PK
+        string role_id PK
     }
 
     app_projects {
-        CHAR_36 id PK
-        CHAR_36 workspace_id FK
-        VARCHAR_255 name
-        TEXT description
-        ENUM status
-        DATE deadline
-        TIMESTAMP created_at
-        TIMESTAMP updated_at
+        string id PK
+        string workspace_id FK
+        string name
+        text description
+        enum status
+        date deadline
+        datetime created_at
+        datetime updated_at
     }
 
     project_members {
-        CHAR_36 project_id PK, FK
-        CHAR_36 user_id PK, FK
-        TIMESTAMP joined_at
+        string project_id PK
+        string user_id PK
+        datetime joined_at
     }
 
     user_project_roles {
-        CHAR_36 project_id PK, FK
-        CHAR_36 user_id PK, FK
-        CHAR_36 role_id PK, FK
+        string project_id PK
+        string user_id PK
+        string role_id PK
     }
 
     user_workspaces ||--o{ workspace_members : "has"
@@ -100,58 +91,55 @@ erDiagram
     project_members ||--o{ user_project_roles : "assigned"
     roles ||--o{ user_project_roles : "role_in_project"
 
-    %% ----------------------------------------------------
-    %% 4. PROJECT TASKS & SUB-MODULES
-    %% ----------------------------------------------------
     project_tasks {
-        CHAR_36 id PK
-        CHAR_36 project_id FK
-        VARCHAR_255 title
-        TEXT description
-        ENUM_hu status
-        ENUM priority
-        CHAR_36 assignee_id FK
-        CHAR_36 reporter_id FK
-        DATE due_date
-        TIMESTAMP created_at
-        TIMESTAMP updated_at
+        string id PK
+        string project_id FK
+        string title
+        text description
+        enum status
+        enum priority
+        string assignee_id FK
+        string reporter_id FK
+        date due_date
+        datetime created_at
+        datetime updated_at
     }
 
     project_comments {
-        CHAR_36 id PK
-        CHAR_36 task_id FK
-        CHAR_36 user_id FK
-        TEXT content
-        TIMESTAMP created_at
+        string id PK
+        string task_id FK
+        string user_id FK
+        text content
+        datetime created_at
     }
 
     project_labels {
-        CHAR_36 id PK
-        CHAR_36 project_id FK
-        VARCHAR_100 name
-        VARCHAR_7 color
+        string id PK
+        string project_id FK
+        string name
+        string color
     }
 
     project_task_labels {
-        CHAR_36 task_id PK, FK
-        CHAR_36 label_id PK, FK
+        string task_id PK
+        string label_id PK
     }
 
     project_activity_log {
-        CHAR_36 id PK
-        CHAR_36 task_id FK
-        CHAR_36 user_id FK
-        VARCHAR_100 action
-        JSON details
-        TIMESTAMP created_at
+        string id PK
+        string task_id FK
+        string user_id FK
+        string action
+        json details
+        datetime created_at
     }
 
     user_notifications {
-        CHAR_36 id PK
-        CHAR_36 user_id FK
-        VARCHAR_500 content
-        BOOLEAN is_read
-        TIMESTAMP created_at
+        string id PK
+        string user_id FK
+        string content
+        boolean is_read
+        datetime created_at
     }
 
     app_projects ||--o{ project_tasks : "contains"
@@ -169,52 +157,49 @@ erDiagram
     app_users ||--o{ project_activity_log : "performed_by"
     app_users ||--o{ user_notifications : "notified"
 
-    %% ----------------------------------------------------
-    %% 5. STORAGE & DRIVE MODULE
-    %% ----------------------------------------------------
     storage_nodes {
-        CHAR_36 id PK
-        CHAR_36 workspace_id FK
-        CHAR_36 project_id FK
-        CHAR_36 parent_id FK
-        VARCHAR_255 name
-        ENUM type
-        VARCHAR_127 mime_type
-        BIGINT size_bytes
-        CHAR_36 created_by FK
-        CHAR_36 updated_by FK
-        TIMESTAMP created_at
-        TIMESTAMP updated_at
+        string id PK
+        string workspace_id FK
+        string project_id FK
+        string parent_id FK
+        string name
+        enum type
+        string mime_type
+        bigint size_bytes
+        string created_by FK
+        string updated_by FK
+        datetime created_at
+        datetime updated_at
     }
 
     storage_tags {
-        CHAR_36 id PK
-        CHAR_36 workspace_id FK
-        VARCHAR_100 name
-        VARCHAR_7 color
+        string id PK
+        string workspace_id FK
+        string name
+        string color
     }
 
     storage_tag_rbac {
-        CHAR_36 tag_id PK, FK
-        CHAR_36 role_id PK, FK
-        BOOLEAN can_read
-        BOOLEAN can_write
-        BOOLEAN can_delete
+        string tag_id PK
+        string role_id PK
+        boolean can_read
+        boolean can_write
+        boolean can_delete
     }
 
     storage_node_tags {
-        CHAR_36 node_id PK, FK
-        CHAR_36 tag_id PK, FK
+        string node_id PK
+        string tag_id PK
     }
 
     storage_file_versions {
-        CHAR_36 id PK
-        CHAR_36 node_id FK
-        VARCHAR_500 file_path
-        INT version_number
-        BIGINT size_bytes
-        CHAR_36 uploaded_by FK
-        TIMESTAMP created_at
+        string id PK
+        string node_id FK
+        string file_path
+        int version_number
+        bigint size_bytes
+        string uploaded_by FK
+        datetime created_at
     }
 
     user_workspaces ||--o{ storage_nodes : "owns_nodes"
@@ -232,60 +217,57 @@ erDiagram
     storage_nodes ||--o{ storage_file_versions : "has_versions"
     app_users ||--o{ storage_file_versions : "uploaded_by"
 
-    %% ----------------------------------------------------
-    %% 6. END-TO-END CHAT MODULE
-    %% ----------------------------------------------------
     chat_rooms {
-        CHAR_36 id PK
-        CHAR_36 workspace_id FK
-        CHAR_36 project_id FK
-        VARCHAR_255 name
-        ENUM type
-        BOOLEAN is_private
-        CHAR_36 created_by FK
-        TIMESTAMP created_at
+        string id PK
+        string workspace_id FK
+        string project_id FK
+        string name
+        enum type
+        boolean is_private
+        string created_by FK
+        datetime created_at
     }
 
     e2e_user_keys {
-        CHAR_36 id PK
-        CHAR_36 user_id FK
-        VARCHAR_255 device_id
-        TEXT identity_key
-        TEXT signed_prekey
-        TEXT prekey_signature
+        string id PK
+        string user_id FK
+        string device_id
+        text identity_key
+        text signed_prekey
+        text prekey_signature
     }
 
     e2e_room_keys {
-        CHAR_36 room_id PK, FK
-        CHAR_36 user_id PK, FK
-        INT key_version PK
-        TEXT encrypted_key
+        string room_id PK
+        string user_id PK
+        int key_version PK
+        text encrypted_key
     }
 
     e2e_chat_messages {
-        CHAR_36 id PK
-        CHAR_36 room_id FK
-        CHAR_36 sender_id FK
-        VARCHAR_255 sender_device_id
-        CHAR_36 parent_id FK
-        TEXT ciphertext
-        VARCHAR_255 nonce_or_iv
-        INT key_version
-        TIMESTAMP created_at
+        string id PK
+        string room_id FK
+        string sender_id FK
+        string sender_device_id
+        string parent_id FK
+        text ciphertext
+        string nonce_or_iv
+        int key_version
+        datetime created_at
     }
 
     chat_room_members {
-        CHAR_36 room_id PK, FK
-        CHAR_36 user_id PK, FK
-        CHAR_36 last_read_message_id FK
+        string room_id PK
+        string user_id PK
+        string last_read_message_id FK
     }
 
     chat_message_attachments {
-        CHAR_36 id PK
-        CHAR_36 message_id FK
-        CHAR_36 storage_node_id FK
-        VARCHAR_500 file_url
-        VARCHAR_255 file_name
+        string id PK
+        string message_id FK
+        string storage_node_id FK
+        string file_url
+        string file_name
     }
 
     user_workspaces ||--o{ chat_rooms : "contains"
@@ -306,29 +288,26 @@ erDiagram
     e2e_chat_messages ||--o{ chat_message_attachments : "has_attachment"
     storage_nodes ||--o{ chat_message_attachments : "referenced_in"
 
-    %% ----------------------------------------------------
-    %% 7. CALENDAR MODULE
-    %% ----------------------------------------------------
     calendars {
-        CHAR_36 id PK
-        CHAR_36 workspace_id FK
-        CHAR_36 project_id FK
-        CHAR_36 user_id FK
-        VARCHAR_255 name
-        VARCHAR_7 color
-        ENUM type
+        string id PK
+        string workspace_id FK
+        string project_id FK
+        string user_id FK
+        string name
+        string color
+        enum type
     }
 
     calendar_events {
-        CHAR_36 id PK
-        CHAR_36 calendar_id FK
-        CHAR_36 task_id FK
-        VARCHAR_255 title
-        TEXT description
-        DATETIME start_time
-        DATETIME end_time
-        BOOLEAN is_all_day
-        CHAR_36 created_by FK
+        string id PK
+        string calendar_id FK
+        string task_id FK
+        string title
+        text description
+        datetime start_time
+        datetime end_time
+        boolean is_all_day
+        string created_by FK
     }
 
     user_workspaces ||--o{ calendars : "owns_cal"
@@ -339,25 +318,22 @@ erDiagram
     project_tasks ||--o{ calendar_events : "linked_to_task"
     app_users ||--o{ calendar_events : "created_event"
 
-    %% ----------------------------------------------------
-    %% 8. AUTH & JWT SESSION MANAGEMENT
-    %% ----------------------------------------------------
     user_sessions {
-        CHAR_36 id PK
-        CHAR_36 user_id FK
-        VARCHAR_64 refresh_token_hash UK
-        CHAR_36 replaced_by_session_id FK
-        VARCHAR_255 device_info
-        VARCHAR_45 ip_address
-        BOOLEAN is_revoked
-        TIMESTAMP expires_at
+        string id PK
+        string user_id FK
+        string refresh_token_hash UK
+        string replaced_by_session_id FK
+        string device_info
+        string ip_address
+        boolean is_revoked
+        datetime expires_at
     }
 
     jwt_blacklisted_tokens {
-        CHAR_36 id PK
-        VARCHAR_255 jti UK
-        CHAR_36 user_id FK
-        TIMESTAMP expires_at
+        string id PK
+        string jti UK
+        string user_id FK
+        datetime expires_at
     }
 
     app_users ||--o{ user_sessions : "has_sessions"
