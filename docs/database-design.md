@@ -1,3 +1,5 @@
+```mermaid
+
 erDiagram
 
     app_users {
