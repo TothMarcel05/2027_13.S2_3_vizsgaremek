@@ -231,3 +231,11 @@ C:\Users\Kecskeméti Milán\Documents\GitHub\TMD_KM_TO-DO_Project\backend\PROTOT
 C:\Users\Kecskeméti Milán\Documents\GitHub\TMD_KM_TO-DO_Project\backend\PROTOTYPE-backend\obj\Debug\net8.0\PROTOTYP.D000D1CC.Up2Date
 C:\Users\Kecskeméti Milán\Documents\GitHub\TMD_KM_TO-DO_Project\backend\PROTOTYPE-backend\obj\Debug\net8.0\PROTOTYPE-backend.genruntimeconfig.cache
 C:\Users\Kecskeméti Milán\Documents\GitHub\TMD_KM_TO-DO_Project\backend\PROTOTYPE-backend\obj\Debug\net8.0\ref\PROTOTYPE-backend.dll
+C:\Users\Kecskeméti Milán\Documents\GitHub\TMD_KM_TO-DO_Project\backend\PROTOTYPE-backend\bin\Debug\net8.0\BCrypt-Net-Next.dll
+C:\Users\Kecskeméti Milán\Documents\GitHub\TMD_KM_TO-DO_Project\backend\PROTOTYPE-backend\bin\Debug\net8.0\Microsoft.Bcl.Cryptography.dll
+C:\Users\Kecskeméti Milán\Documents\GitHub\TMD_KM_TO-DO_Project\backend\PROTOTYPE-backend\bin\Debug\net8.0\Microsoft.IdentityModel.Abstractions.dll
+C:\Users\Kecskeméti Milán\Documents\GitHub\TMD_KM_TO-DO_Project\backend\PROTOTYPE-backend\bin\Debug\net8.0\Microsoft.IdentityModel.JsonWebTokens.dll
+C:\Users\Kecskeméti Milán\Documents\GitHub\TMD_KM_TO-DO_Project\backend\PROTOTYPE-backend\bin\Debug\net8.0\Microsoft.IdentityModel.Logging.dll
+C:\Users\Kecskeméti Milán\Documents\GitHub\TMD_KM_TO-DO_Project\backend\PROTOTYPE-backend\bin\Debug\net8.0\Microsoft.IdentityModel.Tokens.dll
+C:\Users\Kecskeméti Milán\Documents\GitHub\TMD_KM_TO-DO_Project\backend\PROTOTYPE-backend\bin\Debug\net8.0\System.Formats.Asn1.dll
+C:\Users\Kecskeméti Milán\Documents\GitHub\TMD_KM_TO-DO_Project\backend\PROTOTYPE-backend\bin\Debug\net8.0\System.IdentityModel.Tokens.Jwt.dll

@@ -19,6 +19,8 @@ public partial class AppUser
 
     public DateTime? UpdatedAt { get; set; }
 
+    public string GlobalRole { get; set; } = null!;
+
     public virtual ICollection<CalendarEvent> CalendarEvents { get; set; } = new List<CalendarEvent>();
 
     public virtual ICollection<Calendar> Calendars { get; set; } = new List<Calendar>();

@@ -18,7 +18,8 @@ CREATE TABLE app_users (
     password_hash   VARCHAR(255) NOT NULL,
     avatar_url      VARCHAR(500),
     created_at      TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
-    updated_at      TIMESTAMP    DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP
+    updated_at      TIMESTAMP    DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
+    global_role     ENUM('User', 'SystemAdmin') NOT NULL DEFAULT 'User'
 ) ENGINE=InnoDB;
 
 CREATE TABLE user_workspaces (

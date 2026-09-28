@@ -1,4 +1,6 @@
-﻿using Microsoft.AspNetCore.Http;
+﻿// KM
+
+using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using PROTOTYPE_backend.DTOs.Auth;
 using PROTOTYPE_backend.Services.Auth;
@@ -17,7 +19,7 @@ namespace PROTOTYPE_backend.Controllers
         }
 
         [HttpPost("register")]
-        public async Task<IActionResult> Register([FromBody] CreateUserDto dto) 
+        public async Task<IActionResult> Register([FromBody] RegisterDto dto) 
         {
             var result = await _authService.CreateUserAsync(dto);
 

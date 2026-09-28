@@ -1,20 +1,25 @@
-﻿using PROTOTYPE_backend.Data.Repositories;
+﻿// KM
+
+using PROTOTYPE_backend.Data.Repositories;
 using PROTOTYPE_backend.DTOs.Auth;
 using PROTOTYPE_backend.Models;
 using BCrypt.Net;
+using PROTOTYPE_backend.Services.Token;
 
 namespace PROTOTYPE_backend.Services.Auth
 {
     public class AuthService : IAuthService
     {
         private readonly IUnitOfWork _unitOfWork;
+        private readonly ITokenService _tokenService;
 
-        public AuthService(IUnitOfWork unitOfWork) 
+        public AuthService(IUnitOfWork unitOfWork, ITokenService tokenService) 
         {
             _unitOfWork = unitOfWork;
+            _tokenService = tokenService;
         }
 
-        public async Task<UserDto> CreateUserAsync(CreateUserDto dto) 
+        public async Task<UserDto> CreateUserAsync(RegisterDto dto) 
         {
             var userExistsByEmail = await _unitOfWork.Repository<AppUser>()
                 .FirstOrDefaultAsync(u => u.Email == dto.Email);
@@ -43,13 +48,26 @@ namespace PROTOTYPE_backend.Services.Auth
             await _unitOfWork.Repository<AppUser>().AddAsync(newUser);
             await _unitOfWork.CompleteAsync();
 
-            return new UserDto
+            return new UserDto(newUser.Id, newUser.Name, newUser.Email, newUser.CreatedAt);
+        }
+
+        public async Task<AuthResponseDto> LoginAsync(LoginDto loginDto) 
+        {
+            var user = await _unitOfWork.Repository<AppUser>()
+                .FirstOrDefaultAsync(u => u.Email == loginDto.Email);
+
+            if (user == null || !BCrypt.Net.BCrypt.EnhancedVerify(loginDto.Password, user.PasswordHash)) 
             {
-                Id = newUser.Id,
-                Username = newUser.Name,
-                Email = newUser.Email,
-                CreatedAt = newUser.CreatedAt,
-            };
+                throw new Exception("Érvénytelen e-mail cím vagy jelszó!");
+            }
+
+            string globalToken = _tokenService.GenerateGlobalToken(user);
+
+            return new AuthResponseDto(
+                globalToken,
+                new UserDto(user.Id, user.Name, user.Email, user.CreatedAt)
+            );
         }
     }
 }
+
