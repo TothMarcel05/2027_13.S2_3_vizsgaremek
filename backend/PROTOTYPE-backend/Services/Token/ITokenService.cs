@@ -9,9 +9,9 @@ namespace PROTOTYPE_backend.Services.Token
         string GenerateGlobalToken(AppUser user);
         string GenerateWorkspaceToken(
             AppUser user,
-            string workspaceId,
-            string workspaceRole,
-            IEnumerable<(string ProjectId, string RoleName)> projectRoles
+            Guid workspaceId,
+            Guid workspaceRole,
+            Dictionary<Guid, List<string>> projectRoles
         );
         string GenerateRefreshToken();
     }

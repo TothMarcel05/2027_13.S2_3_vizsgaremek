@@ -12,11 +12,39 @@ namespace PROTOTYPE_backend.Services.Auth
     {
         private readonly IUnitOfWork _unitOfWork;
         private readonly ITokenService _tokenService;
+        private readonly IHttpContextAccessor _httpContextAccessor;
 
-        public AuthService(IUnitOfWork unitOfWork, ITokenService tokenService) 
+        public AuthService(
+            IUnitOfWork unitOfWork,
+            ITokenService tokenService,
+            IHttpContextAccessor httpContextAccessor
+            ) 
         {
             _unitOfWork = unitOfWork;
             _tokenService = tokenService;
+            _httpContextAccessor = httpContextAccessor;
+        }
+
+        private string GetClientIpAddress() 
+        {
+            var httpContext = _httpContextAccessor.HttpContext;
+
+            if (httpContext == null) return String.Empty;
+
+            var forwardedHeader = httpContext.Request.Headers["X-Forwarded-for"].FirstOrDefault();
+            if (!String.IsNullOrEmpty(forwardedHeader))
+                return forwardedHeader.Split(',')[0].Trim();
+
+            return httpContext.Connection.RemoteIpAddress?.ToString() ?? String.Empty;
+        }
+
+        private string GetClientDeviceInfo() 
+        {
+            var httpContext = _httpContextAccessor.HttpContext;
+            if (httpContext == null) return "Unknown";
+
+            var userAgent = httpContext.Request.Headers["User-Agent"].ToString();
+            return string.IsNullOrEmpty(userAgent) ? "Unknown Device" : userAgent;
         }
 
         public async Task<UserDto> CreateUserAsync(RegisterDto dto) 
@@ -62,9 +90,28 @@ namespace PROTOTYPE_backend.Services.Auth
             }
 
             string globalToken = _tokenService.GenerateGlobalToken(user);
+            string refreshToken = _tokenService.GenerateRefreshToken();
+
+            string clientIpAddress = GetClientIpAddress();
+            string clientDeviceInfo = GetClientDeviceInfo();
+
+            var userSession = new UserSession
+            {
+                UserId = user.Id,
+                RefreshTokenHash = refreshToken,
+                ExpiresAt = DateTime.UtcNow.AddDays(7),
+                IsRevoked = false,
+                CreatedAt = DateTime.UtcNow,
+                IpAddress = clientIpAddress,
+                DeviceInfo = clientDeviceInfo,
+            };
+
+            await _unitOfWork.Repository<UserSession>().AddAsync(userSession);
+            await _unitOfWork.CompleteAsync();
 
             return new AuthResponseDto(
                 globalToken,
+                refreshToken,
                 new UserDto(user.Id, user.Name, user.Email, user.CreatedAt)
             );
         }

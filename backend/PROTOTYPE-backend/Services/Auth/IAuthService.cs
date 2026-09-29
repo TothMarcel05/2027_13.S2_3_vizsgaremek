@@ -7,6 +7,6 @@ namespace PROTOTYPE_backend.Services.Auth
     {
         Task<UserDto> CreateUserAsync(RegisterDto dto);
         Task<AuthResponseDto> LoginAsync(LoginDto dto);
-        Task LogoutAsync(string userId, string jti, DateTime tokenExpiry);
+        //Task LogoutAsync(string userId, string jti, DateTime tokenExpiry);
     }
 }

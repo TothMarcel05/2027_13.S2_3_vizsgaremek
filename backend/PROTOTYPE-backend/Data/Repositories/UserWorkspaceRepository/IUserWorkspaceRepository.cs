@@ -4,6 +4,7 @@ namespace PROTOTYPE_backend.Data.Repositories.UserWorkspaceRepository
 {
     public interface IUserWorkspaceRepository
     {
-        //Task<UserWorkspaceRoleDto?> GetUserRoleInWorkspaceAsync(string userId, string workspaceId);
+        Task<string?> GetUserRoleInWorkspaceAsync(Guid userId, Guid workspaceId);
+        Task<Dictionary<string, List<string>>> GetUserRolesInProjectAsync(Guid userId, Guid projectId);
     }
 }

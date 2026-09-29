@@ -2,5 +2,5 @@
 
 namespace PROTOTYPE_backend.DTOs.Workspace
 {
-    public record SelectWorkspaceDto ([Required(ErrorMessage = "Munkaterület azonosítója kötelező!")] string workspaceId);
+    public record SelectWorkspaceDto ([Required(ErrorMessage = "Munkaterület azonosítója kötelező!")] Guid workspaceId);
 }

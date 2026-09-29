@@ -13,11 +13,31 @@ namespace PROTOTYPE_backend.Data.Repositories.UserWorkspaceRepository
             _context = context;
         }
 
-        /*public async Task<UserWorkspaceRoleDto?> GetUserRoleInWorkspaceAsync(string userId, string workspaceId) 
+        public async Task<string?> GetUserRoleInWorkspaceAsync(Guid userId, Guid workspaceId)
         {
-            return await _context.UserWorkspaces
+            var result = await _context.WorkspaceMembers
                 .AsNoTracking()
-                .Include(uw => WorkspaceMember)
-        }/*/
+                .Where(wm => wm.UserId == userId && wm.WorkspaceId == workspaceId)
+                .SelectMany(wm => wm.Roles)
+                .Select(r => r.Name)
+                .ToListAsync();
+
+            if(!result.Any()) return null;
+
+            return string.Join(',', result);
+        }
+
+        public async Task<Dictionary<string, List<string>>> GetUserRolesInProjectAsync(Guid userId, Guid projectId) 
+        {
+            var res = await _context.UserProjectRole
+                .AsNoTracking()
+                .Where(pm => pm.UserId == userId && pm.ProjectId == projectId)
+                .Select(pm => new
+                {
+                    ProjectId = pm.ProjectId,
+                    RoleName = pm.Roles
+                }
+                ).ToListAsync();
+        }
     }
 }

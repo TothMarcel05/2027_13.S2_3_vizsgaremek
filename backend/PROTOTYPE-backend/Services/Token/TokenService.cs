@@ -4,6 +4,7 @@ using System.IdentityModel.Tokens.Jwt;
 using System.Security.Claims;
 using System.Security.Cryptography;
 using System.Text;
+using System.Text.Json;
 using Microsoft.IdentityModel.Tokens;
 using PROTOTYPE_backend.Models;
 
@@ -33,9 +34,9 @@ namespace PROTOTYPE_backend.Services.Token
 
         public string GenerateWorkspaceToken(
             AppUser user,
-            string workspaceId,
-            string workspaceRole,
-            IEnumerable<(string ProjectId, string RoleName)> projectRoles
+            Guid workspaceId,
+            Guid workspaceRole,
+            Dictionary<Guid, List<string>> projectRoles
             ) 
         {
             var claims = new List<Claim>
@@ -43,22 +44,21 @@ namespace PROTOTYPE_backend.Services.Token
                 new(ClaimTypes.NameIdentifier, user.Id.ToString()),
                 new(ClaimTypes.Email, user.Email),
                 new(ClaimTypes.Role, user.GlobalRole.ToString()),
-                new("active_workspace_id", workspaceId),
-                new("active_workspace_role", workspaceRole),
+                new("active_workspace_id", workspaceId.ToString()),
+                new("active_workspace_role", workspaceRole.ToString()),
                 new(JwtRegisteredClaimNames.Jti, Guid.NewGuid().ToString())
             };
 
-            foreach (var (ProjectId, RoleName) in projectRoles) 
-            {
-                claims.Add(new Claim("project_role", $"{ProjectId}:{RoleName}"));
-            }
+            string projRoles = JsonSerializer.Serialize(projectRoles);
+
+            claims.Add(new Claim("project_role", projRoles));
 
             return BuildJwt(claims);
         }
 
         private string BuildJwt(IEnumerable<Claim> claims) 
         {
-            var jwtSettings = _configuration.GetSection("jwtSettings");
+            var jwtSettings = _configuration.GetSection("JwtSettings");
             var secretKey = jwtSettings["Secret"]
                 ?? throw new InvalidOperationException("A JWT Secret nincsen konfigurálva.");
 
