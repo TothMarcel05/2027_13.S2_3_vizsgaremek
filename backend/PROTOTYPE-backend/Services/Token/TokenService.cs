@@ -36,7 +36,7 @@ namespace PROTOTYPE_backend.Services.Token
             AppUser user,
             Guid workspaceId,
             Guid workspaceRole,
-            Dictionary<Guid, List<string>> projectRoles
+            Dictionary<string, List<string>> projectRoles
             ) 
         {
             var claims = new List<Claim>

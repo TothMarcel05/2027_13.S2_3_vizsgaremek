@@ -1,6 +1,8 @@
 ﻿using Microsoft.EntityFrameworkCore;
+using System.Linq;
 using PROTOTYPE_backend.DTOs.Workspace;
 using PROTOTYPE_backend.Models;
+using PROTOTYPE_backend.Data;
 
 namespace PROTOTYPE_backend.Data.Repositories.UserWorkspaceRepository
 {
@@ -27,17 +29,18 @@ namespace PROTOTYPE_backend.Data.Repositories.UserWorkspaceRepository
             return string.Join(',', result);
         }
 
-        public async Task<Dictionary<string, List<string>>> GetUserRolesInProjectAsync(Guid userId, Guid projectId) 
+        public async Task<Dictionary<string, List<string>>> GetUserRolesInProjectAsync(Guid userId, Guid projectId)
         {
-            var res = await _context.UserProjectRole
+            var roleNames = await _context.ProjectMembers
                 .AsNoTracking()
                 .Where(pm => pm.UserId == userId && pm.ProjectId == projectId)
-                .Select(pm => new
-                {
-                    ProjectId = pm.ProjectId,
-                    RoleName = pm.Roles
-                }
-                ).ToListAsync();
+                .SelectMany(pm => pm.Roles.Select(r => r.Name)) 
+                .ToListAsync();
+
+            return new Dictionary<string, List<string>>
+            {
+                { projectId.ToString(), roleNames }
+            };
         }
     }
 }

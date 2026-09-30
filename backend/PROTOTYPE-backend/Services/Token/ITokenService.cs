@@ -10,8 +10,8 @@ namespace PROTOTYPE_backend.Services.Token
         string GenerateWorkspaceToken(
             AppUser user,
             Guid workspaceId,
-            Guid workspaceRole,
-            Dictionary<Guid, List<string>> projectRoles
+            Dictionary<string, List<string>> workspaceRolesNPermissions,
+            Dictionary<string, List<string>> projectRolesNPermssions
         );
         string GenerateRefreshToken();
     }
