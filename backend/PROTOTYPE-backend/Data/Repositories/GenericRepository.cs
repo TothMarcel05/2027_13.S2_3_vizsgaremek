@@ -1,4 +1,5 @@
-﻿using System;
+﻿// KM
+
 using System.Linq.Expressions;
 using Microsoft.EntityFrameworkCore;
 
@@ -34,7 +35,7 @@ public class GenericRepository<T> : IGenericRepository<T> where T : class
 
         return await query.ToListAsync();
     }
-    public async Task<T?> FirstOrDefault(
+    public async Task<T?> FirstOrDefaultAsync(
         Expression<Func<T, bool>> predicate,
         Func<IQueryable<T>, IQueryable<T>>? include = null
     )

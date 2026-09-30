@@ -123,6 +123,10 @@ public partial class AppDbContext : DbContext
                 .HasColumnType("timestamp")
                 .HasColumnName("created_at");
             entity.Property(e => e.Email).HasColumnName("email");
+            entity.Property(e => e.GlobalRole)
+                .HasDefaultValueSql("'User'")
+                .HasColumnType("enum('User','SystemAdmin')")
+                .HasColumnName("global_role");
             entity.Property(e => e.Name)
                 .HasMaxLength(255)
                 .HasColumnName("name");
