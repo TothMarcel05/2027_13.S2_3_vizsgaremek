@@ -1,9 +1,9 @@
-DROP DATABASE IF EXISTS TDM_KM_ProjectManagerApp;
-CREATE DATABASE TDM_KM_ProjectManagerApp
+DROP DATABASE IF EXISTS TMD_KM_ProjectManagerApp;
+CREATE DATABASE TMD_KM_ProjectManagerApp
 CHARACTER SET utf8mb4
 COLLATE utf8mb4_unicode_ci;
 
-USE TDM_KM_ProjectManagerApp;
+USE TMD_KM_ProjectManagerApp;
 
 SET NAMES utf8mb4;
 SET FOREIGN_KEY_CHECKS = 0;
@@ -12,14 +12,20 @@ SET FOREIGN_KEY_CHECKS = 0;
 -- 1. APP USERS & CORE IAM
 -- ============================================================
 CREATE TABLE app_users (
-    id              CHAR(36)     PRIMARY KEY DEFAULT (UUID()),
-    name            VARCHAR(255) NOT NULL,
-    email           VARCHAR(255) NOT NULL UNIQUE,
-    password_hash   VARCHAR(255) NOT NULL,
-    avatar_url      VARCHAR(500),
-    created_at      TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
-    updated_at      TIMESTAMP    DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
-    global_role     ENUM('User', 'SystemAdmin') NOT NULL DEFAULT 'User'
+    id                          CHAR(36)     PRIMARY KEY DEFAULT (UUID()),
+    name                        VARCHAR(255) NOT NULL,
+    email                       VARCHAR(255) NOT NULL UNIQUE,
+    password_hash               VARCHAR(255) NOT NULL,
+    avatar_url                  VARCHAR(500),
+    created_at                  TIMESTAMP    NOT NULL DEFAULT CURRENT_TIMESTAMP,
+    updated_at                  TIMESTAMP    DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
+    global_role                 ENUM('User', 'SystemAdmin') NOT NULL DEFAULT 'User',
+    
+    -- 2FA Kiegészítések
+    is_2fa_enabled              BOOLEAN      NOT NULL DEFAULT FALSE,
+    two_factor_type             ENUM('None', 'Authenticator', 'Email') NOT NULL DEFAULT 'None',
+    two_factor_secret           VARCHAR(255) NULL,
+    two_factor_recovery_codes   TEXT         NULL
 ) ENGINE=InnoDB;
 
 CREATE TABLE user_workspaces (
@@ -164,10 +170,7 @@ CREATE TABLE project_tasks (
     project_id      CHAR(36)     NOT NULL,
     title           VARCHAR(255) NOT NULL,
     description     TEXT,
-    
-    -- Magyar nyelvű feladatÁllapot ENUM:
     status          ENUM('Tervezés', 'Folyamatban', 'Kész') NOT NULL DEFAULT 'Tervezés',
-    
     priority        ENUM('low', 'medium', 'high', 'urgent') NOT NULL DEFAULT 'medium',
     assignee_id     CHAR(36),
     reporter_id     CHAR(36),
@@ -429,19 +432,20 @@ CREATE TABLE calendar_events (
 CREATE INDEX idx_ce_dates ON calendar_events(start_time, end_time);
 
 -- ============================================================
--- 8. AUTH & JWT SESSION MANAGEMENT
+-- 8. AUTH, 2FA & JWT SESSION MANAGEMENT
 -- ============================================================
 CREATE TABLE user_sessions (
-    id                    CHAR(36)     PRIMARY KEY DEFAULT (UUID()),
-    user_id               CHAR(36)     NOT NULL,
-    refresh_token_hash    VARCHAR(64)  NOT NULL UNIQUE,
-    replaced_by_session_id CHAR(36)    NULL,
-    device_info           VARCHAR(255) NULL,
-    ip_address            VARCHAR(45)  NULL,
-    is_revoked            BOOLEAN      NOT NULL DEFAULT FALSE,
-    expires_at            TIMESTAMP    NOT NULL,
-    created_at            TIMESTAMP    DEFAULT CURRENT_TIMESTAMP,
-    updated_at            TIMESTAMP    DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
+    id                      CHAR(36)     PRIMARY KEY DEFAULT (UUID()),
+    user_id                 CHAR(36)     NOT NULL,
+    refresh_token_hash      VARCHAR(64)  NOT NULL UNIQUE,
+    replaced_by_session_id  CHAR(36)    NULL,
+    device_id               VARCHAR(255) NULL,
+    device_info             VARCHAR(255) NULL,
+    ip_address              VARCHAR(45)  NULL,
+    is_revoked              BOOLEAN      NOT NULL DEFAULT FALSE,
+    expires_at              TIMESTAMP    NOT NULL,
+    created_at              TIMESTAMP    DEFAULT CURRENT_TIMESTAMP,
+    updated_at              TIMESTAMP    DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
 
     CONSTRAINT fk_sessions_user FOREIGN KEY (user_id) REFERENCES app_users(id) ON DELETE CASCADE,
     CONSTRAINT fk_sessions_replaced FOREIGN KEY (replaced_by_session_id) REFERENCES user_sessions(id) ON DELETE SET NULL
@@ -449,6 +453,22 @@ CREATE TABLE user_sessions (
 
 CREATE INDEX idx_sessions_user ON user_sessions(user_id);
 CREATE INDEX idx_sessions_refresh ON user_sessions(refresh_token_hash);
+CREATE INDEX idx_sessions_device ON user_sessions(user_id, device_id);
+
+CREATE TABLE user_2fa_codes (
+    id              CHAR(36)     PRIMARY KEY DEFAULT (UUID()),
+    user_id         CHAR(36)     NOT NULL,
+    code_hash       VARCHAR(255) NOT NULL,
+    failed_attempts TINYINT      UNSIGNED NOT NULL DEFAULT 0,
+    max_attempts    TINYINT      UNSIGNED NOT NULL DEFAULT 5,
+    expires_at      TIMESTAMP    NOT NULL,
+    is_used         BOOLEAN      NOT NULL DEFAULT FALSE,
+    created_at      TIMESTAMP    DEFAULT CURRENT_TIMESTAMP,
+
+    CONSTRAINT fk_u2c_user FOREIGN KEY (user_id) REFERENCES app_users(id) ON DELETE CASCADE
+) ENGINE=InnoDB;
+
+CREATE INDEX idx_u2c_user_active ON user_2fa_codes(user_id, is_used, expires_at);
 
 CREATE TABLE jwt_blacklisted_tokens (
     id              CHAR(36)     PRIMARY KEY DEFAULT (UUID()),
@@ -469,7 +489,6 @@ SET FOREIGN_KEY_CHECKS = 1;
 -- 9. MYSQL EVENT SCHEDULER (AUTOMATIKUS TISZTÍTÁS)
 -- ============================================================
 
--- Az eseményütemező szál bekapcsolása az adatbázis-szerveren
 SET GLOBAL event_scheduler = ON;
 
 DROP EVENT IF EXISTS purge_expired_auth_data;
@@ -481,7 +500,7 @@ ON SCHEDULE EVERY 1 HOUR
 STARTS CURRENT_TIMESTAMP
 DO
 BEGIN
-    -- 1. Lejárt JWT feketelista tokenek azonnali törlése
+    -- 1. Lejárt JWT feketelista tokenek törlése
     DELETE FROM jwt_blacklisted_tokens
     WHERE expires_at < NOW();
 
@@ -489,6 +508,12 @@ BEGIN
     DELETE FROM user_sessions
     WHERE expires_at < DATE_SUB(NOW(), INTERVAL 7 DAY)
       AND is_revoked = TRUE;
+
+    -- 3. Felhasznált, lejárt vagy túllépett próbálkozású 2FA kódok tisztítása
+    DELETE FROM user_2fa_codes
+    WHERE expires_at < NOW() 
+       OR is_used = TRUE 
+       OR failed_attempts >= max_attempts;
 END$$
 
 DELIMITER ;
