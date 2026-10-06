@@ -10,6 +10,11 @@ erDiagram
         string avatar_url
         datetime created_at
         datetime updated_at
+        enum global_role
+        boolean is_2fa_enabled
+        enum two_factor_type
+        string two_factor_secret
+        text two_factor_recovery_codes
     }
 
     user_workspaces {
@@ -237,6 +242,8 @@ erDiagram
         text identity_key
         text signed_prekey
         text prekey_signature
+        datetime created_at
+        datetime updated_at
     }
 
     e2e_room_keys {
@@ -244,6 +251,7 @@ erDiagram
         string user_id PK
         int key_version PK
         text encrypted_key
+        datetime created_at
     }
 
     e2e_chat_messages {
@@ -262,6 +270,7 @@ erDiagram
         string room_id PK
         string user_id PK
         string last_read_message_id FK
+        datetime joined_at
     }
 
     chat_message_attachments {
@@ -298,6 +307,7 @@ erDiagram
         string name
         string color
         enum type
+        datetime created_at
     }
 
     calendar_events {
@@ -306,6 +316,7 @@ erDiagram
         string task_id FK
         string title
         text description
+        string location
         datetime start_time
         datetime end_time
         boolean is_all_day
@@ -325,10 +336,13 @@ erDiagram
         string user_id FK
         string refresh_token_hash UK
         string replaced_by_session_id FK
+        string device_id
         string device_info
         string ip_address
         boolean is_revoked
         datetime expires_at
+        datetime created_at
+        datetime updated_at
     }
 
     jwt_blacklisted_tokens {
@@ -336,8 +350,22 @@ erDiagram
         string jti UK
         string user_id FK
         datetime expires_at
+        datetime created_at
     }
 
     app_users ||--o{ user_sessions : "has_sessions"
     user_sessions ||--o{ user_sessions : "rotated_to"
     app_users ||--o{ jwt_blacklisted_tokens : "blacklisted"
+
+    user_2fa_codes {
+        string id PK
+        string user_id FK
+        string code_hash
+        int failed_attempts
+        int max_attempts
+        datetime expires_at
+        boolean is_used
+        datetime created_at
+    }
+
+    app_users ||--o{ user_2fa_codes : "has_2fa_codes"

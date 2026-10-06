@@ -259,7 +259,8 @@ CREATE TABLE storage_nodes (
     CONSTRAINT fk_sn_workspace FOREIGN KEY (workspace_id) REFERENCES user_workspaces(id) ON DELETE CASCADE,
     CONSTRAINT fk_sn_project FOREIGN KEY (project_id) REFERENCES app_projects(id) ON DELETE CASCADE,
     CONSTRAINT fk_sn_parent FOREIGN KEY (parent_id) REFERENCES storage_nodes(id) ON DELETE CASCADE,
-    CONSTRAINT fk_sn_creator FOREIGN KEY (created_by) REFERENCES app_users(id) ON DELETE SET NULL
+    CONSTRAINT fk_sn_creator FOREIGN KEY (created_by) REFERENCES app_users(id) ON DELETE SET NULL,
+    CONSTRAINT fk_sn_updater FOREIGN KEY (updated_by) REFERENCES app_users(id) ON DELETE SET NULL
 ) ENGINE=InnoDB;
 
 CREATE INDEX idx_sn_parent ON storage_nodes(parent_id);
@@ -323,7 +324,8 @@ CREATE TABLE chat_rooms (
     created_at      TIMESTAMP    DEFAULT CURRENT_TIMESTAMP,
 
     CONSTRAINT fk_cr_workspace FOREIGN KEY (workspace_id) REFERENCES user_workspaces(id) ON DELETE CASCADE,
-    CONSTRAINT fk_cr_project FOREIGN KEY (project_id) REFERENCES app_projects(id) ON DELETE CASCADE
+    CONSTRAINT fk_cr_project FOREIGN KEY (project_id) REFERENCES app_projects(id) ON DELETE CASCADE,
+    CONSTRAINT fk_cr_creator FOREIGN KEY (created_by) REFERENCES app_users(id) ON DELETE SET NULL
 ) ENGINE=InnoDB;
 
 CREATE TABLE e2e_user_keys (

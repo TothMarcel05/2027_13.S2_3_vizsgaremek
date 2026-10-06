@@ -1,0 +1,15 @@
+{
+  "ExpandedNodes": [
+    "",
+    "\\bin",
+    "\\bin\\Debug",
+    "\\Data",
+    "\\Data\\UnitOfWork",
+    "\\DTOs",
+    "\\DTOs\\Auth",
+    "\\Services",
+    "\\Services\\Workspace"
+  ],
+  "SelectedNode": "\\Models",
+  "PreviewInSolutionExplorer": false
+}
