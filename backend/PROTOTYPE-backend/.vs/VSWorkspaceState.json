@@ -7,9 +7,10 @@
     "\\Data\\UnitOfWork",
     "\\DTOs",
     "\\DTOs\\Auth",
+    "\\Models",
     "\\Services",
     "\\Services\\Workspace"
   ],
-  "SelectedNode": "\\Models",
+  "SelectedNode": "\\Models\\SotfDelete.cs",
   "PreviewInSolutionExplorer": false
 }
