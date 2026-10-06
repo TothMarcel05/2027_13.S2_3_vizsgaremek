@@ -35,8 +35,8 @@ namespace PROTOTYPE_backend.Services.Token
         public string GenerateWorkspaceToken(
             AppUser user,
             Guid workspaceId,
-            Guid workspaceRole,
-            Dictionary<string, List<string>> projectRoles
+            Dictionary<string, List<string>> WorkspaceRolesNPermissions,
+            Dictionary<string, List<string>> ProjectRolesNPermissions
             ) 
         {
             var claims = new List<Claim>
@@ -45,13 +45,14 @@ namespace PROTOTYPE_backend.Services.Token
                 new(ClaimTypes.Email, user.Email),
                 new(ClaimTypes.Role, user.GlobalRole.ToString()),
                 new("active_workspace_id", workspaceId.ToString()),
-                new("active_workspace_role", workspaceRole.ToString()),
                 new(JwtRegisteredClaimNames.Jti, Guid.NewGuid().ToString())
             };
 
-            string projRoles = JsonSerializer.Serialize(projectRoles);
+            string wRolesNPermissions = JsonSerializer.Serialize(WorkspaceRolesNPermissions);
+            string pRolesNPermissions = JsonSerializer.Serialize(ProjectRolesNPermissions);
 
-            claims.Add(new Claim("project_role", projRoles));
+            claims.Add(new Claim("active_workspace_roles_permissions", wRolesNPermissions));
+            claims.Add(new Claim("project_roles_permissions", pRolesNPermissions));
 
             return BuildJwt(claims);
         }

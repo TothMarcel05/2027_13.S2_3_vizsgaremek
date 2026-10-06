@@ -3,6 +3,42 @@
   "WorkspaceRootPath": "C:\\Users\\KecskemetiMilan\\Documents\\Github\\TMD_KM_TO-DO_Project\\backend\\",
   "Documents": [
     {
+      "AbsoluteMoniker": "D:0:0:{709D5F3C-AE65-16AB-703F-30F362550762}|PROTOTYPE-backend\\PROTOTYPE-backend.csproj|c:\\users\\kecskemetimilan\\documents\\github\\tmd_km_to-do_project\\backend\\prototype-backend\\services\\calendar\\calendarservice.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{709D5F3C-AE65-16AB-703F-30F362550762}|PROTOTYPE-backend\\PROTOTYPE-backend.csproj|solutionrelative:prototype-backend\\services\\calendar\\calendarservice.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{709D5F3C-AE65-16AB-703F-30F362550762}|PROTOTYPE-backend\\PROTOTYPE-backend.csproj|c:\\users\\kecskemetimilan\\documents\\github\\tmd_km_to-do_project\\backend\\prototype-backend\\services\\auth\\iauthservice.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{709D5F3C-AE65-16AB-703F-30F362550762}|PROTOTYPE-backend\\PROTOTYPE-backend.csproj|solutionrelative:prototype-backend\\services\\auth\\iauthservice.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{709D5F3C-AE65-16AB-703F-30F362550762}|PROTOTYPE-backend\\PROTOTYPE-backend.csproj|c:\\users\\kecskemetimilan\\documents\\github\\tmd_km_to-do_project\\backend\\prototype-backend\\services\\calendar\\icalendarservice.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{709D5F3C-AE65-16AB-703F-30F362550762}|PROTOTYPE-backend\\PROTOTYPE-backend.csproj|solutionrelative:prototype-backend\\services\\calendar\\icalendarservice.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{709D5F3C-AE65-16AB-703F-30F362550762}|PROTOTYPE-backend\\PROTOTYPE-backend.csproj|c:\\users\\kecskemetimilan\\documents\\github\\tmd_km_to-do_project\\backend\\prototype-backend\\dtos\\calendar\\daterequestdto.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{709D5F3C-AE65-16AB-703F-30F362550762}|PROTOTYPE-backend\\PROTOTYPE-backend.csproj|solutionrelative:prototype-backend\\dtos\\calendar\\daterequestdto.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{709D5F3C-AE65-16AB-703F-30F362550762}|PROTOTYPE-backend\\PROTOTYPE-backend.csproj|c:\\users\\kecskemetimilan\\documents\\github\\tmd_km_to-do_project\\backend\\prototype-backend\\dtos\\calendar\\datedto.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{709D5F3C-AE65-16AB-703F-30F362550762}|PROTOTYPE-backend\\PROTOTYPE-backend.csproj|solutionrelative:prototype-backend\\dtos\\calendar\\datedto.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{709D5F3C-AE65-16AB-703F-30F362550762}|PROTOTYPE-backend\\PROTOTYPE-backend.csproj|c:\\users\\kecskemetimilan\\documents\\github\\tmd_km_to-do_project\\backend\\prototype-backend\\services\\auth\\authservice.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{709D5F3C-AE65-16AB-703F-30F362550762}|PROTOTYPE-backend\\PROTOTYPE-backend.csproj|solutionrelative:prototype-backend\\services\\auth\\authservice.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{709D5F3C-AE65-16AB-703F-30F362550762}|PROTOTYPE-backend\\PROTOTYPE-backend.csproj|c:\\users\\kecskemetimilan\\documents\\github\\tmd_km_to-do_project\\backend\\prototype-backend\\controllers\\authcontroller.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{709D5F3C-AE65-16AB-703F-30F362550762}|PROTOTYPE-backend\\PROTOTYPE-backend.csproj|solutionrelative:prototype-backend\\controllers\\authcontroller.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{709D5F3C-AE65-16AB-703F-30F362550762}|PROTOTYPE-backend\\PROTOTYPE-backend.csproj|c:\\users\\kecskemetimilan\\documents\\github\\tmd_km_to-do_project\\backend\\prototype-backend\\data\\repositories\\userworkspacerepository\\iuserworkspacerepository.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{709D5F3C-AE65-16AB-703F-30F362550762}|PROTOTYPE-backend\\PROTOTYPE-backend.csproj|solutionrelative:prototype-backend\\data\\repositories\\userworkspacerepository\\iuserworkspacerepository.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{709D5F3C-AE65-16AB-703F-30F362550762}|PROTOTYPE-backend\\PROTOTYPE-backend.csproj|c:\\users\\kecskemetimilan\\documents\\github\\tmd_km_to-do_project\\backend\\prototype-backend\\services\\token\\tokenservice.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{709D5F3C-AE65-16AB-703F-30F362550762}|PROTOTYPE-backend\\PROTOTYPE-backend.csproj|solutionrelative:prototype-backend\\services\\token\\tokenservice.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
       "AbsoluteMoniker": "D:0:0:{709D5F3C-AE65-16AB-703F-30F362550762}|PROTOTYPE-backend\\PROTOTYPE-backend.csproj|c:\\users\\kecskemetimilan\\documents\\github\\tmd_km_to-do_project\\backend\\prototype-backend\\services\\token\\itokenservice.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
       "RelativeMoniker": "D:0:0:{709D5F3C-AE65-16AB-703F-30F362550762}|PROTOTYPE-backend\\PROTOTYPE-backend.csproj|solutionrelative:prototype-backend\\services\\token\\itokenservice.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
     },
@@ -11,24 +47,8 @@
       "RelativeMoniker": "D:0:0:{709D5F3C-AE65-16AB-703F-30F362550762}|PROTOTYPE-backend\\PROTOTYPE-backend.csproj|solutionrelative:prototype-backend\\services\\workspace\\iworkspaceservice.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
     },
     {
-      "AbsoluteMoniker": "D:0:0:{709D5F3C-AE65-16AB-703F-30F362550762}|PROTOTYPE-backend\\PROTOTYPE-backend.csproj|c:\\users\\kecskemetimilan\\documents\\github\\tmd_km_to-do_project\\backend\\prototype-backend\\services\\token\\tokenservice.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
-      "RelativeMoniker": "D:0:0:{709D5F3C-AE65-16AB-703F-30F362550762}|PROTOTYPE-backend\\PROTOTYPE-backend.csproj|solutionrelative:prototype-backend\\services\\token\\tokenservice.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
-    },
-    {
-      "AbsoluteMoniker": "D:0:0:{709D5F3C-AE65-16AB-703F-30F362550762}|PROTOTYPE-backend\\PROTOTYPE-backend.csproj|c:\\users\\kecskemetimilan\\documents\\github\\tmd_km_to-do_project\\backend\\prototype-backend\\services\\workspace\\workspaceservice.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
-      "RelativeMoniker": "D:0:0:{709D5F3C-AE65-16AB-703F-30F362550762}|PROTOTYPE-backend\\PROTOTYPE-backend.csproj|solutionrelative:prototype-backend\\services\\workspace\\workspaceservice.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
-    },
-    {
       "AbsoluteMoniker": "D:0:0:{709D5F3C-AE65-16AB-703F-30F362550762}|PROTOTYPE-backend\\PROTOTYPE-backend.csproj|c:\\users\\kecskemetimilan\\documents\\github\\tmd_km_to-do_project\\backend\\prototype-backend\\models\\role.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
       "RelativeMoniker": "D:0:0:{709D5F3C-AE65-16AB-703F-30F362550762}|PROTOTYPE-backend\\PROTOTYPE-backend.csproj|solutionrelative:prototype-backend\\models\\role.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
-    },
-    {
-      "AbsoluteMoniker": "D:0:0:{709D5F3C-AE65-16AB-703F-30F362550762}|PROTOTYPE-backend\\PROTOTYPE-backend.csproj|c:\\users\\kecskemetimilan\\documents\\github\\tmd_km_to-do_project\\backend\\prototype-backend\\services\\auth\\authservice.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
-      "RelativeMoniker": "D:0:0:{709D5F3C-AE65-16AB-703F-30F362550762}|PROTOTYPE-backend\\PROTOTYPE-backend.csproj|solutionrelative:prototype-backend\\services\\auth\\authservice.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
-    },
-    {
-      "AbsoluteMoniker": "D:0:0:{709D5F3C-AE65-16AB-703F-30F362550762}|PROTOTYPE-backend\\PROTOTYPE-backend.csproj|c:\\users\\kecskemetimilan\\documents\\github\\tmd_km_to-do_project\\backend\\prototype-backend\\data\\repositories\\userworkspacerepository\\iuserworkspacerepository.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
-      "RelativeMoniker": "D:0:0:{709D5F3C-AE65-16AB-703F-30F362550762}|PROTOTYPE-backend\\PROTOTYPE-backend.csproj|solutionrelative:prototype-backend\\data\\repositories\\userworkspacerepository\\iuserworkspacerepository.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
     },
     {
       "AbsoluteMoniker": "D:0:0:{709D5F3C-AE65-16AB-703F-30F362550762}|PROTOTYPE-backend\\PROTOTYPE-backend.csproj|c:\\users\\kecskemetimilan\\documents\\github\\tmd_km_to-do_project\\backend\\prototype-backend\\dtos\\workspace\\selectworkspaceresponsedto.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
@@ -37,10 +57,6 @@
     {
       "AbsoluteMoniker": "D:0:0:{709D5F3C-AE65-16AB-703F-30F362550762}|PROTOTYPE-backend\\PROTOTYPE-backend.csproj|c:\\users\\kecskemetimilan\\documents\\github\\tmd_km_to-do_project\\backend\\prototype-backend\\data\\repositories\\userworkspacerepository\\userworkspacerepository.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
       "RelativeMoniker": "D:0:0:{709D5F3C-AE65-16AB-703F-30F362550762}|PROTOTYPE-backend\\PROTOTYPE-backend.csproj|solutionrelative:prototype-backend\\data\\repositories\\userworkspacerepository\\userworkspacerepository.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
-    },
-    {
-      "AbsoluteMoniker": "D:0:0:{709D5F3C-AE65-16AB-703F-30F362550762}|PROTOTYPE-backend\\PROTOTYPE-backend.csproj|c:\\users\\kecskemetimilan\\documents\\github\\tmd_km_to-do_project\\backend\\prototype-backend\\services\\auth\\iauthservice.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
-      "RelativeMoniker": "D:0:0:{709D5F3C-AE65-16AB-703F-30F362550762}|PROTOTYPE-backend\\PROTOTYPE-backend.csproj|solutionrelative:prototype-backend\\services\\auth\\iauthservice.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
     },
     {
       "AbsoluteMoniker": "D:0:0:{709D5F3C-AE65-16AB-703F-30F362550762}|PROTOTYPE-backend\\PROTOTYPE-backend.csproj|c:\\users\\kecskemetimilan\\documents\\github\\tmd_km_to-do_project\\backend\\prototype-backend\\program.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
@@ -54,50 +70,76 @@
       "DocumentGroups": [
         {
           "DockedWidth": 200,
-          "SelectedChildIndex": 5,
+          "SelectedChildIndex": 0,
           "Children": [
             {
               "$type": "Document",
-              "DocumentIndex": 4,
-              "Title": "Role.cs",
-              "DocumentMoniker": "C:\\Users\\KecskemetiMilan\\Documents\\Github\\TMD_KM_TO-DO_Project\\backend\\PROTOTYPE-backend\\Models\\Role.cs",
-              "RelativeDocumentMoniker": "PROTOTYPE-backend\\Models\\Role.cs",
-              "ToolTip": "C:\\Users\\KecskemetiMilan\\Documents\\Github\\TMD_KM_TO-DO_Project\\backend\\PROTOTYPE-backend\\Models\\Role.cs",
-              "RelativeToolTip": "PROTOTYPE-backend\\Models\\Role.cs",
-              "ViewState": "AgIAAAUAAAAAAAAAAAAxwAAAAAAAAAAAAAAAAA==",
+              "DocumentIndex": 0,
+              "Title": "CalendarService.cs",
+              "DocumentMoniker": "C:\\Users\\KecskemetiMilan\\Documents\\Github\\TMD_KM_TO-DO_Project\\backend\\PROTOTYPE-backend\\Services\\Calendar\\CalendarService.cs",
+              "RelativeDocumentMoniker": "PROTOTYPE-backend\\Services\\Calendar\\CalendarService.cs",
+              "ToolTip": "C:\\Users\\KecskemetiMilan\\Documents\\Github\\TMD_KM_TO-DO_Project\\backend\\PROTOTYPE-backend\\Services\\Calendar\\CalendarService.cs",
+              "RelativeToolTip": "PROTOTYPE-backend\\Services\\Calendar\\CalendarService.cs",
+              "ViewState": "AgIAAAMAAAAAAAAAAAAAABEAAAAJAAAAAAAAAA==",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
-              "WhenOpened": "2026-09-30T08:27:36.863Z",
+              "WhenOpened": "2026-10-06T07:36:34.989Z",
               "EditorCaption": ""
             },
             {
               "$type": "Document",
               "DocumentIndex": 3,
-              "Title": "WorkspaceService.cs",
-              "DocumentMoniker": "C:\\Users\\KecskemetiMilan\\Documents\\Github\\TMD_KM_TO-DO_Project\\backend\\PROTOTYPE-backend\\Services\\Workspace\\WorkspaceService.cs",
-              "RelativeDocumentMoniker": "PROTOTYPE-backend\\Services\\Workspace\\WorkspaceService.cs",
-              "ToolTip": "C:\\Users\\KecskemetiMilan\\Documents\\Github\\TMD_KM_TO-DO_Project\\backend\\PROTOTYPE-backend\\Services\\Workspace\\WorkspaceService.cs",
-              "RelativeToolTip": "PROTOTYPE-backend\\Services\\Workspace\\WorkspaceService.cs",
-              "ViewState": "AgIAABkAAAAAAAAAAAAkwB4AAAAAAAAAAAAAAA==",
+              "Title": "DateRequestDto.cs",
+              "DocumentMoniker": "C:\\Users\\KecskemetiMilan\\Documents\\Github\\TMD_KM_TO-DO_Project\\backend\\PROTOTYPE-backend\\DTOs\\Calendar\\DateRequestDto.cs",
+              "RelativeDocumentMoniker": "PROTOTYPE-backend\\DTOs\\Calendar\\DateRequestDto.cs",
+              "ToolTip": "C:\\Users\\KecskemetiMilan\\Documents\\Github\\TMD_KM_TO-DO_Project\\backend\\PROTOTYPE-backend\\DTOs\\Calendar\\DateRequestDto.cs",
+              "RelativeToolTip": "PROTOTYPE-backend\\DTOs\\Calendar\\DateRequestDto.cs",
+              "ViewState": "AgIAAAAAAAAAAAAAAAAAAAYAAAAWAAAAAAAAAA==",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
-              "WhenOpened": "2026-09-30T08:03:50.936Z",
+              "WhenOpened": "2026-10-06T07:23:14.49Z",
               "EditorCaption": ""
             },
             {
               "$type": "Document",
-              "DocumentIndex": 1,
-              "Title": "IWorkspaceService.cs",
-              "DocumentMoniker": "C:\\Users\\KecskemetiMilan\\Documents\\Github\\TMD_KM_TO-DO_Project\\backend\\PROTOTYPE-backend\\Services\\Workspace\\IWorkspaceService.cs",
-              "RelativeDocumentMoniker": "PROTOTYPE-backend\\Services\\Workspace\\IWorkspaceService.cs",
-              "ToolTip": "C:\\Users\\KecskemetiMilan\\Documents\\Github\\TMD_KM_TO-DO_Project\\backend\\PROTOTYPE-backend\\Services\\Workspace\\IWorkspaceService.cs",
-              "RelativeToolTip": "PROTOTYPE-backend\\Services\\Workspace\\IWorkspaceService.cs",
-              "ViewState": "AgIAAAAAAAAAAAAAAAAAAAYAAAAIAAAAAAAAAA==",
+              "DocumentIndex": 4,
+              "Title": "DateDto.cs",
+              "DocumentMoniker": "C:\\Users\\KecskemetiMilan\\Documents\\Github\\TMD_KM_TO-DO_Project\\backend\\PROTOTYPE-backend\\DTOs\\Calendar\\DateDto.cs",
+              "RelativeDocumentMoniker": "PROTOTYPE-backend\\DTOs\\Calendar\\DateDto.cs",
+              "ToolTip": "C:\\Users\\KecskemetiMilan\\Documents\\Github\\TMD_KM_TO-DO_Project\\backend\\PROTOTYPE-backend\\DTOs\\Calendar\\DateDto.cs",
+              "RelativeToolTip": "PROTOTYPE-backend\\DTOs\\Calendar\\DateDto.cs",
+              "ViewState": "AgIAAAAAAAAAAAAAAAAAAAcAAAAeAAAAAAAAAA==",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
-              "WhenOpened": "2026-09-30T08:03:05.188Z",
+              "WhenOpened": "2026-10-06T07:21:26.836Z",
               "EditorCaption": ""
             },
             {
               "$type": "Document",
-              "DocumentIndex": 7,
+              "DocumentIndex": 2,
+              "Title": "ICalendarService.cs",
+              "DocumentMoniker": "C:\\Users\\KecskemetiMilan\\Documents\\Github\\TMD_KM_TO-DO_Project\\backend\\PROTOTYPE-backend\\Services\\Calendar\\ICalendarService.cs",
+              "RelativeDocumentMoniker": "PROTOTYPE-backend\\Services\\Calendar\\ICalendarService.cs",
+              "ToolTip": "C:\\Users\\KecskemetiMilan\\Documents\\Github\\TMD_KM_TO-DO_Project\\backend\\PROTOTYPE-backend\\Services\\Calendar\\ICalendarService.cs",
+              "RelativeToolTip": "PROTOTYPE-backend\\Services\\Calendar\\ICalendarService.cs",
+              "ViewState": "AgIAAAAAAAAAAAAAAAAAAAMAAAABAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2026-10-06T07:20:24.795Z",
+              "EditorCaption": ""
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 6,
+              "Title": "AuthController.cs",
+              "DocumentMoniker": "C:\\Users\\KecskemetiMilan\\Documents\\Github\\TMD_KM_TO-DO_Project\\backend\\PROTOTYPE-backend\\Controllers\\AuthController.cs",
+              "RelativeDocumentMoniker": "PROTOTYPE-backend\\Controllers\\AuthController.cs",
+              "ToolTip": "C:\\Users\\KecskemetiMilan\\Documents\\Github\\TMD_KM_TO-DO_Project\\backend\\PROTOTYPE-backend\\Controllers\\AuthController.cs",
+              "RelativeToolTip": "PROTOTYPE-backend\\Controllers\\AuthController.cs",
+              "ViewState": "AgIAAAYAAAAAAAAAAAAAABsAAAAAAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2026-10-06T07:16:49.287Z",
+              "EditorCaption": ""
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 12,
               "Title": "SelectWorkspaceResponseDto.cs",
               "DocumentMoniker": "C:\\Users\\KecskemetiMilan\\Documents\\Github\\TMD_KM_TO-DO_Project\\backend\\PROTOTYPE-backend\\DTOs\\Workspace\\SelectWorkspaceResponseDto.cs",
               "RelativeDocumentMoniker": "PROTOTYPE-backend\\DTOs\\Workspace\\SelectWorkspaceResponseDto.cs",
@@ -105,38 +147,87 @@
               "RelativeToolTip": "PROTOTYPE-backend\\DTOs\\Workspace\\SelectWorkspaceResponseDto.cs",
               "ViewState": "AgIAAAAAAAAAAAAAAAAAAAMAAAAbAAAAAAAAAA==",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
-              "WhenOpened": "2026-09-30T08:00:41.23Z",
-              "EditorCaption": ""
+              "WhenOpened": "2026-09-30T08:00:41.23Z"
             },
             {
               "$type": "Document",
-              "DocumentIndex": 2,
+              "DocumentIndex": 8,
               "Title": "TokenService.cs",
               "DocumentMoniker": "C:\\Users\\KecskemetiMilan\\Documents\\Github\\TMD_KM_TO-DO_Project\\backend\\PROTOTYPE-backend\\Services\\Token\\TokenService.cs",
               "RelativeDocumentMoniker": "PROTOTYPE-backend\\Services\\Token\\TokenService.cs",
               "ToolTip": "C:\\Users\\KecskemetiMilan\\Documents\\Github\\TMD_KM_TO-DO_Project\\backend\\PROTOTYPE-backend\\Services\\Token\\TokenService.cs",
               "RelativeToolTip": "PROTOTYPE-backend\\Services\\Token\\TokenService.cs",
-              "ViewState": "AgIAAB4AAAAAAAAAAAAowCMAAAAZAAAAAAAAAA==",
+              "ViewState": "AgIAACEAAAAAAAAAAAAowC4AAABDAAAAAAAAAA==",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
               "WhenOpened": "2026-09-29T07:26:51.27Z",
               "EditorCaption": ""
             },
             {
               "$type": "Document",
-              "DocumentIndex": 0,
+              "DocumentIndex": 9,
               "Title": "ITokenService.cs",
               "DocumentMoniker": "C:\\Users\\KecskemetiMilan\\Documents\\Github\\TMD_KM_TO-DO_Project\\backend\\PROTOTYPE-backend\\Services\\Token\\ITokenService.cs",
               "RelativeDocumentMoniker": "PROTOTYPE-backend\\Services\\Token\\ITokenService.cs",
               "ToolTip": "C:\\Users\\KecskemetiMilan\\Documents\\Github\\TMD_KM_TO-DO_Project\\backend\\PROTOTYPE-backend\\Services\\Token\\ITokenService.cs",
               "RelativeToolTip": "PROTOTYPE-backend\\Services\\Token\\ITokenService.cs",
-              "ViewState": "AgIAAAAAAAAAAAAAAAAAAA8AAAAmAAAAAAAAAA==",
+              "ViewState": "AgIAAAAAAAAAAAAAAAAAAAsAAAAdAAAAAAAAAA==",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
               "WhenOpened": "2026-09-29T07:25:16.361Z",
               "EditorCaption": ""
             },
             {
               "$type": "Document",
-              "DocumentIndex": 6,
+              "DocumentIndex": 1,
+              "Title": "IAuthService.cs",
+              "DocumentMoniker": "C:\\Users\\KecskemetiMilan\\Documents\\Github\\TMD_KM_TO-DO_Project\\backend\\PROTOTYPE-backend\\Services\\Auth\\IAuthService.cs",
+              "RelativeDocumentMoniker": "PROTOTYPE-backend\\Services\\Auth\\IAuthService.cs",
+              "ToolTip": "C:\\Users\\KecskemetiMilan\\Documents\\Github\\TMD_KM_TO-DO_Project\\backend\\PROTOTYPE-backend\\Services\\Auth\\IAuthService.cs",
+              "RelativeToolTip": "PROTOTYPE-backend\\Services\\Auth\\IAuthService.cs",
+              "ViewState": "AgIAAAAAAAAAAAAAAAAAAAsAAAABAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2026-09-29T06:04:49.299Z",
+              "EditorCaption": ""
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 10,
+              "Title": "IWorkspaceService.cs",
+              "DocumentMoniker": "C:\\Users\\KecskemetiMilan\\Documents\\Github\\TMD_KM_TO-DO_Project\\backend\\PROTOTYPE-backend\\Services\\Workspace\\IWorkspaceService.cs",
+              "RelativeDocumentMoniker": "PROTOTYPE-backend\\Services\\Workspace\\IWorkspaceService.cs",
+              "ToolTip": "C:\\Users\\KecskemetiMilan\\Documents\\Github\\TMD_KM_TO-DO_Project\\backend\\PROTOTYPE-backend\\Services\\Workspace\\IWorkspaceService.cs",
+              "RelativeToolTip": "PROTOTYPE-backend\\Services\\Workspace\\IWorkspaceService.cs",
+              "ViewState": "AgIAAAAAAAAAAAAAAAAAAAYAAAAIAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2026-09-30T08:03:05.188Z"
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 5,
+              "Title": "AuthService.cs",
+              "DocumentMoniker": "C:\\Users\\KecskemetiMilan\\Documents\\Github\\TMD_KM_TO-DO_Project\\backend\\PROTOTYPE-backend\\Services\\Auth\\AuthService.cs",
+              "RelativeDocumentMoniker": "PROTOTYPE-backend\\Services\\Auth\\AuthService.cs",
+              "ToolTip": "C:\\Users\\KecskemetiMilan\\Documents\\Github\\TMD_KM_TO-DO_Project\\backend\\PROTOTYPE-backend\\Services\\Auth\\AuthService.cs",
+              "RelativeToolTip": "PROTOTYPE-backend\\Services\\Auth\\AuthService.cs",
+              "ViewState": "AgIAAC8AAAAAAAAAAAAwwDkAAAAqAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2026-09-29T05:53:05.008Z",
+              "EditorCaption": ""
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 11,
+              "Title": "Role.cs",
+              "DocumentMoniker": "C:\\Users\\KecskemetiMilan\\Documents\\Github\\TMD_KM_TO-DO_Project\\backend\\PROTOTYPE-backend\\Models\\Role.cs",
+              "RelativeDocumentMoniker": "PROTOTYPE-backend\\Models\\Role.cs",
+              "ToolTip": "C:\\Users\\KecskemetiMilan\\Documents\\Github\\TMD_KM_TO-DO_Project\\backend\\PROTOTYPE-backend\\Models\\Role.cs",
+              "RelativeToolTip": "PROTOTYPE-backend\\Models\\Role.cs",
+              "ViewState": "AgIAAAUAAAAAAAAAAAAxwAAAAAAAAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2026-09-30T08:27:36.863Z"
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 7,
               "Title": "IUserWorkspaceRepository.cs",
               "DocumentMoniker": "C:\\Users\\KecskemetiMilan\\Documents\\Github\\TMD_KM_TO-DO_Project\\backend\\PROTOTYPE-backend\\Data\\Repositories\\UserWorkspaceRepository\\IUserWorkspaceRepository.cs",
               "RelativeDocumentMoniker": "PROTOTYPE-backend\\Data\\Repositories\\UserWorkspaceRepository\\IUserWorkspaceRepository.cs",
@@ -149,20 +240,7 @@
             },
             {
               "$type": "Document",
-              "DocumentIndex": 5,
-              "Title": "AuthService.cs",
-              "DocumentMoniker": "C:\\Users\\KecskemetiMilan\\Documents\\Github\\TMD_KM_TO-DO_Project\\backend\\PROTOTYPE-backend\\Services\\Auth\\AuthService.cs",
-              "RelativeDocumentMoniker": "PROTOTYPE-backend\\Services\\Auth\\AuthService.cs",
-              "ToolTip": "C:\\Users\\KecskemetiMilan\\Documents\\Github\\TMD_KM_TO-DO_Project\\backend\\PROTOTYPE-backend\\Services\\Auth\\AuthService.cs",
-              "RelativeToolTip": "PROTOTYPE-backend\\Services\\Auth\\AuthService.cs",
-              "ViewState": "AgIAAAAAAAAAAAAAAAAAAGUAAAA3AAAAAAAAAA==",
-              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
-              "WhenOpened": "2026-09-29T05:53:05.008Z",
-              "EditorCaption": ""
-            },
-            {
-              "$type": "Document",
-              "DocumentIndex": 8,
+              "DocumentIndex": 13,
               "Title": "UserWorkspaceRepository.cs",
               "DocumentMoniker": "C:\\Users\\KecskemetiMilan\\Documents\\Github\\TMD_KM_TO-DO_Project\\backend\\PROTOTYPE-backend\\Data\\Repositories\\UserWorkspaceRepository\\UserWorkspaceRepository.cs",
               "RelativeDocumentMoniker": "PROTOTYPE-backend\\Data\\Repositories\\UserWorkspaceRepository\\UserWorkspaceRepository.cs",
@@ -170,24 +248,11 @@
               "RelativeToolTip": "PROTOTYPE-backend\\Data\\Repositories\\UserWorkspaceRepository\\UserWorkspaceRepository.cs",
               "ViewState": "AgIAABAAAAAAAAAAAAAgwBsAAAAAAAAAAAAAAA==",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
-              "WhenOpened": "2026-09-29T06:27:31.85Z",
-              "EditorCaption": ""
+              "WhenOpened": "2026-09-29T06:27:31.85Z"
             },
             {
               "$type": "Document",
-              "DocumentIndex": 9,
-              "Title": "IAuthService.cs",
-              "DocumentMoniker": "C:\\Users\\KecskemetiMilan\\Documents\\Github\\TMD_KM_TO-DO_Project\\backend\\PROTOTYPE-backend\\Services\\Auth\\IAuthService.cs",
-              "RelativeDocumentMoniker": "PROTOTYPE-backend\\Services\\Auth\\IAuthService.cs",
-              "ToolTip": "C:\\Users\\KecskemetiMilan\\Documents\\Github\\TMD_KM_TO-DO_Project\\backend\\PROTOTYPE-backend\\Services\\Auth\\IAuthService.cs",
-              "RelativeToolTip": "PROTOTYPE-backend\\Services\\Auth\\IAuthService.cs",
-              "ViewState": "AgIAAAAAAAAAAAAAAAAAAAYAAAAFAAAAAAAAAA==",
-              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
-              "WhenOpened": "2026-09-29T06:04:49.299Z"
-            },
-            {
-              "$type": "Document",
-              "DocumentIndex": 10,
+              "DocumentIndex": 14,
               "Title": "Program.cs",
               "DocumentMoniker": "C:\\Users\\KecskemetiMilan\\Documents\\Github\\TMD_KM_TO-DO_Project\\backend\\PROTOTYPE-backend\\Program.cs",
               "RelativeDocumentMoniker": "PROTOTYPE-backend\\Program.cs",

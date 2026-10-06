@@ -25,5 +25,13 @@ namespace PROTOTYPE_backend.Controllers
 
             return CreatedAtAction(nameof(Register), new { id = result.Id }, result);
         }
+
+        [HttpPost("login")]
+        public async Task<IActionResult> Login([FromBody] LoginDto dto) 
+        {
+            var result = await _authService.LoginAsync(dto);
+
+            return CreatedAtAction(nameof(Login), new { id = result.User.Id }, result);
+        }
     }
 }
