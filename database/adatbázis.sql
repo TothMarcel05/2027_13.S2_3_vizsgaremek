@@ -69,7 +69,7 @@ CREATE TABLE role_permission (
     PRIMARY KEY (role_id, permission_id),
 
     CONSTRAINT fk_rp_role
-        FOREIGN KEY (role_id) REFERENCES role(id)
+        FOREIGN KEY (role_id) REFERENCES app_role(id)
         ON DELETE CASCADE,
     CONSTRAINT fk_rp_permission
         FOREIGN KEY (permission_id) REFERENCES permission(id)
@@ -94,7 +94,7 @@ CREATE TABLE workspace_member (
         FOREIGN KEY (user_id) REFERENCES app_user(id)
         ON DELETE CASCADE,
     CONSTRAINT fk_wm_role
-        FOREIGN KEY (role_id) REFERENCES role(id)
+        FOREIGN KEY (role_id) REFERENCES app_role(id)
         ON DELETE RESTRICT
 ) ENGINE=InnoDB COMMENT='Workspace tagságok és szerepkörük';
 
@@ -137,7 +137,7 @@ CREATE TABLE project_member (
         FOREIGN KEY (workspace_id, user_id) REFERENCES workspace_member(workspace_id, user_id)
         ON DELETE CASCADE,
     CONSTRAINT fk_pm_role
-        FOREIGN KEY (role_id) REFERENCES role(id)
+        FOREIGN KEY (role_id) REFERENCES app_role(id)
         ON DELETE RESTRICT
 ) ENGINE=InnoDB COMMENT='Közvetlen projekt tagságok: egy sor = egy felhasználó egy szerepköre';
 
@@ -215,7 +215,7 @@ CREATE TABLE project_team_member (
         FOREIGN KEY (team_id, user_id) REFERENCES team_member(team_id, user_id)
         ON DELETE CASCADE,
     CONSTRAINT fk_ptm_role
-        FOREIGN KEY (role_id) REFERENCES role(id)
+        FOREIGN KEY (role_id) REFERENCES app_role(id)
         ON DELETE RESTRICT,
     CONSTRAINT fk_ptm_assigned_by
         FOREIGN KEY (assigned_by) REFERENCES app_user(id)
@@ -238,13 +238,13 @@ CREATE TABLE app_invitation (
     created_at      TIMESTAMP    DEFAULT CURRENT_TIMESTAMP COMMENT 'Kiküldés ideje',
     responded_at    TIMESTAMP    NULL COMMENT 'A válaszadás (elfogadás/elutasítás) ideje',
 
-    CONSTRAINT fk_inv_role FOREIGN KEY (role_id) REFERENCES role(id) ON DELETE SET NULL,
+    CONSTRAINT fk_inv_role FOREIGN KEY (role_id) REFERENCES app_role(id) ON DELETE SET NULL,
     CONSTRAINT fk_inv_invited_user FOREIGN KEY (invited_user_id) REFERENCES app_user(id) ON DELETE CASCADE,
     CONSTRAINT fk_inv_invited_by FOREIGN KEY (invited_by) REFERENCES app_user(id) ON DELETE CASCADE
 ) ENGINE=InnoDB COMMENT='Meghívások kezelése státuszkövetéssel (pending, accepted, refused, expired)';
 
-CREATE INDEX idx_inv_email_status ON invitation(invited_email, status);
-CREATE INDEX idx_inv_user_status ON invitation(invited_user_id, status);
+CREATE INDEX idx_inv_email_status ON app_invitation(invited_email, status);
+CREATE INDEX idx_inv_user_status ON app_invitation(invited_user_id, status);
 
 -- ============================================================
 -- 4. PROJECT TASK & SUB-MODULES
@@ -264,7 +264,7 @@ CREATE TABLE project_task (
     updated_at          TIMESTAMP    DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP COMMENT 'Utolsó módosítás ideje',
 
     CONSTRAINT fk_task_project FOREIGN KEY (project_id) REFERENCES project(id) ON DELETE CASCADE,
-    CONSTRAINT fk_task_assignee_role FOREIGN KEY (assignee_role_id) REFERENCES role(id) ON DELETE SET NULL,
+    CONSTRAINT fk_task_assignee_role FOREIGN KEY (assignee_role_id) REFERENCES app_role(id) ON DELETE SET NULL,
     CONSTRAINT fk_task_assignee_user FOREIGN KEY (assignee_user_id) REFERENCES app_user(id) ON DELETE SET NULL,
     CONSTRAINT fk_task_creator FOREIGN KEY (created_by) REFERENCES app_user(id) ON DELETE SET NULL
 ) ENGINE=InnoDB COMMENT='Projekt taskok (szerepkörre kiírva és/vagy személyre lefoglalva)';
@@ -361,7 +361,7 @@ CREATE TABLE storage_node_role (
     PRIMARY KEY (node_id, role_id),
 
     CONSTRAINT fk_snr_node FOREIGN KEY (node_id) REFERENCES storage_node(id) ON DELETE CASCADE,
-    CONSTRAINT fk_snr_role FOREIGN KEY (role_id) REFERENCES role(id) ON DELETE CASCADE
+    CONSTRAINT fk_snr_role FOREIGN KEY (role_id) REFERENCES app_role(id) ON DELETE CASCADE
 ) ENGINE=InnoDB COMMENT='Fájlok és mappák közvetlen szerepkör-alapú védelme (ha a tábla üres az adott node-ra, minden projekttag eléri)';
 
 CREATE TABLE storage_node_label (
