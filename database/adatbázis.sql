@@ -254,7 +254,7 @@ CREATE TABLE project_task (
     project_id          CHAR(36)     NOT NULL COMMENT 'Projekt, amelyhez a task tartozik',
     title               VARCHAR(255) NOT NULL COMMENT 'Task címe',
     description         TEXT COMMENT 'Task leírása',
-    status              ENUM('Tervezés', 'Folyamatban', 'Kész') NOT NULL DEFAULT 'Tervezés' COMMENT 'Task állapota',
+    status              ENUM('planning', 'on_going', 'ready') NOT NULL DEFAULT 'Tervezés' COMMENT 'Task állapota',
     priority            ENUM('low', 'medium', 'high', 'urgent') NOT NULL DEFAULT 'medium' COMMENT 'Prioritás',
     assignee_role_id    CHAR(36)     NULL COMMENT 'Szerepkör, amire a task ki van hirdetve (akiknek ez a szerepkörük, az megkapja/látja)',
     assignee_user_id    CHAR(36)     NULL COMMENT 'Konkrét felhasználó, aki lefoglalta/megkapta a feladatot (NULL = szabadon felvehető)',
