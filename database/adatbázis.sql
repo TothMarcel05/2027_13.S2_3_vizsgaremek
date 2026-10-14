@@ -121,29 +121,6 @@ CREATE TABLE project (
 
 CREATE INDEX idx_project_workspace ON project(workspace_id);
 
-CREATE TABLE project_member (
-    project_id   CHAR(36)  NOT NULL COMMENT 'Projekt',
-    workspace_id CHAR(36)  NOT NULL COMMENT 'A projekt workspace-e',
-    user_id      CHAR(36)  NOT NULL COMMENT 'Tag',
-    role_id      CHAR(36)  NOT NULL COMMENT 'A tag egyik szerepköre a projektben (több szerepkör esetén több sor)',
-    assigned_at  TIMESTAMP DEFAULT CURRENT_TIMESTAMP COMMENT 'A szerepkör megadásának ideje',
-
-    PRIMARY KEY (project_id, user_id, role_id),
-
-    CONSTRAINT fk_pm_project
-        FOREIGN KEY (project_id) REFERENCES project(id)
-        ON DELETE CASCADE,
-    CONSTRAINT fk_pm_workspace_member
-        FOREIGN KEY (workspace_id, user_id) REFERENCES workspace_member(workspace_id, user_id)
-        ON DELETE CASCADE,
-    CONSTRAINT fk_pm_role
-        FOREIGN KEY (role_id) REFERENCES app_role(id)
-        ON DELETE RESTRICT
-) ENGINE=InnoDB COMMENT='Közvetlen projekt tagságok: egy sor = egy felhasználó egy szerepköre';
-
-CREATE INDEX idx_pm_user ON project_member(user_id);
-CREATE INDEX idx_pm_role ON project_member(project_id, role_id);
-
 CREATE TABLE team (
     id              CHAR(36)     PRIMARY KEY DEFAULT (UUID()) COMMENT 'Csapat azonosító (UUID)',
     owner_id        CHAR(36)     NOT NULL COMMENT 'Csapat tulajdonosa (ő kezeli a tagságot)',
@@ -158,71 +135,36 @@ CREATE TABLE team (
         ON DELETE RESTRICT
 ) ENGINE=InnoDB COMMENT='Workspace-ektől független csapattag-csoportok';
 
-CREATE TABLE team_member (
-    team_id      CHAR(36)  NOT NULL COMMENT 'Csapat',
-    user_id      CHAR(36)  NOT NULL COMMENT 'Tag',
-    joined_at    TIMESTAMP DEFAULT CURRENT_TIMESTAMP COMMENT 'Csatlakozás ideje',
+CREATE TABLE project_member (
+    project_id   CHAR(36)  NOT NULL COMMENT 'Projekt azonosító',
+    workspace_id CHAR(36)  NOT NULL COMMENT 'A projekt workspace-e',
+    user_id      CHAR(36)  NOT NULL COMMENT 'Felhasználó azonosító',
+    role_id      CHAR(36)  NOT NULL COMMENT 'A tag szerepköre a projektben (pl. Developer, Viewer)',
+    team_id      CHAR(36)  NULL     COMMENT 'Opcionális: melyik csapathoz tartozik ezen a projekten belül (NULL = egyéni projekttag)',
+    assigned_at  TIMESTAMP DEFAULT CURRENT_TIMESTAMP COMMENT 'Hozzárendelés ideje',
 
-    PRIMARY KEY (team_id, user_id),
+    PRIMARY KEY (project_id, user_id, role_id),
 
-    CONSTRAINT fk_tm_team
-        FOREIGN KEY (team_id) REFERENCES team(id)
-        ON DELETE CASCADE,
-    CONSTRAINT fk_tm_user
-        FOREIGN KEY (user_id) REFERENCES app_user(id)
-        ON DELETE CASCADE
-) ENGINE=InnoDB COMMENT='Csapattagságok';
-
-CREATE INDEX idx_tm_user ON team_member(user_id);
-
-CREATE TABLE project_team (
-    project_id    CHAR(36)  NOT NULL COMMENT 'Projekt, amelyre a csapat fel van kérve',
-    team_id       CHAR(36)  NOT NULL COMMENT 'Csapat',
-    status        ENUM('pending', 'active') NOT NULL DEFAULT 'pending' COMMENT 'pending = jóváhagyásra vár, active = elfogadva',
-    added_by      CHAR(36)  NULL COMMENT 'Aki a csapatot a projekthez rendelte',
-    added_at      TIMESTAMP DEFAULT CURRENT_TIMESTAMP COMMENT 'Hozzárendelés ideje',
-    responded_at  TIMESTAMP NULL COMMENT 'A csapat tulajdonosának elfogadási ideje',
-
-    PRIMARY KEY (project_id, team_id),
-
-    CONSTRAINT fk_pt_project
+    CONSTRAINT fk_pm_project
         FOREIGN KEY (project_id) REFERENCES project(id)
         ON DELETE CASCADE,
-    CONSTRAINT fk_pt_team
-        FOREIGN KEY (team_id) REFERENCES team(id)
+    CONSTRAINT fk_pm_workspace
+        FOREIGN KEY (workspace_id) REFERENCES workspace(id)
         ON DELETE CASCADE,
-    CONSTRAINT fk_pt_added_by
-        FOREIGN KEY (added_by) REFERENCES app_user(id)
-        ON DELETE SET NULL
-) ENGINE=InnoDB COMMENT='Csapatok projektre rendelése (egyben kezelhető entitásként)';
-
-CREATE INDEX idx_pt_team ON project_team(team_id);
-
-CREATE TABLE project_team_member (
-    project_id    CHAR(36)  NOT NULL COMMENT 'Projekt',
-    team_id       CHAR(36)  NOT NULL COMMENT 'Csapat',
-    user_id       CHAR(36)  NOT NULL COMMENT 'Csapattag',
-    role_id       CHAR(36)  NOT NULL COMMENT 'A csapattag szerepköre a projekten',
-    assigned_by   CHAR(36)  NULL COMMENT 'Aki a szerepkört megadta',
-    assigned_at   TIMESTAMP DEFAULT CURRENT_TIMESTAMP COMMENT 'Szerepkör megadásának ideje',
-
-    PRIMARY KEY (project_id, team_id, user_id, role_id),
-
-    CONSTRAINT fk_ptm_project_team
-        FOREIGN KEY (project_id, team_id) REFERENCES project_team(project_id, team_id)
+    CONSTRAINT fk_pm_user
+        FOREIGN KEY (user_id) REFERENCES app_user(id)
         ON DELETE CASCADE,
-    CONSTRAINT fk_ptm_team_member
-        FOREIGN KEY (team_id, user_id) REFERENCES team_member(team_id, user_id)
-        ON DELETE CASCADE,
-    CONSTRAINT fk_ptm_role
+    CONSTRAINT fk_pm_role
         FOREIGN KEY (role_id) REFERENCES app_role(id)
         ON DELETE RESTRICT,
-    CONSTRAINT fk_ptm_assigned_by
-        FOREIGN KEY (assigned_by) REFERENCES app_user(id)
+    CONSTRAINT fk_pm_team
+        FOREIGN KEY (team_id) REFERENCES team(id)
         ON DELETE SET NULL
-) ENGINE=InnoDB COMMENT='Csapattagok egyéni szerepkörei a projekten belül';
+) ENGINE=InnoDB COMMENT='Projekttagságok és csapatszintű hozzárendelések';
 
-CREATE INDEX idx_ptm_user ON project_team_member(user_id, project_id);
+CREATE INDEX idx_pm_user ON project_member(user_id);
+CREATE INDEX idx_pm_team ON project_member(project_id, team_id);
+CREATE INDEX idx_pm_role ON project_member(project_id, role_id);
 
 CREATE TABLE app_invitation (
     id              CHAR(36)     PRIMARY KEY DEFAULT (UUID()) COMMENT 'Meghívó azonosító (UUID)',
