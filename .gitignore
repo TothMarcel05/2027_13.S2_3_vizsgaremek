@@ -145,3 +145,21 @@ vite.config.ts.timestamp-*
 # CSharp
 .appsettings.json
 appsettings.json
+
+# Visual Studio / C# specifikus ignorálások
+*.user
+*.userosscache
+*.sln.docstates
+*.suo
+
+# Build és átmeneti mappák
+[Bb]in/
+[Oo]bj/
+.vs/
+[Tt]est[Rr]esult*/
+
+.tmp
+.Backup.tmp
+
+# Beállítások
+appsettings.Development.json

@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Linq.Expressions;
 using Microsoft.EntityFrameworkCore;
 using PROTOTYPE_backend.Models;
 
@@ -1079,8 +1080,6 @@ public partial class AppDbContext : DbContext
                     });
         });
 
-        OnModelCreatingPartial(modelBuilder);
+  
     }
-
-    partial void OnModelCreatingPartial(ModelBuilder modelBuilder);
 }

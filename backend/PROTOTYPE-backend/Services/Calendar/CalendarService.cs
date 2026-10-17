@@ -20,7 +20,23 @@ namespace PROTOTYPE_backend.Services.Calendar
 
             if (user == null) throw new Exception("");
 
-            var newDate = new 
+            var newDate = new CalendarDate
+            {
+                Id = Guid.NewGuid(),
+                Title = dto.Title,
+                Date = dto.Date,
+                UserId = userId
+            };
+
+            await _unitOfWork.Repository<CalendarDate>().AddAsync(newDate);
+            await _unitOfWork.SaveAsync();
+
+            return new DateDto
+            {
+                Id = newDate.Id,
+                Title = newDate.Title,
+                Date = newDate.Date
+            };
         }
     }
 }

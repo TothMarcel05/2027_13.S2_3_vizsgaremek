@@ -1,16 +1,16 @@
 {
   "ExpandedNodes": [
     "",
-    "\\bin",
-    "\\bin\\Debug",
-    "\\Data",
     "\\Data\\UnitOfWork",
-    "\\DTOs",
-    "\\DTOs\\Auth",
-    "\\Models",
-    "\\Services",
+    "\\DTOs\\Workspace",
+    "\\Services\\Admin",
+    "\\Services\\Auth",
+    "\\Services\\Calendar",
+    "\\Services\\SoftDelete",
+    "\\Services\\Storage",
+    "\\Services\\Token",
     "\\Services\\Workspace"
   ],
-  "SelectedNode": "\\Models\\SotfDelete.cs",
+  "SelectedNode": "\\appsettings.Development.json",
   "PreviewInSolutionExplorer": false
 }
