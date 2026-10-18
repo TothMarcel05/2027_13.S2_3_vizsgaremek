@@ -1,28 +1,31 @@
-﻿namespace PROTOTYPE_backend.DTOs.Storage;
+﻿using System;
+using System.Collections.Generic;
+using System.ComponentModel.DataAnnotations;
+using Microsoft.AspNetCore.Http;
 
-public record FileUploadDto(
-    string Name,
-    string MimeType,
-    long SizeBytes,
-    Guid? WorkspaceId,
-    Guid? ProjectId,
-    List<string>? Tags
-);
+namespace PROTOTYPE_backend.DTOs.Storage
+{
+    public record UploadFileDto(
+        [Required] Guid WorkspaceId,
+        Guid? ProjectId,
+        Guid? ParentId,
+        [Required] IFormFile File,
+        List<string>? Labels,
+        [Required] string UserId
+    );
 
-public record StorageNodeDto(
-    Guid Id,
-    string Name,
-    string Type,
-    string? MimeType,
-    long SizeBytes,
-    List<string> Tags,
-    DateTime CreatedAt
-);
+    public record ShareNodeDto(
+        [Required] Guid NodeId,
+        [Required] Guid RoleId
+    );
 
-public record SetTagRbacDto(
-    Guid TagId,
-    Guid RoleId,
-    bool CanRead,
-    bool CanWrite,
-    bool CanDelete
-);
+    public record StorageNodeResponseDto(
+        Guid Id,
+        string Name,
+        byte Type,
+        string? MimeType,
+        ulong SizeBytes,
+        DateTime CreatedAt,
+        List<string> Labels
+    );
+}

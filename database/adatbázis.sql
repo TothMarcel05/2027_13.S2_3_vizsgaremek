@@ -9,7 +9,7 @@ SET NAMES utf8mb4 COLLATE utf8mb4_unicode_ci;
 SET FOREIGN_KEY_CHECKS = 0;
 
 -- ============================================================
--- 0. ENUM / LOOKUP SZÓTÁR TÁBLA (TANÁRI KÉRÉSRE)
+-- 0. ENUM / LOOKUP SZÓTÁR TÁBLA
 -- ============================================================
 CREATE TABLE enum_lookup (
     id          INT AUTO_INCREMENT PRIMARY KEY COMMENT 'Elsődleges kulcs',
@@ -185,7 +185,6 @@ CREATE TABLE project (
 
 CREATE INDEX idx_project_workspace ON project(workspace_id);
 
--- TANÁRI KÉRÉS: team tábla helyett is_workspace_member BOOLEAN mező a project_member-ben!
 CREATE TABLE project_member (
     project_id          CHAR(36)  NOT NULL COMMENT 'Projekt azonosító',
     workspace_id        CHAR(36)  NOT NULL COMMENT 'A projekt workspace-e',

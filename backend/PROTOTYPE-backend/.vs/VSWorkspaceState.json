@@ -1,16 +1,16 @@
 {
   "ExpandedNodes": [
     "",
-    "\\Data\\UnitOfWork",
-    "\\DTOs\\Workspace",
+    "\\Controllers",
+    "\\DTOs",
+    "\\DTOs\\Admin",
+    "\\DTOs\\SoftDelete",
+    "\\DTOs\\Storage",
+    "\\Models",
+    "\\Services",
     "\\Services\\Admin",
-    "\\Services\\Auth",
-    "\\Services\\Calendar",
-    "\\Services\\SoftDelete",
-    "\\Services\\Storage",
-    "\\Services\\Token",
     "\\Services\\Workspace"
   ],
-  "SelectedNode": "\\appsettings.Development.json",
+  "SelectedNode": "\\Controllers\\AdminController.cs",
   "PreviewInSolutionExplorer": false
 }

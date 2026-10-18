@@ -1,125 +1,143 @@
-﻿using Microsoft.EntityFrameworkCore;
+﻿using System;
+using System.Collections.Generic;
+using System.IO;
+using System.Linq;
+using System.Threading.Tasks;
+using Microsoft.EntityFrameworkCore;
 using PROTOTYPE_backend.Data;
 using PROTOTYPE_backend.DTOs.Storage;
 using PROTOTYPE_backend.Models;
-using PROTOTYPE_backend.Services.SoftDelete;
 
-namespace PROTOTYPE_backend.Services.Storage;
-
-public interface IStorageService
+namespace PROTOTYPE_backend.Services.Storage
 {
-    Task<StorageNodeDto> UploadFileAsync(FileUploadDto dto, Guid userId);
-    Task<List<StorageNodeDto>> GetFilesByTagAsync(string tagName, Guid? workspaceId);
-    Task<bool> SetTagRbacAsync(SetTagRbacDto dto);
-    Task<bool> DeleteFileAsync(Guid fileId, Guid userId);
-}
-
-public class StorageService : IStorageService
-{
-    private readonly AppDbContext _context;
-    private readonly ISoftDeleteService _softDeleteService;
-
-    public StorageService(AppDbContext context, ISoftDeleteService softDeleteService)
+    public class StorageService : IStorageService
     {
-        _context = context;
-        _softDeleteService = softDeleteService;
-    }
+        private readonly AppDbContext _context;
 
-    public async Task<StorageNodeDto> UploadFileAsync(FileUploadDto dto, Guid userId)
-    {
-        var node = new StorageNode
+        public StorageService(AppDbContext context)
         {
-            Id = Guid.NewGuid(),
-            Name = dto.Name,
-            Type = "file",
-            MimeType = dto.MimeType,
-            SizeBytes = dto.SizeBytes,
-            WorkspaceId = dto.WorkspaceId,
-            ProjectId = dto.ProjectId,
-            CreatedBy = userId,
-            CreatedAt = DateTime.UtcNow
-        };
+            _context = context;
+        }
 
-        if (dto.Tags != null && dto.Tags.Any())
+        // 1. Fájl feltöltése és címkék hozzárendelése
+        public async Task<StorageNodeResponseDto> UploadFileAsync(UploadFileDto dto)
         {
-            foreach (var tagName in dto.Tags)
+            // Fizikai mentés szimulálása / útvonal képzése
+            var uploadsFolder = Path.Combine(Directory.GetCurrentDirectory(), "Uploads");
+            if (!Directory.Exists(uploadsFolder)) Directory.CreateDirectory(uploadsFolder);
+
+            var uniqueFileName = $"{Guid.NewGuid()}_{dto.File.FileName}";
+            var filePath = Path.Combine(uploadsFolder, uniqueFileName);
+
+            using (var stream = new FileStream(filePath, FileMode.Create))
             {
-                var tag = await _context.StorageTags
-                    .FirstOrDefaultAsync(t => t.Name.ToLower() == tagName.ToLower() && t.WorkspaceId == dto.WorkspaceId)
-                    ?? new StorageTag
-                    {
-                        Id = Guid.NewGuid(),
-                        Name = tagName,
-                        WorkspaceId = dto.WorkspaceId
-                    };
-
-                node.Tags.Add(tag);
+                await dto.File.CopyToAsync(stream);
             }
-        }
 
-        _context.StorageNodes.Add(node);
-        await _context.SaveChangesAsync();
-
-        var tagNames = node.Tags.Select(t => t.Name).ToList();
-        return new StorageNodeDto(node.Id, node.Name, node.Type, node.MimeType, node.SizeBytes ?? 0, tagNames, node.CreatedAt);
-    }
-
-    public async Task<List<StorageNodeDto>> GetFilesByTagAsync(string tagName, Guid? workspaceId)
-    {
-        var query = _context.StorageNodes
-            .AsNoTracking()
-            .Include(n => n.Tags)
-            .Where(n => n.Tags.Any(t => t.Name.ToLower() == tagName.ToLower()));
-
-        if (workspaceId.HasValue)
-        {
-            query = query.Where(n => n.WorkspaceId == workspaceId.Value);
-        }
-
-        var files = await query.ToListAsync();
-
-        return files.Select(f => new StorageNodeDto(
-            f.Id,
-            f.Name,
-            f.Type,
-            f.MimeType,
-            f.SizeBytes ?? 0,
-            f.Tags.Select(t => t.Name).ToList(),
-            f.CreatedAt
-        )).ToList();
-    }
-
-    public async Task<bool> SetTagRbacAsync(SetTagRbacDto dto)
-    {
-        var existingRbac = await _context.StorageTagRbacs
-            .FirstOrDefaultAsync(r => r.TagId == dto.TagId && r.RoleId == dto.RoleId);
-
-        if (existingRbac != null)
-        {
-            existingRbac.CanRead = dto.CanRead;
-            existingRbac.CanWrite = dto.CanWrite;
-            existingRbac.CanDelete = dto.CanDelete;
-        }
-        else
-        {
-            var newRbac = new StorageTagRbac
+            var node = new StorageNode
             {
-                TagId = dto.TagId,
-                RoleId = dto.RoleId,
-                CanRead = dto.CanRead,
-                CanWrite = dto.CanWrite,
-                CanDelete = dto.CanDelete
+                WorkspaceId = dto.WorkspaceId,
+                ProjectId = dto.ProjectId,
+                ParentId = dto.ParentId,
+                Name = dto.File.FileName,
+                Type = 2, // 2 = File
+                MimeType = dto.File.ContentType,
+                StoragePath = filePath,
+                SizeBytes = (ulong)dto.File.Length,
+                CreatedBy = dto.UserId,
+                CreatedAt = DateTime.UtcNow
             };
-            _context.StorageTagRbacs.Add(newRbac);
+
+            _context.StorageNodes.Add(node);
+
+            // Címkék (Tags) elmentése
+            if (dto.Labels != null && dto.Labels.Any())
+            {
+                foreach (var labelText in dto.Labels)
+                {
+                    _context.StorageNodeLabels.Add(new StorageNodeLabel
+                    {
+                        NodeId = node.Id,
+                        Label = labelText
+                    });
+                }
+            }
+
+            await _context.SaveChangesAsync();
+
+            return new StorageNodeResponseDto(
+                node.Id,
+                node.Name,
+                node.Type,
+                node.MimeType,
+                node.SizeBytes,
+                node.CreatedAt,
+                dto.Labels ?? new List<string>()
+            );
         }
 
-        await _context.SaveChangesAsync();
-        return true;
-    }
+        public async Task<IEnumerable<StorageNodeResponseDto>> GetNodesByWorkspaceAsync(Guid workspaceId, string? tagFilter)
+        {
+            var query = _context.StorageNodes
+                .Where(n => n.WorkspaceId == workspaceId && n.DeletedAt == null)
+                .Include(n => n.StorageNodeLabels)
+                .AsQueryable();
 
-    public async Task<bool> DeleteFileAsync(Guid fileId, Guid userId)
-    {
-        // Az 1. lépésben elkészített Soft-Delete szolgáltatást hívja meg
-        return await _softDeleteService.SoftDeleteAsync<StorageNode>(fileId, userId);
+            if (!string.IsNullOrWhiteSpace(tagFilter))
+            {
+                query = query.Where(n => n.StorageNodeLabels.Any(l => l.Label.ToLower() == tagFilter.ToLower()));
+            }
+
+            var nodes = await query.ToListAsync();
+
+            return nodes.Select(n => new StorageNodeResponseDto(
+                n.Id,
+                n.Name,
+                n.Type,
+                n.MimeType,
+                n.SizeBytes,
+                n.CreatedAt,
+                n.StorageNodeLabels.Select(l => l.Label).ToList()
+            ));
+        }
+        public async Task<bool> ShareNodeWithRoleAsync(Guid nodeId, Guid roleId)
+        {
+            var node = await _context.StorageNodes
+                .Include(n => n.Roles)
+                .FirstOrDefaultAsync(n => n.Id == nodeId && n.DeletedAt == null);
+
+            var role = await _context.Roles.FindAsync(roleId);
+            if (node == null || role == null) return false;
+
+            if (!node.Roles.Any(r => r.Id == roleId))
+            {
+                node.Roles.Add(role);
+                await _context.SaveChangesAsync();
+            }
+
+            return true;
+        }
+
+        public async Task<bool> SoftDeleteNodeAsync(Guid nodeId, string userId)
+        {
+            var node = await _context.StorageNodes.FindAsync(nodeId);
+            if (node == null || node.DeletedAt != null) return false;
+
+            node.DeletedAt = DateTime.UtcNow;
+            node.UpdatedBy = userId;
+
+            await _context.SaveChangesAsync();
+            return true;
+        }
+
+        public async Task<bool> RestoreNodeAsync(Guid nodeId)
+        {
+            var node = await _context.StorageNodes.FindAsync(nodeId);
+            if (node == null || node.DeletedAt == null) return false;
+
+            node.DeletedAt = null;
+            await _context.SaveChangesAsync();
+            return true;
+        }
     }
 }

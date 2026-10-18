@@ -1,52 +1,61 @@
-﻿using Microsoft.AspNetCore.Authorization;
+﻿using System;
+using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
 using PROTOTYPE_backend.DTOs.Storage;
 using PROTOTYPE_backend.Services.Storage;
-using System.Security.Claims;
 
-namespace PROTOTYPE_backend.Controllers;
-
-[ApiController]
-[Route("api/[controller]")]
-//[Authorize]
-public class StorageController : ControllerBase
+namespace PROTOTYPE_backend.Controllers
 {
-    private readonly IStorageService _storageService;
-
-    public StorageController(IStorageService storageService)
+    [ApiController]
+    [Route("api/[controller]")]
+    public class StorageController : ControllerBase
     {
-        _storageService = storageService;
-    }
+        private readonly IStorageService _storageService;
 
-    private Guid GetUserId() => Guid.Parse("00000000-0000-0000-0000-000000000001");
-    //Guid.Parse(User.FindFirstValue(ClaimTypes.NameIdentifier)!);
+        public StorageController(IStorageService storageService)
+        {
+            _storageService = storageService;
+        }
 
-    [HttpPost("upload")]
-    public async Task<IActionResult> Upload([FromBody] FileUploadDto dto)
-    {
-        var result = await _storageService.UploadFileAsync(dto, GetUserId());
-        return Ok(result);
-    }
+        [HttpPost("upload")]
+        public async Task<IActionResult> UploadFile([FromForm] UploadFileDto dto)
+        {
+            if (dto.File == null || dto.File.Length == 0)
+                return BadRequest("Érvénytelen vagy üres fájl.");
 
-    [HttpGet("search")]
-    public async Task<IActionResult> SearchByTag([FromQuery] string tag, [FromQuery] Guid? workspaceId)
-    {
-        var result = await _storageService.GetFilesByTagAsync(tag, workspaceId);
-        return Ok(result);
-    }
+            var result = await _storageService.UploadFileAsync(dto);
+            return Ok(result);
+        }
 
-    [HttpPost("rbac")]
-    public async Task<IActionResult> SetTagRbac([FromBody] SetTagRbacDto dto)
-    {
-        await _storageService.SetTagRbacAsync(dto);
-        return Ok(new { message = "Címke RBAC jogosultságok sikeresen beállítva." });
-    }
+        [HttpGet("workspace/{workspaceId}")]
+        public async Task<IActionResult> GetFiles(Guid workspaceId, [FromQuery] string? tag)
+        {
+            var files = await _storageService.GetNodesByWorkspaceAsync(workspaceId, tag);
+            return Ok(files);
+        }
 
-    [HttpDelete("{id:guid}")]
-    public async Task<IActionResult> DeleteFile(Guid id)
-    {
-        var success = await _storageService.DeleteFileAsync(id, GetUserId());
-        if (!success) return NotFound("A fájl nem található vagy már törölve lett.");
-        return Ok(new { message = "Fájl áthelyezve a lomtárba (Soft-Delete)." });
+        [HttpPost("share")]
+        public async Task<IActionResult> ShareNode([FromBody] ShareNodeDto dto)
+        {
+            var success = await _storageService.ShareNodeWithRoleAsync(dto.NodeId, dto.RoleId);
+            if (!success) return NotFound("A fájl vagy szerepkör nem található.");
+            return Ok(new { message = "Sikeres megosztás." });
+        }
+
+        [HttpDelete("{nodeId}")]
+        public async Task<IActionResult> SoftDeleteNode(Guid nodeId, [FromQuery] string userId)
+        {
+            var success = await _storageService.SoftDeleteNodeAsync(nodeId, userId);
+            if (!success) return NotFound("A fájl nem található vagy már törölve van.");
+            return Ok(new { message = "Fájl sikeresen Soft-Delete állapotba került." });
+        }
+
+        [HttpPost("{nodeId}/restore")]
+        public async Task<IActionResult> RestoreNode(Guid nodeId)
+        {
+            var success = await _storageService.RestoreNodeAsync(nodeId);
+            if (!success) return NotFound("A fájl nem található vagy nincs törölve.");
+            return Ok(new { message = "Fájl sikeresen visszaállítva." });
+        }
     }
 }

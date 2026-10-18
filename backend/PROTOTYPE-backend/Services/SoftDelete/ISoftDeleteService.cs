@@ -1,8 +1,15 @@
-﻿namespace PROTOTYPE_backend.Services.SoftDelete;
+﻿using System;
+using System.Collections.Generic;
+using System.Threading.Tasks;
+using PROTOTYPE_backend.DTOs.SoftDelete;
 
-public interface ISoftDeleteService
+namespace PROTOTYPE_backend.Services.SoftDelete
 {
-    Task<bool> SoftDeleteAsync<T>(Guid id, Guid userId) where T : class;
-    Task<bool> RestoreAsync<T>(Guid id) where T : class;
-    Task HardDeleteExpiredAsync<T>(TimeSpan retentionPeriod) where T : class;
+    public interface ISoftDeleteService
+    {
+        Task<bool> SoftDeleteAsync(SoftDeleteRequestDto dto);
+        Task<bool> RestoreAsync(RestoreRequestDto dto);
+        Task<IEnumerable<DeletedItemDto>> GetDeletedItemsAsync(string userId);
+        Task<int> HardDeleteExpiredItemsAsync(); 
+    }
 }

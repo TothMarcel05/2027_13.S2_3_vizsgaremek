@@ -1,27 +1,28 @@
-﻿namespace PROTOTYPE_backend.DTOs.Admin;
+﻿using System;
+using System.ComponentModel.DataAnnotations;
 
-public record UserAdminDto(
-    Guid Id,
-    string Name,
-    string Email,
-    string GlobalRole,
-    DateTime CreatedAt
-);
+namespace PROTOTYPE_backend.DTOs.Admin
+{
+    public record UserAdminViewDto(
+        string Id,
+        string Name,
+        string Email,
+        byte GlobalRole,
+        bool Is2FaEnabled,
+        DateTime CreatedAt,
+        DateTime? DeletedAt
+    );
 
-public record UpdateGlobalRoleDto(
-    Guid UserId,
-    string NewGlobalRole
-);
+    public record UpdateUserRoleDto(
+        [Required] string UserId,
+        [Required] byte NewGlobalRole 
+    );
 
-public record DeletedItemDto(
-    Guid Id,
-    string TitleOrName,
-    string EntityType,
-    DateTime? DeletedAt,
-    Guid? DeletedBy
-);
-
-public record RestoreItemDto(
-    Guid Id,
-    string EntityType
-);
+    public record SystemOverviewStatsDto(
+        int TotalUsers,
+        int ActiveUsers,
+        int TotalWorkspaces,
+        int TotalProjects,
+        int TotalTasks
+    );
+}

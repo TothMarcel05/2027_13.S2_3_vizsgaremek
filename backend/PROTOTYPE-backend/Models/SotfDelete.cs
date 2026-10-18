@@ -1,6 +1,14 @@
-﻿public interface ISoftDeletable { DateTime? DeletedAt { get; set; } Guid? DeletedBy { get; set; } }
+﻿using System;
 
-public partial class AppProject : ISoftDeletable { public DateTime? DeletedAt { get; set; } public Guid? DeletedBy { get; set; } }
-public partial class ProjectTask : ISoftDeletable { public DateTime? DeletedAt { get; set; } public Guid? DeletedBy { get; set; } }
-public partial class StorageNode : ISoftDeletable { public DateTime? DeletedAt { get; set; } public Guid? DeletedBy { get; set; } }
-public partial class UserWorkspace : ISoftDeletable { public DateTime? DeletedAt { get; set; } public Guid? DeletedBy { get; set; } }
+namespace PROTOTYPE_backend.Models
+{
+    public class SoftDeleteLog
+    {
+        public Guid Id { get; set; } = Guid.NewGuid();
+        public string EntityName { get; set; } = string.Empty;
+        public string EntityId { get; set; } = string.Empty;
+        public string DeletedByUserId { get; set; } = string.Empty;
+        public DateTime DeletedAt { get; set; } = DateTime.UtcNow;
+        public DateTime RetentionExpiresAt { get; set; } = DateTime.UtcNow.AddDays(30);
+    }
+}

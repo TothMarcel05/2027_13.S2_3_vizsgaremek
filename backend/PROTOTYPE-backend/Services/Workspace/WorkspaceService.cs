@@ -1,147 +1,92 @@
-﻿using Microsoft.EntityFrameworkCore;
+﻿using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Threading.Tasks;
+using Microsoft.EntityFrameworkCore;
 using PROTOTYPE_backend.Data;
-using PROTOTYPE_backend.Data.Repositories;
-using PROTOTYPE_backend.DTOs.Workspace;
 using PROTOTYPE_backend.Models;
-using PROTOTYPE_backend.Services.Token;
 
 namespace PROTOTYPE_backend.Services.Workspace
 {
     public class WorkspaceService : IWorkspaceService
     {
-        private readonly IUnitOfWork _unitOfWork;
-        private readonly ITokenService _tokenService;
         private readonly AppDbContext _context;
 
-        public WorkspaceService(IUnitOfWork unitOfWork, ITokenService tokenService, AppDbContext context)
+        public WorkspaceService(AppDbContext context)
         {
-            _tokenService = tokenService;
-            _unitOfWork = unitOfWork;
             _context = context;
         }
 
-        public async Task<SelectWorkspaceResponseDto> SelectWorkspaceAsync(Guid userId, Guid workspaceId)
+        public async Task<IEnumerable<UserWorkspace>> GetUserWorkspacesAsync(string userId)
         {
-            var user = await _unitOfWork.Repository<AppUser>().FirstOrDefaultAsync(u => u.Id == userId);
-            var workspace = await _unitOfWork.Repository<UserWorkspace>().FirstOrDefaultAsync(u => u.Id == workspaceId);
-
-            if (user == null) throw new Exception("A felhasználó nem található.");
-            if (workspace == null) throw new Exception("A munkaterület nem található.");
-
-            var rolesAndPermissions = await _context.Roles
-                .AsNoTracking()
-                .Where(r => r.WorkspaceId == workspaceId)
-                .Select(r => new
-                {
-                    RoleName = r.Name,
-                    Permissions = r.Permissions.Select(p => p.Code).ToList(),
-                })
+            return await _context.UserWorkspaces
+                .Where(w => w.OwnerId == userId || w.WorkspaceMembers.Any(m => m.UserId == userId))
+                .Include(w => w.AppProjects)
                 .ToListAsync();
-
-            var roles = rolesAndPermissions.Select(rap => rap.RoleName).ToList();
-            var permissions = rolesAndPermissions.SelectMany(r => r.Permissions).Distinct().ToList();
-
-            var newAccessToken = _tokenService.GenerateWorkspaceToken(userId, workspaceId, roles, permissions);
-
-            return new SelectWorkspaceResponseDto(newAccessToken, workspaceId, workspace.Name);
         }
 
-
-        public async Task<WorkspaceDto?> CreateWorkspaceAsync(CreateWorkspaceDto dto, Guid ownerId)
+        public async Task<UserWorkspace> CreateWorkspaceAsync(string userId, string name)
         {
             var workspace = new UserWorkspace
             {
-                Id = Guid.NewGuid(),
-                Name = dto.Name,
-                OwnerId = ownerId,
+                Name = name,
+                OwnerId = userId,
                 CreatedAt = DateTime.UtcNow
             };
 
             _context.UserWorkspaces.Add(workspace);
             await _context.SaveChangesAsync();
-
-            return new WorkspaceDto(workspace.Id, workspace.Name, new List<ProjectDto>());
+            return workspace;
         }
 
-        public async Task<ProjectDto?> CreateProjectAsync(CreateProjectDto dto, Guid userId)
+        public async Task<AppProject> CreateProjectAsync(Guid workspaceId, string name, string? description, DateTime? deadline, string? ownerId)
         {
             var project = new AppProject
             {
-                Id = Guid.NewGuid(),
-                WorkspaceId = dto.WorkspaceId,
-                Name = dto.Name,
-                Description = dto.Description,
-                Deadline = dto.Deadline,
-                Status = "planned",
+                WorkspaceId = workspaceId,
+                Name = name,
+                Description = description,
+                Deadline = deadline,
+                OwnerId = ownerId,
+                Status = 1, // Planned
                 CreatedAt = DateTime.UtcNow
             };
 
             _context.AppProjects.Add(project);
             await _context.SaveChangesAsync();
-
-            return new ProjectDto(project.Id, project.Name, project.Description, project.Status, project.Deadline, new List<TaskDto>());
+            return project;
         }
 
-        public async Task<TaskDto?> CreateTaskAsync(CreateTaskDto dto, Guid reporterId)
+        public async Task<ProjectTask> CreateTaskAsync(Guid projectId, string title, string? description, byte priority, DateTime? dueDate, string? assigneeId, string? reporterId)
         {
             var task = new ProjectTask
             {
-                Id = Guid.NewGuid(),
-                ProjectId = dto.ProjectId,
+                ProjectId = projectId,
+                Title = title,
+                Description = description,
+                Priority = priority == 0 ? (byte)2 : priority, 
+                Status = 1,
+                DueDate = dueDate,
+                AssigneeUserId = assigneeId,
                 ReporterId = reporterId,
-                Title = dto.Title,
-                Description = dto.Description,
-                Priority = string.IsNullOrEmpty(dto.Priority) ? "medium" : dto.Priority,
-                Status = "Tervezés",
-                DueDate = dto.DueDate,
-                AssigneeId = dto.AssigneeId,
                 CreatedAt = DateTime.UtcNow
             };
 
             _context.ProjectTasks.Add(task);
             await _context.SaveChangesAsync();
-
-            return new TaskDto(task.Id, task.Title, task.Description, task.Status, task.Priority, task.DueDate, task.AssigneeId);
+            return task;
         }
 
-        public async Task<bool> UpdateTaskStatusAsync(UpdateTaskStatusDto dto, Guid userId)
+        public async Task<bool> UpdateTaskStatusAsync(Guid taskId, byte newStatus)
         {
-            var task = await _context.ProjectTasks.FindAsync(dto.TaskId);
+            var task = await _context.ProjectTasks.FindAsync(taskId);
             if (task == null) return false;
 
-            var validStatuses = new[] { "Tervezés", "Folyamatban", "Kész" };
-            if (!validStatuses.Contains(dto.Status)) return false;
-
-            task.Status = dto.Status;
+            task.Status = newStatus;
             task.UpdatedAt = DateTime.UtcNow;
 
             await _context.SaveChangesAsync();
             return true;
-        }
-
-        public async Task<List<WorkspaceDto>> GetUserWorkspacesAsync(Guid userId)
-        {
-            var workspaces = await _context.UserWorkspaces
-                .AsNoTracking()
-                .Where(w => w.OwnerId == userId)
-                .Include(w => w.AppProjects)
-                    .ThenInclude(p => p.ProjectTasks)
-                .ToListAsync();
-
-            return workspaces.Select(w => new WorkspaceDto(
-                w.Id,
-                w.Name,
-                w.AppProjects.Select(p => new ProjectDto(
-                    p.Id,
-                    p.Name,
-                    p.Description ?? "",
-                    p.Status,
-                    p.Deadline,
-                    p.ProjectTasks.Select(t => new TaskDto(
-                        t.Id, t.Title, t.Description ?? "", t.Status, t.Priority, t.DueDate, t.AssigneeId
-                    )).ToList()
-                )).ToList()
-            )).ToList();
         }
     }
 }

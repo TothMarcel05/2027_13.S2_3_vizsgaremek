@@ -1,43 +1,28 @@
 ﻿using System;
 using System.Collections.Generic;
 
-namespace PROTOTYPE_backend.Models;
-
-public partial class ProjectTask
+namespace PROTOTYPE_backend.Models
 {
-    public Guid Id { get; set; }
+    public class ProjectTask
+    {
+        public Guid Id { get; set; } = Guid.NewGuid();
+        public Guid ProjectId { get; set; }
+        public string Title { get; set; } = string.Empty;
+        public string? Description { get; set; }
+        public byte Status { get; set; } = 1; 
+        public byte Priority { get; set; } = 2;
+        public Guid? AssigneeRoleId { get; set; }
+        public string? AssigneeUserId { get; set; }
+        public string? AssigneeId { get => AssigneeUserId; set => AssigneeUserId = value; }
+        public string? ReporterId { get; set; }
+        public DateTime? DueDate { get; set; }
+        public DateTime CreatedAt { get; set; } = DateTime.UtcNow;
+        public DateTime? UpdatedAt { get; set; }
 
-    public Guid ProjectId { get; set; }
-
-    public string Title { get; set; } = null!;
-
-    public string? Description { get; set; }
-
-    public string Status { get; set; } = null!;
-
-    public string Priority { get; set; } = null!;
-
-    public Guid? AssigneeId { get; set; }
-
-    public Guid? ReporterId { get; set; }
-
-    public DateOnly? DueDate { get; set; }
-
-    public DateTime? CreatedAt { get; set; }
-
-    public DateTime? UpdatedAt { get; set; }
-
-    public virtual AppUser? Assignee { get; set; }
-
-    public virtual ICollection<CalendarEvent> CalendarEvents { get; set; } = new List<CalendarEvent>();
-
-    public virtual AppProject Project { get; set; } = null!;
-
-    public virtual ICollection<ProjectActivityLog> ProjectActivityLogs { get; set; } = new List<ProjectActivityLog>();
-
-    public virtual ICollection<ProjectComment> ProjectComments { get; set; } = new List<ProjectComment>();
-
-    public virtual AppUser? Reporter { get; set; }
-
-    public virtual ICollection<ProjectLabel> Labels { get; set; } = new List<ProjectLabel>();
+        public AppProject? Project { get; set; }
+        public Role? AssigneeRole { get; set; }
+        public AppUser? Assignee { get; set; }
+        public AppUser? Reporter { get; set; }
+        public ICollection<ProjectComment> ProjectComments { get; set; } = new List<ProjectComment>();
+    }
 }

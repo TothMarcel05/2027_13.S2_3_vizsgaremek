@@ -1,101 +1,86 @@
-﻿using Microsoft.EntityFrameworkCore;
+﻿using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Threading.Tasks;
+using Microsoft.EntityFrameworkCore;
 using PROTOTYPE_backend.Data;
 using PROTOTYPE_backend.DTOs.Admin;
-using PROTOTYPE_backend.Models;
-using PROTOTYPE_backend.Services.SoftDelete;
 
-namespace PROTOTYPE_backend.Services.Admin;
-
-public interface IAdminService
+namespace PROTOTYPE_backend.Services.Admin
 {
-    Task<List<UserAdminDto>> GetAllUsersAsync();
-    Task<bool> UpdateGlobalRoleAsync(UpdateGlobalRoleDto dto);
-    Task<List<DeletedItemDto>> GetSoftDeletedItemsAsync();
-    Task<bool> RestoreDeletedItemAsync(RestoreItemDto dto);
-    Task<bool> PurgeExpiredDeletedItemsAsync(int retentionDays);
-}
-
-public class AdminService : IAdminService
-{
-    private readonly AppDbContext _context;
-    private readonly ISoftDeleteService _softDeleteService;
-
-    public AdminService(AppDbContext context, ISoftDeleteService softDeleteService)
+    public class AdminService : IAdminService
     {
-        _context = context;
-        _softDeleteService = softDeleteService;
-    }
+        private readonly AppDbContext _context;
 
-    public async Task<List<UserAdminDto>> GetAllUsersAsync()
-    {
-        return await _context.AppUsers
-            .AsNoTracking()
-            .Select(u => new UserAdminDto(
+        public AdminService(AppDbContext context)
+        {
+            _context = context;
+        }
+
+        public async Task<IEnumerable<UserAdminViewDto>> GetAllUsersAsync()
+        {
+            var users = await _context.AppUsers
+                .AsNoTracking()
+                .OrderByDescending(u => u.CreatedAt)
+                .ToListAsync();
+
+            return users.Select(u => new UserAdminViewDto(
                 u.Id,
                 u.Name,
                 u.Email,
                 u.GlobalRole,
-                u.CreatedAt ?? DateTime.UtcNow
-            ))
-            .ToListAsync();
-    }
+                u.Is2FaEnabled,
+                u.CreatedAt,
+                u.DeletedAt
+            ));
+        }
 
-    public async Task<bool> UpdateGlobalRoleAsync(UpdateGlobalRoleDto dto)
-    {
-        var user = await _context.AppUsers.FindAsync(dto.UserId);
-        if (user == null) return false;
-
-        var validRoles = new[] { "User", "SystemAdmin" };
-        if (!validRoles.Contains(dto.NewGlobalRole)) return false;
-
-        user.GlobalRole = dto.NewGlobalRole;
-        user.UpdatedAt = DateTime.UtcNow;
-
-        await _context.SaveChangesAsync();
-        return true;
-    }
-
-    public async Task<List<DeletedItemDto>> GetSoftDeletedItemsAsync()
-    {
-        var deletedItems = new List<DeletedItemDto>();
-
-        var deletedFiles = await _context.StorageNodes
-            .IgnoreQueryFilters()
-            .Where(f => f.DeletedAt != null)
-            .Select(f => new DeletedItemDto(f.Id, f.Name, "StorageNode", f.DeletedAt, f.DeletedBy))
-            .ToListAsync();
-
-        var deletedTasks = await _context.ProjectTasks
-            .IgnoreQueryFilters()
-            .Where(t => t.DeletedAt != null)
-            .Select(t => new DeletedItemDto(t.Id, t.Title, "ProjectTask", t.DeletedAt, t.DeletedBy))
-            .ToListAsync();
-
-        deletedItems.AddRange(deletedFiles);
-        deletedItems.AddRange(deletedTasks);
-
-        return deletedItems;
-    }
-
-    public async Task<bool> RestoreDeletedItemAsync(RestoreItemDto dto)
-    {
-        return dto.EntityType switch
+        public async Task<bool> UpdateUserGlobalRoleAsync(UpdateUserRoleDto dto)
         {
-            "StorageNode" => await _softDeleteService.RestoreAsync<StorageNode>(dto.Id),
-            "ProjectTask" => await _softDeleteService.RestoreAsync<ProjectTask>(dto.Id),
-            "AppProject" => await _softDeleteService.RestoreAsync<AppProject>(dto.Id),
-            "UserWorkspace" => await _softDeleteService.RestoreAsync<UserWorkspace>(dto.Id),
-            _ => false
-        };
-    }
+            var user = await _context.AppUsers.FindAsync(dto.UserId);
+            if (user == null) return false;
 
-    public async Task<bool> PurgeExpiredDeletedItemsAsync(int retentionDays)
-    {
-        await _softDeleteService.HardDeleteExpiredAsync<StorageNode>(retentionDays);
-        await _softDeleteService.HardDeleteExpiredAsync<ProjectTask>(retentionDays);
-        await _softDeleteService.HardDeleteExpiredAsync<AppProject>(retentionDays);
-        await _softDeleteService.HardDeleteExpiredAsync<UserWorkspace>(retentionDays);
+            user.GlobalRole = dto.NewGlobalRole;
+            user.UpdatedAt = DateTime.UtcNow;
 
-        return true;
+            await _context.SaveChangesAsync();
+            return true;
+        }
+
+        public async Task<SystemOverviewStatsDto> GetSystemStatsAsync()
+        {
+            var totalUsers = await _context.AppUsers.CountAsync();
+            var activeUsers = await _context.AppUsers.CountAsync(u => u.DeletedAt == null);
+            var totalWorkspaces = await _context.UserWorkspaces.CountAsync();
+            var totalProjects = await _context.AppProjects.CountAsync();
+            var totalTasks = await _context.ProjectTasks.CountAsync();
+
+            return new SystemOverviewStatsDto(
+                totalUsers,
+                activeUsers,
+                totalWorkspaces,
+                totalProjects,
+                totalTasks
+            );
+        }
+
+        public async Task<bool> ToggleUserStatusAsync(string userId)
+        {
+            var user = await _context.AppUsers.FindAsync(userId);
+            if (user == null) return false;
+
+            if (user.DeletedAt == null)
+            {
+                user.DeletedAt = DateTime.UtcNow;
+            }
+            else
+            {
+                user.DeletedAt = null;
+            }
+
+            user.UpdatedAt = DateTime.UtcNow;
+            await _context.SaveChangesAsync();
+            return true;
+        }
     }
 }

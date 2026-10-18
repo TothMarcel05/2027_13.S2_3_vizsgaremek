@@ -1,58 +1,56 @@
-﻿using Microsoft.AspNetCore.Authorization;
+﻿using System;
+using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
 using PROTOTYPE_backend.DTOs.Workspace;
 using PROTOTYPE_backend.Services.Workspace;
-using System.Security.Claims;
 
-namespace PROTOTYPE_backend.Controllers;
-
-[ApiController]
-[Route("api/[controller]")]
-[Authorize]
-public class WorkspaceController : ControllerBase
+namespace PROTOTYPE_backend.Controllers
 {
-    private readonly IWorkspaceService _workspaceService;
-
-    public WorkspaceController(IWorkspaceService workspaceService)
+    [ApiController]
+    [Route("api/[controller]")]
+    public class WorkspaceController : ControllerBase
     {
-        _workspaceService = workspaceService;
-    }
+        private readonly IWorkspaceService _workspaceService;
 
-    private Guid GetUserId() => Guid.Parse(User.FindFirstValue(ClaimTypes.NameIdentifier)!);
+        public WorkspaceController(IWorkspaceService workspaceService)
+        {
+            _workspaceService = workspaceService;
+        }
 
-    [HttpGet]
-    public async Task<IActionResult> GetWorkspaces()
-    {
-        var result = await _workspaceService.GetUserWorkspacesAsync(GetUserId());
-        return Ok(result);
-    }
+        [HttpGet("user/{userId}")]
+        public async Task<IActionResult> GetUserWorkspaces(string userId)
+        {
+            var workspaces = await _workspaceService.GetUserWorkspacesAsync(userId);
+            return Ok(workspaces);
+        }
 
-    [HttpPost]
-    public async Task<IActionResult> CreateWorkspace([FromBody] CreateWorkspaceDto dto)
-    {
-        var result = await _workspaceService.CreateWorkspaceAsync(dto, GetUserId());
-        return Ok(result);
-    }
+        [HttpPost]
+        public async Task<IActionResult> CreateWorkspace([FromBody] CreateWorkspaceDto dto)
+        {
+            var workspace = await _workspaceService.CreateWorkspaceAsync(dto.UserId, dto.Name);
+            return Ok(workspace);
+        }
 
-    [HttpPost("project")]
-    public async Task<IActionResult> CreateProject([FromBody] CreateProjectDto dto)
-    {
-        var result = await _workspaceService.CreateProjectAsync(dto, GetUserId());
-        return Ok(result);
-    }
+        [HttpPost("{workspaceId}/project")]
+        public async Task<IActionResult> CreateProject(Guid workspaceId, [FromBody] CreateProjectDto dto)
+        {
+            var project = await _workspaceService.CreateProjectAsync(workspaceId, dto.Name, dto.Description, dto.Deadline, dto.OwnerId);
+            return Ok(project);
+        }
 
-    [HttpPost("task")]
-    public async Task<IActionResult> CreateTask([FromBody] CreateTaskDto dto)
-    {
-        var result = await _workspaceService.CreateTaskAsync(dto, GetUserId());
-        return Ok(result);
-    }
+        [HttpPost("project/{projectId}/task")]
+        public async Task<IActionResult> CreateTask(Guid projectId, [FromBody] CreateTaskDto dto)
+        {
+            var task = await _workspaceService.CreateTaskAsync(projectId, dto.Title, dto.Description, dto.Priority, dto.DueDate, dto.AssigneeId, dto.ReporterId);
+            return Ok(task);
+        }
 
-    [HttpPatch("task/status")]
-    public async Task<IActionResult> UpdateTaskStatus([FromBody] UpdateTaskStatusDto dto)
-    {
-        var success = await _workspaceService.UpdateTaskStatusAsync(dto, GetUserId());
-        if (!success) return BadRequest("Érvénytelen feladat vagy állapot.");
-        return Ok(new { message = "Feladat állapota sikeresen frissítve." });
+        [HttpPut("task/{taskId}/status")]
+        public async Task<IActionResult> UpdateTaskStatus(Guid taskId, [FromBody] UpdateTaskStatusDto dto)
+        {
+            var success = await _workspaceService.UpdateTaskStatusAsync(taskId, dto.NewStatus);
+            if (!success) return NotFound();
+            return Ok();
+        }
     }
 }
