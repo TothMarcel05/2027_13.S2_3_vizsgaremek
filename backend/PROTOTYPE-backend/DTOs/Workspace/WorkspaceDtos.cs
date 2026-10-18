@@ -4,7 +4,7 @@ using System.ComponentModel.DataAnnotations;
 namespace PROTOTYPE_backend.DTOs.Workspace
 {
     public record CreateWorkspaceDto(
-        [Required] string UserId,
+        [Required] Guid UserId,
         [Required] string Name
     );
 
@@ -12,19 +12,6 @@ namespace PROTOTYPE_backend.DTOs.Workspace
         [Required] string Name,
         string? Description,
         DateTime? Deadline,
-        string? OwnerId
-    );
-
-    public record CreateTaskDto(
-        [Required] string Title,
-        string? Description,
-        byte Priority,
-        DateTime? DueDate,
-        string? AssigneeId,
-        string? ReporterId
-    );
-
-    public record UpdateTaskStatusDto(
-        [Required] byte NewStatus 
+        Guid? OwnerId
     );
 }

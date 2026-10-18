@@ -1,7 +1,12 @@
 {
   "Version": 1,
   "WorkspaceRootPath": "C:\\Users\\Kecskem\u00E9ti Mil\u00E1n\\Documents\\GitHub\\TMD_KM_TO-DO_Project\\backend\\",
-  "Documents": [],
+  "Documents": [
+    {
+      "AbsoluteMoniker": "D:0:0:{709D5F3C-AE65-16AB-703F-30F362550762}|PROTOTYPE-backend\\PROTOTYPE-backend.csproj|c:\\users\\kecskem\u00E9ti mil\u00E1n\\documents\\github\\tmd_km_to-do_project\\backend\\prototype-backend\\controllers\\workspacecontroller.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{709D5F3C-AE65-16AB-703F-30F362550762}|PROTOTYPE-backend\\PROTOTYPE-backend.csproj|solutionrelative:prototype-backend\\controllers\\workspacecontroller.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    }
+  ],
   "DocumentGroupContainers": [
     {
       "Orientation": 0,
@@ -9,11 +14,24 @@
       "DocumentGroups": [
         {
           "DockedWidth": 254,
-          "SelectedChildIndex": -1,
+          "SelectedChildIndex": 1,
           "Children": [
             {
               "$type": "Bookmark",
               "Name": "ST:0:0:{1c4feeaa-4718-4aa9-859d-94ce25d182ba}"
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 0,
+              "Title": "WorkspaceController.cs",
+              "DocumentMoniker": "C:\\Users\\Kecskem\u00E9ti Mil\u00E1n\\Documents\\GitHub\\TMD_KM_TO-DO_Project\\backend\\PROTOTYPE-backend\\Controllers\\WorkspaceController.cs",
+              "RelativeDocumentMoniker": "PROTOTYPE-backend\\Controllers\\WorkspaceController.cs",
+              "ToolTip": "C:\\Users\\Kecskem\u00E9ti Mil\u00E1n\\Documents\\GitHub\\TMD_KM_TO-DO_Project\\backend\\PROTOTYPE-backend\\Controllers\\WorkspaceController.cs",
+              "RelativeToolTip": "PROTOTYPE-backend\\Controllers\\WorkspaceController.cs",
+              "ViewState": "AgIAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2026-10-18T15:20:34.853Z",
+              "EditorCaption": ""
             }
           ]
         }

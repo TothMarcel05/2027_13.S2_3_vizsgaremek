@@ -10,9 +10,10 @@ namespace PROTOTYPE_backend.Services.Token
         string GenerateWorkspaceToken(
             AppUser user,
             Guid workspaceId,
-            Dictionary<string, List<string>> workspaceRolesNPermissions,
-            Dictionary<string, List<string>> projectRolesNPermssions
+            Dictionary<string, List<string>> AllRolesNPermissions
         );
         string GenerateRefreshToken();
+        string GenerateTwoFactorToken(AppUser user);
+        Guid? ValidateTwoFactorToken(string token);
     }
 }

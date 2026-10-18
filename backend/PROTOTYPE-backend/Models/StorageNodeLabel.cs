@@ -1,14 +1,32 @@
 ﻿using System;
+using System.Collections.Generic;
 
-namespace PROTOTYPE_backend.Models
+namespace PROTOTYPE_backend.Models;
+
+/// <summary>
+/// Fájlok és mappák egyedi címkéi
+/// </summary>
+public partial class StorageNodeLabel
 {
-    public class StorageNodeLabel
-    {
-        public Guid Id { get; set; } = Guid.NewGuid();
-        public Guid NodeId { get; set; }
-        public string Label { get; set; } = string.Empty;
-        public DateTime CreatedAt { get; set; } = DateTime.UtcNow;
+    /// <summary>
+    /// Címke azonosító (UUID)
+    /// </summary>
+    public Guid Id { get; set; }
 
-        public StorageNode? Node { get; set; }
-    }
+    /// <summary>
+    /// Kapcsolódó fájl vagy mappa
+    /// </summary>
+    public Guid NodeId { get; set; }
+
+    /// <summary>
+    /// Címke felirata
+    /// </summary>
+    public string Label { get; set; } = null!;
+
+    /// <summary>
+    /// Létrehozás ideje
+    /// </summary>
+    public DateTime? CreatedAt { get; set; }
+
+    public virtual StorageNode Node { get; set; } = null!;
 }

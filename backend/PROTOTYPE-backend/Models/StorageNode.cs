@@ -1,32 +1,93 @@
 ﻿using System;
 using System.Collections.Generic;
 
-namespace PROTOTYPE_backend.Models
+namespace PROTOTYPE_backend.Models;
+
+/// <summary>
+/// Fájlok és mappák fastruktúrája
+/// </summary>
+public partial class StorageNode
 {
-    public class StorageNode
-    {
-        public Guid Id { get; set; } = Guid.NewGuid();
-        public Guid WorkspaceId { get; set; }
-        public Guid? ProjectId { get; set; }
-        public Guid? ParentId { get; set; }
-        public string Name { get; set; } = string.Empty;
-        public byte Type { get; set; } = 2;
-        public string? MimeType { get; set; }
-        public string? StoragePath { get; set; }
-        public ulong SizeBytes { get; set; } = 0;
-        public string? CreatedBy { get; set; }
-        public string? UpdatedBy { get; set; }
-        public DateTime CreatedAt { get; set; } = DateTime.UtcNow;
-        public DateTime? UpdatedAt { get; set; }
-        public DateTime? DeletedAt { get; set; } 
+    /// <summary>
+    /// Node azonosító (UUID)
+    /// </summary>
+    public Guid Id { get; set; }
 
-        public UserWorkspace? Workspace { get; set; }
-        public AppProject? Project { get; set; }
-        public StorageNode? Parent { get; set; }
-        public AppUser? Creator { get; set; }
+    /// <summary>
+    /// Workspace
+    /// </summary>
+    public Guid WorkspaceId { get; set; }
 
-        public ICollection<StorageNode> InverseParent { get; set; } = new List<StorageNode>();
-        public ICollection<StorageNodeLabel> StorageNodeLabels { get; set; } = new List<StorageNodeLabel>();
-        public ICollection<Role> Roles { get; set; } = new List<Role>();
-    }
+    /// <summary>
+    /// Projekt
+    /// </summary>
+    public Guid? ProjectId { get; set; }
+
+    /// <summary>
+    /// Szülő mappa (NULL = gyökér)
+    /// </summary>
+    public Guid? ParentId { get; set; }
+
+    /// <summary>
+    /// Fájl vagy mappa neve
+    /// </summary>
+    public string Name { get; set; } = null!;
+
+    /// <summary>
+    /// 1 = folder, 2 = file
+    /// </summary>
+    public sbyte Type { get; set; }
+
+    /// <summary>
+    /// MIME típus
+    /// </summary>
+    public string? MimeType { get; set; }
+
+    /// <summary>
+    /// Fájl fizikai helye
+    /// </summary>
+    public string? StoragePath { get; set; }
+
+    /// <summary>
+    /// Méret bájtban
+    /// </summary>
+    public ulong? SizeBytes { get; set; }
+
+    /// <summary>
+    /// Létrehozó felhasználó
+    /// </summary>
+    public Guid? CreatedBy { get; set; }
+
+    /// <summary>
+    /// Utolsó módosító
+    /// </summary>
+    public Guid? UpdatedBy { get; set; }
+
+    /// <summary>
+    /// Létrehozás ideje
+    /// </summary>
+    public DateTime? CreatedAt { get; set; }
+
+    /// <summary>
+    /// Utolsó módosítás ideje
+    /// </summary>
+    public DateTime? UpdatedAt { get; set; }
+
+    public virtual ICollection<ChatMessageAttachment> ChatMessageAttachments { get; set; } = new List<ChatMessageAttachment>();
+
+    public virtual AppUser? CreatedByNavigation { get; set; }
+
+    public virtual ICollection<StorageNode> InverseParent { get; set; } = new List<StorageNode>();
+
+    public virtual StorageNode? Parent { get; set; }
+
+    public virtual Project? Project { get; set; }
+
+    public virtual ICollection<StorageNodeLabel> StorageNodeLabels { get; set; } = new List<StorageNodeLabel>();
+
+    public virtual AppUser? UpdatedByNavigation { get; set; }
+
+    public virtual Workspace Workspace { get; set; } = null!;
+
+    public virtual ICollection<AppRole> Roles { get; set; } = new List<AppRole>();
 }

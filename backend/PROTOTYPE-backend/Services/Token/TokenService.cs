@@ -1,12 +1,13 @@
 ﻿// KM
 
+using Microsoft.IdentityModel.Tokens;
+using PROTOTYPE_backend.Models;
+using System.Globalization;
 using System.IdentityModel.Tokens.Jwt;
 using System.Security.Claims;
 using System.Security.Cryptography;
 using System.Text;
 using System.Text.Json;
-using Microsoft.IdentityModel.Tokens;
-using PROTOTYPE_backend.Models;
 
 namespace PROTOTYPE_backend.Services.Token
 {
@@ -35,8 +36,7 @@ namespace PROTOTYPE_backend.Services.Token
         public string GenerateWorkspaceToken(
             AppUser user,
             Guid workspaceId,
-            Dictionary<string, List<string>> WorkspaceRolesNPermissions,
-            Dictionary<string, List<string>> ProjectRolesNPermissions
+            Dictionary<string, List<string>> AllRolesNPermissions
             ) 
         {
             var claims = new List<Claim>
@@ -48,39 +48,11 @@ namespace PROTOTYPE_backend.Services.Token
                 new(JwtRegisteredClaimNames.Jti, Guid.NewGuid().ToString())
             };
 
-            string wRolesNPermissions = JsonSerializer.Serialize(WorkspaceRolesNPermissions);
-            string pRolesNPermissions = JsonSerializer.Serialize(ProjectRolesNPermissions);
+            string allRolesNPermissions = JsonSerializer.Serialize(AllRolesNPermissions);
 
-            claims.Add(new Claim("active_workspace_roles_permissions", wRolesNPermissions));
-            claims.Add(new Claim("project_roles_permissions", pRolesNPermissions));
+            claims.Add(new Claim("all_roles_permissions", allRolesNPermissions));
 
             return BuildJwt(claims);
-        }
-
-        private string BuildJwt(IEnumerable<Claim> claims) 
-        {
-            var jwtSettings = _configuration.GetSection("JwtSettings");
-            var secretKey = jwtSettings["Secret"]
-                ?? throw new InvalidOperationException("A JWT Secret nincsen konfigurálva.");
-
-            var key = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(secretKey));
-            var creds = new SigningCredentials(key, SecurityAlgorithms.HmacSha256);
-
-            var expiryInMinutes = double.Parse(jwtSettings["ExpiryInMinutes"] ?? "10");
-
-            var tokenDescriptor = new SecurityTokenDescriptor
-            {
-                Subject = new ClaimsIdentity(claims),
-                Expires = DateTime.UtcNow.AddMinutes(expiryInMinutes),
-                Issuer = jwtSettings["Issuer"],
-                Audience = jwtSettings["Audience"],
-                SigningCredentials = creds
-            };
-
-            var tokenHandler = new JwtSecurityTokenHandler();
-            var token = tokenHandler.CreateToken(tokenDescriptor);
-
-            return tokenHandler.WriteToken(token);
         }
 
         public string GenerateRefreshToken() 
@@ -90,5 +62,54 @@ namespace PROTOTYPE_backend.Services.Token
             rng.GetBytes(randomNumber);
             return Convert.ToBase64String(randomNumber);
         }
+
+        public string GenerateTwoFactorToken(AppUser user) =>
+            BuildJwt(new[] { new Claim(ClaimTypes.NameIdentifier, user.Id.ToString()) },
+             audienceSuffix: "-2fa", expiryMinutes: 5);
+
+        public Guid? ValidateTwoFactorToken(string token)
+        {
+            var jwt = _configuration.GetSection("JwtSettings");
+            try
+            {
+                var principal = new JwtSecurityTokenHandler().ValidateToken(token, new TokenValidationParameters
+                {
+                    ValidateIssuer = true,
+                    ValidIssuer = jwt["Issuer"],
+                    ValidateAudience = true,
+                    ValidAudience = jwt["Audience"] + "-2fa",
+                    ValidateIssuerSigningKey = true,
+                    IssuerSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(jwt["Secret"]!)),
+                    ValidateLifetime = true,
+                    ClockSkew = TimeSpan.FromSeconds(30)
+                }, out _);
+
+                return Guid.TryParse(principal.FindFirstValue(ClaimTypes.NameIdentifier), out var id) ? id : null;
+            }
+            catch { return null; }
+        }
+        private string BuildJwt(IEnumerable<Claim> claims, string? audienceSuffix = null, double? expiryMinutes = null)
+        {
+            var jwtSettings = _configuration.GetSection("JwtSettings");
+            var secretKey = jwtSettings["Secret"]
+                ?? throw new InvalidOperationException("A JWT Secret nincsen konfigurálva.");
+
+            var key = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(secretKey));
+            var expiry = expiryMinutes
+                ?? double.Parse(jwtSettings["ExpiryInMinutes"] ?? "10", CultureInfo.InvariantCulture);
+
+            var tokenDescriptor = new SecurityTokenDescriptor
+            {
+                Subject = new ClaimsIdentity(claims),
+                Expires = DateTime.UtcNow.AddMinutes(expiry),
+                Issuer = jwtSettings["Issuer"],
+                Audience = jwtSettings["Audience"] + audienceSuffix,
+                SigningCredentials = new SigningCredentials(key, SecurityAlgorithms.HmacSha256)
+            };
+
+            var handler = new JwtSecurityTokenHandler();
+            return handler.WriteToken(handler.CreateToken(tokenDescriptor));
+        }
+
     }
 }

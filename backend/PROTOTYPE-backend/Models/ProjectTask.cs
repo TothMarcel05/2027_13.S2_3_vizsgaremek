@@ -1,28 +1,84 @@
 ﻿using System;
 using System.Collections.Generic;
 
-namespace PROTOTYPE_backend.Models
-{
-    public class ProjectTask
-    {
-        public Guid Id { get; set; } = Guid.NewGuid();
-        public Guid ProjectId { get; set; }
-        public string Title { get; set; } = string.Empty;
-        public string? Description { get; set; }
-        public byte Status { get; set; } = 1; 
-        public byte Priority { get; set; } = 2;
-        public Guid? AssigneeRoleId { get; set; }
-        public string? AssigneeUserId { get; set; }
-        public string? AssigneeId { get => AssigneeUserId; set => AssigneeUserId = value; }
-        public string? ReporterId { get; set; }
-        public DateTime? DueDate { get; set; }
-        public DateTime CreatedAt { get; set; } = DateTime.UtcNow;
-        public DateTime? UpdatedAt { get; set; }
+namespace PROTOTYPE_backend.Models;
 
-        public AppProject? Project { get; set; }
-        public Role? AssigneeRole { get; set; }
-        public AppUser? Assignee { get; set; }
-        public AppUser? Reporter { get; set; }
-        public ICollection<ProjectComment> ProjectComments { get; set; } = new List<ProjectComment>();
-    }
+/// <summary>
+/// Projekt taskok
+/// </summary>
+public partial class ProjectTask
+{
+    /// <summary>
+    /// Task azonosító (UUID)
+    /// </summary>
+    public Guid Id { get; set; }
+
+    /// <summary>
+    /// Projekt, amelyhez a task tartozik
+    /// </summary>
+    public Guid ProjectId { get; set; }
+
+    /// <summary>
+    /// Task címe
+    /// </summary>
+    public string Title { get; set; } = null!;
+
+    /// <summary>
+    /// Task leírása
+    /// </summary>
+    public string? Description { get; set; }
+
+    /// <summary>
+    /// 1 = planning, 2 = on_going, 3 = ready
+    /// </summary>
+    public sbyte Status { get; set; }
+
+    /// <summary>
+    /// 1 = low, 2 = medium, 3 = high, 4 = urgent
+    /// </summary>
+    public sbyte Priority { get; set; }
+
+    /// <summary>
+    /// Szerepkör, amire a task ki van hirdetve
+    /// </summary>
+    public Guid? AssigneeRoleId { get; set; }
+
+    /// <summary>
+    /// Konkrét felhasználó, aki lefoglalta a feladatot
+    /// </summary>
+    public Guid? AssigneeUserId { get; set; }
+
+    /// <summary>
+    /// Létrehozó felhasználó
+    /// </summary>
+    public Guid? CreatedBy { get; set; }
+
+    /// <summary>
+    /// Határidő
+    /// </summary>
+    public DateOnly? DueDate { get; set; }
+
+    /// <summary>
+    /// Létrehozás ideje
+    /// </summary>
+    public DateTime? CreatedAt { get; set; }
+
+    /// <summary>
+    /// Utolsó módosítás ideje
+    /// </summary>
+    public DateTime? UpdatedAt { get; set; }
+
+    public virtual AppRole? AssigneeRole { get; set; }
+
+    public virtual AppUser? AssigneeUser { get; set; }
+
+    public virtual AppUser? CreatedByNavigation { get; set; }
+
+    public virtual Project Project { get; set; } = null!;
+
+    public virtual ICollection<ProjectActivityLog> ProjectActivityLogs { get; set; } = new List<ProjectActivityLog>();
+
+    public virtual ICollection<ProjectComment> ProjectComments { get; set; } = new List<ProjectComment>();
+
+    public virtual ICollection<ProjectLabel> Labels { get; set; } = new List<ProjectLabel>();
 }

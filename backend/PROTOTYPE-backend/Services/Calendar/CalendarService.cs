@@ -1,42 +1,48 @@
-﻿using PROTOTYPE_backend.Data.Repositories;
+﻿using Microsoft.EntityFrameworkCore;
+using PROTOTYPE_backend.Data;
 using PROTOTYPE_backend.DTOs.Calendar;
-using PROTOTYPE_backend.Data.Repositories;
 using PROTOTYPE_backend.Models;
 
 namespace PROTOTYPE_backend.Services.Calendar
 {
     public class CalendarService : ICalendarService
     {
-        private readonly IUnitOfWork _unitOfWork;
+        private readonly AppDbContext _context;
 
-        public CalendarService(IUnitOfWork unitOfWork)
+        public CalendarService(AppDbContext context)
         {
-            _unitOfWork = unitOfWork;
+            _context = context;
         }
-
         public async Task<DateDto> CreateDateAsync(DateRequestDto dto, Guid userId) 
         {
-            var user = await _unitOfWork.Repository<AppUser>().FirstOrDefaultAsync(u => u.Id == userId);
+            var user = await _context.AppUsers.FirstOrDefaultAsync(u => u.Id == userId);
 
-            if (user == null) throw new Exception("");
+            if (user == null) throw new Exception("Érvénytelen felhasználó!");
 
-            var newDate = new CalendarDate
+            var newDate = new CalendarEvent
             {
                 Id = Guid.NewGuid(),
+                ProjectId = dto.ProjectId,
                 Title = dto.Title,
-                Date = dto.Date,
-                UserId = userId
+                StartTime = DateTime.UtcNow,
+                EndTime = dto.timeStamp,
+                CreatedBy = userId,
+                IsAllDay = false,
+                Description = dto.Description
             };
 
-            await _unitOfWork.Repository<CalendarDate>().AddAsync(newDate);
-            await _unitOfWork.SaveAsync();
+            await _context.CalendarEvents.AddAsync(newDate);
+            await _context.SaveChangesAsync();
 
-            return new DateDto
-            {
-                Id = newDate.Id,
-                Title = newDate.Title,
-                Date = newDate.Date
-            };
+            return new DateDto(
+                newDate.ProjectId ?? Guid.Empty,
+                newDate.Id,
+                newDate.EndTime,
+                newDate.Title,
+                newDate.Description ?? string.Empty
+            );
+        
         }
     }
 }
+

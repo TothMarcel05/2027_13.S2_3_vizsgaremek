@@ -1,14 +1,17 @@
 ﻿// KM
 
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using PROTOTYPE_backend.DTOs.Auth;
 using PROTOTYPE_backend.Services.Auth;
+using System.Security.Claims;
 
 namespace PROTOTYPE_backend.Controllers
 {
     [Route("api/[controller]")]
     [ApiController]
+    [Authorize]
     public class AuthController : ControllerBase
     {
         private readonly IAuthService _authService;
@@ -17,7 +20,7 @@ namespace PROTOTYPE_backend.Controllers
         {
             _authService = authService;
         }
-
+        [AllowAnonymous]
         [HttpPost("register")]
         public async Task<IActionResult> Register([FromBody] RegisterDto dto) 
         {
@@ -25,7 +28,7 @@ namespace PROTOTYPE_backend.Controllers
 
             return CreatedAtAction(nameof(Register), new { id = result.Id }, result);
         }
-
+        [AllowAnonymous]
         [HttpPost("login")]
         public async Task<IActionResult> Login([FromBody] LoginDto dto) 
         {
