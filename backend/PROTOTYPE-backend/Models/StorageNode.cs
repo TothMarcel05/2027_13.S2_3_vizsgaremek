@@ -69,6 +69,11 @@ public partial class StorageNode
     public DateTime? CreatedAt { get; set; }
 
     /// <summary>
+    /// Törlés ideje
+    /// </summary>
+    public DateTime? DeletedAt { get; set; }
+
+    /// <summary>
     /// Utolsó módosítás ideje
     /// </summary>
     public DateTime? UpdatedAt { get; set; }

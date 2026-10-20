@@ -938,6 +938,11 @@ public partial class AppDbContext : DbContext
             entity.Property(e => e.CreatedBy)
                 .HasComment("Létrehozó felhasználó")
                 .HasColumnName("created_by");
+            entity.Property(e => e.DeletedAt)
+                .HasDefaultValueSql("CURRENT_TIMESTAMP")
+                .HasComment("Törlés ideje")
+                .HasColumnType("timestamp")
+                .HasColumnName("deleted_at");
             entity.Property(e => e.MimeType)
                 .HasMaxLength(127)
                 .HasComment("MIME típus")
@@ -976,8 +981,6 @@ public partial class AppDbContext : DbContext
             entity.Property(e => e.WorkspaceId)
                 .HasComment("Workspace")
                 .HasColumnName("workspace_id");
-
-
 
             entity.HasOne(d => d.CreatedByNavigation).WithMany(p => p.StorageNodeCreatedByNavigations)
                 .HasForeignKey(d => d.CreatedBy)
