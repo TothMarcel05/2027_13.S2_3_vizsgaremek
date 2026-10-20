@@ -19,3 +19,15 @@ Accept: application/json
 ###
 GET {{PROTOTYPE_backend_HostAddress}}/api/workspace/user/01000000-0000-4000-8000-000000000003
 Accept: application/json
+
+###
+POST {{PROTOTYPE_backend_HostAddress}}/api/workspace
+Accept: application/json
+Content-Type: application/json
+
+{
+  "UserId": "01000000-0000-4000-8000-000000000001",
+  "Name": "Okligon"
+}
+
+
