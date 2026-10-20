@@ -329,6 +329,7 @@ CREATE TABLE storage_node (
     created_by      CHAR(36)     NULL COMMENT 'Létrehozó felhasználó',
     updated_by      CHAR(36)     NULL COMMENT 'Utolsó módosító',
     created_at      TIMESTAMP    DEFAULT CURRENT_TIMESTAMP COMMENT 'Létrehozás ideje',
+    deleted_at      TIMESTAMP    DEFAULT CURRENT_TIMESTAMP COMMENT 'Törlés ideje',
     updated_at      TIMESTAMP    DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP COMMENT 'Utolsó módosítás ideje',
 
     CONSTRAINT fk_sn_workspace FOREIGN KEY (workspace_id) REFERENCES workspace(id) ON DELETE CASCADE,
