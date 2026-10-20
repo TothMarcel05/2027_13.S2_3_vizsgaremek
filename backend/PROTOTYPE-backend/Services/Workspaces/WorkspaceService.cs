@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using PROTOTYPE_backend.Data;
 using PROTOTYPE_backend.Models;
@@ -23,9 +24,16 @@ namespace PROTOTYPE_backend.Services.Workspaces
 
         public async Task<IEnumerable<Workspace>> GetUserWorkspacesAsync(Guid userId)
         {
+            var user  = _context.AppUsers.FirstOrDefaultAsync(u => u.Id == userId);
+
+            if (user == null)
+            {
+                throw new Exception("Nem létezik a felhasználó!");
+            }
+
+
             return await _context.Workspaces
                 .Where(w => w.OwnerId == userId || w.WorkspaceMembers.Any(m => m.UserId == userId))
-                .Include(w => w.Projects)
                 .ToListAsync();
         }
 

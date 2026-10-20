@@ -11,7 +11,7 @@ namespace PROTOTYPE_backend.Controllers
 {
     [ApiController]
     [Route("api/workspace")]
-    [Authorize]
+    //[Authorize]
     public class WorkspaceController : ControllerBase
     {
         private readonly IWorkspaceService _workspaceService;

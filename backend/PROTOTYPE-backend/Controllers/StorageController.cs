@@ -43,7 +43,7 @@ namespace PROTOTYPE_backend.Controllers
         }
 
         [HttpDelete("{nodeId}")]
-        public async Task<IActionResult> SoftDeleteNode(Guid nodeId, [FromQuery] string userId)
+        public async Task<IActionResult> SoftDeleteNode(Guid nodeId, [FromQuery] Guid userId)
         {
             var success = await _storageService.SoftDeleteNodeAsync(nodeId, userId);
             if (!success) return NotFound("A fájl nem található vagy már törölve van.");

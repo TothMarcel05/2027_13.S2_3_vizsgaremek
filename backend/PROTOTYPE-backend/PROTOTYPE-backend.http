@@ -1,9 +1,21 @@
-@PROTOTYPE_backend_HostAddress = http://localhost:5000 
-//5243
+@PROTOTYPE_backend_HostAddress = http://localhost:5243
+//5000
 
 GET {{PROTOTYPE_backend_HostAddress}}/weatherforecast/
 Accept: application/json
 
 ###
 GET {{PROTOTYPE_backend_HostAddress}}/api/storage/search?tag=fontos
+Accept: application/json
+
+###
+GET {{PROTOTYPE_backend_HostAddress}}/api/admin/users
+Accept: application/json
+
+###
+GET {{PROTOTYPE_backend_HostAddress}}/api/admin/stats
+Accept: application/json
+
+###
+GET {{PROTOTYPE_backend_HostAddress}}/api/workspace/user/01000000-0000-4000-8000-000000000003
 Accept: application/json
