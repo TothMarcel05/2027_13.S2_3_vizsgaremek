@@ -11,7 +11,7 @@ namespace PROTOTYPE_backend.DTOs.Storage
         Guid? ParentId,
         [Required] IFormFile File,
         List<string>? Labels,
-        [Required] string UserId
+        [Required] Guid UserId
     );
 
     public record ShareNodeDto(
@@ -22,7 +22,7 @@ namespace PROTOTYPE_backend.DTOs.Storage
     public record StorageNodeResponseDto(
         Guid Id,
         string Name,
-        byte Type,
+        sbyte Type,
         string? MimeType,
         ulong SizeBytes,
         DateTime CreatedAt,

@@ -51,7 +51,7 @@ public partial class StorageNode
     /// <summary>
     /// Méret bájtban
     /// </summary>
-    public ulong? SizeBytes { get; set; }
+    public ulong SizeBytes { get; set; }
 
     /// <summary>
     /// Létrehozó felhasználó
@@ -66,7 +66,7 @@ public partial class StorageNode
     /// <summary>
     /// Létrehozás ideje
     /// </summary>
-    public DateTime? CreatedAt { get; set; }
+    public DateTime CreatedAt { get; set; }
 
     /// <summary>
     /// Törlés ideje

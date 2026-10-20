@@ -103,7 +103,7 @@ namespace PROTOTYPE_backend.Services.Storage
                 .Include(n => n.Roles)
                 .FirstOrDefaultAsync(n => n.Id == nodeId && n.DeletedAt == null);
 
-            var role = await _context.Roles.FindAsync(roleId);
+            var role = await _context.AppRoles.FindAsync(roleId);
             if (node == null || role == null) return false;
 
             if (!node.Roles.Any(r => r.Id == roleId))
@@ -115,7 +115,7 @@ namespace PROTOTYPE_backend.Services.Storage
             return true;
         }
 
-        public async Task<bool> SoftDeleteNodeAsync(Guid nodeId, string userId)
+        public async Task<bool> SoftDeleteNodeAsync(Guid nodeId, System.Guid userId)
         {
             var node = await _context.StorageNodes.FindAsync(nodeId);
             if (node == null || node.DeletedAt != null) return false;
