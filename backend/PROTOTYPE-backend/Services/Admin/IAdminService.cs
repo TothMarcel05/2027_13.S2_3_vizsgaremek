@@ -9,6 +9,6 @@ namespace PROTOTYPE_backend.Services.Admin
         Task<IEnumerable<UserAdminViewDto>> GetAllUsersAsync();
         Task<bool> UpdateUserGlobalRoleAsync(UpdateUserRoleDto dto);
         Task<SystemOverviewStatsDto> GetSystemStatsAsync();
-        Task<bool> ToggleUserStatusAsync(string userId); // Felhasználó inaktiválása / reaktiválása
+        Task<bool> ToggleUserStatusAsync(string userId);
     }
 }

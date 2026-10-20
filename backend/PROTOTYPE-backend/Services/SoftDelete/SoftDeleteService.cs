@@ -104,7 +104,6 @@ namespace PROTOTYPE_backend.Services.SoftDelete
         {
             var cutoffDate = DateTime.UtcNow.AddDays(-RetentionDays);
 
-            // Lejárt StorageNode rekordok végleges törlése
             var expiredNodes = await _context.StorageNodes
                 .Where(n => n.DeletedAt != null && n.DeletedAt <= cutoffDate)
                 .ToListAsync();

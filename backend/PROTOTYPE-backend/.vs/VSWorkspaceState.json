@@ -2,15 +2,9 @@
   "ExpandedNodes": [
     "",
     "\\Controllers",
-    "\\DTOs\\Admin",
-    "\\DTOs\\Auth",
-    "\\DTOs\\Calendar",
-    "\\DTOs\\Project",
-    "\\DTOs\\SoftDelete",
-    "\\DTOs\\Storage",
-    "\\DTOs\\Workspace",
-    "\\Services\\Admin"
+    "\\Services",
+    "\\Services\\Storage"
   ],
-  "SelectedNode": "\\Controllers\\StorageController.cs",
+  "SelectedNode": "\\Services\\Storage\\StorageService.cs",
   "PreviewInSolutionExplorer": false
 }

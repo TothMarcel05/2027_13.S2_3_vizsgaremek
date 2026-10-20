@@ -19,10 +19,8 @@ namespace PROTOTYPE_backend.Services.Storage
             _context = context;
         }
 
-        // 1. Fájl feltöltése és címkék hozzárendelése
         public async Task<StorageNodeResponseDto> UploadFileAsync(UploadFileDto dto)
         {
-            // Fizikai mentés szimulálása / útvonal képzése
             var uploadsFolder = Path.Combine(Directory.GetCurrentDirectory(), "Uploads");
             if (!Directory.Exists(uploadsFolder)) Directory.CreateDirectory(uploadsFolder);
 
@@ -40,7 +38,7 @@ namespace PROTOTYPE_backend.Services.Storage
                 ProjectId = dto.ProjectId,
                 ParentId = dto.ParentId,
                 Name = dto.File.FileName,
-                Type = 2, // 2 = File
+                Type = 2, 
                 MimeType = dto.File.ContentType,
                 StoragePath = filePath,
                 SizeBytes = (ulong)dto.File.Length,
@@ -50,7 +48,6 @@ namespace PROTOTYPE_backend.Services.Storage
 
             _context.StorageNodes.Add(node);
 
-            // Címkék (Tags) elmentése
             if (dto.Labels != null && dto.Labels.Any())
             {
                 foreach (var labelText in dto.Labels)

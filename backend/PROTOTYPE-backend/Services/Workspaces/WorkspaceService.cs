@@ -55,7 +55,7 @@ namespace PROTOTYPE_backend.Services.Workspaces
                 Description = description,
                 Deadline = deadline.HasValue ? DateOnly.FromDateTime(deadline.Value) : null,
                 OwnerId = ownerId,
-                Status = 1, // Planned
+                Status = 1, 
                 CreatedAt = DateTime.UtcNow
             };
 
