@@ -35,7 +35,7 @@ namespace PROTOTYPE_backend.Controllers
         }
 
         [HttpGet("trash/{userId}")]
-        public async Task<IActionResult> GetTrash(string userId)
+        public async Task<IActionResult> GetTrash(Guid userId)
         {
             var deletedItems = await _softDeleteService.GetDeletedItemsAsync(userId);
             return Ok(deletedItems);

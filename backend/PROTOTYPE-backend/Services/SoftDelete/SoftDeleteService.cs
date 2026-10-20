@@ -77,7 +77,7 @@ namespace PROTOTYPE_backend.Services.SoftDelete
             return true;
         }
 
-        public async Task<IEnumerable<DeletedItemDto>> GetDeletedItemsAsync(string userId)
+        public async Task<IEnumerable<DeletedItemDto>> GetDeletedItemsAsync(Guid userId)
         {
             var result = new List<DeletedItemDto>();
 

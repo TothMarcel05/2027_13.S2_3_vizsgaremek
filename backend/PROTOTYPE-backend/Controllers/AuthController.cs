@@ -34,7 +34,7 @@ namespace PROTOTYPE_backend.Controllers
         {
             var result = await _authService.LoginAsync(dto);
 
-            return CreatedAtAction(nameof(Login), new { id = result.User.Id }, result);
+            return CreatedAtAction(nameof(Login), new { id = result.Auth?.User.Id }, result);
         }
     }
 }

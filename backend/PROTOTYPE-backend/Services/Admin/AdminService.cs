@@ -29,7 +29,7 @@ namespace PROTOTYPE_backend.Services.Admin
                 u.Name,
                 u.Email,
                 u.GlobalRole,
-                u.Is2FaEnabled,
+                u.Is2faEnabled,
                 u.CreatedAt,
                 u.DeletedAt
             ));
@@ -51,8 +51,8 @@ namespace PROTOTYPE_backend.Services.Admin
         {
             var totalUsers = await _context.AppUsers.CountAsync();
             var activeUsers = await _context.AppUsers.CountAsync(u => u.DeletedAt == null);
-            var totalWorkspaces = await _context.UserWorkspaces.CountAsync();
-            var totalProjects = await _context.AppProjects.CountAsync();
+            var totalWorkspaces = await _context.Workspaces.CountAsync();
+            var totalProjects = await _context.Projects.CountAsync();
             var totalTasks = await _context.ProjectTasks.CountAsync();
 
             return new SystemOverviewStatsDto(

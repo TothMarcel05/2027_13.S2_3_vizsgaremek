@@ -6,7 +6,7 @@ namespace PROTOTYPE_backend.DTOs.SoftDelete
     public record SoftDeleteRequestDto(
         [Required] string EntityName, 
         [Required] string EntityId,
-        [Required] string UserId
+        [Required] Guid UserId
     );
 
     public record RestoreRequestDto(

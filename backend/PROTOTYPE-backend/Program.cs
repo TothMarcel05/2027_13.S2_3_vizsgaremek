@@ -2,7 +2,6 @@
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.IdentityModel.Tokens;
-/*
 using PROTOTYPE_backend.Data;
 using PROTOTYPE_backend.Services.Admin;
 using PROTOTYPE_backend.Services.Auth;
@@ -11,7 +10,6 @@ using PROTOTYPE_backend.Services.SoftDelete;
 using PROTOTYPE_backend.Services.Storage;
 using PROTOTYPE_backend.Services.Token;
 using PROTOTYPE_backend.Services.Workspaces;
-*/
 using Scalar.AspNetCore;
 using System.Text;
 using System.Threading.RateLimiting;
@@ -26,13 +24,13 @@ builder.Services.AddControllers();
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
 
-/*var connectionString = builder.Configuration.GetConnectionString("DefaultConnection");
+var connectionString = builder.Configuration.GetConnectionString("DefaultConnection");
 builder.Services.AddDbContext<AppDbContext>(options =>
-    options.UseMySql(connectionString, ServerVersion.AutoDetect(connectionString)));*/
+    options.UseMySql(connectionString, ServerVersion.AutoDetect(connectionString)));
 
 builder.Services.AddHttpContextAccessor();
 
-/*
+
 builder.Services.AddScoped<ISoftDeleteService, SoftDeleteService>();
 builder.Services.AddScoped<IWorkspaceService, WorkspaceService>();
 builder.Services.AddScoped<IStorageService, StorageService>();
@@ -40,7 +38,7 @@ builder.Services.AddScoped<IAdminService, AdminService>();
 builder.Services.AddScoped<IAuthService, AuthService>();
 builder.Services.AddScoped<ICalendarService, CalendarService>();
 builder.Services.AddScoped<ITokenService, TokenService>();
-*/
+
 
 var jwtSection = builder.Configuration.GetSection("JwtSettings");
 

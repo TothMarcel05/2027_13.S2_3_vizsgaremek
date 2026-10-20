@@ -12,7 +12,7 @@ namespace PROTOTYPE_backend.Services.Storage
         Task<StorageNodeResponseDto> UploadFileAsync(UploadFileDto dto);
         Task<IEnumerable<StorageNodeResponseDto>> GetNodesByWorkspaceAsync(Guid workspaceId, string? tagFilter);
         Task<bool> ShareNodeWithRoleAsync(Guid nodeId, Guid roleId);
-        Task<bool> SoftDeleteNodeAsync(Guid nodeId, string userId);
+        Task<bool> SoftDeleteNodeAsync(Guid nodeId, Guid userId);
         Task<bool> RestoreNodeAsync(Guid nodeId);
     }
 }

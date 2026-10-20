@@ -7,16 +7,16 @@
       "RelativeMoniker": "D:0:0:{709D5F3C-AE65-16AB-703F-30F362550762}|PROTOTYPE-backend\\PROTOTYPE-backend.csproj|solutionrelative:prototype-backend\\services\\storage\\storageservice.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
     },
     {
+      "AbsoluteMoniker": "D:0:0:{709D5F3C-AE65-16AB-703F-30F362550762}|PROTOTYPE-backend\\PROTOTYPE-backend.csproj|c:\\users\\tothmarcel\\documents\\github\\tmd_km_to-do_project\\backend\\prototype-backend\\services\\softdelete\\softdeleteservice.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{709D5F3C-AE65-16AB-703F-30F362550762}|PROTOTYPE-backend\\PROTOTYPE-backend.csproj|solutionrelative:prototype-backend\\services\\softdelete\\softdeleteservice.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
       "AbsoluteMoniker": "D:0:0:{709D5F3C-AE65-16AB-703F-30F362550762}|PROTOTYPE-backend\\PROTOTYPE-backend.csproj|c:\\users\\tothmarcel\\documents\\github\\tmd_km_to-do_project\\backend\\prototype-backend\\models\\storagenode.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
       "RelativeMoniker": "D:0:0:{709D5F3C-AE65-16AB-703F-30F362550762}|PROTOTYPE-backend\\PROTOTYPE-backend.csproj|solutionrelative:prototype-backend\\models\\storagenode.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
     },
     {
       "AbsoluteMoniker": "D:0:0:{709D5F3C-AE65-16AB-703F-30F362550762}|PROTOTYPE-backend\\PROTOTYPE-backend.csproj|c:\\users\\tothmarcel\\documents\\github\\tmd_km_to-do_project\\backend\\prototype-backend\\dtos\\storage\\storagedtos.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
       "RelativeMoniker": "D:0:0:{709D5F3C-AE65-16AB-703F-30F362550762}|PROTOTYPE-backend\\PROTOTYPE-backend.csproj|solutionrelative:prototype-backend\\dtos\\storage\\storagedtos.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
-    },
-    {
-      "AbsoluteMoniker": "D:0:0:{709D5F3C-AE65-16AB-703F-30F362550762}|PROTOTYPE-backend\\PROTOTYPE-backend.csproj|c:\\users\\tothmarcel\\documents\\github\\tmd_km_to-do_project\\backend\\prototype-backend\\services\\softdelete\\softdeleteservice.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
-      "RelativeMoniker": "D:0:0:{709D5F3C-AE65-16AB-703F-30F362550762}|PROTOTYPE-backend\\PROTOTYPE-backend.csproj|solutionrelative:prototype-backend\\services\\softdelete\\softdeleteservice.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
     },
     {
       "AbsoluteMoniker": "D:0:0:{709D5F3C-AE65-16AB-703F-30F362550762}|PROTOTYPE-backend\\PROTOTYPE-backend.csproj|c:\\users\\tothmarcel\\documents\\github\\tmd_km_to-do_project\\backend\\prototype-backend\\services\\softdelete\\isoftdeleteservice.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
@@ -97,7 +97,7 @@
           "Children": [
             {
               "$type": "Document",
-              "DocumentIndex": 1,
+              "DocumentIndex": 2,
               "Title": "StorageNode.cs",
               "DocumentMoniker": "C:\\Users\\TothMarcel\\Documents\\GitHub\\TMD_KM_TO-DO_Project\\backend\\PROTOTYPE-backend\\Models\\StorageNode.cs",
               "RelativeDocumentMoniker": "PROTOTYPE-backend\\Models\\StorageNode.cs",
@@ -110,7 +110,7 @@
             },
             {
               "$type": "Document",
-              "DocumentIndex": 2,
+              "DocumentIndex": 3,
               "Title": "StorageDtos.cs",
               "DocumentMoniker": "C:\\Users\\TothMarcel\\Documents\\GitHub\\TMD_KM_TO-DO_Project\\backend\\PROTOTYPE-backend\\DTOs\\Storage\\StorageDtos.cs",
               "RelativeDocumentMoniker": "PROTOTYPE-backend\\DTOs\\Storage\\StorageDtos.cs",
@@ -129,20 +129,20 @@
               "RelativeDocumentMoniker": "PROTOTYPE-backend\\Services\\Storage\\StorageService.cs",
               "ToolTip": "C:\\Users\\TothMarcel\\Documents\\GitHub\\TMD_KM_TO-DO_Project\\backend\\PROTOTYPE-backend\\Services\\Storage\\StorageService.cs",
               "RelativeToolTip": "PROTOTYPE-backend\\Services\\Storage\\StorageService.cs",
-              "ViewState": "AgIAAEgAAAAAAAAAAAAUwEwAAAAJAAAAAAAAAA==",
+              "ViewState": "AgIAAAAAAAAAAAAAAAAqwAoAAAAsAAAAAAAAAA==",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
               "WhenOpened": "2026-10-20T06:25:19.3Z",
               "EditorCaption": ""
             },
             {
               "$type": "Document",
-              "DocumentIndex": 3,
+              "DocumentIndex": 1,
               "Title": "SoftDeleteService.cs",
               "DocumentMoniker": "C:\\Users\\TothMarcel\\Documents\\GitHub\\TMD_KM_TO-DO_Project\\backend\\PROTOTYPE-backend\\Services\\SoftDelete\\SoftDeleteService.cs",
               "RelativeDocumentMoniker": "PROTOTYPE-backend\\Services\\SoftDelete\\SoftDeleteService.cs",
               "ToolTip": "C:\\Users\\TothMarcel\\Documents\\GitHub\\TMD_KM_TO-DO_Project\\backend\\PROTOTYPE-backend\\Services\\SoftDelete\\SoftDeleteService.cs",
               "RelativeToolTip": "PROTOTYPE-backend\\Services\\SoftDelete\\SoftDeleteService.cs",
-              "ViewState": "AgIAAC0AAAAAAAAAAAAowE8AAAAJAAAAAAAAAA==",
+              "ViewState": "AgIAAD4AAAAAAAAAAAAQwFQAAAAzAAAAAAAAAA==",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
               "WhenOpened": "2026-10-20T06:24:29.87Z",
               "EditorCaption": ""

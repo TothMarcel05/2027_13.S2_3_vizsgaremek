@@ -9,7 +9,7 @@ namespace PROTOTYPE_backend.Services.SoftDelete
     {
         Task<bool> SoftDeleteAsync(SoftDeleteRequestDto dto);
         Task<bool> RestoreAsync(RestoreRequestDto dto);
-        Task<IEnumerable<DeletedItemDto>> GetDeletedItemsAsync(string userId);
+        Task<IEnumerable<DeletedItemDto>> GetDeletedItemsAsync(Guid userId);
         Task<int> HardDeleteExpiredItemsAsync(); 
     }
 }

@@ -4,18 +4,18 @@ using System.ComponentModel.DataAnnotations;
 namespace PROTOTYPE_backend.DTOs.Admin
 {
     public record UserAdminViewDto(
-        string Id,
+        Guid Id,
         string Name,
         string Email,
-        byte GlobalRole,
+        sbyte GlobalRole,
         bool Is2FaEnabled,
         DateTime CreatedAt,
         DateTime? DeletedAt
     );
 
     public record UpdateUserRoleDto(
-        [Required] string UserId,
-        [Required] byte NewGlobalRole 
+        [Required] Guid UserId,
+        [Required] sbyte NewGlobalRole 
     );
 
     public record SystemOverviewStatsDto(
