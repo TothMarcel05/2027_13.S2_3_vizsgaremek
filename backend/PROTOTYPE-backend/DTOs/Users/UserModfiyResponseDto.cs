@@ -1,6 +1,6 @@
 ﻿namespace PROTOTYPE_backend.DTOs.Users
 {
-    public record UserResponseDto
+    public record UserModfiyResponseDto
         (
             Guid UserId,
             string Name,

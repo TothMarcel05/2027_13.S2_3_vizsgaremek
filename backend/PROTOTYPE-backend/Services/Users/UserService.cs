@@ -15,7 +15,31 @@ namespace PROTOTYPE_backend.Services.User
             _context = context;
         }
 
-        public async Task<UserResponseDto> UserModifyAsync(Guid userId, UserModifyRequestDto dto)
+        public async Task<UserResponseDto> UserInformationAsync(Guid userId) 
+        {
+            var user = await _context.AppUsers
+                .FirstOrDefaultAsync(u => u.Id == userId);
+
+            if (user == null) 
+            {
+                throw new Exception("A felhasználó nem található a rendszerben!");
+            }
+
+            var updatedat = user.UpdatedAt == null ? null : user.UpdatedAt;
+
+            return new UserResponseDto
+            (
+                user.Id,
+                user.Name,
+                user.Email,
+                updatedat,
+                user.GlobalRole,
+                user.Is2faEnabled,
+                user.TwoFactorType
+            );
+        }
+
+        public async Task<UserModfiyResponseDto> UserModifyAsync(Guid userId, UserModifyRequestDto dto)
         {
             var user = await _context.AppUsers
                 .FirstOrDefaultAsync(u => u.Id == userId);
@@ -31,7 +55,7 @@ namespace PROTOTYPE_backend.Services.User
 
             await _context.SaveChangesAsync();
 
-            return new UserResponseDto
+            return new UserModfiyResponseDto
             (
                 user.Id,
                 user.Name,
@@ -40,7 +64,7 @@ namespace PROTOTYPE_backend.Services.User
             );
         }
 
-        public async Task<UserDeleteResponseDto> UserDeleteAsync(Guid userId) 
+        public async Task<UserDeleteResponseDto> UserDeleteAsync(Guid userId)
         {
             var user = await _context.AppUsers
                 .FirstOrDefaultAsync (u => u.Id == userId);
