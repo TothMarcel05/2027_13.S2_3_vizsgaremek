@@ -8,6 +8,12 @@ public record SelectWorkspaceDto(
     [Required(ErrorMessage = "Munkaterület azonosítója kötelező!")] Guid workspaceId
 );
 
+
+public record CreateWorkspaceDto(
+    [Required] Guid UserId,
+    [Required] string Name
+);
+
 public record SelectWorkspaceResponseDto(
     string AccessToken,
     Guid WorkspaceId,
@@ -16,15 +22,13 @@ public record SelectWorkspaceResponseDto(
     List<string> Permissions
 );
 
+
 public record UserWorkspaceRoleDto(
     Guid workspaceId,
     string role
 );
 
-public record CreateWorkspaceDto(
-    [Required] Guid UserId,
-    [Required] string Name
-);
+
 
 public record CreateProjectDto(
     [Required] string Name,

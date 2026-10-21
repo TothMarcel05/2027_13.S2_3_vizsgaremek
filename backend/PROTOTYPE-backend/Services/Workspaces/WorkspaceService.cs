@@ -22,6 +22,23 @@ namespace PROTOTYPE_backend.Services.Workspaces
             _tokenService = tokenService ;
         }
 
+        public async Task<Workspace> CreateWorkspaceAsync(Guid userId, string name)
+        {
+            var existingWorkspace = await _context.Workspaces
+                .FirstOrDefaultAsync(w => w.Name == name && w.OwnerId == userId);
+
+            var workspace = new Workspace
+            {
+                Name = name,
+                OwnerId = userId,
+                CreatedAt = DateTime.UtcNow,
+            };
+
+            _context.Workspaces.Add(workspace);
+            await _context.SaveChangesAsync();
+            return workspace;
+        }
+
         public async Task<IEnumerable<Workspace>> GetUserWorkspacesAsync(Guid userId)
         {
             var user  = _context.AppUsers.FirstOrDefaultAsync(u => u.Id == userId);
@@ -37,22 +54,7 @@ namespace PROTOTYPE_backend.Services.Workspaces
                 .ToListAsync();
         }
 
-        public async Task<Workspace> CreateWorkspaceAsync(Guid userId, string name)
-        {
-            var existingWorkspace = await _context.Workspaces
-                .FirstOrDefaultAsync(w => w.Name == name && w.OwnerId == userId);
 
-            var workspace = new Workspace
-            {
-                Name = name,
-                OwnerId = userId,
-                CreatedAt = DateTime.UtcNow
-            };
-
-            _context.Workspaces.Add(workspace);
-            await _context.SaveChangesAsync();
-            return workspace;
-        }
 
         public async Task<Project> CreateProjectAsync(Guid workspaceId, string name, string? description, DateTime? deadline, Guid? ownerId)
         {
