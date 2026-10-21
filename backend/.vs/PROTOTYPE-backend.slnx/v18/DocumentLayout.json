@@ -1,121 +1,125 @@
 {
   "Version": 1,
-  "WorkspaceRootPath": "C:\\Users\\KecskemetiMilan\\Documents\\Github\\TMD_KM_TO-DO_Project\\backend\\",
+  "WorkspaceRootPath": "C:\\Users\\TothMarcel\\Documents\\GitHub\\TMD_KM_TO-DO_Project\\backend\\",
   "Documents": [
     {
-      "AbsoluteMoniker": "D:0:0:{709D5F3C-AE65-16AB-703F-30F362550762}|PROTOTYPE-backend\\PROTOTYPE-backend.csproj|c:\\users\\kecskemetimilan\\documents\\github\\tmd_km_to-do_project\\backend\\prototype-backend\\controllers\\usercontroller.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
-      "RelativeMoniker": "D:0:0:{709D5F3C-AE65-16AB-703F-30F362550762}|PROTOTYPE-backend\\PROTOTYPE-backend.csproj|solutionrelative:prototype-backend\\controllers\\usercontroller.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
-    },
-    {
-      "AbsoluteMoniker": "D:0:0:{709D5F3C-AE65-16AB-703F-30F362550762}|PROTOTYPE-backend\\PROTOTYPE-backend.csproj|c:\\users\\kecskemetimilan\\documents\\github\\tmd_km_to-do_project\\backend\\prototype-backend\\services\\users\\userservice.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "AbsoluteMoniker": "D:0:0:{709D5F3C-AE65-16AB-703F-30F362550762}|PROTOTYPE-backend\\PROTOTYPE-backend.csproj|c:\\users\\tothmarcel\\documents\\github\\tmd_km_to-do_project\\backend\\prototype-backend\\services\\users\\userservice.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
       "RelativeMoniker": "D:0:0:{709D5F3C-AE65-16AB-703F-30F362550762}|PROTOTYPE-backend\\PROTOTYPE-backend.csproj|solutionrelative:prototype-backend\\services\\users\\userservice.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
     },
     {
-      "AbsoluteMoniker": "D:0:0:{709D5F3C-AE65-16AB-703F-30F362550762}|PROTOTYPE-backend\\PROTOTYPE-backend.csproj|c:\\users\\kecskemetimilan\\documents\\github\\tmd_km_to-do_project\\backend\\prototype-backend\\services\\workspaces\\workspaceservice.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
-      "RelativeMoniker": "D:0:0:{709D5F3C-AE65-16AB-703F-30F362550762}|PROTOTYPE-backend\\PROTOTYPE-backend.csproj|solutionrelative:prototype-backend\\services\\workspaces\\workspaceservice.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
-    },
-    {
-      "AbsoluteMoniker": "D:0:0:{709D5F3C-AE65-16AB-703F-30F362550762}|PROTOTYPE-backend\\PROTOTYPE-backend.csproj|c:\\users\\kecskemetimilan\\documents\\github\\tmd_km_to-do_project\\backend\\prototype-backend\\services\\workspaces\\iworkspaceservice.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
-      "RelativeMoniker": "D:0:0:{709D5F3C-AE65-16AB-703F-30F362550762}|PROTOTYPE-backend\\PROTOTYPE-backend.csproj|solutionrelative:prototype-backend\\services\\workspaces\\iworkspaceservice.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
-    },
-    {
-      "AbsoluteMoniker": "D:0:0:{709D5F3C-AE65-16AB-703F-30F362550762}|PROTOTYPE-backend\\PROTOTYPE-backend.csproj|c:\\users\\kecskemetimilan\\documents\\github\\tmd_km_to-do_project\\backend\\prototype-backend\\controllers\\workspacecontroller.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
-      "RelativeMoniker": "D:0:0:{709D5F3C-AE65-16AB-703F-30F362550762}|PROTOTYPE-backend\\PROTOTYPE-backend.csproj|solutionrelative:prototype-backend\\controllers\\workspacecontroller.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
-    },
-    {
-      "AbsoluteMoniker": "D:0:0:{709D5F3C-AE65-16AB-703F-30F362550762}|PROTOTYPE-backend\\PROTOTYPE-backend.csproj|c:\\users\\kecskemetimilan\\documents\\github\\tmd_km_to-do_project\\backend\\prototype-backend\\services\\users\\iuserservice.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
-      "RelativeMoniker": "D:0:0:{709D5F3C-AE65-16AB-703F-30F362550762}|PROTOTYPE-backend\\PROTOTYPE-backend.csproj|solutionrelative:prototype-backend\\services\\users\\iuserservice.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
-    },
-    {
-      "AbsoluteMoniker": "D:0:0:{709D5F3C-AE65-16AB-703F-30F362550762}|PROTOTYPE-backend\\PROTOTYPE-backend.csproj|c:\\users\\kecskemetimilan\\documents\\github\\tmd_km_to-do_project\\backend\\prototype-backend\\controllers\\authcontroller.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
-      "RelativeMoniker": "D:0:0:{709D5F3C-AE65-16AB-703F-30F362550762}|PROTOTYPE-backend\\PROTOTYPE-backend.csproj|solutionrelative:prototype-backend\\controllers\\authcontroller.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
-    },
-    {
-      "AbsoluteMoniker": "D:0:0:{709D5F3C-AE65-16AB-703F-30F362550762}|PROTOTYPE-backend\\PROTOTYPE-backend.csproj|c:\\users\\kecskemetimilan\\documents\\github\\tmd_km_to-do_project\\backend\\prototype-backend\\dtos\\users\\userresponsedto.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
-      "RelativeMoniker": "D:0:0:{709D5F3C-AE65-16AB-703F-30F362550762}|PROTOTYPE-backend\\PROTOTYPE-backend.csproj|solutionrelative:prototype-backend\\dtos\\users\\userresponsedto.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
-    },
-    {
-      "AbsoluteMoniker": "D:0:0:{709D5F3C-AE65-16AB-703F-30F362550762}|PROTOTYPE-backend\\PROTOTYPE-backend.csproj|c:\\users\\kecskemetimilan\\documents\\github\\tmd_km_to-do_project\\backend\\prototype-backend\\models\\appuser.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
-      "RelativeMoniker": "D:0:0:{709D5F3C-AE65-16AB-703F-30F362550762}|PROTOTYPE-backend\\PROTOTYPE-backend.csproj|solutionrelative:prototype-backend\\models\\appuser.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
-    },
-    {
-      "AbsoluteMoniker": "D:0:0:{709D5F3C-AE65-16AB-703F-30F362550762}|PROTOTYPE-backend\\PROTOTYPE-backend.csproj|c:\\users\\kecskemetimilan\\documents\\github\\tmd_km_to-do_project\\backend\\prototype-backend\\dtos\\users\\usermodfiyresponsedto.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
-      "RelativeMoniker": "D:0:0:{709D5F3C-AE65-16AB-703F-30F362550762}|PROTOTYPE-backend\\PROTOTYPE-backend.csproj|solutionrelative:prototype-backend\\dtos\\users\\usermodfiyresponsedto.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
-    },
-    {
-      "AbsoluteMoniker": "D:0:0:{709D5F3C-AE65-16AB-703F-30F362550762}|PROTOTYPE-backend\\PROTOTYPE-backend.csproj|c:\\users\\kecskemetimilan\\documents\\github\\tmd_km_to-do_project\\backend\\prototype-backend\\dtos\\users\\usermodifyrequestdto.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
-      "RelativeMoniker": "D:0:0:{709D5F3C-AE65-16AB-703F-30F362550762}|PROTOTYPE-backend\\PROTOTYPE-backend.csproj|solutionrelative:prototype-backend\\dtos\\users\\usermodifyrequestdto.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
-    },
-    {
-      "AbsoluteMoniker": "D:0:0:{709D5F3C-AE65-16AB-703F-30F362550762}|PROTOTYPE-backend\\PROTOTYPE-backend.csproj|c:\\users\\kecskemetimilan\\documents\\github\\tmd_km_to-do_project\\backend\\prototype-backend\\prototype-backend.http||{5703B403-55E7-4C63-8C88-A8F52C7A45C5}",
-      "RelativeMoniker": "D:0:0:{709D5F3C-AE65-16AB-703F-30F362550762}|PROTOTYPE-backend\\PROTOTYPE-backend.csproj|solutionrelative:prototype-backend\\prototype-backend.http||{5703B403-55E7-4C63-8C88-A8F52C7A45C5}"
-    },
-    {
-      "AbsoluteMoniker": "D:0:0:{709D5F3C-AE65-16AB-703F-30F362550762}|PROTOTYPE-backend\\PROTOTYPE-backend.csproj|c:\\users\\kecskemetimilan\\documents\\github\\tmd_km_to-do_project\\backend\\prototype-backend\\controllers\\admincontroller.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
-      "RelativeMoniker": "D:0:0:{709D5F3C-AE65-16AB-703F-30F362550762}|PROTOTYPE-backend\\PROTOTYPE-backend.csproj|solutionrelative:prototype-backend\\controllers\\admincontroller.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
-    },
-    {
-      "AbsoluteMoniker": "D:0:0:{709D5F3C-AE65-16AB-703F-30F362550762}|PROTOTYPE-backend\\PROTOTYPE-backend.csproj|c:\\users\\kecskemetimilan\\documents\\github\\tmd_km_to-do_project\\backend\\prototype-backend\\controllers\\storagecontroller.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
-      "RelativeMoniker": "D:0:0:{709D5F3C-AE65-16AB-703F-30F362550762}|PROTOTYPE-backend\\PROTOTYPE-backend.csproj|solutionrelative:prototype-backend\\controllers\\storagecontroller.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
-    },
-    {
-      "AbsoluteMoniker": "D:0:0:{709D5F3C-AE65-16AB-703F-30F362550762}|PROTOTYPE-backend\\PROTOTYPE-backend.csproj|c:\\users\\kecskemetimilan\\documents\\github\\tmd_km_to-do_project\\backend\\prototype-backend\\controllers\\softdeletecontroller.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
-      "RelativeMoniker": "D:0:0:{709D5F3C-AE65-16AB-703F-30F362550762}|PROTOTYPE-backend\\PROTOTYPE-backend.csproj|solutionrelative:prototype-backend\\controllers\\softdeletecontroller.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
-    },
-    {
-      "AbsoluteMoniker": "D:0:0:{709D5F3C-AE65-16AB-703F-30F362550762}|PROTOTYPE-backend\\PROTOTYPE-backend.csproj|c:\\users\\kecskemetimilan\\documents\\github\\tmd_km_to-do_project\\backend\\prototype-backend\\controllers\\calendarcontroller.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "AbsoluteMoniker": "D:0:0:{709D5F3C-AE65-16AB-703F-30F362550762}|PROTOTYPE-backend\\PROTOTYPE-backend.csproj|c:\\users\\tothmarcel\\documents\\github\\tmd_km_to-do_project\\backend\\prototype-backend\\controllers\\calendarcontroller.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
       "RelativeMoniker": "D:0:0:{709D5F3C-AE65-16AB-703F-30F362550762}|PROTOTYPE-backend\\PROTOTYPE-backend.csproj|solutionrelative:prototype-backend\\controllers\\calendarcontroller.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
     },
     {
-      "AbsoluteMoniker": "D:0:0:{709D5F3C-AE65-16AB-703F-30F362550762}|PROTOTYPE-backend\\PROTOTYPE-backend.csproj|c:\\users\\kecskemetimilan\\documents\\github\\tmd_km_to-do_project\\backend\\prototype-backend\\appsettings.development.json||{90A6B3A7-C1A3-4009-A288-E2FF89E96FA0}",
-      "RelativeMoniker": "D:0:0:{709D5F3C-AE65-16AB-703F-30F362550762}|PROTOTYPE-backend\\PROTOTYPE-backend.csproj|solutionrelative:prototype-backend\\appsettings.development.json||{90A6B3A7-C1A3-4009-A288-E2FF89E96FA0}"
+      "AbsoluteMoniker": "D:0:0:{709D5F3C-AE65-16AB-703F-30F362550762}|PROTOTYPE-backend\\PROTOTYPE-backend.csproj|c:\\users\\tothmarcel\\documents\\github\\tmd_km_to-do_project\\backend\\prototype-backend\\controllers\\usercontroller.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{709D5F3C-AE65-16AB-703F-30F362550762}|PROTOTYPE-backend\\PROTOTYPE-backend.csproj|solutionrelative:prototype-backend\\controllers\\usercontroller.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
     },
     {
-      "AbsoluteMoniker": "D:0:0:{709D5F3C-AE65-16AB-703F-30F362550762}|PROTOTYPE-backend\\PROTOTYPE-backend.csproj|c:\\users\\kecskemetimilan\\documents\\github\\tmd_km_to-do_project\\backend\\prototype-backend\\program.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "AbsoluteMoniker": "D:0:0:{709D5F3C-AE65-16AB-703F-30F362550762}|PROTOTYPE-backend\\PROTOTYPE-backend.csproj|c:\\users\\tothmarcel\\documents\\github\\tmd_km_to-do_project\\backend\\prototype-backend\\services\\users\\iuserservice.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{709D5F3C-AE65-16AB-703F-30F362550762}|PROTOTYPE-backend\\PROTOTYPE-backend.csproj|solutionrelative:prototype-backend\\services\\users\\iuserservice.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{709D5F3C-AE65-16AB-703F-30F362550762}|PROTOTYPE-backend\\PROTOTYPE-backend.csproj|c:\\users\\tothmarcel\\documents\\github\\tmd_km_to-do_project\\backend\\prototype-backend\\controllers\\storagecontroller.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{709D5F3C-AE65-16AB-703F-30F362550762}|PROTOTYPE-backend\\PROTOTYPE-backend.csproj|solutionrelative:prototype-backend\\controllers\\storagecontroller.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{709D5F3C-AE65-16AB-703F-30F362550762}|PROTOTYPE-backend\\PROTOTYPE-backend.csproj|c:\\users\\tothmarcel\\documents\\github\\tmd_km_to-do_project\\backend\\prototype-backend\\controllers\\workspacecontroller.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{709D5F3C-AE65-16AB-703F-30F362550762}|PROTOTYPE-backend\\PROTOTYPE-backend.csproj|solutionrelative:prototype-backend\\controllers\\workspacecontroller.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{709D5F3C-AE65-16AB-703F-30F362550762}|PROTOTYPE-backend\\PROTOTYPE-backend.csproj|c:\\users\\tothmarcel\\documents\\github\\tmd_km_to-do_project\\backend\\prototype-backend\\controllers\\projectcontroller.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{709D5F3C-AE65-16AB-703F-30F362550762}|PROTOTYPE-backend\\PROTOTYPE-backend.csproj|solutionrelative:prototype-backend\\controllers\\projectcontroller.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{709D5F3C-AE65-16AB-703F-30F362550762}|PROTOTYPE-backend\\PROTOTYPE-backend.csproj|c:\\users\\tothmarcel\\documents\\github\\tmd_km_to-do_project\\backend\\prototype-backend\\controllers\\authcontroller.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{709D5F3C-AE65-16AB-703F-30F362550762}|PROTOTYPE-backend\\PROTOTYPE-backend.csproj|solutionrelative:prototype-backend\\controllers\\authcontroller.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{709D5F3C-AE65-16AB-703F-30F362550762}|PROTOTYPE-backend\\PROTOTYPE-backend.csproj|c:\\users\\tothmarcel\\documents\\github\\tmd_km_to-do_project\\backend\\prototype-backend\\controllers\\admincontroller.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{709D5F3C-AE65-16AB-703F-30F362550762}|PROTOTYPE-backend\\PROTOTYPE-backend.csproj|solutionrelative:prototype-backend\\controllers\\admincontroller.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{709D5F3C-AE65-16AB-703F-30F362550762}|PROTOTYPE-backend\\PROTOTYPE-backend.csproj|c:\\users\\tothmarcel\\documents\\github\\tmd_km_to-do_project\\backend\\prototype-backend\\program.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
       "RelativeMoniker": "D:0:0:{709D5F3C-AE65-16AB-703F-30F362550762}|PROTOTYPE-backend\\PROTOTYPE-backend.csproj|solutionrelative:prototype-backend\\program.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
     },
     {
-      "AbsoluteMoniker": "D:0:0:{709D5F3C-AE65-16AB-703F-30F362550762}|PROTOTYPE-backend\\PROTOTYPE-backend.csproj|c:\\users\\kecskemetimilan\\documents\\github\\tmd_km_to-do_project\\backend\\prototype-backend\\appsettings.json||{90A6B3A7-C1A3-4009-A288-E2FF89E96FA0}",
+      "AbsoluteMoniker": "D:0:0:{709D5F3C-AE65-16AB-703F-30F362550762}|PROTOTYPE-backend\\PROTOTYPE-backend.csproj|c:\\users\\tothmarcel\\documents\\github\\tmd_km_to-do_project\\backend\\prototype-backend\\services\\token\\tokenservice.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{709D5F3C-AE65-16AB-703F-30F362550762}|PROTOTYPE-backend\\PROTOTYPE-backend.csproj|solutionrelative:prototype-backend\\services\\token\\tokenservice.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{709D5F3C-AE65-16AB-703F-30F362550762}|PROTOTYPE-backend\\PROTOTYPE-backend.csproj|c:\\users\\tothmarcel\\documents\\github\\tmd_km_to-do_project\\backend\\prototype-backend\\services\\workspaces\\workspaceservice.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{709D5F3C-AE65-16AB-703F-30F362550762}|PROTOTYPE-backend\\PROTOTYPE-backend.csproj|solutionrelative:prototype-backend\\services\\workspaces\\workspaceservice.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{709D5F3C-AE65-16AB-703F-30F362550762}|PROTOTYPE-backend\\PROTOTYPE-backend.csproj|c:\\users\\tothmarcel\\documents\\github\\tmd_km_to-do_project\\backend\\prototype-backend\\services\\workspaces\\iworkspaceservice.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{709D5F3C-AE65-16AB-703F-30F362550762}|PROTOTYPE-backend\\PROTOTYPE-backend.csproj|solutionrelative:prototype-backend\\services\\workspaces\\iworkspaceservice.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{709D5F3C-AE65-16AB-703F-30F362550762}|PROTOTYPE-backend\\PROTOTYPE-backend.csproj|c:\\users\\tothmarcel\\documents\\github\\tmd_km_to-do_project\\backend\\prototype-backend\\dtos\\users\\userresponsedto.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{709D5F3C-AE65-16AB-703F-30F362550762}|PROTOTYPE-backend\\PROTOTYPE-backend.csproj|solutionrelative:prototype-backend\\dtos\\users\\userresponsedto.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{709D5F3C-AE65-16AB-703F-30F362550762}|PROTOTYPE-backend\\PROTOTYPE-backend.csproj|c:\\users\\tothmarcel\\documents\\github\\tmd_km_to-do_project\\backend\\prototype-backend\\models\\appuser.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{709D5F3C-AE65-16AB-703F-30F362550762}|PROTOTYPE-backend\\PROTOTYPE-backend.csproj|solutionrelative:prototype-backend\\models\\appuser.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{709D5F3C-AE65-16AB-703F-30F362550762}|PROTOTYPE-backend\\PROTOTYPE-backend.csproj|c:\\users\\tothmarcel\\documents\\github\\tmd_km_to-do_project\\backend\\prototype-backend\\dtos\\users\\usermodfiyresponsedto.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{709D5F3C-AE65-16AB-703F-30F362550762}|PROTOTYPE-backend\\PROTOTYPE-backend.csproj|solutionrelative:prototype-backend\\dtos\\users\\usermodfiyresponsedto.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{709D5F3C-AE65-16AB-703F-30F362550762}|PROTOTYPE-backend\\PROTOTYPE-backend.csproj|c:\\users\\tothmarcel\\documents\\github\\tmd_km_to-do_project\\backend\\prototype-backend\\dtos\\users\\usermodifyrequestdto.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{709D5F3C-AE65-16AB-703F-30F362550762}|PROTOTYPE-backend\\PROTOTYPE-backend.csproj|solutionrelative:prototype-backend\\dtos\\users\\usermodifyrequestdto.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{709D5F3C-AE65-16AB-703F-30F362550762}|PROTOTYPE-backend\\PROTOTYPE-backend.csproj|c:\\users\\tothmarcel\\documents\\github\\tmd_km_to-do_project\\backend\\prototype-backend\\controllers\\softdeletecontroller.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{709D5F3C-AE65-16AB-703F-30F362550762}|PROTOTYPE-backend\\PROTOTYPE-backend.csproj|solutionrelative:prototype-backend\\controllers\\softdeletecontroller.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{709D5F3C-AE65-16AB-703F-30F362550762}|PROTOTYPE-backend\\PROTOTYPE-backend.csproj|c:\\users\\tothmarcel\\documents\\github\\tmd_km_to-do_project\\backend\\prototype-backend\\appsettings.development.json||{90A6B3A7-C1A3-4009-A288-E2FF89E96FA0}",
+      "RelativeMoniker": "D:0:0:{709D5F3C-AE65-16AB-703F-30F362550762}|PROTOTYPE-backend\\PROTOTYPE-backend.csproj|solutionrelative:prototype-backend\\appsettings.development.json||{90A6B3A7-C1A3-4009-A288-E2FF89E96FA0}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{709D5F3C-AE65-16AB-703F-30F362550762}|PROTOTYPE-backend\\PROTOTYPE-backend.csproj|c:\\users\\tothmarcel\\documents\\github\\tmd_km_to-do_project\\backend\\prototype-backend\\appsettings.json||{90A6B3A7-C1A3-4009-A288-E2FF89E96FA0}",
       "RelativeMoniker": "D:0:0:{709D5F3C-AE65-16AB-703F-30F362550762}|PROTOTYPE-backend\\PROTOTYPE-backend.csproj|solutionrelative:prototype-backend\\appsettings.json||{90A6B3A7-C1A3-4009-A288-E2FF89E96FA0}"
     },
     {
-      "AbsoluteMoniker": "D:0:0:{709D5F3C-AE65-16AB-703F-30F362550762}|PROTOTYPE-backend\\PROTOTYPE-backend.csproj|c:\\users\\kecskemetimilan\\documents\\github\\tmd_km_to-do_project\\backend\\prototype-backend\\services\\storage\\istorageservice.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "AbsoluteMoniker": "D:0:0:{709D5F3C-AE65-16AB-703F-30F362550762}|PROTOTYPE-backend\\PROTOTYPE-backend.csproj|c:\\users\\tothmarcel\\documents\\github\\tmd_km_to-do_project\\backend\\prototype-backend\\services\\storage\\istorageservice.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
       "RelativeMoniker": "D:0:0:{709D5F3C-AE65-16AB-703F-30F362550762}|PROTOTYPE-backend\\PROTOTYPE-backend.csproj|solutionrelative:prototype-backend\\services\\storage\\istorageservice.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
     },
     {
-      "AbsoluteMoniker": "D:0:0:{709D5F3C-AE65-16AB-703F-30F362550762}|PROTOTYPE-backend\\PROTOTYPE-backend.csproj|c:\\users\\kecskemetimilan\\documents\\github\\tmd_km_to-do_project\\backend\\prototype-backend\\services\\storage\\storageservice.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "AbsoluteMoniker": "D:0:0:{709D5F3C-AE65-16AB-703F-30F362550762}|PROTOTYPE-backend\\PROTOTYPE-backend.csproj|c:\\users\\tothmarcel\\documents\\github\\tmd_km_to-do_project\\backend\\prototype-backend\\services\\storage\\storageservice.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
       "RelativeMoniker": "D:0:0:{709D5F3C-AE65-16AB-703F-30F362550762}|PROTOTYPE-backend\\PROTOTYPE-backend.csproj|solutionrelative:prototype-backend\\services\\storage\\storageservice.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
     },
     {
-      "AbsoluteMoniker": "D:0:0:{709D5F3C-AE65-16AB-703F-30F362550762}|PROTOTYPE-backend\\PROTOTYPE-backend.csproj|c:\\users\\kecskemetimilan\\documents\\github\\tmd_km_to-do_project\\backend\\prototype-backend\\services\\softdelete\\isoftdeleteservice.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "AbsoluteMoniker": "D:0:0:{709D5F3C-AE65-16AB-703F-30F362550762}|PROTOTYPE-backend\\PROTOTYPE-backend.csproj|c:\\users\\tothmarcel\\documents\\github\\tmd_km_to-do_project\\backend\\prototype-backend\\services\\softdelete\\isoftdeleteservice.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
       "RelativeMoniker": "D:0:0:{709D5F3C-AE65-16AB-703F-30F362550762}|PROTOTYPE-backend\\PROTOTYPE-backend.csproj|solutionrelative:prototype-backend\\services\\softdelete\\isoftdeleteservice.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
     },
     {
-      "AbsoluteMoniker": "D:0:0:{709D5F3C-AE65-16AB-703F-30F362550762}|PROTOTYPE-backend\\PROTOTYPE-backend.csproj|c:\\users\\kecskemetimilan\\documents\\github\\tmd_km_to-do_project\\backend\\prototype-backend\\services\\softdelete\\softdeleteservice.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "AbsoluteMoniker": "D:0:0:{709D5F3C-AE65-16AB-703F-30F362550762}|PROTOTYPE-backend\\PROTOTYPE-backend.csproj|c:\\users\\tothmarcel\\documents\\github\\tmd_km_to-do_project\\backend\\prototype-backend\\services\\softdelete\\softdeleteservice.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
       "RelativeMoniker": "D:0:0:{709D5F3C-AE65-16AB-703F-30F362550762}|PROTOTYPE-backend\\PROTOTYPE-backend.csproj|solutionrelative:prototype-backend\\services\\softdelete\\softdeleteservice.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
     },
     {
-      "AbsoluteMoniker": "D:0:0:{709D5F3C-AE65-16AB-703F-30F362550762}|PROTOTYPE-backend\\PROTOTYPE-backend.csproj|c:\\users\\kecskemetimilan\\documents\\github\\tmd_km_to-do_project\\backend\\prototype-backend\\dtos\\softdelete\\softdeletedtos.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "AbsoluteMoniker": "D:0:0:{709D5F3C-AE65-16AB-703F-30F362550762}|PROTOTYPE-backend\\PROTOTYPE-backend.csproj|c:\\users\\tothmarcel\\documents\\github\\tmd_km_to-do_project\\backend\\prototype-backend\\dtos\\softdelete\\softdeletedtos.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
       "RelativeMoniker": "D:0:0:{709D5F3C-AE65-16AB-703F-30F362550762}|PROTOTYPE-backend\\PROTOTYPE-backend.csproj|solutionrelative:prototype-backend\\dtos\\softdelete\\softdeletedtos.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
     },
     {
-      "AbsoluteMoniker": "D:0:0:{709D5F3C-AE65-16AB-703F-30F362550762}|PROTOTYPE-backend\\PROTOTYPE-backend.csproj|c:\\users\\kecskemetimilan\\documents\\github\\tmd_km_to-do_project\\backend\\prototype-backend\\dtos\\admin\\admindtos.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "AbsoluteMoniker": "D:0:0:{709D5F3C-AE65-16AB-703F-30F362550762}|PROTOTYPE-backend\\PROTOTYPE-backend.csproj|c:\\users\\tothmarcel\\documents\\github\\tmd_km_to-do_project\\backend\\prototype-backend\\dtos\\admin\\admindtos.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
       "RelativeMoniker": "D:0:0:{709D5F3C-AE65-16AB-703F-30F362550762}|PROTOTYPE-backend\\PROTOTYPE-backend.csproj|solutionrelative:prototype-backend\\dtos\\admin\\admindtos.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
     },
     {
-      "AbsoluteMoniker": "D:0:0:{709D5F3C-AE65-16AB-703F-30F362550762}|PROTOTYPE-backend\\PROTOTYPE-backend.csproj|c:\\users\\kecskemetimilan\\documents\\github\\tmd_km_to-do_project\\backend\\prototype-backend\\services\\admin\\adminservice.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "AbsoluteMoniker": "D:0:0:{709D5F3C-AE65-16AB-703F-30F362550762}|PROTOTYPE-backend\\PROTOTYPE-backend.csproj|c:\\users\\tothmarcel\\documents\\github\\tmd_km_to-do_project\\backend\\prototype-backend\\services\\admin\\adminservice.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
       "RelativeMoniker": "D:0:0:{709D5F3C-AE65-16AB-703F-30F362550762}|PROTOTYPE-backend\\PROTOTYPE-backend.csproj|solutionrelative:prototype-backend\\services\\admin\\adminservice.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
     },
     {
-      "AbsoluteMoniker": "D:0:0:{709D5F3C-AE65-16AB-703F-30F362550762}|PROTOTYPE-backend\\PROTOTYPE-backend.csproj|c:\\users\\kecskemetimilan\\documents\\github\\tmd_km_to-do_project\\backend\\prototype-backend\\data\\appdbcontext.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "AbsoluteMoniker": "D:0:0:{709D5F3C-AE65-16AB-703F-30F362550762}|PROTOTYPE-backend\\PROTOTYPE-backend.csproj|c:\\users\\tothmarcel\\documents\\github\\tmd_km_to-do_project\\backend\\prototype-backend\\data\\appdbcontext.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
       "RelativeMoniker": "D:0:0:{709D5F3C-AE65-16AB-703F-30F362550762}|PROTOTYPE-backend\\PROTOTYPE-backend.csproj|solutionrelative:prototype-backend\\data\\appdbcontext.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
     },
     {
-      "AbsoluteMoniker": "D:0:0:{709D5F3C-AE65-16AB-703F-30F362550762}|PROTOTYPE-backend\\PROTOTYPE-backend.csproj|c:\\users\\kecskemetimilan\\documents\\github\\tmd_km_to-do_project\\backend\\prototype-backend\\services\\calendar\\calendarservice.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "AbsoluteMoniker": "D:0:0:{709D5F3C-AE65-16AB-703F-30F362550762}|PROTOTYPE-backend\\PROTOTYPE-backend.csproj|c:\\users\\tothmarcel\\documents\\github\\tmd_km_to-do_project\\backend\\prototype-backend\\services\\calendar\\calendarservice.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
       "RelativeMoniker": "D:0:0:{709D5F3C-AE65-16AB-703F-30F362550762}|PROTOTYPE-backend\\PROTOTYPE-backend.csproj|solutionrelative:prototype-backend\\services\\calendar\\calendarservice.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
     },
     {
-      "AbsoluteMoniker": "D:0:0:{709D5F3C-AE65-16AB-703F-30F362550762}|PROTOTYPE-backend\\PROTOTYPE-backend.csproj|c:\\users\\kecskemetimilan\\documents\\github\\tmd_km_to-do_project\\backend\\prototype-backend\\dtos\\calendar\\daterequestdto.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "AbsoluteMoniker": "D:0:0:{709D5F3C-AE65-16AB-703F-30F362550762}|PROTOTYPE-backend\\PROTOTYPE-backend.csproj|c:\\users\\tothmarcel\\documents\\github\\tmd_km_to-do_project\\backend\\prototype-backend\\dtos\\calendar\\daterequestdto.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
       "RelativeMoniker": "D:0:0:{709D5F3C-AE65-16AB-703F-30F362550762}|PROTOTYPE-backend\\PROTOTYPE-backend.csproj|solutionrelative:prototype-backend\\dtos\\calendar\\daterequestdto.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
     }
   ],
@@ -126,56 +130,73 @@
       "DocumentGroups": [
         {
           "DockedWidth": 200,
-          "SelectedChildIndex": 0,
+          "SelectedChildIndex": 5,
           "Children": [
             {
               "$type": "Document",
-              "DocumentIndex": 0,
+              "DocumentIndex": 2,
               "Title": "UserController.cs",
-              "DocumentMoniker": "C:\\Users\\KecskemetiMilan\\Documents\\Github\\TMD_KM_TO-DO_Project\\backend\\PROTOTYPE-backend\\Controllers\\UserController.cs",
+              "DocumentMoniker": "C:\\Users\\TothMarcel\\Documents\\GitHub\\TMD_KM_TO-DO_Project\\backend\\PROTOTYPE-backend\\Controllers\\UserController.cs",
               "RelativeDocumentMoniker": "PROTOTYPE-backend\\Controllers\\UserController.cs",
-              "ToolTip": "C:\\Users\\KecskemetiMilan\\Documents\\Github\\TMD_KM_TO-DO_Project\\backend\\PROTOTYPE-backend\\Controllers\\UserController.cs",
+              "ToolTip": "C:\\Users\\TothMarcel\\Documents\\GitHub\\TMD_KM_TO-DO_Project\\backend\\PROTOTYPE-backend\\Controllers\\UserController.cs",
               "RelativeToolTip": "PROTOTYPE-backend\\Controllers\\UserController.cs",
-              "ViewState": "AgIAAAAAAAAAAAAAAAAAAAoAAAAGAAAAAAAAAA==",
+              "ViewState": "AgIAAAsAAAAAAAAAAAAxwB0AAAAAAAAAAAAAAA==",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
-              "WhenOpened": "2026-10-21T06:48:22.686Z",
+              "WhenOpened": "2026-10-21T07:41:45.527Z",
+              "EditorCaption": ""
+            },
+            {
+              "$type": "Bookmark",
+              "Name": "ST:0:0:{aa2115a1-9712-457b-9047-dbb71ca2cdd2}"
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 6,
+              "Title": "ProjectController.cs",
+              "DocumentMoniker": "C:\\Users\\TothMarcel\\Documents\\GitHub\\TMD_KM_TO-DO_Project\\backend\\PROTOTYPE-backend\\Controllers\\ProjectController.cs",
+              "RelativeDocumentMoniker": "PROTOTYPE-backend\\Controllers\\ProjectController.cs",
+              "ToolTip": "C:\\Users\\TothMarcel\\Documents\\GitHub\\TMD_KM_TO-DO_Project\\backend\\PROTOTYPE-backend\\Controllers\\ProjectController.cs",
+              "RelativeToolTip": "PROTOTYPE-backend\\Controllers\\ProjectController.cs",
+              "ViewState": "AgIAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2026-10-21T07:42:29.801Z",
+              "EditorCaption": ""
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 9,
+              "Title": "Program.cs",
+              "DocumentMoniker": "C:\\Users\\TothMarcel\\Documents\\GitHub\\TMD_KM_TO-DO_Project\\backend\\PROTOTYPE-backend\\Program.cs",
+              "RelativeDocumentMoniker": "PROTOTYPE-backend\\Program.cs",
+              "ToolTip": "C:\\Users\\TothMarcel\\Documents\\GitHub\\TMD_KM_TO-DO_Project\\backend\\PROTOTYPE-backend\\Program.cs",
+              "RelativeToolTip": "PROTOTYPE-backend\\Program.cs",
+              "ViewState": "AgIAAAkAAAAAAAAAAAAAABwAAAA2AAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2026-09-29T06:03:29.738Z",
               "EditorCaption": ""
             },
             {
               "$type": "Document",
               "DocumentIndex": 3,
-              "Title": "IWorkspaceService.cs",
-              "DocumentMoniker": "C:\\Users\\KecskemetiMilan\\Documents\\Github\\TMD_KM_TO-DO_Project\\backend\\PROTOTYPE-backend\\Services\\Workspaces\\IWorkspaceService.cs",
-              "RelativeDocumentMoniker": "PROTOTYPE-backend\\Services\\Workspaces\\IWorkspaceService.cs",
-              "ToolTip": "C:\\Users\\KecskemetiMilan\\Documents\\Github\\TMD_KM_TO-DO_Project\\backend\\PROTOTYPE-backend\\Services\\Workspaces\\IWorkspaceService.cs",
-              "RelativeToolTip": "PROTOTYPE-backend\\Services\\Workspaces\\IWorkspaceService.cs",
-              "ViewState": "AgIAAAAAAAAAAAAAAAAqwAkAAAAlAAAAAAAAAA==",
+              "Title": "IUserService.cs",
+              "DocumentMoniker": "C:\\Users\\TothMarcel\\Documents\\GitHub\\TMD_KM_TO-DO_Project\\backend\\PROTOTYPE-backend\\Services\\Users\\IUserService.cs",
+              "RelativeDocumentMoniker": "PROTOTYPE-backend\\Services\\Users\\IUserService.cs",
+              "ToolTip": "C:\\Users\\TothMarcel\\Documents\\GitHub\\TMD_KM_TO-DO_Project\\backend\\PROTOTYPE-backend\\Services\\Users\\IUserService.cs",
+              "RelativeToolTip": "PROTOTYPE-backend\\Services\\Users\\IUserService.cs",
+              "ViewState": "AgIAAAAAAAAAAAAAAAAAAAQAAAAVAAAAAAAAAA==",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
-              "WhenOpened": "2026-10-20T07:19:28.344Z",
+              "WhenOpened": "2026-10-20T07:39:14.056Z",
               "EditorCaption": ""
             },
             {
               "$type": "Document",
-              "DocumentIndex": 2,
-              "Title": "WorkspaceService.cs",
-              "DocumentMoniker": "C:\\Users\\KecskemetiMilan\\Documents\\Github\\TMD_KM_TO-DO_Project\\backend\\PROTOTYPE-backend\\Services\\Workspaces\\WorkspaceService.cs",
-              "RelativeDocumentMoniker": "PROTOTYPE-backend\\Services\\Workspaces\\WorkspaceService.cs",
-              "ToolTip": "C:\\Users\\KecskemetiMilan\\Documents\\Github\\TMD_KM_TO-DO_Project\\backend\\PROTOTYPE-backend\\Services\\Workspaces\\WorkspaceService.cs",
-              "RelativeToolTip": "PROTOTYPE-backend\\Services\\Workspaces\\WorkspaceService.cs",
-              "ViewState": "AgIAAA8AAAAAAAAAAAAQwAwAAAAYAAAAAAAAAA==",
-              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
-              "WhenOpened": "2026-10-20T07:19:31.069Z",
-              "EditorCaption": ""
-            },
-            {
-              "$type": "Document",
-              "DocumentIndex": 1,
+              "DocumentIndex": 0,
               "Title": "UserService.cs",
-              "DocumentMoniker": "C:\\Users\\KecskemetiMilan\\Documents\\Github\\TMD_KM_TO-DO_Project\\backend\\PROTOTYPE-backend\\Services\\Users\\UserService.cs",
+              "DocumentMoniker": "C:\\Users\\TothMarcel\\Documents\\GitHub\\TMD_KM_TO-DO_Project\\backend\\PROTOTYPE-backend\\Services\\Users\\UserService.cs",
               "RelativeDocumentMoniker": "PROTOTYPE-backend\\Services\\Users\\UserService.cs",
-              "ToolTip": "C:\\Users\\KecskemetiMilan\\Documents\\Github\\TMD_KM_TO-DO_Project\\backend\\PROTOTYPE-backend\\Services\\Users\\UserService.cs",
+              "ToolTip": "C:\\Users\\TothMarcel\\Documents\\GitHub\\TMD_KM_TO-DO_Project\\backend\\PROTOTYPE-backend\\Services\\Users\\UserService.cs",
               "RelativeToolTip": "PROTOTYPE-backend\\Services\\Users\\UserService.cs",
-              "ViewState": "AgIAADIAAAAAAAAAAAAwwDgAAAAAAAAAAAAAAA==",
+              "ViewState": "AgIAACwAAAAAAAAAAAAwwE0AAAAAAAAAAAAAAA==",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
               "WhenOpened": "2026-10-20T07:39:25.198Z",
               "EditorCaption": ""
@@ -183,72 +204,49 @@
             {
               "$type": "Document",
               "DocumentIndex": 5,
-              "Title": "IUserService.cs",
-              "DocumentMoniker": "C:\\Users\\KecskemetiMilan\\Documents\\Github\\TMD_KM_TO-DO_Project\\backend\\PROTOTYPE-backend\\Services\\Users\\IUserService.cs",
-              "RelativeDocumentMoniker": "PROTOTYPE-backend\\Services\\Users\\IUserService.cs",
-              "ToolTip": "C:\\Users\\KecskemetiMilan\\Documents\\Github\\TMD_KM_TO-DO_Project\\backend\\PROTOTYPE-backend\\Services\\Users\\IUserService.cs",
-              "RelativeToolTip": "PROTOTYPE-backend\\Services\\Users\\IUserService.cs",
-              "ViewState": "AgIAAAAAAAAAAAAAAAAAAAYAAAAhAAAAAAAAAA==",
+              "Title": "WorkspaceController.cs",
+              "DocumentMoniker": "C:\\Users\\TothMarcel\\Documents\\GitHub\\TMD_KM_TO-DO_Project\\backend\\PROTOTYPE-backend\\Controllers\\WorkspaceController.cs",
+              "RelativeDocumentMoniker": "PROTOTYPE-backend\\Controllers\\WorkspaceController.cs",
+              "ToolTip": "C:\\Users\\TothMarcel\\Documents\\GitHub\\TMD_KM_TO-DO_Project\\backend\\PROTOTYPE-backend\\Controllers\\WorkspaceController.cs",
+              "RelativeToolTip": "PROTOTYPE-backend\\Controllers\\WorkspaceController.cs",
+              "ViewState": "AgIAAAkAAAAAAAAAAAAAAAwAAAAcAAAAAAAAAA==",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
-              "WhenOpened": "2026-10-20T07:39:14.056Z",
+              "WhenOpened": "2026-10-20T07:11:47.859Z",
               "EditorCaption": ""
             },
             {
               "$type": "Document",
-              "DocumentIndex": 9,
-              "Title": "UserModfiyResponseDto.cs",
-              "DocumentMoniker": "C:\\Users\\KecskemetiMilan\\Documents\\Github\\TMD_KM_TO-DO_Project\\backend\\PROTOTYPE-backend\\DTOs\\Users\\UserModfiyResponseDto.cs",
-              "RelativeDocumentMoniker": "PROTOTYPE-backend\\DTOs\\Users\\UserModfiyResponseDto.cs",
-              "ToolTip": "C:\\Users\\KecskemetiMilan\\Documents\\Github\\TMD_KM_TO-DO_Project\\backend\\PROTOTYPE-backend\\DTOs\\Users\\UserModfiyResponseDto.cs",
-              "RelativeToolTip": "PROTOTYPE-backend\\DTOs\\Users\\UserModfiyResponseDto.cs",
-              "ViewState": "AgIAAAAAAAAAAAAAAAAAAAgAAAAKAAAAAAAAAA==",
+              "DocumentIndex": 4,
+              "Title": "StorageController.cs",
+              "DocumentMoniker": "C:\\Users\\TothMarcel\\Documents\\GitHub\\TMD_KM_TO-DO_Project\\backend\\PROTOTYPE-backend\\Controllers\\StorageController.cs",
+              "RelativeDocumentMoniker": "PROTOTYPE-backend\\Controllers\\StorageController.cs",
+              "ToolTip": "C:\\Users\\TothMarcel\\Documents\\GitHub\\TMD_KM_TO-DO_Project\\backend\\PROTOTYPE-backend\\Controllers\\StorageController.cs",
+              "RelativeToolTip": "PROTOTYPE-backend\\Controllers\\StorageController.cs",
+              "ViewState": "AgIAAAkAAAAAAAAAAAAgwCwAAAAgAAAAAAAAAA==",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
-              "WhenOpened": "2026-10-20T07:40:26.47Z"
-            },
-            {
-              "$type": "Document",
-              "DocumentIndex": 6,
-              "Title": "AuthController.cs",
-              "DocumentMoniker": "C:\\Users\\KecskemetiMilan\\Documents\\Github\\TMD_KM_TO-DO_Project\\backend\\PROTOTYPE-backend\\Controllers\\AuthController.cs",
-              "RelativeDocumentMoniker": "PROTOTYPE-backend\\Controllers\\AuthController.cs",
-              "ToolTip": "C:\\Users\\KecskemetiMilan\\Documents\\Github\\TMD_KM_TO-DO_Project\\backend\\PROTOTYPE-backend\\Controllers\\AuthController.cs",
-              "RelativeToolTip": "PROTOTYPE-backend\\Controllers\\AuthController.cs",
-              "ViewState": "AgIAAA4AAAAAAAAAAAAxwCIAAAA8AAAAAAAAAA==",
-              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
-              "WhenOpened": "2026-10-06T07:16:49.287Z",
+              "WhenOpened": "2026-10-20T06:51:39.357Z",
               "EditorCaption": ""
             },
             {
               "$type": "Document",
-              "DocumentIndex": 10,
-              "Title": "UserModifyRequestDto.cs",
-              "DocumentMoniker": "C:\\Users\\KecskemetiMilan\\Documents\\Github\\TMD_KM_TO-DO_Project\\backend\\PROTOTYPE-backend\\DTOs\\Users\\UserModifyRequestDto.cs",
-              "RelativeDocumentMoniker": "PROTOTYPE-backend\\DTOs\\Users\\UserModifyRequestDto.cs",
-              "ToolTip": "C:\\Users\\KecskemetiMilan\\Documents\\Github\\TMD_KM_TO-DO_Project\\backend\\PROTOTYPE-backend\\DTOs\\Users\\UserModifyRequestDto.cs",
-              "RelativeToolTip": "PROTOTYPE-backend\\DTOs\\Users\\UserModifyRequestDto.cs",
-              "ViewState": "AgIAAAAAAAAAAAAAAAAAAAYAAAAUAAAAAAAAAA==",
+              "DocumentIndex": 1,
+              "Title": "CalendarController.cs",
+              "DocumentMoniker": "C:\\Users\\TothMarcel\\Documents\\GitHub\\TMD_KM_TO-DO_Project\\backend\\PROTOTYPE-backend\\Controllers\\CalendarController.cs",
+              "RelativeDocumentMoniker": "PROTOTYPE-backend\\Controllers\\CalendarController.cs",
+              "ToolTip": "C:\\Users\\TothMarcel\\Documents\\GitHub\\TMD_KM_TO-DO_Project\\backend\\PROTOTYPE-backend\\Controllers\\CalendarController.cs",
+              "RelativeToolTip": "PROTOTYPE-backend\\Controllers\\CalendarController.cs",
+              "ViewState": "AgIAAAAAAAAAAAAAAAAAAA4AAAAJAAAAAAAAAA==",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
-              "WhenOpened": "2026-10-20T07:40:51.006Z"
+              "WhenOpened": "2026-10-20T07:22:54.995Z",
+              "EditorCaption": ""
             },
             {
               "$type": "Document",
-              "DocumentIndex": 8,
-              "Title": "AppUser.cs",
-              "DocumentMoniker": "C:\\Users\\KecskemetiMilan\\Documents\\Github\\TMD_KM_TO-DO_Project\\backend\\PROTOTYPE-backend\\Models\\AppUser.cs",
-              "RelativeDocumentMoniker": "PROTOTYPE-backend\\Models\\AppUser.cs",
-              "ToolTip": "C:\\Users\\KecskemetiMilan\\Documents\\Github\\TMD_KM_TO-DO_Project\\backend\\PROTOTYPE-backend\\Models\\AppUser.cs",
-              "RelativeToolTip": "PROTOTYPE-backend\\Models\\AppUser.cs",
-              "ViewState": "AgIAADUAAAAAAAAAAAAAwD8AAAARAAAAAAAAAA==",
-              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
-              "WhenOpened": "2026-10-21T05:41:45.31Z"
-            },
-            {
-              "$type": "Document",
-              "DocumentIndex": 7,
+              "DocumentIndex": 13,
               "Title": "UserResponseDto.cs",
-              "DocumentMoniker": "C:\\Users\\KecskemetiMilan\\Documents\\Github\\TMD_KM_TO-DO_Project\\backend\\PROTOTYPE-backend\\DTOs\\Users\\UserResponseDto.cs",
+              "DocumentMoniker": "C:\\Users\\TothMarcel\\Documents\\GitHub\\TMD_KM_TO-DO_Project\\backend\\PROTOTYPE-backend\\DTOs\\Users\\UserResponseDto.cs",
               "RelativeDocumentMoniker": "PROTOTYPE-backend\\DTOs\\Users\\UserResponseDto.cs",
-              "ToolTip": "C:\\Users\\KecskemetiMilan\\Documents\\Github\\TMD_KM_TO-DO_Project\\backend\\PROTOTYPE-backend\\DTOs\\Users\\UserResponseDto.cs",
+              "ToolTip": "C:\\Users\\TothMarcel\\Documents\\GitHub\\TMD_KM_TO-DO_Project\\backend\\PROTOTYPE-backend\\DTOs\\Users\\UserResponseDto.cs",
               "RelativeToolTip": "PROTOTYPE-backend\\DTOs\\Users\\UserResponseDto.cs",
               "ViewState": "AgIAAAAAAAAAAAAAAAAAAAcAAAARAAAAAAAAAA==",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
@@ -256,47 +254,110 @@
             },
             {
               "$type": "Document",
-              "DocumentIndex": 15,
-              "Title": "CalendarController.cs",
-              "DocumentMoniker": "C:\\Users\\KecskemetiMilan\\Documents\\Github\\TMD_KM_TO-DO_Project\\backend\\PROTOTYPE-backend\\Controllers\\CalendarController.cs",
-              "RelativeDocumentMoniker": "PROTOTYPE-backend\\Controllers\\CalendarController.cs",
-              "ToolTip": "C:\\Users\\KecskemetiMilan\\Documents\\Github\\TMD_KM_TO-DO_Project\\backend\\PROTOTYPE-backend\\Controllers\\CalendarController.cs",
-              "RelativeToolTip": "PROTOTYPE-backend\\Controllers\\CalendarController.cs",
-              "ViewState": "AgIAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA==",
+              "DocumentIndex": 14,
+              "Title": "AppUser.cs",
+              "DocumentMoniker": "C:\\Users\\TothMarcel\\Documents\\GitHub\\TMD_KM_TO-DO_Project\\backend\\PROTOTYPE-backend\\Models\\AppUser.cs",
+              "RelativeDocumentMoniker": "PROTOTYPE-backend\\Models\\AppUser.cs",
+              "ToolTip": "C:\\Users\\TothMarcel\\Documents\\GitHub\\TMD_KM_TO-DO_Project\\backend\\PROTOTYPE-backend\\Models\\AppUser.cs",
+              "RelativeToolTip": "PROTOTYPE-backend\\Models\\AppUser.cs",
+              "ViewState": "AgIAADUAAAAAAAAAAAAAwD8AAAARAAAAAAAAAA==",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
-              "WhenOpened": "2026-10-20T07:22:54.995Z"
+              "WhenOpened": "2026-10-21T05:41:45.31Z"
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 8,
+              "Title": "AdminController.cs",
+              "DocumentMoniker": "C:\\Users\\TothMarcel\\Documents\\GitHub\\TMD_KM_TO-DO_Project\\backend\\PROTOTYPE-backend\\Controllers\\AdminController.cs",
+              "RelativeDocumentMoniker": "PROTOTYPE-backend\\Controllers\\AdminController.cs",
+              "ToolTip": "C:\\Users\\TothMarcel\\Documents\\GitHub\\TMD_KM_TO-DO_Project\\backend\\PROTOTYPE-backend\\Controllers\\AdminController.cs",
+              "RelativeToolTip": "PROTOTYPE-backend\\Controllers\\AdminController.cs",
+              "ViewState": "AgIAAAsAAAAAAAAAAAAQwBwAAAAJAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2026-10-20T07:09:36.659Z",
+              "EditorCaption": ""
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 7,
+              "Title": "AuthController.cs",
+              "DocumentMoniker": "C:\\Users\\TothMarcel\\Documents\\GitHub\\TMD_KM_TO-DO_Project\\backend\\PROTOTYPE-backend\\Controllers\\AuthController.cs",
+              "RelativeDocumentMoniker": "PROTOTYPE-backend\\Controllers\\AuthController.cs",
+              "ToolTip": "C:\\Users\\TothMarcel\\Documents\\GitHub\\TMD_KM_TO-DO_Project\\backend\\PROTOTYPE-backend\\Controllers\\AuthController.cs",
+              "RelativeToolTip": "PROTOTYPE-backend\\Controllers\\AuthController.cs",
+              "ViewState": "AgIAAAAAAAAAAAAAAAAAACIAAAA8AAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2026-10-06T07:16:49.287Z",
+              "EditorCaption": ""
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 16,
+              "Title": "UserModifyRequestDto.cs",
+              "DocumentMoniker": "C:\\Users\\TothMarcel\\Documents\\GitHub\\TMD_KM_TO-DO_Project\\backend\\PROTOTYPE-backend\\DTOs\\Users\\UserModifyRequestDto.cs",
+              "RelativeDocumentMoniker": "PROTOTYPE-backend\\DTOs\\Users\\UserModifyRequestDto.cs",
+              "ToolTip": "C:\\Users\\TothMarcel\\Documents\\GitHub\\TMD_KM_TO-DO_Project\\backend\\PROTOTYPE-backend\\DTOs\\Users\\UserModifyRequestDto.cs",
+              "RelativeToolTip": "PROTOTYPE-backend\\DTOs\\Users\\UserModifyRequestDto.cs",
+              "ViewState": "AgIAAAAAAAAAAAAAAAAAAAYAAAAUAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2026-10-20T07:40:51.006Z"
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 15,
+              "Title": "UserModfiyResponseDto.cs",
+              "DocumentMoniker": "C:\\Users\\TothMarcel\\Documents\\GitHub\\TMD_KM_TO-DO_Project\\backend\\PROTOTYPE-backend\\DTOs\\Users\\UserModfiyResponseDto.cs",
+              "RelativeDocumentMoniker": "PROTOTYPE-backend\\DTOs\\Users\\UserModfiyResponseDto.cs",
+              "ToolTip": "C:\\Users\\TothMarcel\\Documents\\GitHub\\TMD_KM_TO-DO_Project\\backend\\PROTOTYPE-backend\\DTOs\\Users\\UserModfiyResponseDto.cs",
+              "RelativeToolTip": "PROTOTYPE-backend\\DTOs\\Users\\UserModfiyResponseDto.cs",
+              "ViewState": "AgIAAAAAAAAAAAAAAAAAAAgAAAAKAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2026-10-20T07:40:26.47Z"
             },
             {
               "$type": "Document",
               "DocumentIndex": 12,
-              "Title": "AdminController.cs",
-              "DocumentMoniker": "C:\\Users\\KecskemetiMilan\\Documents\\Github\\TMD_KM_TO-DO_Project\\backend\\PROTOTYPE-backend\\Controllers\\AdminController.cs",
-              "RelativeDocumentMoniker": "PROTOTYPE-backend\\Controllers\\AdminController.cs",
-              "ToolTip": "C:\\Users\\KecskemetiMilan\\Documents\\Github\\TMD_KM_TO-DO_Project\\backend\\PROTOTYPE-backend\\Controllers\\AdminController.cs",
-              "RelativeToolTip": "PROTOTYPE-backend\\Controllers\\AdminController.cs",
-              "ViewState": "AgIAAAYAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA==",
+              "Title": "IWorkspaceService.cs",
+              "DocumentMoniker": "C:\\Users\\TothMarcel\\Documents\\GitHub\\TMD_KM_TO-DO_Project\\backend\\PROTOTYPE-backend\\Services\\Workspaces\\IWorkspaceService.cs",
+              "RelativeDocumentMoniker": "PROTOTYPE-backend\\Services\\Workspaces\\IWorkspaceService.cs",
+              "ToolTip": "C:\\Users\\TothMarcel\\Documents\\GitHub\\TMD_KM_TO-DO_Project\\backend\\PROTOTYPE-backend\\Services\\Workspaces\\IWorkspaceService.cs",
+              "RelativeToolTip": "PROTOTYPE-backend\\Services\\Workspaces\\IWorkspaceService.cs",
+              "ViewState": "AgIAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA==",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
-              "WhenOpened": "2026-10-20T07:09:36.659Z"
+              "WhenOpened": "2026-10-20T07:19:28.344Z"
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 10,
+              "Title": "TokenService.cs",
+              "DocumentMoniker": "C:\\Users\\TothMarcel\\Documents\\GitHub\\TMD_KM_TO-DO_Project\\backend\\PROTOTYPE-backend\\Services\\Token\\TokenService.cs",
+              "RelativeDocumentMoniker": "PROTOTYPE-backend\\Services\\Token\\TokenService.cs",
+              "ToolTip": "C:\\Users\\TothMarcel\\Documents\\GitHub\\TMD_KM_TO-DO_Project\\backend\\PROTOTYPE-backend\\Services\\Token\\TokenService.cs",
+              "RelativeToolTip": "PROTOTYPE-backend\\Services\\Token\\TokenService.cs",
+              "ViewState": "AgIAAAAAAAAAAAAAAAAqwA0AAAARAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2026-10-21T07:36:22.757Z",
+              "EditorCaption": ""
             },
             {
               "$type": "Document",
               "DocumentIndex": 11,
-              "Title": "PROTOTYPE-backend.http",
-              "DocumentMoniker": "C:\\Users\\KecskemetiMilan\\Documents\\Github\\TMD_KM_TO-DO_Project\\backend\\PROTOTYPE-backend\\PROTOTYPE-backend.http",
-              "RelativeDocumentMoniker": "PROTOTYPE-backend\\PROTOTYPE-backend.http",
-              "ToolTip": "C:\\Users\\KecskemetiMilan\\Documents\\Github\\TMD_KM_TO-DO_Project\\backend\\PROTOTYPE-backend\\PROTOTYPE-backend.http",
-              "RelativeToolTip": "PROTOTYPE-backend\\PROTOTYPE-backend.http",
-              "ViewState": "AgIAAAAAAAAAAAAAAAAAABkAAAAeAAAAAAAAAA==",
-              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.003502|",
-              "WhenOpened": "2026-10-20T07:07:05.716Z"
+              "Title": "WorkspaceService.cs",
+              "DocumentMoniker": "C:\\Users\\TothMarcel\\Documents\\GitHub\\TMD_KM_TO-DO_Project\\backend\\PROTOTYPE-backend\\Services\\Workspaces\\WorkspaceService.cs",
+              "RelativeDocumentMoniker": "PROTOTYPE-backend\\Services\\Workspaces\\WorkspaceService.cs",
+              "ToolTip": "C:\\Users\\TothMarcel\\Documents\\GitHub\\TMD_KM_TO-DO_Project\\backend\\PROTOTYPE-backend\\Services\\Workspaces\\WorkspaceService.cs",
+              "RelativeToolTip": "PROTOTYPE-backend\\Services\\Workspaces\\WorkspaceService.cs",
+              "ViewState": "AgIAADwAAAAAAAAAAAAIwAwAAAAYAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2026-10-20T07:19:31.069Z"
             },
             {
               "$type": "Document",
-              "DocumentIndex": 14,
+              "DocumentIndex": 17,
               "Title": "SoftDeleteController.cs",
-              "DocumentMoniker": "C:\\Users\\KecskemetiMilan\\Documents\\Github\\TMD_KM_TO-DO_Project\\backend\\PROTOTYPE-backend\\Controllers\\SoftDeleteController.cs",
+              "DocumentMoniker": "C:\\Users\\TothMarcel\\Documents\\GitHub\\TMD_KM_TO-DO_Project\\backend\\PROTOTYPE-backend\\Controllers\\SoftDeleteController.cs",
               "RelativeDocumentMoniker": "PROTOTYPE-backend\\Controllers\\SoftDeleteController.cs",
-              "ToolTip": "C:\\Users\\KecskemetiMilan\\Documents\\Github\\TMD_KM_TO-DO_Project\\backend\\PROTOTYPE-backend\\Controllers\\SoftDeleteController.cs",
+              "ToolTip": "C:\\Users\\TothMarcel\\Documents\\GitHub\\TMD_KM_TO-DO_Project\\backend\\PROTOTYPE-backend\\Controllers\\SoftDeleteController.cs",
               "RelativeToolTip": "PROTOTYPE-backend\\Controllers\\SoftDeleteController.cs",
               "ViewState": "AgIAABsAAAAAAAAAAAAowCMAAAAAAAAAAAAAAA==",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
@@ -304,23 +365,11 @@
             },
             {
               "$type": "Document",
-              "DocumentIndex": 13,
-              "Title": "StorageController.cs",
-              "DocumentMoniker": "C:\\Users\\KecskemetiMilan\\Documents\\Github\\TMD_KM_TO-DO_Project\\backend\\PROTOTYPE-backend\\Controllers\\StorageController.cs",
-              "RelativeDocumentMoniker": "PROTOTYPE-backend\\Controllers\\StorageController.cs",
-              "ToolTip": "C:\\Users\\KecskemetiMilan\\Documents\\Github\\TMD_KM_TO-DO_Project\\backend\\PROTOTYPE-backend\\Controllers\\StorageController.cs",
-              "RelativeToolTip": "PROTOTYPE-backend\\Controllers\\StorageController.cs",
-              "ViewState": "AgIAABMAAAAAAAAAAAAwwCwAAAAgAAAAAAAAAA==",
-              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
-              "WhenOpened": "2026-10-20T06:51:39.357Z"
-            },
-            {
-              "$type": "Document",
-              "DocumentIndex": 18,
+              "DocumentIndex": 19,
               "Title": "appsettings.json",
-              "DocumentMoniker": "C:\\Users\\KecskemetiMilan\\Documents\\Github\\TMD_KM_TO-DO_Project\\backend\\PROTOTYPE-backend\\appsettings.json",
+              "DocumentMoniker": "C:\\Users\\TothMarcel\\Documents\\GitHub\\TMD_KM_TO-DO_Project\\backend\\PROTOTYPE-backend\\appsettings.json",
               "RelativeDocumentMoniker": "PROTOTYPE-backend\\appsettings.json",
-              "ToolTip": "C:\\Users\\KecskemetiMilan\\Documents\\Github\\TMD_KM_TO-DO_Project\\backend\\PROTOTYPE-backend\\appsettings.json",
+              "ToolTip": "C:\\Users\\TothMarcel\\Documents\\GitHub\\TMD_KM_TO-DO_Project\\backend\\PROTOTYPE-backend\\appsettings.json",
               "RelativeToolTip": "PROTOTYPE-backend\\appsettings.json",
               "ViewState": "AgIAAAAAAAAAAAAAAAAAAAkAAAAAAAAAAAAAAA==",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.001642|",
@@ -328,11 +377,11 @@
             },
             {
               "$type": "Document",
-              "DocumentIndex": 16,
+              "DocumentIndex": 18,
               "Title": "appsettings.Development.json",
-              "DocumentMoniker": "C:\\Users\\KecskemetiMilan\\Documents\\Github\\TMD_KM_TO-DO_Project\\backend\\PROTOTYPE-backend\\appsettings.Development.json",
+              "DocumentMoniker": "C:\\Users\\TothMarcel\\Documents\\GitHub\\TMD_KM_TO-DO_Project\\backend\\PROTOTYPE-backend\\appsettings.Development.json",
               "RelativeDocumentMoniker": "PROTOTYPE-backend\\appsettings.Development.json",
-              "ToolTip": "C:\\Users\\KecskemetiMilan\\Documents\\Github\\TMD_KM_TO-DO_Project\\backend\\PROTOTYPE-backend\\appsettings.Development.json",
+              "ToolTip": "C:\\Users\\TothMarcel\\Documents\\GitHub\\TMD_KM_TO-DO_Project\\backend\\PROTOTYPE-backend\\appsettings.Development.json",
               "RelativeToolTip": "PROTOTYPE-backend\\appsettings.Development.json",
               "ViewState": "AgIAAAAAAAAAAAAAAAAAABIAAAAAAAAAAAAAAA==",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.001642|",
@@ -340,11 +389,11 @@
             },
             {
               "$type": "Document",
-              "DocumentIndex": 19,
+              "DocumentIndex": 20,
               "Title": "IStorageService.cs",
-              "DocumentMoniker": "C:\\Users\\KecskemetiMilan\\Documents\\Github\\TMD_KM_TO-DO_Project\\backend\\PROTOTYPE-backend\\Services\\Storage\\IStorageService.cs",
+              "DocumentMoniker": "C:\\Users\\TothMarcel\\Documents\\GitHub\\TMD_KM_TO-DO_Project\\backend\\PROTOTYPE-backend\\Services\\Storage\\IStorageService.cs",
               "RelativeDocumentMoniker": "PROTOTYPE-backend\\Services\\Storage\\IStorageService.cs",
-              "ToolTip": "C:\\Users\\KecskemetiMilan\\Documents\\Github\\TMD_KM_TO-DO_Project\\backend\\PROTOTYPE-backend\\Services\\Storage\\IStorageService.cs",
+              "ToolTip": "C:\\Users\\TothMarcel\\Documents\\GitHub\\TMD_KM_TO-DO_Project\\backend\\PROTOTYPE-backend\\Services\\Storage\\IStorageService.cs",
               "RelativeToolTip": "PROTOTYPE-backend\\Services\\Storage\\IStorageService.cs",
               "ViewState": "AgIAAAAAAAAAAAAAAAAAAAwAAAA0AAAAAAAAAA==",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
@@ -352,11 +401,11 @@
             },
             {
               "$type": "Document",
-              "DocumentIndex": 20,
+              "DocumentIndex": 21,
               "Title": "StorageService.cs",
-              "DocumentMoniker": "C:\\Users\\KecskemetiMilan\\Documents\\Github\\TMD_KM_TO-DO_Project\\backend\\PROTOTYPE-backend\\Services\\Storage\\StorageService.cs",
+              "DocumentMoniker": "C:\\Users\\TothMarcel\\Documents\\GitHub\\TMD_KM_TO-DO_Project\\backend\\PROTOTYPE-backend\\Services\\Storage\\StorageService.cs",
               "RelativeDocumentMoniker": "PROTOTYPE-backend\\Services\\Storage\\StorageService.cs",
-              "ToolTip": "C:\\Users\\KecskemetiMilan\\Documents\\Github\\TMD_KM_TO-DO_Project\\backend\\PROTOTYPE-backend\\Services\\Storage\\StorageService.cs",
+              "ToolTip": "C:\\Users\\TothMarcel\\Documents\\GitHub\\TMD_KM_TO-DO_Project\\backend\\PROTOTYPE-backend\\Services\\Storage\\StorageService.cs",
               "RelativeToolTip": "PROTOTYPE-backend\\Services\\Storage\\StorageService.cs",
               "ViewState": "AgIAAAMAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA==",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
@@ -364,11 +413,11 @@
             },
             {
               "$type": "Document",
-              "DocumentIndex": 21,
+              "DocumentIndex": 22,
               "Title": "ISoftDeleteService.cs",
-              "DocumentMoniker": "C:\\Users\\KecskemetiMilan\\Documents\\Github\\TMD_KM_TO-DO_Project\\backend\\PROTOTYPE-backend\\Services\\SoftDelete\\ISoftDeleteService.cs",
+              "DocumentMoniker": "C:\\Users\\TothMarcel\\Documents\\GitHub\\TMD_KM_TO-DO_Project\\backend\\PROTOTYPE-backend\\Services\\SoftDelete\\ISoftDeleteService.cs",
               "RelativeDocumentMoniker": "PROTOTYPE-backend\\Services\\SoftDelete\\ISoftDeleteService.cs",
-              "ToolTip": "C:\\Users\\KecskemetiMilan\\Documents\\Github\\TMD_KM_TO-DO_Project\\backend\\PROTOTYPE-backend\\Services\\SoftDelete\\ISoftDeleteService.cs",
+              "ToolTip": "C:\\Users\\TothMarcel\\Documents\\GitHub\\TMD_KM_TO-DO_Project\\backend\\PROTOTYPE-backend\\Services\\SoftDelete\\ISoftDeleteService.cs",
               "RelativeToolTip": "PROTOTYPE-backend\\Services\\SoftDelete\\ISoftDeleteService.cs",
               "ViewState": "AgIAAAAAAAAAAAAAAAAAAAsAAABFAAAAAAAAAA==",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
@@ -376,11 +425,11 @@
             },
             {
               "$type": "Document",
-              "DocumentIndex": 23,
+              "DocumentIndex": 24,
               "Title": "SoftDeleteDtos.cs",
-              "DocumentMoniker": "C:\\Users\\KecskemetiMilan\\Documents\\Github\\TMD_KM_TO-DO_Project\\backend\\PROTOTYPE-backend\\DTOs\\SoftDelete\\SoftDeleteDtos.cs",
+              "DocumentMoniker": "C:\\Users\\TothMarcel\\Documents\\GitHub\\TMD_KM_TO-DO_Project\\backend\\PROTOTYPE-backend\\DTOs\\SoftDelete\\SoftDeleteDtos.cs",
               "RelativeDocumentMoniker": "PROTOTYPE-backend\\DTOs\\SoftDelete\\SoftDeleteDtos.cs",
-              "ToolTip": "C:\\Users\\KecskemetiMilan\\Documents\\Github\\TMD_KM_TO-DO_Project\\backend\\PROTOTYPE-backend\\DTOs\\SoftDelete\\SoftDeleteDtos.cs",
+              "ToolTip": "C:\\Users\\TothMarcel\\Documents\\GitHub\\TMD_KM_TO-DO_Project\\backend\\PROTOTYPE-backend\\DTOs\\SoftDelete\\SoftDeleteDtos.cs",
               "RelativeToolTip": "PROTOTYPE-backend\\DTOs\\SoftDelete\\SoftDeleteDtos.cs",
               "ViewState": "AgIAAAAAAAAAAAAAAAAAAAYAAAAmAAAAAAAAAA==",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
@@ -388,11 +437,11 @@
             },
             {
               "$type": "Document",
-              "DocumentIndex": 24,
+              "DocumentIndex": 25,
               "Title": "AdminDtos.cs",
-              "DocumentMoniker": "C:\\Users\\KecskemetiMilan\\Documents\\Github\\TMD_KM_TO-DO_Project\\backend\\PROTOTYPE-backend\\DTOs\\Admin\\AdminDtos.cs",
+              "DocumentMoniker": "C:\\Users\\TothMarcel\\Documents\\GitHub\\TMD_KM_TO-DO_Project\\backend\\PROTOTYPE-backend\\DTOs\\Admin\\AdminDtos.cs",
               "RelativeDocumentMoniker": "PROTOTYPE-backend\\DTOs\\Admin\\AdminDtos.cs",
-              "ToolTip": "C:\\Users\\KecskemetiMilan\\Documents\\Github\\TMD_KM_TO-DO_Project\\backend\\PROTOTYPE-backend\\DTOs\\Admin\\AdminDtos.cs",
+              "ToolTip": "C:\\Users\\TothMarcel\\Documents\\GitHub\\TMD_KM_TO-DO_Project\\backend\\PROTOTYPE-backend\\DTOs\\Admin\\AdminDtos.cs",
               "RelativeToolTip": "PROTOTYPE-backend\\DTOs\\Admin\\AdminDtos.cs",
               "ViewState": "AgIAAAQAAAAAAAAAAAAswA8AAAAkAAAAAAAAAA==",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
@@ -400,11 +449,11 @@
             },
             {
               "$type": "Document",
-              "DocumentIndex": 26,
+              "DocumentIndex": 27,
               "Title": "AppDbContext.cs",
-              "DocumentMoniker": "C:\\Users\\KecskemetiMilan\\Documents\\Github\\TMD_KM_TO-DO_Project\\backend\\PROTOTYPE-backend\\Data\\AppDbContext.cs",
+              "DocumentMoniker": "C:\\Users\\TothMarcel\\Documents\\GitHub\\TMD_KM_TO-DO_Project\\backend\\PROTOTYPE-backend\\Data\\AppDbContext.cs",
               "RelativeDocumentMoniker": "PROTOTYPE-backend\\Data\\AppDbContext.cs",
-              "ToolTip": "C:\\Users\\KecskemetiMilan\\Documents\\Github\\TMD_KM_TO-DO_Project\\backend\\PROTOTYPE-backend\\Data\\AppDbContext.cs",
+              "ToolTip": "C:\\Users\\TothMarcel\\Documents\\GitHub\\TMD_KM_TO-DO_Project\\backend\\PROTOTYPE-backend\\Data\\AppDbContext.cs",
               "RelativeToolTip": "PROTOTYPE-backend\\Data\\AppDbContext.cs",
               "ViewState": "AgIAALkDAAAAAAAAAAAAANcDAAAAAAAAAAAAAA==",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
@@ -412,11 +461,11 @@
             },
             {
               "$type": "Document",
-              "DocumentIndex": 25,
+              "DocumentIndex": 26,
               "Title": "AdminService.cs",
-              "DocumentMoniker": "C:\\Users\\KecskemetiMilan\\Documents\\Github\\TMD_KM_TO-DO_Project\\backend\\PROTOTYPE-backend\\Services\\Admin\\AdminService.cs",
+              "DocumentMoniker": "C:\\Users\\TothMarcel\\Documents\\GitHub\\TMD_KM_TO-DO_Project\\backend\\PROTOTYPE-backend\\Services\\Admin\\AdminService.cs",
               "RelativeDocumentMoniker": "PROTOTYPE-backend\\Services\\Admin\\AdminService.cs",
-              "ToolTip": "C:\\Users\\KecskemetiMilan\\Documents\\Github\\TMD_KM_TO-DO_Project\\backend\\PROTOTYPE-backend\\Services\\Admin\\AdminService.cs",
+              "ToolTip": "C:\\Users\\TothMarcel\\Documents\\GitHub\\TMD_KM_TO-DO_Project\\backend\\PROTOTYPE-backend\\Services\\Admin\\AdminService.cs",
               "RelativeToolTip": "PROTOTYPE-backend\\Services\\Admin\\AdminService.cs",
               "ViewState": "AgIAAEEAAAAAAAAAAAAIwDsAAAAcAAAAAAAAAA==",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
@@ -424,23 +473,11 @@
             },
             {
               "$type": "Document",
-              "DocumentIndex": 17,
-              "Title": "Program.cs",
-              "DocumentMoniker": "C:\\Users\\KecskemetiMilan\\Documents\\Github\\TMD_KM_TO-DO_Project\\backend\\PROTOTYPE-backend\\Program.cs",
-              "RelativeDocumentMoniker": "PROTOTYPE-backend\\Program.cs",
-              "ToolTip": "C:\\Users\\KecskemetiMilan\\Documents\\Github\\TMD_KM_TO-DO_Project\\backend\\PROTOTYPE-backend\\Program.cs",
-              "RelativeToolTip": "PROTOTYPE-backend\\Program.cs",
-              "ViewState": "AgIAACYAAAAAAAAAAAAewDEAAAAJAAAAAAAAAA==",
-              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
-              "WhenOpened": "2026-09-29T06:03:29.738Z"
-            },
-            {
-              "$type": "Document",
-              "DocumentIndex": 22,
+              "DocumentIndex": 23,
               "Title": "SoftDeleteService.cs",
-              "DocumentMoniker": "C:\\Users\\KecskemetiMilan\\Documents\\Github\\TMD_KM_TO-DO_Project\\backend\\PROTOTYPE-backend\\Services\\SoftDelete\\SoftDeleteService.cs",
+              "DocumentMoniker": "C:\\Users\\TothMarcel\\Documents\\GitHub\\TMD_KM_TO-DO_Project\\backend\\PROTOTYPE-backend\\Services\\SoftDelete\\SoftDeleteService.cs",
               "RelativeDocumentMoniker": "PROTOTYPE-backend\\Services\\SoftDelete\\SoftDeleteService.cs",
-              "ToolTip": "C:\\Users\\KecskemetiMilan\\Documents\\Github\\TMD_KM_TO-DO_Project\\backend\\PROTOTYPE-backend\\Services\\SoftDelete\\SoftDeleteService.cs",
+              "ToolTip": "C:\\Users\\TothMarcel\\Documents\\GitHub\\TMD_KM_TO-DO_Project\\backend\\PROTOTYPE-backend\\Services\\SoftDelete\\SoftDeleteService.cs",
               "RelativeToolTip": "PROTOTYPE-backend\\Services\\SoftDelete\\SoftDeleteService.cs",
               "ViewState": "AgIAAA4AAAAAAAAAAAAtwB0AAAAwAAAAAAAAAA==",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
@@ -448,11 +485,11 @@
             },
             {
               "$type": "Document",
-              "DocumentIndex": 27,
+              "DocumentIndex": 28,
               "Title": "CalendarService.cs",
-              "DocumentMoniker": "C:\\Users\\KecskemetiMilan\\Documents\\Github\\TMD_KM_TO-DO_Project\\backend\\PROTOTYPE-backend\\Services\\Calendar\\CalendarService.cs",
+              "DocumentMoniker": "C:\\Users\\TothMarcel\\Documents\\GitHub\\TMD_KM_TO-DO_Project\\backend\\PROTOTYPE-backend\\Services\\Calendar\\CalendarService.cs",
               "RelativeDocumentMoniker": "PROTOTYPE-backend\\Services\\Calendar\\CalendarService.cs",
-              "ToolTip": "C:\\Users\\KecskemetiMilan\\Documents\\Github\\TMD_KM_TO-DO_Project\\backend\\PROTOTYPE-backend\\Services\\Calendar\\CalendarService.cs",
+              "ToolTip": "C:\\Users\\TothMarcel\\Documents\\GitHub\\TMD_KM_TO-DO_Project\\backend\\PROTOTYPE-backend\\Services\\Calendar\\CalendarService.cs",
               "RelativeToolTip": "PROTOTYPE-backend\\Services\\Calendar\\CalendarService.cs",
               "ViewState": "AgIAAAMAAAAAAAAAAAAAABEAAAAJAAAAAAAAAA==",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
@@ -460,34 +497,15 @@
             },
             {
               "$type": "Document",
-              "DocumentIndex": 28,
+              "DocumentIndex": 29,
               "Title": "DateRequestDto.cs",
-              "DocumentMoniker": "C:\\Users\\KecskemetiMilan\\Documents\\Github\\TMD_KM_TO-DO_Project\\backend\\PROTOTYPE-backend\\DTOs\\Calendar\\DateRequestDto.cs",
+              "DocumentMoniker": "C:\\Users\\TothMarcel\\Documents\\GitHub\\TMD_KM_TO-DO_Project\\backend\\PROTOTYPE-backend\\DTOs\\Calendar\\DateRequestDto.cs",
               "RelativeDocumentMoniker": "PROTOTYPE-backend\\DTOs\\Calendar\\DateRequestDto.cs",
-              "ToolTip": "C:\\Users\\KecskemetiMilan\\Documents\\Github\\TMD_KM_TO-DO_Project\\backend\\PROTOTYPE-backend\\DTOs\\Calendar\\DateRequestDto.cs",
+              "ToolTip": "C:\\Users\\TothMarcel\\Documents\\GitHub\\TMD_KM_TO-DO_Project\\backend\\PROTOTYPE-backend\\DTOs\\Calendar\\DateRequestDto.cs",
               "RelativeToolTip": "PROTOTYPE-backend\\DTOs\\Calendar\\DateRequestDto.cs",
               "ViewState": "AgIAAAAAAAAAAAAAAAAAAAYAAAAWAAAAAAAAAA==",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
               "WhenOpened": "2026-10-06T07:23:14.49Z"
-            }
-          ]
-        },
-        {
-          "DockedWidth": 200,
-          "SelectedChildIndex": 0,
-          "Children": [
-            {
-              "$type": "Document",
-              "DocumentIndex": 4,
-              "Title": "WorkspaceController.cs",
-              "DocumentMoniker": "C:\\Users\\KecskemetiMilan\\Documents\\Github\\TMD_KM_TO-DO_Project\\backend\\PROTOTYPE-backend\\Controllers\\WorkspaceController.cs",
-              "RelativeDocumentMoniker": "PROTOTYPE-backend\\Controllers\\WorkspaceController.cs",
-              "ToolTip": "C:\\Users\\KecskemetiMilan\\Documents\\Github\\TMD_KM_TO-DO_Project\\backend\\PROTOTYPE-backend\\Controllers\\WorkspaceController.cs",
-              "RelativeToolTip": "PROTOTYPE-backend\\Controllers\\WorkspaceController.cs",
-              "ViewState": "AgIAABEAAAAAAAAAAAAQwBoAAABLAAAAAAAAAA==",
-              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
-              "WhenOpened": "2026-10-20T07:11:47.859Z",
-              "EditorCaption": ""
             }
           ]
         }

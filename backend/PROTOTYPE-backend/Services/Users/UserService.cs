@@ -4,7 +4,7 @@ using PROTOTYPE_backend.DTOs.Users;
 using PROTOTYPE_backend.Models;
 using PROTOTYPE_backend.Services.Users;
 
-namespace PROTOTYPE_backend.Services.User
+namespace PROTOTYPE_backend.Services.Users
 {
     public class UserService : IUserService
     {
@@ -76,7 +76,6 @@ namespace PROTOTYPE_backend.Services.User
 
             user.DeletedAt = DateTime.UtcNow;
 
-            _context.Remove(user);
             await _context.SaveChangesAsync();
 
             return new UserDeleteResponseDto

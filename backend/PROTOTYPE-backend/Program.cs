@@ -1,5 +1,6 @@
 
 using Microsoft.AspNetCore.Authentication.JwtBearer;
+using Microsoft.AspNetCore.RateLimiting;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.IdentityModel.Tokens;
 using PROTOTYPE_backend.Data;
@@ -9,11 +10,11 @@ using PROTOTYPE_backend.Services.Calendar;
 using PROTOTYPE_backend.Services.SoftDelete;
 using PROTOTYPE_backend.Services.Storage;
 using PROTOTYPE_backend.Services.Token;
+using PROTOTYPE_backend.Services.Users;
 using PROTOTYPE_backend.Services.Workspaces;
 using Scalar.AspNetCore;
 using System.Text;
 using System.Threading.RateLimiting;
-using Microsoft.AspNetCore.RateLimiting;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -38,6 +39,7 @@ builder.Services.AddScoped<IAdminService, AdminService>();
 builder.Services.AddScoped<IAuthService, AuthService>();
 builder.Services.AddScoped<ICalendarService, CalendarService>();
 builder.Services.AddScoped<ITokenService, TokenService>();
+builder.Services.AddScoped<IUserService, UserService>();
 
 
 var jwtSection = builder.Configuration.GetSection("JwtSettings");
@@ -72,8 +74,8 @@ builder.Services.AddRateLimiter(options =>
             partitionKey: httpContext.Connection.RemoteIpAddress?.ToString() ?? "unknown",
             factory: _ => new FixedWindowRateLimiterOptions
             {
-                PermitLimit = 5,                    // 5 próbálkozás
-                Window = TimeSpan.FromMinutes(1),   // percenként
+                PermitLimit = 5,                   
+                Window = TimeSpan.FromMinutes(1),  
                 QueueLimit = 0
             }));
 });
