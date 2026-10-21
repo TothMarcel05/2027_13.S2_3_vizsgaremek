@@ -215,6 +215,7 @@ erDiagram
         string created_by FK "Létrehozó felhasználó"
         string updated_by FK "Utolsó módosító"
         datetime created_at "Létrehozás ideje"
+        datetime deleted_at "Törlés ideje"
         datetime updated_at "Utolsó módosítás ideje"
     }
 
