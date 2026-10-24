@@ -52,7 +52,6 @@ namespace PROTOTYPE_backend.Services.Workspaces
                     w.StorageQuotaBytes
                 ))
                 .FirstOrDefaultAsync();
-
         }
 
         public async Task<IEnumerable<Workspace>> GetUserWorkspacesAsync(Guid userId)
