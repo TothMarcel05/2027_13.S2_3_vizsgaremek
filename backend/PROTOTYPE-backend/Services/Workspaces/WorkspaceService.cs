@@ -5,6 +5,7 @@ using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using PROTOTYPE_backend.Data;
+using PROTOTYPE_backend.DTOs.Workspace;
 using PROTOTYPE_backend.Models;
 using PROTOTYPE_backend.Services.Token;
 
@@ -22,14 +23,14 @@ namespace PROTOTYPE_backend.Services.Workspaces
             _tokenService = tokenService ;
         }
 
-        public async Task<Workspace> CreateWorkspaceAsync(Guid userId, string name)
+        public async Task<Workspace> CreateWorkspaceAsync(Guid userId, string WorkspaceName)
         {
             var existingWorkspace = await _context.Workspaces
-                .FirstOrDefaultAsync(w => w.Name == name && w.OwnerId == userId);
+                .FirstOrDefaultAsync(w => w.Name == WorkspaceName && w.OwnerId == userId);
 
             var workspace = new Workspace
             {
-                Name = name,
+                Name = WorkspaceName,
                 OwnerId = userId,
                 CreatedAt = DateTime.UtcNow,
             };
@@ -37,6 +38,21 @@ namespace PROTOTYPE_backend.Services.Workspaces
             _context.Workspaces.Add(workspace);
             await _context.SaveChangesAsync();
             return workspace;
+        }
+
+        public async Task<WorkspaceDataResponseDto?> GetWorkspaceDataAsync(Guid WorkspaceId)
+        {
+            return await _context.Workspaces
+                .Where(w => w.Id == WorkspaceId)
+                .Select(w => new WorkspaceDataResponseDto(
+                    w.Id,
+                    w.Name,
+                    w.OwnerId,
+                    w.Owner.Name,
+                    w.StorageQuotaBytes
+                ))
+                .FirstOrDefaultAsync();
+
         }
 
         public async Task<IEnumerable<Workspace>> GetUserWorkspacesAsync(Guid userId)

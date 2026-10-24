@@ -4,14 +4,37 @@ using System.ComponentModel.DataAnnotations;
 
 namespace PROTOTYPE_backend.DTOs.Workspace;
 
-public record SelectWorkspaceDto(
-    [Required(ErrorMessage = "Munkaterület azonosítója kötelező!")] Guid workspaceId
-);
-
 
 public record CreateWorkspaceDto(
     [Required] Guid UserId,
-    [Required] string Name
+    [Required] string WorkspaceName
+);
+
+public record UsersWorkspaceListResponseDto(
+    Guid WorkspaceId,
+    string WorkspaceName,
+    Guid OwnerId
+);
+
+public record WorkspaceDataResponseDto(
+    Guid WorkspaceId,
+    string WorkspaceName,
+    Guid OwnerId,
+    string OwnerName,
+    ulong Storage
+);
+
+public record WorkspaceProjectResponseDto(
+    Guid WorkspaceId,
+    Guid ProjectId,
+    string ProjectName,
+    sbyte Status,
+    string? Descritpion,
+    DateTime? Deadline
+);
+
+public record SelectWorkspaceDto(
+    [Required(ErrorMessage = "Munkaterület azonosítója kötelező!")] Guid workspaceId
 );
 
 public record SelectWorkspaceResponseDto(
@@ -27,7 +50,6 @@ public record UserWorkspaceRoleDto(
     Guid workspaceId,
     string role
 );
-
 
 
 public record CreateProjectDto(

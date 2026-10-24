@@ -2,8 +2,11 @@
   "ExpandedNodes": [
     "",
     "\\Controllers",
+    "\\DTOs",
+    "\\DTOs\\Workspace",
+    "\\Properties",
     "\\Services",
-    "\\Services\\Storage"
+    "\\Services\\Workspaces"
   ],
   "PreviewInSolutionExplorer": false
 }

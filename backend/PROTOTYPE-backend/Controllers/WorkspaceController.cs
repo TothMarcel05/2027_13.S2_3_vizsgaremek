@@ -21,6 +21,14 @@ namespace PROTOTYPE_backend.Controllers
             _workspaceService = workspaceService;
         }
 
+        [HttpPost]
+        public async Task<IActionResult> CreateWorkspace([FromBody] CreateWorkspaceDto dto)
+        {
+            var workspace = await _workspaceService.CreateWorkspaceAsync(dto.UserId, dto.WorkspaceName);
+            return Ok(workspace);
+        }
+
+
         [HttpGet("user/{userId}")]
         public async Task<IActionResult> GetUserWorkspaces(Guid userId)
         {
@@ -28,10 +36,17 @@ namespace PROTOTYPE_backend.Controllers
             return Ok(workspaces);
         }
 
-        [HttpPost]
-        public async Task<IActionResult> CreateWorkspace([FromBody] CreateWorkspaceDto dto)
+
+        [HttpGet("/workspaces/{workspaceId}")]
+        public async Task<IActionResult> GetWorkspaceData(Guid WorkspaceId)
         {
-            var workspace = await _workspaceService.CreateWorkspaceAsync(dto.UserId, dto.Name);
+            var workspace = await _workspaceService.GetWorkspaceDataAsync(WorkspaceId);
+
+            if (workspace == null)
+            {
+                return NotFound(new { message = "A megadott munkaterület nem található." });
+            }
+
             return Ok(workspace);
         }
 
