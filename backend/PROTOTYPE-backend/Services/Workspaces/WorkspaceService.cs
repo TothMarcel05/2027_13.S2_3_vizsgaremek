@@ -1,13 +1,14 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
-using Microsoft.AspNetCore.Mvc;
+﻿using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.Mvc.RazorPages;
 using Microsoft.EntityFrameworkCore;
 using PROTOTYPE_backend.Data;
 using PROTOTYPE_backend.DTOs.Workspace;
 using PROTOTYPE_backend.Models;
 using PROTOTYPE_backend.Services.Token;
+using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Threading.Tasks;
 
 namespace PROTOTYPE_backend.Services.Workspaces
 {
@@ -52,6 +53,28 @@ namespace PROTOTYPE_backend.Services.Workspaces
                     w.StorageQuotaBytes
                 ))
                 .FirstOrDefaultAsync();
+        }
+
+        public async Task<List<WorkspaceProjectResponseDto>> GetWorkspaceProjectAsync(Guid WorkspaceId, int Page = 1, int Limit = 20, sbyte? Status = null) {
+            var query = _context.Projects
+                .Where(p => p.WorkspaceId == WorkspaceId);
+
+            if (Status.HasValue)
+            {
+                query = query.Where(p => p.Status == Status.Value);
+            }
+            return await query
+                .Skip((Page - 1) * Limit)
+                .Take(Limit)
+                .Select(p => new WorkspaceProjectResponseDto(
+                    p.WorkspaceId,
+                    p.Id,
+                    p.Name,
+                    p.Status,
+                    p.Description,
+                    p.Deadline
+                ))
+                .ToListAsync();
         }
 
         public async Task<IEnumerable<Workspace>> GetUserWorkspacesAsync(Guid userId)

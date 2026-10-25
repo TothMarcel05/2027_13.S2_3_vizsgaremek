@@ -11,6 +11,7 @@ namespace PROTOTYPE_backend.Services.Workspaces
         Task<IEnumerable<Workspace>> GetUserWorkspacesAsync(Guid userId);
         Task<Workspace> CreateWorkspaceAsync(Guid userId, string WorkspaceName);
         Task<WorkspaceDataResponseDto?> GetWorkspaceDataAsync(Guid WorkspaceId);
+        Task<List<WorkspaceProjectResponseDto>> GetWorkspaceProjectAsync(Guid WorkspaceId, int Page = 1, int Limit = 20,sbyte? Status = null);
         Task<Project> CreateProjectAsync(Guid workspaceId, string name, string? description, DateTime? deadline, Guid? ownerId);
         Task<string> SwitchWorkspaceAsync(Guid userId, Guid workspaceId);
     }

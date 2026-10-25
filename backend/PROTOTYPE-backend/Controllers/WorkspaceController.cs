@@ -50,6 +50,14 @@ namespace PROTOTYPE_backend.Controllers
             return Ok(workspace);
         }
 
+        [HttpGet("/workspaces/{workspaceId}/projects")]
+        public async Task<IActionResult> GetWorkspaceProjects(Guid workspaceId, [FromQuery] int page = 1, [FromQuery] int limit = 20, [FromQuery] sbyte? status = null)
+        {
+            var projects = await _workspaceService.GetWorkspaceProjectAsync(workspaceId, page, limit, status);
+
+            return Ok(projects);
+        }
+
         [HttpPost("{workspaceId}/project")]
         public async Task<IActionResult> CreateProject(Guid workspaceId, [FromBody] CreateProjectDto dto)
         {

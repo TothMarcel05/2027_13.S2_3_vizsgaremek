@@ -29,8 +29,8 @@ public record WorkspaceProjectResponseDto(
     Guid ProjectId,
     string ProjectName,
     sbyte Status,
-    string? Descritpion,
-    DateTime? Deadline
+    string? Description,
+    DateOnly? Deadline
 );
 
 public record SelectWorkspaceDto(
