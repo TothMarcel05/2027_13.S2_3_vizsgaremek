@@ -2,6 +2,7 @@
 using Microsoft.AspNetCore.Mvc;
 using PROTOTYPE_backend.DTOs.Auth;
 using PROTOTYPE_backend.DTOs.Workspace;
+using PROTOTYPE_backend.Models;
 using PROTOTYPE_backend.Services.Workspaces;
 using System;
 using System.Security.Claims;
@@ -54,8 +55,14 @@ namespace PROTOTYPE_backend.Controllers
         public async Task<IActionResult> GetWorkspaceProjects(Guid workspaceId, [FromQuery] int page = 1, [FromQuery] int limit = 20, [FromQuery] sbyte? status = null)
         {
             var projects = await _workspaceService.GetWorkspaceProjectAsync(workspaceId, page, limit, status);
-
             return Ok(projects);
+        }
+
+        [HttpGet("/workspaces/{workspaceId}/members")]
+        public async Task<IActionResult> GetWorkspaceMembers(Guid workspaceId, [FromQuery] int page = 1, [FromQuery] int limit = 50, [FromQuery] Guid? Role = null)
+        {
+            var members = await _workspaceService.GetWorkspaceMembersAsync(workspaceId, page, limit, Role);
+            return Ok(members);
         }
 
         [HttpPost("{workspaceId}/project")]

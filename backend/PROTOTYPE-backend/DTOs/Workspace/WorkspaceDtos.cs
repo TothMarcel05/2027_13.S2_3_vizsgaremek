@@ -33,6 +33,14 @@ public record WorkspaceProjectResponseDto(
     DateOnly? Deadline
 );
 
+public record WorkspaceMembersResponseDto(
+    Guid WorkspaceId,
+    Guid MemberId,
+    string MemberName,
+    Guid Role,
+    DateTime? JoinedAt
+);
+
 public record SelectWorkspaceDto(
     [Required(ErrorMessage = "Munkaterület azonosítója kötelező!")] Guid workspaceId
 );

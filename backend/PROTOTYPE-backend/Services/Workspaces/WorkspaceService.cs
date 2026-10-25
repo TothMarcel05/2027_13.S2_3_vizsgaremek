@@ -77,6 +77,28 @@ namespace PROTOTYPE_backend.Services.Workspaces
                 .ToListAsync();
         }
 
+        public async Task<List<WorkspaceMembersResponseDto>> GetWorkspaceMembersAsync(Guid WorkspaceId, int Page = 1, int Limit = 50, Guid? Role = null)
+        {
+            var query = _context.WorkspaceMembers
+                .Where(p => p.WorkspaceId == WorkspaceId);
+
+            if (Role.HasValue)
+            {
+                query = query.Where(p => p.RoleId == Role.Value);
+            }
+            return await query
+                .Skip((Page - 1) * Limit)
+                .Take(Limit)
+                .Select(p => new WorkspaceMembersResponseDto(
+                    p.WorkspaceId,
+                    p.UserId,
+                    p.User.Name,
+                    p.RoleId,
+                    p.JoinedAt
+                ))
+                .ToListAsync();
+        }
+
         public async Task<IEnumerable<Workspace>> GetUserWorkspacesAsync(Guid userId)
         {
             var user  = _context.AppUsers.FirstOrDefaultAsync(u => u.Id == userId);
