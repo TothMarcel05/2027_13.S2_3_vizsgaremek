@@ -1,15 +1,27 @@
 {
   "Version": 1,
-<<<<<<< Updated upstream
-  "WorkspaceRootPath": "C:\\Users\\marce\\Documents\\GitHub\\2027_13.S2_3_vizsgaremek\\backend\\",
+  "WorkspaceRootPath": "C:\\Users\\Kecskem\u00E9ti Mil\u00E1n\\Documents\\GitHub\\TMD_KM_TO-DO_Project\\backend\\",
   "Documents": [
+    {
+      "AbsoluteMoniker": "D:0:0:{709D5F3C-AE65-16AB-703F-30F362550762}|PROTOTYPE-backend\\PROTOTYPE-backend.csproj|c:\\users\\kecskem\u00E9ti mil\u00E1n\\documents\\github\\tmd_km_to-do_project\\backend\\prototype-backend\\services\\auth\\authservice.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{709D5F3C-AE65-16AB-703F-30F362550762}|PROTOTYPE-backend\\PROTOTYPE-backend.csproj|solutionrelative:prototype-backend\\services\\auth\\authservice.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+<<<<<<< Updated upstream
+      "AbsoluteMoniker": "D:0:0:{709D5F3C-AE65-16AB-703F-30F362550762}|PROTOTYPE-backend\\PROTOTYPE-backend.csproj|c:\\users\\marce\\documents\\github\\2027_13.s2_3_vizsgaremek\\backend\\prototype-backend\\services\\calendar\\icalendarservice.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{709D5F3C-AE65-16AB-703F-30F362550762}|PROTOTYPE-backend\\PROTOTYPE-backend.csproj|solutionrelative:prototype-backend\\services\\calendar\\icalendarservice.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{709D5F3C-AE65-16AB-703F-30F362550762}|PROTOTYPE-backend\\PROTOTYPE-backend.csproj|c:\\users\\marce\\documents\\github\\2027_13.s2_3_vizsgaremek\\backend\\prototype-backend\\services\\calendar\\calendarservice.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{709D5F3C-AE65-16AB-703F-30F362550762}|PROTOTYPE-backend\\PROTOTYPE-backend.csproj|solutionrelative:prototype-backend\\services\\calendar\\calendarservice.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{709D5F3C-AE65-16AB-703F-30F362550762}|PROTOTYPE-backend\\PROTOTYPE-backend.csproj|c:\\users\\marce\\documents\\github\\2027_13.s2_3_vizsgaremek\\backend\\prototype-backend\\models\\calendarevent.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{709D5F3C-AE65-16AB-703F-30F362550762}|PROTOTYPE-backend\\PROTOTYPE-backend.csproj|solutionrelative:prototype-backend\\models\\calendarevent.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
     {
       "AbsoluteMoniker": "D:0:0:{709D5F3C-AE65-16AB-703F-30F362550762}|PROTOTYPE-backend\\PROTOTYPE-backend.csproj|c:\\users\\marce\\documents\\github\\2027_13.s2_3_vizsgaremek\\backend\\prototype-backend\\controllers\\workspacecontroller.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
       "RelativeMoniker": "D:0:0:{709D5F3C-AE65-16AB-703F-30F362550762}|PROTOTYPE-backend\\PROTOTYPE-backend.csproj|solutionrelative:prototype-backend\\controllers\\workspacecontroller.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
-    },
-    {
-      "AbsoluteMoniker": "D:0:0:{709D5F3C-AE65-16AB-703F-30F362550762}|PROTOTYPE-backend\\PROTOTYPE-backend.csproj|c:\\users\\marce\\documents\\github\\2027_13.s2_3_vizsgaremek\\backend\\prototype-backend\\services\\workspaces\\workspaceservice.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
-      "RelativeMoniker": "D:0:0:{709D5F3C-AE65-16AB-703F-30F362550762}|PROTOTYPE-backend\\PROTOTYPE-backend.csproj|solutionrelative:prototype-backend\\services\\workspaces\\workspaceservice.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
     },
     {
       "AbsoluteMoniker": "D:0:0:{709D5F3C-AE65-16AB-703F-30F362550762}|PROTOTYPE-backend\\PROTOTYPE-backend.csproj|c:\\users\\marce\\documents\\github\\2027_13.s2_3_vizsgaremek\\backend\\prototype-backend\\dtos\\workspace\\workspacedtos.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
@@ -43,19 +55,12 @@
       "AbsoluteMoniker": "D:0:0:{709D5F3C-AE65-16AB-703F-30F362550762}|PROTOTYPE-backend\\PROTOTYPE-backend.csproj|c:\\users\\marce\\documents\\github\\2027_13.s2_3_vizsgaremek\\backend\\prototype-backend\\models\\project.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
       "RelativeMoniker": "D:0:0:{709D5F3C-AE65-16AB-703F-30F362550762}|PROTOTYPE-backend\\PROTOTYPE-backend.csproj|solutionrelative:prototype-backend\\models\\project.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
 =======
-  "WorkspaceRootPath": "C:\\Users\\Kecskem\u00E9ti Mil\u00E1n\\Documents\\GitHub\\TMD_KM_TO-DO_Project\\backend\\",
-  "Documents": [
-    {
-      "AbsoluteMoniker": "D:0:0:{709D5F3C-AE65-16AB-703F-30F362550762}|PROTOTYPE-backend\\PROTOTYPE-backend.csproj|c:\\users\\kecskem\u00E9ti mil\u00E1n\\documents\\github\\tmd_km_to-do_project\\backend\\prototype-backend\\services\\auth\\authservice.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
-      "RelativeMoniker": "D:0:0:{709D5F3C-AE65-16AB-703F-30F362550762}|PROTOTYPE-backend\\PROTOTYPE-backend.csproj|solutionrelative:prototype-backend\\services\\auth\\authservice.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+      "AbsoluteMoniker": "D:0:0:{709D5F3C-AE65-16AB-703F-30F362550762}|PROTOTYPE-backend\\PROTOTYPE-backend.csproj|c:\\users\\kecskem\u00E9ti mil\u00E1n\\documents\\github\\tmd_km_to-do_project\\backend\\prototype-backend\\program.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{709D5F3C-AE65-16AB-703F-30F362550762}|PROTOTYPE-backend\\PROTOTYPE-backend.csproj|solutionrelative:prototype-backend\\program.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
     },
     {
-      "AbsoluteMoniker": "D:0:0:{709D5F3C-AE65-16AB-703F-30F362550762}|PROTOTYPE-backend\\PROTOTYPE-backend.csproj|c:\\users\\kecskem\u00E9ti mil\u00E1n\\documents\\github\\tmd_km_to-do_project\\backend\\prototype-backend\\controllers\\authcontroller.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
-      "RelativeMoniker": "D:0:0:{709D5F3C-AE65-16AB-703F-30F362550762}|PROTOTYPE-backend\\PROTOTYPE-backend.csproj|solutionrelative:prototype-backend\\controllers\\authcontroller.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
-    },
-    {
-      "AbsoluteMoniker": "D:0:0:{709D5F3C-AE65-16AB-703F-30F362550762}|PROTOTYPE-backend\\PROTOTYPE-backend.csproj|c:\\users\\kecskem\u00E9ti mil\u00E1n\\documents\\github\\tmd_km_to-do_project\\backend\\prototype-backend\\dtos\\auth\\twofactor.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
-      "RelativeMoniker": "D:0:0:{709D5F3C-AE65-16AB-703F-30F362550762}|PROTOTYPE-backend\\PROTOTYPE-backend.csproj|solutionrelative:prototype-backend\\dtos\\auth\\twofactor.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+      "AbsoluteMoniker": "D:0:0:{709D5F3C-AE65-16AB-703F-30F362550762}|PROTOTYPE-backend\\PROTOTYPE-backend.csproj|c:\\users\\kecskem\u00E9ti mil\u00E1n\\documents\\github\\tmd_km_to-do_project\\backend\\prototype-backend\\data\\appdbcontext.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{709D5F3C-AE65-16AB-703F-30F362550762}|PROTOTYPE-backend\\PROTOTYPE-backend.csproj|solutionrelative:prototype-backend\\data\\appdbcontext.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
 >>>>>>> Stashed changes
     }
   ],
@@ -67,11 +72,91 @@
         {
 <<<<<<< Updated upstream
           "DockedWidth": 200,
-          "SelectedChildIndex": 12,
+          "SelectedChildIndex": 11,
           "Children": [
             {
               "$type": "Document",
-              "DocumentIndex": 5,
+              "DocumentIndex": 1,
+              "Title": "ICalendarService.cs",
+              "DocumentMoniker": "C:\\Users\\marce\\Documents\\GitHub\\2027_13.S2_3_vizsgaremek\\backend\\PROTOTYPE-backend\\Services\\Calendar\\ICalendarService.cs",
+              "RelativeDocumentMoniker": "PROTOTYPE-backend\\Services\\Calendar\\ICalendarService.cs",
+              "ToolTip": "C:\\Users\\marce\\Documents\\GitHub\\2027_13.S2_3_vizsgaremek\\backend\\PROTOTYPE-backend\\Services\\Calendar\\ICalendarService.cs",
+              "RelativeToolTip": "PROTOTYPE-backend\\Services\\Calendar\\ICalendarService.cs",
+              "ViewState": "AgIAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2026-10-25T14:00:24.156Z",
+              "EditorCaption": ""
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 2,
+              "Title": "CalendarService.cs",
+              "DocumentMoniker": "C:\\Users\\marce\\Documents\\GitHub\\2027_13.S2_3_vizsgaremek\\backend\\PROTOTYPE-backend\\Services\\Calendar\\CalendarService.cs",
+              "RelativeDocumentMoniker": "PROTOTYPE-backend\\Services\\Calendar\\CalendarService.cs",
+              "ToolTip": "C:\\Users\\marce\\Documents\\GitHub\\2027_13.S2_3_vizsgaremek\\backend\\PROTOTYPE-backend\\Services\\Calendar\\CalendarService.cs",
+              "RelativeToolTip": "PROTOTYPE-backend\\Services\\Calendar\\CalendarService.cs",
+              "ViewState": "AgIAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2026-10-25T14:00:19.586Z",
+=======
+          "DockedWidth": 208,
+          "SelectedChildIndex": 3,
+          "Children": [
+            {
+              "$type": "Document",
+              "DocumentIndex": 2,
+              "Title": "AppDbContext.cs",
+              "DocumentMoniker": "C:\\Users\\Kecskem\u00E9ti Mil\u00E1n\\Documents\\GitHub\\TMD_KM_TO-DO_Project\\backend\\PROTOTYPE-backend\\Data\\AppDbContext.cs",
+              "RelativeDocumentMoniker": "PROTOTYPE-backend\\Data\\AppDbContext.cs",
+              "ToolTip": "C:\\Users\\Kecskem\u00E9ti Mil\u00E1n\\Documents\\GitHub\\TMD_KM_TO-DO_Project\\backend\\PROTOTYPE-backend\\Data\\AppDbContext.cs",
+              "RelativeToolTip": "PROTOTYPE-backend\\Data\\AppDbContext.cs",
+              "ViewState": "AgIAAFEEAAAAAAAAAADwv2cEAAA4AAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2026-10-24T11:17:10.87Z",
+>>>>>>> Stashed changes
+              "EditorCaption": ""
+            },
+            {
+              "$type": "Document",
+<<<<<<< Updated upstream
+              "DocumentIndex": 3,
+              "Title": "CalendarEvent.cs",
+              "DocumentMoniker": "C:\\Users\\marce\\Documents\\GitHub\\2027_13.S2_3_vizsgaremek\\backend\\PROTOTYPE-backend\\Models\\CalendarEvent.cs",
+              "RelativeDocumentMoniker": "PROTOTYPE-backend\\Models\\CalendarEvent.cs",
+              "ToolTip": "C:\\Users\\marce\\Documents\\GitHub\\2027_13.S2_3_vizsgaremek\\backend\\PROTOTYPE-backend\\Models\\CalendarEvent.cs",
+              "RelativeToolTip": "PROTOTYPE-backend\\Models\\CalendarEvent.cs",
+              "ViewState": "AgIAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2026-10-25T13:50:46.225Z",
+=======
+              "DocumentIndex": 1,
+              "Title": "Program.cs",
+              "DocumentMoniker": "C:\\Users\\Kecskem\u00E9ti Mil\u00E1n\\Documents\\GitHub\\TMD_KM_TO-DO_Project\\backend\\PROTOTYPE-backend\\Program.cs",
+              "RelativeDocumentMoniker": "PROTOTYPE-backend\\Program.cs",
+              "ToolTip": "C:\\Users\\Kecskem\u00E9ti Mil\u00E1n\\Documents\\GitHub\\TMD_KM_TO-DO_Project\\backend\\PROTOTYPE-backend\\Program.cs",
+              "RelativeToolTip": "PROTOTYPE-backend\\Program.cs",
+              "ViewState": "AgIAAA8AAAAAAAAAAAAAACQAAABCAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2026-10-24T11:06:45.293Z",
+>>>>>>> Stashed changes
+              "EditorCaption": ""
+            },
+            {
+              "$type": "Bookmark",
+              "Name": "ST:0:0:{1c4feeaa-4718-4aa9-859d-94ce25d182ba}"
+            },
+            {
+<<<<<<< Updated upstream
+              "$type": "Bookmark",
+              "Name": "ST:0:0:{aa2115a1-9712-457b-9047-dbb71ca2cdd2}"
+            },
+            {
+              "$type": "Bookmark",
+              "Name": "ST:0:0:{cce594b6-0c39-4442-ba28-10c64ac7e89f}"
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 8,
               "Title": "AppUser.cs",
               "DocumentMoniker": "C:\\Users\\marce\\Documents\\GitHub\\2027_13.S2_3_vizsgaremek\\backend\\PROTOTYPE-backend\\Models\\AppUser.cs",
               "RelativeDocumentMoniker": "PROTOTYPE-backend\\Models\\AppUser.cs",
@@ -84,7 +169,7 @@
             },
             {
               "$type": "Document",
-              "DocumentIndex": 3,
+              "DocumentIndex": 6,
               "Title": "appsettings.json",
               "DocumentMoniker": "C:\\Users\\marce\\Documents\\GitHub\\2027_13.S2_3_vizsgaremek\\backend\\PROTOTYPE-backend\\appsettings.json",
               "RelativeDocumentMoniker": "PROTOTYPE-backend\\appsettings.json",
@@ -97,7 +182,7 @@
             },
             {
               "$type": "Document",
-              "DocumentIndex": 6,
+              "DocumentIndex": 9,
               "Title": "UserSession.cs",
               "DocumentMoniker": "C:\\Users\\marce\\Documents\\GitHub\\2027_13.S2_3_vizsgaremek\\backend\\PROTOTYPE-backend\\Models\\UserSession.cs",
               "RelativeDocumentMoniker": "PROTOTYPE-backend\\Models\\UserSession.cs",
@@ -106,55 +191,11 @@
               "ViewState": "AgIAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA==",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
               "WhenOpened": "2026-10-25T13:41:25.221Z",
-=======
-          "DockedWidth": 208,
-          "SelectedChildIndex": 0,
-          "Children": [
-            {
-              "$type": "Document",
-              "DocumentIndex": 0,
-              "Title": "AuthService.cs",
-              "DocumentMoniker": "C:\\Users\\Kecskem\u00E9ti Mil\u00E1n\\Documents\\GitHub\\TMD_KM_TO-DO_Project\\backend\\PROTOTYPE-backend\\Services\\Auth\\AuthService.cs",
-              "RelativeDocumentMoniker": "PROTOTYPE-backend\\Services\\Auth\\AuthService.cs",
-              "ToolTip": "C:\\Users\\Kecskem\u00E9ti Mil\u00E1n\\Documents\\GitHub\\TMD_KM_TO-DO_Project\\backend\\PROTOTYPE-backend\\Services\\Auth\\AuthService.cs",
-              "RelativeToolTip": "PROTOTYPE-backend\\Services\\Auth\\AuthService.cs",
-              "ViewState": "AgIAAAAAAAAAAAAAAAAAAA0AAAAXAAAAAAAAAA==",
-              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
-              "WhenOpened": "2026-10-24T10:12:59.681Z",
->>>>>>> Stashed changes
               "EditorCaption": ""
             },
             {
-              "$type": "Bookmark",
-              "Name": "ST:0:0:{1c4feeaa-4718-4aa9-859d-94ce25d182ba}"
-            }
-          ]
-        },
-        {
-          "DockedWidth": 192,
-          "SelectedChildIndex": 1,
-          "Children": [
-            {
               "$type": "Document",
-              "DocumentIndex": 2,
-              "Title": "TwoFactor.cs",
-              "DocumentMoniker": "C:\\Users\\Kecskem\u00E9ti Mil\u00E1n\\Documents\\GitHub\\TMD_KM_TO-DO_Project\\backend\\PROTOTYPE-backend\\DTOs\\Auth\\TwoFactor.cs",
-              "RelativeDocumentMoniker": "PROTOTYPE-backend\\DTOs\\Auth\\TwoFactor.cs",
-              "ToolTip": "C:\\Users\\Kecskem\u00E9ti Mil\u00E1n\\Documents\\GitHub\\TMD_KM_TO-DO_Project\\backend\\PROTOTYPE-backend\\DTOs\\Auth\\TwoFactor.cs",
-              "RelativeToolTip": "PROTOTYPE-backend\\DTOs\\Auth\\TwoFactor.cs",
-              "ViewState": "AgIAAAAAAAAAAAAAAAAAAAQAAAAwAAAAAAAAAA==",
-              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
-              "WhenOpened": "2026-10-24T10:24:40.378Z",
-              "EditorCaption": ""
-            },
-            {
-<<<<<<< Updated upstream
-              "$type": "Bookmark",
-              "Name": "ST:0:0:{aa2115a1-9712-457b-9047-dbb71ca2cdd2}"
-            },
-            {
-              "$type": "Document",
-              "DocumentIndex": 4,
+              "DocumentIndex": 7,
               "Title": "IWorkspaceService.cs",
               "DocumentMoniker": "C:\\Users\\marce\\Documents\\GitHub\\2027_13.S2_3_vizsgaremek\\backend\\PROTOTYPE-backend\\Services\\Workspaces\\IWorkspaceService.cs",
               "RelativeDocumentMoniker": "PROTOTYPE-backend\\Services\\Workspaces\\IWorkspaceService.cs",
@@ -167,7 +208,7 @@
             },
             {
               "$type": "Document",
-              "DocumentIndex": 7,
+              "DocumentIndex": 10,
               "Title": "Workspace.cs",
               "DocumentMoniker": "C:\\Users\\marce\\Documents\\GitHub\\2027_13.S2_3_vizsgaremek\\backend\\PROTOTYPE-backend\\Models\\Workspace.cs",
               "RelativeDocumentMoniker": "PROTOTYPE-backend\\Models\\Workspace.cs",
@@ -180,20 +221,20 @@
             },
             {
               "$type": "Document",
-              "DocumentIndex": 1,
+              "DocumentIndex": 0,
               "Title": "WorkspaceService.cs",
               "DocumentMoniker": "C:\\Users\\marce\\Documents\\GitHub\\2027_13.S2_3_vizsgaremek\\backend\\PROTOTYPE-backend\\Services\\Workspaces\\WorkspaceService.cs",
               "RelativeDocumentMoniker": "PROTOTYPE-backend\\Services\\Workspaces\\WorkspaceService.cs",
               "ToolTip": "C:\\Users\\marce\\Documents\\GitHub\\2027_13.S2_3_vizsgaremek\\backend\\PROTOTYPE-backend\\Services\\Workspaces\\WorkspaceService.cs",
               "RelativeToolTip": "PROTOTYPE-backend\\Services\\Workspaces\\WorkspaceService.cs",
-              "ViewState": "AgIAADwAAAAAAAAAAAAqwFsAAAA9AAAAAAAAAA==",
+              "ViewState": "AgIAADQAAAAAAAAAAAAiwEAAAAANAAAAAAAAAA==",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
               "WhenOpened": "2026-10-24T06:54:21.756Z",
               "EditorCaption": ""
             },
             {
               "$type": "Document",
-              "DocumentIndex": 8,
+              "DocumentIndex": 11,
               "Title": "CalendarController.cs",
               "DocumentMoniker": "C:\\Users\\marce\\Documents\\GitHub\\2027_13.S2_3_vizsgaremek\\backend\\PROTOTYPE-backend\\Controllers\\CalendarController.cs",
               "RelativeDocumentMoniker": "PROTOTYPE-backend\\Controllers\\CalendarController.cs",
@@ -206,7 +247,7 @@
             },
             {
               "$type": "Document",
-              "DocumentIndex": 9,
+              "DocumentIndex": 12,
               "Title": "Project.cs",
               "DocumentMoniker": "C:\\Users\\marce\\Documents\\GitHub\\2027_13.S2_3_vizsgaremek\\backend\\PROTOTYPE-backend\\Models\\Project.cs",
               "RelativeDocumentMoniker": "PROTOTYPE-backend\\Models\\Project.cs",
@@ -217,12 +258,8 @@
               "WhenOpened": "2026-10-25T06:17:43.519Z"
             },
             {
-              "$type": "Bookmark",
-              "Name": "ST:0:0:{cce594b6-0c39-4442-ba28-10c64ac7e89f}"
-            },
-            {
               "$type": "Document",
-              "DocumentIndex": 2,
+              "DocumentIndex": 5,
               "Title": "WorkspaceDtos.cs",
               "DocumentMoniker": "C:\\Users\\marce\\Documents\\GitHub\\2027_13.S2_3_vizsgaremek\\backend\\PROTOTYPE-backend\\DTOs\\Workspace\\WorkspaceDtos.cs",
               "RelativeDocumentMoniker": "PROTOTYPE-backend\\DTOs\\Workspace\\WorkspaceDtos.cs",
@@ -235,27 +272,25 @@
             },
             {
               "$type": "Document",
-              "DocumentIndex": 0,
+              "DocumentIndex": 4,
               "Title": "WorkspaceController.cs",
               "DocumentMoniker": "C:\\Users\\marce\\Documents\\GitHub\\2027_13.S2_3_vizsgaremek\\backend\\PROTOTYPE-backend\\Controllers\\WorkspaceController.cs",
               "RelativeDocumentMoniker": "PROTOTYPE-backend\\Controllers\\WorkspaceController.cs",
               "ToolTip": "C:\\Users\\marce\\Documents\\GitHub\\2027_13.S2_3_vizsgaremek\\backend\\PROTOTYPE-backend\\Controllers\\WorkspaceController.cs",
               "RelativeToolTip": "PROTOTYPE-backend\\Controllers\\WorkspaceController.cs",
-              "ViewState": "AgIAABkAAAAAAAAAAAA5wEAAAAAfAAAAAAAAAA==",
-              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
-              "WhenOpened": "2026-10-24T06:47:44.127Z",
+              "ViewState": "AgIAACEAAAAAAAAAAAA9wEAAAAAfAAAAAAAAAA==",
 =======
               "$type": "Document",
-              "DocumentIndex": 1,
-              "Title": "AuthController.cs",
-              "DocumentMoniker": "C:\\Users\\Kecskem\u00E9ti Mil\u00E1n\\Documents\\GitHub\\TMD_KM_TO-DO_Project\\backend\\PROTOTYPE-backend\\Controllers\\AuthController.cs",
-              "RelativeDocumentMoniker": "PROTOTYPE-backend\\Controllers\\AuthController.cs",
-              "ToolTip": "C:\\Users\\Kecskem\u00E9ti Mil\u00E1n\\Documents\\GitHub\\TMD_KM_TO-DO_Project\\backend\\PROTOTYPE-backend\\Controllers\\AuthController.cs",
-              "RelativeToolTip": "PROTOTYPE-backend\\Controllers\\AuthController.cs",
-              "ViewState": "AgIAAGcAAAAAAAAAAAAkwHIAAAAYAAAAAAAAAA==",
-              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
-              "WhenOpened": "2026-10-24T10:12:48.012Z",
+              "DocumentIndex": 0,
+              "Title": "AuthService.cs",
+              "DocumentMoniker": "C:\\Users\\Kecskem\u00E9ti Mil\u00E1n\\Documents\\GitHub\\TMD_KM_TO-DO_Project\\backend\\PROTOTYPE-backend\\Services\\Auth\\AuthService.cs",
+              "RelativeDocumentMoniker": "PROTOTYPE-backend\\Services\\Auth\\AuthService.cs",
+              "ToolTip": "C:\\Users\\Kecskem\u00E9ti Mil\u00E1n\\Documents\\GitHub\\TMD_KM_TO-DO_Project\\backend\\PROTOTYPE-backend\\Services\\Auth\\AuthService.cs",
+              "RelativeToolTip": "PROTOTYPE-backend\\Services\\Auth\\AuthService.cs",
+              "ViewState": "AgIAAAYBAAAAAAAAAAAswC8BAAAAAAAAAAAAAA==",
 >>>>>>> Stashed changes
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2026-10-24T10:12:59.681Z",
               "EditorCaption": ""
             }
           ]
