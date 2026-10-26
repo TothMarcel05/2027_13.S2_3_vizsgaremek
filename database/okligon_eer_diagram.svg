@@ -1,0 +1,1037 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 3410 1826" width="3410" height="1826" font-family="'DejaVu Sans','Segoe UI','Helvetica Neue',Arial,sans-serif" xmlns:c2pa="http://c2pa.org/manifest"><metadata><c2pa:manifest>AAAWgmp1bWIAAAAeanVtZGMycGEAEQAQgAAAqgA4m3EDYzJwYQAAABZcanVtYgAAAEdqdW1kYzJtYQARABCAAACqADibcQN1cm46YzJwYTpjOTRiZWY0Ny01NjMzLTQ4NmEtODUxZi0zYzZhYzMxNzFjOWMAAAADl2p1bWIAAAApanVtZGMyYXMAEQAQgAAAqgA4m3EDYzJwYS5hc3NlcnRpb25zAAAAALxqdW1iAAAARGp1bWRjYm9yABEAEIAAAKoAOJtxE2MycGEuaW5ncmVkaWVudC52MwAAAAAYYzJzaPdWRqNaj9LT0zlnLgxOXucAAABwY2JvcqNpZGM6Zm9ybWF0bWltYWdlL3N2Zyt4bWxqaW5zdGFuY2VJRHgseG1wOmlpZDphMGQ4ZTM0ZC01ZWZiLTQ3ZTAtODBjNC05M2I2ZTYxNjNkODlscmVsYXRpb25zaGlwaHBhcmVudE9mAAAB4mp1bWIAAABBanVtZGNib3IAEQAQgAAAqgA4m3ETYzJwYS5hY3Rpb25zLnYyAAAAABhjMnNo2EhnTT4vDwb6mPvTXiVneAAAAZljYm9yomdhY3Rpb25zgqJmYWN0aW9ua2MycGEub3BlbmVkanBhcmFtZXRlcnOha2luZ3JlZGllbnRzgaJjdXJseC1zZWxmI2p1bWJmPWMycGEuYXNzZXJ0aW9ucy9jMnBhLmluZ3JlZGllbnQudjNkaGFzaFggXuQEHruH4XbUoZq8QTUPPIm38VUIm3xyzWeVOdxjuAmkZmFjdGlvbngdY29tLmFudGhyb3BpYy5jbGF1ZGUucHJvdmlkZWRqcGFyYW1ldGVyc6F4H2NvbS5hbnRocm9waWMub3JpZ2luLWNvbmZpZGVuY2VndW5rbm93bmtkZXNjcmlwdGlvbnhmQ2xhdWRlIHByb3ZpZGVkIHRoaXMgZmlsZSBhdCB0aGUgcmVxdWVzdCBvZiBhIHVzZXIgYW5kIG1heSBoYXZlIGNyZWF0ZWQgb3IgbW9kaWZpZWQgdGhlIGZpbGUgY29udGVudHMubXNvZnR3YXJlQWdlbnShZG5hbWVmQ2xhdWRlcmFsbEFjdGlvbnNJbmNsdWRlZPUAAADIanVtYgAAAEBqdW1kY2JvcgARABCAAACqADibcRNjMnBhLmhhc2guZGF0YQAAAAAYYzJzaB4NEIaDHsCck14vy4jsFGYAAACAY2JvcqVjYWxnZnNoYTI1NmNwYWRNAAAAAAAAAAAAAAAAAGRoYXNoWCDALYGR0q1Kw6vIJZuGUhq0UUrODTZ4WYwS/EkEJdor/WRuYW1lbmp1bWJmIG1hbmlmZXN0amV4Y2x1c2lvbnOBomVzdGFydBjjZmxlbmd0aBkeBAAAAj5qdW1iAAAAJ2p1bWRjMmNsABEAEIAAAKoAOJtxA2MycGEuY2xhaW0udjIAAAACD2Nib3KlY2FsZ2ZzaGEyNTZpc2lnbmF0dXJleE1zZWxmI2p1bWJmPS9jMnBhL3VybjpjMnBhOmM5NGJlZjQ3LTU2MzMtNDg2YS04NTFmLTNjNmFjMzE3MWM5Yy9jMnBhLnNpZ25hdHVyZWppbnN0YW5jZUlEeCx4bXA6aWlkOjgyZWJlNjQwLTAzMTctNDAzNi05NTQ4LWMxMTYxYjAzZjk0ZHJjcmVhdGVkX2Fzc2VydGlvbnODomN1cmx4LXNlbGYjanVtYmY9YzJwYS5hc3NlcnRpb25zL2MycGEuaW5ncmVkaWVudC52M2RoYXNoWCBe5AQeu4fhdtShmrxBNQ88ibfxVQibfHLNZ5U53GO4CaJjdXJseCpzZWxmI2p1bWJmPWMycGEuYXNzZXJ0aW9ucy9jMnBhLmFjdGlvbnMudjJkaGFzaFgg4/QnvK2AWMqYETE+g1XkZZCqTL1XjRmjfRrtJKTypuqiY3VybHgpc2VsZiNqdW1iZj1jMnBhLmFzc2VydGlvbnMvYzJwYS5oYXNoLmRhdGFkaGFzaFggYAxptD/Ih5VeLE/V/qoA2h5Hzue5s7HRU7r2xLoSjbp0Y2xhaW1fZ2VuZXJhdG9yX2luZm+jZG5hbWVvQW50aHJvcGljIEZpbGVzZ3ZlcnNpb25lMS4wLjBrc3BlY1ZlcnNpb25lMi40LjAAABA4anVtYgAAAChqdW1kYzJjcwARABCAAACqADibcQNjMnBhLnNpZ25hdHVyZQAAABAIY2JvctKEWQISogEmGCFZAgowggIGMIIBjaADAgECAhRA5aAK7sI50L64g/oGQgU9Z1UTADAKBggqhkjOPQQDAzBJMRcwFQYDVQQKEw5BbnRocm9waWMsIFBCQzEuMCwGA1UEAxMlQW50aHJvcGljIENvbnRlbnQgQ3JlZGVudGlhbHMgUm9vdCBDQTAeFw0yNjA4MDcxODQzNTZaFw0yODA4MDYxOTQzNTZaMEQxFzAVBgNVBAoTDkFudGhyb3BpYywgUEJDMSkwJwYDVQQDEyBBbnRocm9waWMgQ2xhdWRlIENvbnRlbnQgU2lnbmluZzBZMBMGByqGSM49AgEGCCqGSM49AwEHA0IABJh6CmvLUBgFFNU0vUKlOVtE6djd17L5SuwX0LemFisBM3dkd/3cyjxFA3Qo5S46fX0/ihY0VZ7mfb9KF703t5OjWDBWMA4GA1UdDwEB/wQEAwIHgDAVBgNVHSUEDjAMBgorBgEEAYPoXgIBMAwGA1UdEwEB/wQCMAAwHwYDVR0jBBgwFoAUzlHiBIFOZFsj+OPEz5o+nMHXXMIwCgYIKoZIzj0EAwMDZwAwZAIwMXMdFJ4BetLLVY7ORuE9noqbbAZOZn/aArXyTwFAZfKrPzxF2vPoJNf1+UCdg1XGAjBwX1zd9WGqYkqmL5SFqw1QySjr1zJfpJM9+1rdDwSPLMOPOjKuiXjoU/pUUeG9RwmhY3BhZFkNngAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAPZYQABuSeAw8fvUWlITKpYbqjO6Rkqg741PquWacdNVHzQbdQlBRdEDVukJvoO7F+JQAtCTo+WaupKd8ELP1BJS/ZY=</c2pa:manifest></metadata>
+<rect width="100%" height="100%" fill="#FFFFFF"/>
+<text x="60" y="56" font-size="34" font-weight="700" fill="#1B2430">Okligon – EER diagram</text>
+<text x="60" y="88" font-size="18" fill="#5F6B7A">TMD_KM_ProjectManagerApp · MySQL / InnoDB · 28 tábla · 51 idegen kulcs kapcsolat</text>
+<rect x="60" y="106" width="16" height="16" rx="3" fill="#1F4E8C"/>
+<text x="82" y="119" font-size="14" fill="#1B2430">Felhasználó, workspace, projekt</text>
+<rect x="368.40000000000003" y="106" width="16" height="16" rx="3" fill="#6B3FA0"/>
+<text x="390.40000000000003" y="119" font-size="14" fill="#1B2430">Szerepkörök és jogosultságok</text>
+<rect x="651.6000000000001" y="106" width="16" height="16" rx="3" fill="#2E7D4F"/>
+<text x="673.6000000000001" y="119" font-size="14" fill="#1B2430">Feladatok és értesítések</text>
+<rect x="901.2000000000002" y="106" width="16" height="16" rx="3" fill="#B7791F"/>
+<text x="923.2000000000002" y="119" font-size="14" fill="#1B2430">Tárhely (fájlok, mappák)</text>
+<rect x="1150.8000000000002" y="106" width="16" height="16" rx="3" fill="#0E7C86"/>
+<text x="1172.8000000000002" y="119" font-size="14" fill="#1B2430">Chat</text>
+<rect x="1232.4" y="106" width="16" height="16" rx="3" fill="#A23B72"/>
+<text x="1254.4" y="119" font-size="14" fill="#1B2430">Naptár</text>
+<rect x="1330.8000000000002" y="106" width="16" height="16" rx="3" fill="#B4432F"/>
+<text x="1352.8000000000002" y="119" font-size="14" fill="#1B2430">Hitelesítés / munkamenet</text>
+<rect x="1580.4" y="106" width="16" height="16" rx="3" fill="#5F6B7A"/>
+<text x="1602.4" y="119" font-size="14" fill="#1B2430">Szótár (enum)</text>
+<g transform="translate(0,90)">
+<path d="M1800,160 L1770,160 L1770,40 L1020,40 L1020,100 L1000,100" fill="none" stroke="#1F4E8C" stroke-width="1.6" stroke-linejoin="round" opacity="0.85"/>
+<path d="M2960,300 L2940,300 L2940,100 L2740,100" fill="none" stroke="#6B3FA0" stroke-width="1.6" stroke-linejoin="round" opacity="0.85"/>
+<path d="M3320,320 L3340,320 L3340,100 L3320,100" fill="none" stroke="#6B3FA0" stroke-width="1.6" stroke-linejoin="round" opacity="0.85"/>
+<path d="M2160,340 L2180,340 L2180,100 L2160,100" fill="none" stroke="#1F4E8C" stroke-width="1.6" stroke-linejoin="round" opacity="0.85"/>
+<path d="M1800,360 L1770,360 L1770,280 L1170,280 L1170,140 L1000,140" fill="none" stroke="#1F4E8C" stroke-width="1.6" stroke-linejoin="round" opacity="0.85"/>
+<path d="M2160,380 L2360,380 L2360,100 L2380,100" fill="none" stroke="#1F4E8C" stroke-width="1.6" stroke-linejoin="round" opacity="0.85"/>
+<path d="M2160,560 L2190,560 L2190,140 L2160,140" fill="none" stroke="#1F4E8C" stroke-width="1.6" stroke-linejoin="round" opacity="0.85"/>
+<path d="M1800,660 L1780,660 L1780,670 L1150,670 L1150,240 L1000,240" fill="none" stroke="#1F4E8C" stroke-width="1.6" stroke-linejoin="round" opacity="0.85"/>
+<path d="M2160,820 L2180,820 L2180,640 L2160,640" fill="none" stroke="#1F4E8C" stroke-width="1.6" stroke-linejoin="round" opacity="0.85"/>
+<path d="M2160,840 L2200,840 L2200,200 L2160,200" fill="none" stroke="#1F4E8C" stroke-width="1.6" stroke-linejoin="round" opacity="0.85"/>
+<path d="M1800,860 L1140,860 L1140,280 L1000,280" fill="none" stroke="#1F4E8C" stroke-width="1.6" stroke-linejoin="round" opacity="0.85"/>
+<path d="M2160,880 L2210,880 L2210,120 L2380,120" fill="none" stroke="#1F4E8C" stroke-width="1.6" stroke-linejoin="round" opacity="0.85"/>
+<path d="M2160,1140 L2220,1140 L2220,160 L2380,160" fill="none" stroke="#1F4E8C" stroke-width="1.6" stroke-linejoin="round" opacity="0.85"/>
+<path d="M1800,1120 L1760,1120 L1760,300 L1000,300" fill="none" stroke="#1F4E8C" stroke-width="1.6" stroke-linejoin="round" opacity="0.85"/>
+<path d="M1800,1160 L1770,1160 L1770,870 L1130,870 L1130,360 L1000,360" fill="none" stroke="#1F4E8C" stroke-width="1.6" stroke-linejoin="round" opacity="0.85"/>
+<path d="M2380,360 L2180,360 L2180,540 L2160,540" fill="none" stroke="#2E7D4F" stroke-width="1.6" stroke-linejoin="round" opacity="0.85"/>
+<path d="M2740,460 L2760,460 L2760,180 L2740,180" fill="none" stroke="#2E7D4F" stroke-width="1.6" stroke-linejoin="round" opacity="0.85"/>
+<path d="M2380,480 L1750,480 L1750,290 L1160,290 L1160,180 L1000,180" fill="none" stroke="#2E7D4F" stroke-width="1.6" stroke-linejoin="round" opacity="0.85"/>
+<path d="M2380,500 L2360,500 L2360,440 L1120,440 L1120,200 L1000,200" fill="none" stroke="#2E7D4F" stroke-width="1.6" stroke-linejoin="round" opacity="0.85"/>
+<path d="M2740,700 L2770,700 L2770,340 L2740,340" fill="none" stroke="#2E7D4F" stroke-width="1.6" stroke-linejoin="round" opacity="0.85"/>
+<path d="M2380,720 L2350,720 L2350,450 L1110,450 L1110,260 L1000,260" fill="none" stroke="#2E7D4F" stroke-width="1.6" stroke-linejoin="round" opacity="0.85"/>
+<path d="M2380,900 L2360,900 L2360,700 L2160,700" fill="none" stroke="#2E7D4F" stroke-width="1.6" stroke-linejoin="round" opacity="0.85"/>
+<path d="M2740,1060 L2780,1060 L2780,440 L2740,440" fill="none" stroke="#2E7D4F" stroke-width="1.6" stroke-linejoin="round" opacity="0.85"/>
+<path d="M2740,1080 L2760,1080 L2760,880 L2740,880" fill="none" stroke="#2E7D4F" stroke-width="1.6" stroke-linejoin="round" opacity="0.85"/>
+<path d="M2740,1220 L2790,1220 L2790,560 L2740,560" fill="none" stroke="#2E7D4F" stroke-width="1.6" stroke-linejoin="round" opacity="0.85"/>
+<path d="M2380,1240 L2360,1240 L2360,1380 L1100,1380 L1100,380 L1000,380" fill="none" stroke="#2E7D4F" stroke-width="1.6" stroke-linejoin="round" opacity="0.85"/>
+<path d="M640,500 L620,500 L620,220 L640,220" fill="none" stroke="#2E7D4F" stroke-width="1.6" stroke-linejoin="round" opacity="0.85"/>
+<path d="M1580,960 L1600,960 L1600,200 L1800,200" fill="none" stroke="#B7791F" stroke-width="1.6" stroke-linejoin="round" opacity="0.85"/>
+<path d="M1580,980 L1780,980 L1780,700 L1800,700" fill="none" stroke="#B7791F" stroke-width="1.6" stroke-linejoin="round" opacity="0.85"/>
+<path d="M1580,1000 L1610,1000 L1610,940 L1580,940" fill="none" stroke="#B7791F" stroke-width="1.6" stroke-linejoin="round" opacity="0.85"/>
+<path d="M1220,1120 L1170,1120 L1170,320 L1000,320" fill="none" stroke="#B7791F" stroke-width="1.6" stroke-linejoin="round" opacity="0.85"/>
+<path d="M1220,1140 L1160,1140 L1160,340 L1000,340" fill="none" stroke="#B7791F" stroke-width="1.6" stroke-linejoin="round" opacity="0.85"/>
+<path d="M1220,1320 L1200,1320 L1200,1060 L1220,1060" fill="none" stroke="#B7791F" stroke-width="1.6" stroke-linejoin="round" opacity="0.85"/>
+<path d="M1580,1340 L2230,1340 L2230,180 L2380,180" fill="none" stroke="#B7791F" stroke-width="1.6" stroke-linejoin="round" opacity="0.85"/>
+<path d="M1220,1480 L1190,1480 L1190,1200 L1220,1200" fill="none" stroke="#B7791F" stroke-width="1.6" stroke-linejoin="round" opacity="0.85"/>
+<path d="M1580,120 L1780,120 L1780,100 L1800,100" fill="none" stroke="#0E7C86" stroke-width="1.6" stroke-linejoin="round" opacity="0.85"/>
+<path d="M1580,140 L1780,140 L1780,540 L1800,540" fill="none" stroke="#0E7C86" stroke-width="1.6" stroke-linejoin="round" opacity="0.85"/>
+<path d="M1220,220 L1020,220 L1020,120 L1000,120" fill="none" stroke="#0E7C86" stroke-width="1.6" stroke-linejoin="round" opacity="0.85"/>
+<path d="M1220,360 L1200,360 L1200,100 L1220,100" fill="none" stroke="#0E7C86" stroke-width="1.6" stroke-linejoin="round" opacity="0.85"/>
+<path d="M1220,380 L1180,380 L1180,160 L1000,160" fill="none" stroke="#0E7C86" stroke-width="1.6" stroke-linejoin="round" opacity="0.85"/>
+<path d="M1220,540 L1190,540 L1190,240 L1220,240" fill="none" stroke="#0E7C86" stroke-width="1.6" stroke-linejoin="round" opacity="0.85"/>
+<path d="M1220,560 L1020,560 L1020,220 L1000,220" fill="none" stroke="#0E7C86" stroke-width="1.6" stroke-linejoin="round" opacity="0.85"/>
+<path d="M1580,580 L1610,580 L1610,520 L1580,520" fill="none" stroke="#0E7C86" stroke-width="1.6" stroke-linejoin="round" opacity="0.85"/>
+<path d="M1220,760 L1200,760 L1200,520 L1220,520" fill="none" stroke="#0E7C86" stroke-width="1.6" stroke-linejoin="round" opacity="0.85"/>
+<path d="M1220,780 L1200,780 L1200,940 L1220,940" fill="none" stroke="#0E7C86" stroke-width="1.6" stroke-linejoin="round" opacity="0.85"/>
+<path d="M1000,700 L1020,700 L1020,660 L1780,660 L1780,620 L1800,620" fill="none" stroke="#A23B72" stroke-width="1.6" stroke-linejoin="round" opacity="0.85"/>
+<path d="M640,840 L610,840 L610,340 L640,340" fill="none" stroke="#A23B72" stroke-width="1.6" stroke-linejoin="round" opacity="0.85"/>
+<path d="M420,120 L620,120 L620,100 L640,100" fill="none" stroke="#B4432F" stroke-width="1.6" stroke-linejoin="round" opacity="0.85"/>
+<path d="M420,160 L450,160 L450,100 L420,100" fill="none" stroke="#B4432F" stroke-width="1.6" stroke-linejoin="round" opacity="0.85"/>
+<path d="M420,440 L440,440 L440,160 L640,160" fill="none" stroke="#B4432F" stroke-width="1.6" stroke-linejoin="round" opacity="0.85"/>
+<path d="M420,720 L450,720 L450,280 L640,280" fill="none" stroke="#B4432F" stroke-width="1.6" stroke-linejoin="round" opacity="0.85"/>
+<path d="M1787,160 L1800,154 M1787,160 L1800,166 M1787,160 L1800,160" stroke="#1F4E8C" stroke-width="1.8" fill="none"/>
+<path d="M1006,94 L1006,106" stroke="#1F4E8C" stroke-width="1.8"/>
+<path d="M1011,94 L1011,106" stroke="#1F4E8C" stroke-width="1.8"/>
+<path d="M2947,300 L2960,294 M2947,300 L2960,306 M2947,300 L2960,300" stroke="#6B3FA0" stroke-width="1.8" fill="none"/>
+<path d="M2746,94 L2746,106" stroke="#6B3FA0" stroke-width="1.8"/>
+<path d="M2751,94 L2751,106" stroke="#6B3FA0" stroke-width="1.8"/>
+<path d="M3333,320 L3320,314 M3333,320 L3320,326 M3333,320 L3320,320" stroke="#6B3FA0" stroke-width="1.8" fill="none"/>
+<path d="M3326,94 L3326,106" stroke="#6B3FA0" stroke-width="1.8"/>
+<path d="M3331,94 L3331,106" stroke="#6B3FA0" stroke-width="1.8"/>
+<path d="M2173,340 L2160,334 M2173,340 L2160,346 M2173,340 L2160,340" stroke="#1F4E8C" stroke-width="1.8" fill="none"/>
+<path d="M2166,94 L2166,106" stroke="#1F4E8C" stroke-width="1.8"/>
+<path d="M2171,94 L2171,106" stroke="#1F4E8C" stroke-width="1.8"/>
+<path d="M1787,360 L1800,354 M1787,360 L1800,366 M1787,360 L1800,360" stroke="#1F4E8C" stroke-width="1.8" fill="none"/>
+<path d="M1006,134 L1006,146" stroke="#1F4E8C" stroke-width="1.8"/>
+<path d="M1011,134 L1011,146" stroke="#1F4E8C" stroke-width="1.8"/>
+<path d="M2173,380 L2160,374 M2173,380 L2160,386 M2173,380 L2160,380" stroke="#1F4E8C" stroke-width="1.8" fill="none"/>
+<path d="M2374,94 L2374,106" stroke="#1F4E8C" stroke-width="1.8"/>
+<path d="M2369,94 L2369,106" stroke="#1F4E8C" stroke-width="1.8"/>
+<path d="M2173,560 L2160,554 M2173,560 L2160,566 M2173,560 L2160,560" stroke="#1F4E8C" stroke-width="1.8" fill="none"/>
+<path d="M2166,134 L2166,146" stroke="#1F4E8C" stroke-width="1.8"/>
+<path d="M2171,134 L2171,146" stroke="#1F4E8C" stroke-width="1.8"/>
+<path d="M1787,660 L1800,654 M1787,660 L1800,666 M1787,660 L1800,660" stroke="#1F4E8C" stroke-width="1.8" fill="none"/>
+<path d="M1006,234 L1006,246" stroke="#1F4E8C" stroke-width="1.8"/>
+<circle cx="1013" cy="240" r="3.6" fill="#fff" stroke="#1F4E8C" stroke-width="1.6"/>
+<path d="M2173,820 L2160,814 M2173,820 L2160,826 M2173,820 L2160,820" stroke="#1F4E8C" stroke-width="1.8" fill="none"/>
+<path d="M2166,634 L2166,646" stroke="#1F4E8C" stroke-width="1.8"/>
+<path d="M2171,634 L2171,646" stroke="#1F4E8C" stroke-width="1.8"/>
+<path d="M2173,840 L2160,834 M2173,840 L2160,846 M2173,840 L2160,840" stroke="#1F4E8C" stroke-width="1.8" fill="none"/>
+<path d="M2166,194 L2166,206" stroke="#1F4E8C" stroke-width="1.8"/>
+<path d="M2171,194 L2171,206" stroke="#1F4E8C" stroke-width="1.8"/>
+<path d="M1787,860 L1800,854 M1787,860 L1800,866 M1787,860 L1800,860" stroke="#1F4E8C" stroke-width="1.8" fill="none"/>
+<path d="M1006,274 L1006,286" stroke="#1F4E8C" stroke-width="1.8"/>
+<path d="M1011,274 L1011,286" stroke="#1F4E8C" stroke-width="1.8"/>
+<path d="M2173,880 L2160,874 M2173,880 L2160,886 M2173,880 L2160,880" stroke="#1F4E8C" stroke-width="1.8" fill="none"/>
+<path d="M2374,114 L2374,126" stroke="#1F4E8C" stroke-width="1.8"/>
+<path d="M2369,114 L2369,126" stroke="#1F4E8C" stroke-width="1.8"/>
+<path d="M2173,1140 L2160,1134 M2173,1140 L2160,1146 M2173,1140 L2160,1140" stroke="#1F4E8C" stroke-width="1.8" fill="none"/>
+<path d="M2374,154 L2374,166" stroke="#1F4E8C" stroke-width="1.8"/>
+<circle cx="2367" cy="160" r="3.6" fill="#fff" stroke="#1F4E8C" stroke-width="1.6"/>
+<path d="M1787,1120 L1800,1114 M1787,1120 L1800,1126 M1787,1120 L1800,1120" stroke="#1F4E8C" stroke-width="1.8" fill="none"/>
+<path d="M1006,294 L1006,306" stroke="#1F4E8C" stroke-width="1.8"/>
+<circle cx="1013" cy="300" r="3.6" fill="#fff" stroke="#1F4E8C" stroke-width="1.6"/>
+<path d="M1787,1160 L1800,1154 M1787,1160 L1800,1166 M1787,1160 L1800,1160" stroke="#1F4E8C" stroke-width="1.8" fill="none"/>
+<path d="M1006,354 L1006,366" stroke="#1F4E8C" stroke-width="1.8"/>
+<path d="M1011,354 L1011,366" stroke="#1F4E8C" stroke-width="1.8"/>
+<path d="M2367,360 L2380,354 M2367,360 L2380,366 M2367,360 L2380,360" stroke="#2E7D4F" stroke-width="1.8" fill="none"/>
+<path d="M2166,534 L2166,546" stroke="#2E7D4F" stroke-width="1.8"/>
+<path d="M2171,534 L2171,546" stroke="#2E7D4F" stroke-width="1.8"/>
+<path d="M2753,460 L2740,454 M2753,460 L2740,466 M2753,460 L2740,460" stroke="#2E7D4F" stroke-width="1.8" fill="none"/>
+<path d="M2746,174 L2746,186" stroke="#2E7D4F" stroke-width="1.8"/>
+<circle cx="2753" cy="180" r="3.6" fill="#fff" stroke="#2E7D4F" stroke-width="1.6"/>
+<path d="M2367,480 L2380,474 M2367,480 L2380,486 M2367,480 L2380,480" stroke="#2E7D4F" stroke-width="1.8" fill="none"/>
+<path d="M1006,174 L1006,186" stroke="#2E7D4F" stroke-width="1.8"/>
+<circle cx="1013" cy="180" r="3.6" fill="#fff" stroke="#2E7D4F" stroke-width="1.6"/>
+<path d="M2367,500 L2380,494 M2367,500 L2380,506 M2367,500 L2380,500" stroke="#2E7D4F" stroke-width="1.8" fill="none"/>
+<path d="M1006,194 L1006,206" stroke="#2E7D4F" stroke-width="1.8"/>
+<circle cx="1013" cy="200" r="3.6" fill="#fff" stroke="#2E7D4F" stroke-width="1.6"/>
+<path d="M2753,700 L2740,694 M2753,700 L2740,706 M2753,700 L2740,700" stroke="#2E7D4F" stroke-width="1.8" fill="none"/>
+<path d="M2746,334 L2746,346" stroke="#2E7D4F" stroke-width="1.8"/>
+<path d="M2751,334 L2751,346" stroke="#2E7D4F" stroke-width="1.8"/>
+<path d="M2367,720 L2380,714 M2367,720 L2380,726 M2367,720 L2380,720" stroke="#2E7D4F" stroke-width="1.8" fill="none"/>
+<path d="M1006,254 L1006,266" stroke="#2E7D4F" stroke-width="1.8"/>
+<path d="M1011,254 L1011,266" stroke="#2E7D4F" stroke-width="1.8"/>
+<path d="M2367,900 L2380,894 M2367,900 L2380,906 M2367,900 L2380,900" stroke="#2E7D4F" stroke-width="1.8" fill="none"/>
+<path d="M2166,694 L2166,706" stroke="#2E7D4F" stroke-width="1.8"/>
+<path d="M2171,694 L2171,706" stroke="#2E7D4F" stroke-width="1.8"/>
+<path d="M2753,1060 L2740,1054 M2753,1060 L2740,1066 M2753,1060 L2740,1060" stroke="#2E7D4F" stroke-width="1.8" fill="none"/>
+<path d="M2746,434 L2746,446" stroke="#2E7D4F" stroke-width="1.8"/>
+<path d="M2751,434 L2751,446" stroke="#2E7D4F" stroke-width="1.8"/>
+<path d="M2753,1080 L2740,1074 M2753,1080 L2740,1086 M2753,1080 L2740,1080" stroke="#2E7D4F" stroke-width="1.8" fill="none"/>
+<path d="M2746,874 L2746,886" stroke="#2E7D4F" stroke-width="1.8"/>
+<path d="M2751,874 L2751,886" stroke="#2E7D4F" stroke-width="1.8"/>
+<path d="M2753,1220 L2740,1214 M2753,1220 L2740,1226 M2753,1220 L2740,1220" stroke="#2E7D4F" stroke-width="1.8" fill="none"/>
+<path d="M2746,554 L2746,566" stroke="#2E7D4F" stroke-width="1.8"/>
+<circle cx="2753" cy="560" r="3.6" fill="#fff" stroke="#2E7D4F" stroke-width="1.6"/>
+<path d="M2367,1240 L2380,1234 M2367,1240 L2380,1246 M2367,1240 L2380,1240" stroke="#2E7D4F" stroke-width="1.8" fill="none"/>
+<path d="M1006,374 L1006,386" stroke="#2E7D4F" stroke-width="1.8"/>
+<circle cx="1013" cy="380" r="3.6" fill="#fff" stroke="#2E7D4F" stroke-width="1.6"/>
+<path d="M627,500 L640,494 M627,500 L640,506 M627,500 L640,500" stroke="#2E7D4F" stroke-width="1.8" fill="none"/>
+<path d="M634,214 L634,226" stroke="#2E7D4F" stroke-width="1.8"/>
+<path d="M629,214 L629,226" stroke="#2E7D4F" stroke-width="1.8"/>
+<path d="M1593,960 L1580,954 M1593,960 L1580,966 M1593,960 L1580,960" stroke="#B7791F" stroke-width="1.8" fill="none"/>
+<path d="M1794,194 L1794,206" stroke="#B7791F" stroke-width="1.8"/>
+<path d="M1789,194 L1789,206" stroke="#B7791F" stroke-width="1.8"/>
+<path d="M1593,980 L1580,974 M1593,980 L1580,986 M1593,980 L1580,980" stroke="#B7791F" stroke-width="1.8" fill="none"/>
+<path d="M1794,694 L1794,706" stroke="#B7791F" stroke-width="1.8"/>
+<circle cx="1787" cy="700" r="3.6" fill="#fff" stroke="#B7791F" stroke-width="1.6"/>
+<path d="M1593,1000 L1580,994 M1593,1000 L1580,1006 M1593,1000 L1580,1000" stroke="#B7791F" stroke-width="1.8" fill="none"/>
+<path d="M1586,934 L1586,946" stroke="#B7791F" stroke-width="1.8"/>
+<circle cx="1593" cy="940" r="3.6" fill="#fff" stroke="#B7791F" stroke-width="1.6"/>
+<path d="M1207,1120 L1220,1114 M1207,1120 L1220,1126 M1207,1120 L1220,1120" stroke="#B7791F" stroke-width="1.8" fill="none"/>
+<path d="M1006,314 L1006,326" stroke="#B7791F" stroke-width="1.8"/>
+<circle cx="1013" cy="320" r="3.6" fill="#fff" stroke="#B7791F" stroke-width="1.6"/>
+<path d="M1207,1140 L1220,1134 M1207,1140 L1220,1146 M1207,1140 L1220,1140" stroke="#B7791F" stroke-width="1.8" fill="none"/>
+<path d="M1006,334 L1006,346" stroke="#B7791F" stroke-width="1.8"/>
+<circle cx="1013" cy="340" r="3.6" fill="#fff" stroke="#B7791F" stroke-width="1.6"/>
+<path d="M1207,1320 L1220,1314 M1207,1320 L1220,1326 M1207,1320 L1220,1320" stroke="#B7791F" stroke-width="1.8" fill="none"/>
+<path d="M1214,1054 L1214,1066" stroke="#B7791F" stroke-width="1.8"/>
+<path d="M1209,1054 L1209,1066" stroke="#B7791F" stroke-width="1.8"/>
+<path d="M1593,1340 L1580,1334 M1593,1340 L1580,1346 M1593,1340 L1580,1340" stroke="#B7791F" stroke-width="1.8" fill="none"/>
+<path d="M2374,174 L2374,186" stroke="#B7791F" stroke-width="1.8"/>
+<path d="M2369,174 L2369,186" stroke="#B7791F" stroke-width="1.8"/>
+<path d="M1207,1480 L1220,1474 M1207,1480 L1220,1486 M1207,1480 L1220,1480" stroke="#B7791F" stroke-width="1.8" fill="none"/>
+<path d="M1214,1194 L1214,1206" stroke="#B7791F" stroke-width="1.8"/>
+<path d="M1209,1194 L1209,1206" stroke="#B7791F" stroke-width="1.8"/>
+<path d="M1593,120 L1580,114 M1593,120 L1580,126 M1593,120 L1580,120" stroke="#0E7C86" stroke-width="1.8" fill="none"/>
+<path d="M1794,94 L1794,106" stroke="#0E7C86" stroke-width="1.8"/>
+<path d="M1789,94 L1789,106" stroke="#0E7C86" stroke-width="1.8"/>
+<path d="M1593,140 L1580,134 M1593,140 L1580,146 M1593,140 L1580,140" stroke="#0E7C86" stroke-width="1.8" fill="none"/>
+<path d="M1794,534 L1794,546" stroke="#0E7C86" stroke-width="1.8"/>
+<circle cx="1787" cy="540" r="3.6" fill="#fff" stroke="#0E7C86" stroke-width="1.6"/>
+<path d="M1207,220 L1220,214 M1207,220 L1220,226 M1207,220 L1220,220" stroke="#0E7C86" stroke-width="1.8" fill="none"/>
+<path d="M1006,114 L1006,126" stroke="#0E7C86" stroke-width="1.8"/>
+<circle cx="1013" cy="120" r="3.6" fill="#fff" stroke="#0E7C86" stroke-width="1.6"/>
+<path d="M1207,360 L1220,354 M1207,360 L1220,366 M1207,360 L1220,360" stroke="#0E7C86" stroke-width="1.8" fill="none"/>
+<path d="M1214,94 L1214,106" stroke="#0E7C86" stroke-width="1.8"/>
+<path d="M1209,94 L1209,106" stroke="#0E7C86" stroke-width="1.8"/>
+<path d="M1207,380 L1220,374 M1207,380 L1220,386 M1207,380 L1220,380" stroke="#0E7C86" stroke-width="1.8" fill="none"/>
+<path d="M1006,154 L1006,166" stroke="#0E7C86" stroke-width="1.8"/>
+<path d="M1011,154 L1011,166" stroke="#0E7C86" stroke-width="1.8"/>
+<path d="M1207,540 L1220,534 M1207,540 L1220,546 M1207,540 L1220,540" stroke="#0E7C86" stroke-width="1.8" fill="none"/>
+<path d="M1214,234 L1214,246" stroke="#0E7C86" stroke-width="1.8"/>
+<path d="M1209,234 L1209,246" stroke="#0E7C86" stroke-width="1.8"/>
+<path d="M1207,560 L1220,554 M1207,560 L1220,566 M1207,560 L1220,560" stroke="#0E7C86" stroke-width="1.8" fill="none"/>
+<path d="M1006,214 L1006,226" stroke="#0E7C86" stroke-width="1.8"/>
+<circle cx="1013" cy="220" r="3.6" fill="#fff" stroke="#0E7C86" stroke-width="1.6"/>
+<path d="M1593,580 L1580,574 M1593,580 L1580,586 M1593,580 L1580,580" stroke="#0E7C86" stroke-width="1.8" fill="none"/>
+<path d="M1586,514 L1586,526" stroke="#0E7C86" stroke-width="1.8"/>
+<circle cx="1593" cy="520" r="3.6" fill="#fff" stroke="#0E7C86" stroke-width="1.6"/>
+<path d="M1207,760 L1220,754 M1207,760 L1220,766 M1207,760 L1220,760" stroke="#0E7C86" stroke-width="1.8" fill="none"/>
+<path d="M1214,514 L1214,526" stroke="#0E7C86" stroke-width="1.8"/>
+<path d="M1209,514 L1209,526" stroke="#0E7C86" stroke-width="1.8"/>
+<path d="M1207,780 L1220,774 M1207,780 L1220,786 M1207,780 L1220,780" stroke="#0E7C86" stroke-width="1.8" fill="none"/>
+<path d="M1214,934 L1214,946" stroke="#0E7C86" stroke-width="1.8"/>
+<circle cx="1207" cy="940" r="3.6" fill="#fff" stroke="#0E7C86" stroke-width="1.6"/>
+<path d="M1013,700 L1000,694 M1013,700 L1000,706 M1013,700 L1000,700" stroke="#A23B72" stroke-width="1.8" fill="none"/>
+<path d="M1794,614 L1794,626" stroke="#A23B72" stroke-width="1.8"/>
+<circle cx="1787" cy="620" r="3.6" fill="#fff" stroke="#A23B72" stroke-width="1.6"/>
+<path d="M627,840 L640,834 M627,840 L640,846 M627,840 L640,840" stroke="#A23B72" stroke-width="1.8" fill="none"/>
+<path d="M634,334 L634,346" stroke="#A23B72" stroke-width="1.8"/>
+<circle cx="627" cy="340" r="3.6" fill="#fff" stroke="#A23B72" stroke-width="1.6"/>
+<path d="M433,120 L420,114 M433,120 L420,126 M433,120 L420,120" stroke="#B4432F" stroke-width="1.8" fill="none"/>
+<path d="M634,94 L634,106" stroke="#B4432F" stroke-width="1.8"/>
+<path d="M629,94 L629,106" stroke="#B4432F" stroke-width="1.8"/>
+<path d="M433,160 L420,154 M433,160 L420,166 M433,160 L420,160" stroke="#B4432F" stroke-width="1.8" fill="none"/>
+<path d="M426,94 L426,106" stroke="#B4432F" stroke-width="1.8"/>
+<circle cx="433" cy="100" r="3.6" fill="#fff" stroke="#B4432F" stroke-width="1.6"/>
+<path d="M433,440 L420,434 M433,440 L420,446 M433,440 L420,440" stroke="#B4432F" stroke-width="1.8" fill="none"/>
+<path d="M634,154 L634,166" stroke="#B4432F" stroke-width="1.8"/>
+<path d="M629,154 L629,166" stroke="#B4432F" stroke-width="1.8"/>
+<path d="M433,720 L420,714 M433,720 L420,726 M433,720 L420,720" stroke="#B4432F" stroke-width="1.8" fill="none"/>
+<path d="M634,274 L634,286" stroke="#B4432F" stroke-width="1.8"/>
+<path d="M629,274 L629,286" stroke="#B4432F" stroke-width="1.8"/>
+<g id="tbl_enum_lookup">
+<rect x="63" y="1023" width="360" height="140" rx="7" fill="#000" opacity="0.10"/>
+<rect x="60" y="1020" width="360" height="140" rx="7" fill="#FFFFFF" stroke="#5F6B7A" stroke-width="1.6"/>
+<path d="M60,1050 L60,1027 Q60,1020 67,1020 L413,1020 Q420,1020 420,1027 L420,1050 Z" fill="#5F6B7A"/>
+<text x="240.0" y="1041.0" font-size="17" font-weight="700" fill="#FFFFFF" text-anchor="middle" font-family="'DejaVu Sans','Segoe UI','Helvetica Neue',Arial,sans-serif">enum_lookup</text>
+<rect x="68" y="1054" width="22" height="12" rx="3" fill="#C77700"/>
+<text x="79" y="1063.3" font-size="9" font-weight="700" fill="#fff" text-anchor="middle" font-family="'DejaVu Sans','Segoe UI','Helvetica Neue',Arial,sans-serif">PK</text>
+<text x="126" y="1064" font-size="13" fill="#1B2430" font-family="'DejaVu Sans Mono','Consolas','Menlo','Courier New',monospace" font-weight="700">id</text>
+<text x="410" y="1064" font-size="12" fill="#5F6B7A" text-anchor="end" font-family="'DejaVu Sans Mono','Consolas','Menlo','Courier New',monospace">INT</text>
+<rect x="61" y="1070" width="358" height="20" fill="#EEF0F3" opacity="0.55"/>
+<rect x="68" y="1074" width="22" height="12" rx="3" fill="#6B3FA0"/>
+<text x="79" y="1083.3" font-size="9" font-weight="700" fill="#fff" text-anchor="middle" font-family="'DejaVu Sans','Segoe UI','Helvetica Neue',Arial,sans-serif">UQ</text>
+<text x="126" y="1084" font-size="13" fill="#1B2430" font-family="'DejaVu Sans Mono','Consolas','Menlo','Courier New',monospace">category</text>
+<text x="410" y="1084" font-size="12" fill="#5F6B7A" text-anchor="end" font-family="'DejaVu Sans Mono','Consolas','Menlo','Courier New',monospace">VARCHAR(100)</text>
+<rect x="68" y="1094" width="22" height="12" rx="3" fill="#6B3FA0"/>
+<text x="79" y="1103.3" font-size="9" font-weight="700" fill="#fff" text-anchor="middle" font-family="'DejaVu Sans','Segoe UI','Helvetica Neue',Arial,sans-serif">UQ</text>
+<text x="126" y="1104" font-size="13" fill="#1B2430" font-family="'DejaVu Sans Mono','Consolas','Menlo','Courier New',monospace">code</text>
+<text x="410" y="1104" font-size="12" fill="#5F6B7A" text-anchor="end" font-family="'DejaVu Sans Mono','Consolas','Menlo','Courier New',monospace">TINYINT</text>
+<rect x="61" y="1110" width="358" height="20" fill="#EEF0F3" opacity="0.55"/>
+<text x="126" y="1124" font-size="13" fill="#1B2430" font-family="'DejaVu Sans Mono','Consolas','Menlo','Courier New',monospace">name</text>
+<text x="410" y="1124" font-size="12" fill="#5F6B7A" text-anchor="end" font-family="'DejaVu Sans Mono','Consolas','Menlo','Courier New',monospace">VARCHAR(100)</text>
+<text x="126" y="1144" font-size="13" fill="#1B2430" font-family="'DejaVu Sans Mono','Consolas','Menlo','Courier New',monospace" font-style="italic">description</text>
+<text x="410" y="1144" font-size="12" fill="#5F6B7A" text-anchor="end" font-family="'DejaVu Sans Mono','Consolas','Menlo','Courier New',monospace">VARCHAR(255)</text>
+</g>
+<g id="tbl_app_user">
+<rect x="643" y="63" width="360" height="300" rx="7" fill="#000" opacity="0.10"/>
+<rect x="640" y="60" width="360" height="300" rx="7" fill="#FFFFFF" stroke="#1F4E8C" stroke-width="1.6"/>
+<path d="M640,90 L640,67 Q640,60 647,60 L993,60 Q1000,60 1000,67 L1000,90 Z" fill="#1F4E8C"/>
+<text x="820.0" y="81.0" font-size="17" font-weight="700" fill="#FFFFFF" text-anchor="middle" font-family="'DejaVu Sans','Segoe UI','Helvetica Neue',Arial,sans-serif">app_user</text>
+<rect x="648" y="94" width="22" height="12" rx="3" fill="#C77700"/>
+<text x="659" y="103.3" font-size="9" font-weight="700" fill="#fff" text-anchor="middle" font-family="'DejaVu Sans','Segoe UI','Helvetica Neue',Arial,sans-serif">PK</text>
+<text x="706" y="104" font-size="13" fill="#1B2430" font-family="'DejaVu Sans Mono','Consolas','Menlo','Courier New',monospace" font-weight="700">id</text>
+<text x="990" y="104" font-size="12" fill="#5F6B7A" text-anchor="end" font-family="'DejaVu Sans Mono','Consolas','Menlo','Courier New',monospace">CHAR(36)</text>
+<rect x="641" y="110" width="358" height="20" fill="#E8F0FA" opacity="0.55"/>
+<text x="706" y="124" font-size="13" fill="#1B2430" font-family="'DejaVu Sans Mono','Consolas','Menlo','Courier New',monospace">name</text>
+<text x="990" y="124" font-size="12" fill="#5F6B7A" text-anchor="end" font-family="'DejaVu Sans Mono','Consolas','Menlo','Courier New',monospace">VARCHAR(255)</text>
+<rect x="648" y="134" width="22" height="12" rx="3" fill="#6B3FA0"/>
+<text x="659" y="143.3" font-size="9" font-weight="700" fill="#fff" text-anchor="middle" font-family="'DejaVu Sans','Segoe UI','Helvetica Neue',Arial,sans-serif">UQ</text>
+<text x="706" y="144" font-size="13" fill="#1B2430" font-family="'DejaVu Sans Mono','Consolas','Menlo','Courier New',monospace">email</text>
+<text x="990" y="144" font-size="12" fill="#5F6B7A" text-anchor="end" font-family="'DejaVu Sans Mono','Consolas','Menlo','Courier New',monospace">VARCHAR(255)</text>
+<rect x="641" y="150" width="358" height="20" fill="#E8F0FA" opacity="0.55"/>
+<text x="706" y="164" font-size="13" fill="#1B2430" font-family="'DejaVu Sans Mono','Consolas','Menlo','Courier New',monospace">password_hash</text>
+<text x="990" y="164" font-size="12" fill="#5F6B7A" text-anchor="end" font-family="'DejaVu Sans Mono','Consolas','Menlo','Courier New',monospace">VARCHAR(255)</text>
+<text x="706" y="184" font-size="13" fill="#1B2430" font-family="'DejaVu Sans Mono','Consolas','Menlo','Courier New',monospace" font-style="italic">avatar_url</text>
+<text x="990" y="184" font-size="12" fill="#5F6B7A" text-anchor="end" font-family="'DejaVu Sans Mono','Consolas','Menlo','Courier New',monospace">VARCHAR(500)</text>
+<rect x="641" y="190" width="358" height="20" fill="#E8F0FA" opacity="0.55"/>
+<text x="706" y="204" font-size="13" fill="#1B2430" font-family="'DejaVu Sans Mono','Consolas','Menlo','Courier New',monospace">created_at</text>
+<text x="990" y="204" font-size="12" fill="#5F6B7A" text-anchor="end" font-family="'DejaVu Sans Mono','Consolas','Menlo','Courier New',monospace">TIMESTAMP</text>
+<text x="706" y="224" font-size="13" fill="#1B2430" font-family="'DejaVu Sans Mono','Consolas','Menlo','Courier New',monospace" font-style="italic">updated_at</text>
+<text x="990" y="224" font-size="12" fill="#5F6B7A" text-anchor="end" font-family="'DejaVu Sans Mono','Consolas','Menlo','Courier New',monospace">TIMESTAMP</text>
+<rect x="641" y="230" width="358" height="20" fill="#E8F0FA" opacity="0.55"/>
+<text x="706" y="244" font-size="13" fill="#1B2430" font-family="'DejaVu Sans Mono','Consolas','Menlo','Courier New',monospace">global_role</text>
+<text x="990" y="244" font-size="12" fill="#5F6B7A" text-anchor="end" font-family="'DejaVu Sans Mono','Consolas','Menlo','Courier New',monospace">TINYINT</text>
+<text x="706" y="264" font-size="13" fill="#1B2430" font-family="'DejaVu Sans Mono','Consolas','Menlo','Courier New',monospace" font-style="italic">deleted_at</text>
+<text x="990" y="264" font-size="12" fill="#5F6B7A" text-anchor="end" font-family="'DejaVu Sans Mono','Consolas','Menlo','Courier New',monospace">TIMESTAMP</text>
+<rect x="641" y="270" width="358" height="20" fill="#E8F0FA" opacity="0.55"/>
+<text x="706" y="284" font-size="13" fill="#1B2430" font-family="'DejaVu Sans Mono','Consolas','Menlo','Courier New',monospace">is_2fa_enabled</text>
+<text x="990" y="284" font-size="12" fill="#5F6B7A" text-anchor="end" font-family="'DejaVu Sans Mono','Consolas','Menlo','Courier New',monospace">BOOLEAN</text>
+<text x="706" y="304" font-size="13" fill="#1B2430" font-family="'DejaVu Sans Mono','Consolas','Menlo','Courier New',monospace">two_factor_type</text>
+<text x="990" y="304" font-size="12" fill="#5F6B7A" text-anchor="end" font-family="'DejaVu Sans Mono','Consolas','Menlo','Courier New',monospace">TINYINT</text>
+<rect x="641" y="310" width="358" height="20" fill="#E8F0FA" opacity="0.55"/>
+<text x="706" y="324" font-size="13" fill="#1B2430" font-family="'DejaVu Sans Mono','Consolas','Menlo','Courier New',monospace" font-style="italic">two_factor_secret</text>
+<text x="990" y="324" font-size="12" fill="#5F6B7A" text-anchor="end" font-family="'DejaVu Sans Mono','Consolas','Menlo','Courier New',monospace">VARCHAR(255)</text>
+<text x="706" y="344" font-size="13" fill="#1B2430" font-family="'DejaVu Sans Mono','Consolas','Menlo','Courier New',monospace" font-style="italic">two_factor_recovery_codes</text>
+<text x="990" y="344" font-size="12" fill="#5F6B7A" text-anchor="end" font-family="'DejaVu Sans Mono','Consolas','Menlo','Courier New',monospace">TEXT</text>
+</g>
+<g id="tbl_workspace">
+<rect x="1803" y="63" width="360" height="160" rx="7" fill="#000" opacity="0.10"/>
+<rect x="1800" y="60" width="360" height="160" rx="7" fill="#FFFFFF" stroke="#1F4E8C" stroke-width="1.6"/>
+<path d="M1800,90 L1800,67 Q1800,60 1807,60 L2153,60 Q2160,60 2160,67 L2160,90 Z" fill="#1F4E8C"/>
+<text x="1980.0" y="81.0" font-size="17" font-weight="700" fill="#FFFFFF" text-anchor="middle" font-family="'DejaVu Sans','Segoe UI','Helvetica Neue',Arial,sans-serif">workspace</text>
+<rect x="1808" y="94" width="22" height="12" rx="3" fill="#C77700"/>
+<text x="1819" y="103.3" font-size="9" font-weight="700" fill="#fff" text-anchor="middle" font-family="'DejaVu Sans','Segoe UI','Helvetica Neue',Arial,sans-serif">PK</text>
+<text x="1866" y="104" font-size="13" fill="#1B2430" font-family="'DejaVu Sans Mono','Consolas','Menlo','Courier New',monospace" font-weight="700">id</text>
+<text x="2150" y="104" font-size="12" fill="#5F6B7A" text-anchor="end" font-family="'DejaVu Sans Mono','Consolas','Menlo','Courier New',monospace">CHAR(36)</text>
+<rect x="1801" y="110" width="358" height="20" fill="#E8F0FA" opacity="0.55"/>
+<text x="1866" y="124" font-size="13" fill="#1B2430" font-family="'DejaVu Sans Mono','Consolas','Menlo','Courier New',monospace">name</text>
+<text x="2150" y="124" font-size="12" fill="#5F6B7A" text-anchor="end" font-family="'DejaVu Sans Mono','Consolas','Menlo','Courier New',monospace">VARCHAR(255)</text>
+<text x="1866" y="144" font-size="13" fill="#1B2430" font-family="'DejaVu Sans Mono','Consolas','Menlo','Courier New',monospace" font-style="italic">description</text>
+<text x="2150" y="144" font-size="12" fill="#5F6B7A" text-anchor="end" font-family="'DejaVu Sans Mono','Consolas','Menlo','Courier New',monospace">TEXT</text>
+<rect x="1801" y="150" width="358" height="20" fill="#E8F0FA" opacity="0.55"/>
+<rect x="1808" y="154" width="22" height="12" rx="3" fill="#1F4E8C"/>
+<text x="1819" y="163.3" font-size="9" font-weight="700" fill="#fff" text-anchor="middle" font-family="'DejaVu Sans','Segoe UI','Helvetica Neue',Arial,sans-serif">FK</text>
+<text x="1866" y="164" font-size="13" fill="#1B2430" font-family="'DejaVu Sans Mono','Consolas','Menlo','Courier New',monospace">owner_id</text>
+<text x="2150" y="164" font-size="12" fill="#5F6B7A" text-anchor="end" font-family="'DejaVu Sans Mono','Consolas','Menlo','Courier New',monospace">CHAR(36)</text>
+<text x="1866" y="184" font-size="13" fill="#1B2430" font-family="'DejaVu Sans Mono','Consolas','Menlo','Courier New',monospace">storage_quota_bytes</text>
+<text x="2150" y="184" font-size="12" fill="#5F6B7A" text-anchor="end" font-family="'DejaVu Sans Mono','Consolas','Menlo','Courier New',monospace">BIGINT UNSIGNED</text>
+<rect x="1801" y="190" width="358" height="20" fill="#E8F0FA" opacity="0.55"/>
+<text x="1866" y="204" font-size="13" fill="#1B2430" font-family="'DejaVu Sans Mono','Consolas','Menlo','Courier New',monospace" font-style="italic">created_at</text>
+<text x="2150" y="204" font-size="12" fill="#5F6B7A" text-anchor="end" font-family="'DejaVu Sans Mono','Consolas','Menlo','Courier New',monospace">TIMESTAMP</text>
+</g>
+<g id="tbl_permission">
+<rect x="2963" y="63" width="360" height="160" rx="7" fill="#000" opacity="0.10"/>
+<rect x="2960" y="60" width="360" height="160" rx="7" fill="#FFFFFF" stroke="#6B3FA0" stroke-width="1.6"/>
+<path d="M2960,90 L2960,67 Q2960,60 2967,60 L3313,60 Q3320,60 3320,67 L3320,90 Z" fill="#6B3FA0"/>
+<text x="3140.0" y="81.0" font-size="17" font-weight="700" fill="#FFFFFF" text-anchor="middle" font-family="'DejaVu Sans','Segoe UI','Helvetica Neue',Arial,sans-serif">permission</text>
+<rect x="2968" y="94" width="22" height="12" rx="3" fill="#C77700"/>
+<text x="2979" y="103.3" font-size="9" font-weight="700" fill="#fff" text-anchor="middle" font-family="'DejaVu Sans','Segoe UI','Helvetica Neue',Arial,sans-serif">PK</text>
+<text x="3026" y="104" font-size="13" fill="#1B2430" font-family="'DejaVu Sans Mono','Consolas','Menlo','Courier New',monospace" font-weight="700">id</text>
+<text x="3310" y="104" font-size="12" fill="#5F6B7A" text-anchor="end" font-family="'DejaVu Sans Mono','Consolas','Menlo','Courier New',monospace">CHAR(36)</text>
+<rect x="2961" y="110" width="358" height="20" fill="#F1EBF8" opacity="0.55"/>
+<rect x="2968" y="114" width="22" height="12" rx="3" fill="#6B3FA0"/>
+<text x="2979" y="123.3" font-size="9" font-weight="700" fill="#fff" text-anchor="middle" font-family="'DejaVu Sans','Segoe UI','Helvetica Neue',Arial,sans-serif">UQ</text>
+<text x="3026" y="124" font-size="13" fill="#1B2430" font-family="'DejaVu Sans Mono','Consolas','Menlo','Courier New',monospace">code</text>
+<text x="3310" y="124" font-size="12" fill="#5F6B7A" text-anchor="end" font-family="'DejaVu Sans Mono','Consolas','Menlo','Courier New',monospace">VARCHAR(100)</text>
+<text x="3026" y="144" font-size="13" fill="#1B2430" font-family="'DejaVu Sans Mono','Consolas','Menlo','Courier New',monospace">scope</text>
+<text x="3310" y="144" font-size="12" fill="#5F6B7A" text-anchor="end" font-family="'DejaVu Sans Mono','Consolas','Menlo','Courier New',monospace">TINYINT</text>
+<rect x="2961" y="150" width="358" height="20" fill="#F1EBF8" opacity="0.55"/>
+<text x="3026" y="164" font-size="13" fill="#1B2430" font-family="'DejaVu Sans Mono','Consolas','Menlo','Courier New',monospace">name</text>
+<text x="3310" y="164" font-size="12" fill="#5F6B7A" text-anchor="end" font-family="'DejaVu Sans Mono','Consolas','Menlo','Courier New',monospace">VARCHAR(255)</text>
+<text x="3026" y="184" font-size="13" fill="#1B2430" font-family="'DejaVu Sans Mono','Consolas','Menlo','Courier New',monospace" font-style="italic">description</text>
+<text x="3310" y="184" font-size="12" fill="#5F6B7A" text-anchor="end" font-family="'DejaVu Sans Mono','Consolas','Menlo','Courier New',monospace">TEXT</text>
+<rect x="2961" y="190" width="358" height="20" fill="#F1EBF8" opacity="0.55"/>
+<text x="3026" y="204" font-size="13" fill="#1B2430" font-family="'DejaVu Sans Mono','Consolas','Menlo','Courier New',monospace" font-style="italic">created_at</text>
+<text x="3310" y="204" font-size="12" fill="#5F6B7A" text-anchor="end" font-family="'DejaVu Sans Mono','Consolas','Menlo','Courier New',monospace">TIMESTAMP</text>
+</g>
+<g id="tbl_app_role">
+<rect x="2383" y="63" width="360" height="140" rx="7" fill="#000" opacity="0.10"/>
+<rect x="2380" y="60" width="360" height="140" rx="7" fill="#FFFFFF" stroke="#6B3FA0" stroke-width="1.6"/>
+<path d="M2380,90 L2380,67 Q2380,60 2387,60 L2733,60 Q2740,60 2740,67 L2740,90 Z" fill="#6B3FA0"/>
+<text x="2560.0" y="81.0" font-size="17" font-weight="700" fill="#FFFFFF" text-anchor="middle" font-family="'DejaVu Sans','Segoe UI','Helvetica Neue',Arial,sans-serif">app_role</text>
+<rect x="2388" y="94" width="22" height="12" rx="3" fill="#C77700"/>
+<text x="2399" y="103.3" font-size="9" font-weight="700" fill="#fff" text-anchor="middle" font-family="'DejaVu Sans','Segoe UI','Helvetica Neue',Arial,sans-serif">PK</text>
+<text x="2446" y="104" font-size="13" fill="#1B2430" font-family="'DejaVu Sans Mono','Consolas','Menlo','Courier New',monospace" font-weight="700">id</text>
+<text x="2730" y="104" font-size="12" fill="#5F6B7A" text-anchor="end" font-family="'DejaVu Sans Mono','Consolas','Menlo','Courier New',monospace">CHAR(36)</text>
+<rect x="2381" y="110" width="358" height="20" fill="#F1EBF8" opacity="0.55"/>
+<rect x="2388" y="114" width="22" height="12" rx="3" fill="#6B3FA0"/>
+<text x="2399" y="123.3" font-size="9" font-weight="700" fill="#fff" text-anchor="middle" font-family="'DejaVu Sans','Segoe UI','Helvetica Neue',Arial,sans-serif">UQ</text>
+<text x="2446" y="124" font-size="13" fill="#1B2430" font-family="'DejaVu Sans Mono','Consolas','Menlo','Courier New',monospace">name</text>
+<text x="2730" y="124" font-size="12" fill="#5F6B7A" text-anchor="end" font-family="'DejaVu Sans Mono','Consolas','Menlo','Courier New',monospace">VARCHAR(100)</text>
+<text x="2446" y="144" font-size="13" fill="#1B2430" font-family="'DejaVu Sans Mono','Consolas','Menlo','Courier New',monospace" font-style="italic">description</text>
+<text x="2730" y="144" font-size="12" fill="#5F6B7A" text-anchor="end" font-family="'DejaVu Sans Mono','Consolas','Menlo','Courier New',monospace">TEXT</text>
+<rect x="2381" y="150" width="358" height="20" fill="#F1EBF8" opacity="0.55"/>
+<text x="2446" y="164" font-size="13" fill="#1B2430" font-family="'DejaVu Sans Mono','Consolas','Menlo','Courier New',monospace">is_system</text>
+<text x="2730" y="164" font-size="12" fill="#5F6B7A" text-anchor="end" font-family="'DejaVu Sans Mono','Consolas','Menlo','Courier New',monospace">BOOLEAN</text>
+<text x="2446" y="184" font-size="13" fill="#1B2430" font-family="'DejaVu Sans Mono','Consolas','Menlo','Courier New',monospace" font-style="italic">created_at</text>
+<text x="2730" y="184" font-size="12" fill="#5F6B7A" text-anchor="end" font-family="'DejaVu Sans Mono','Consolas','Menlo','Courier New',monospace">TIMESTAMP</text>
+</g>
+<g id="tbl_role_permission">
+<rect x="2963" y="263" width="360" height="80" rx="7" fill="#000" opacity="0.10"/>
+<rect x="2960" y="260" width="360" height="80" rx="7" fill="#FFFFFF" stroke="#6B3FA0" stroke-width="1.6"/>
+<path d="M2960,290 L2960,267 Q2960,260 2967,260 L3313,260 Q3320,260 3320,267 L3320,290 Z" fill="#6B3FA0"/>
+<text x="3140.0" y="281.0" font-size="17" font-weight="700" fill="#FFFFFF" text-anchor="middle" font-family="'DejaVu Sans','Segoe UI','Helvetica Neue',Arial,sans-serif">role_permission</text>
+<rect x="2968" y="294" width="22" height="12" rx="3" fill="#C77700"/>
+<text x="2979" y="303.3" font-size="9" font-weight="700" fill="#fff" text-anchor="middle" font-family="'DejaVu Sans','Segoe UI','Helvetica Neue',Arial,sans-serif">PK</text>
+<rect x="2993" y="294" width="22" height="12" rx="3" fill="#1F4E8C"/>
+<text x="3004" y="303.3" font-size="9" font-weight="700" fill="#fff" text-anchor="middle" font-family="'DejaVu Sans','Segoe UI','Helvetica Neue',Arial,sans-serif">FK</text>
+<text x="3026" y="304" font-size="13" fill="#1B2430" font-family="'DejaVu Sans Mono','Consolas','Menlo','Courier New',monospace" font-weight="700">role_id</text>
+<text x="3310" y="304" font-size="12" fill="#5F6B7A" text-anchor="end" font-family="'DejaVu Sans Mono','Consolas','Menlo','Courier New',monospace">CHAR(36)</text>
+<rect x="2961" y="310" width="358" height="20" fill="#F1EBF8" opacity="0.55"/>
+<rect x="2968" y="314" width="22" height="12" rx="3" fill="#C77700"/>
+<text x="2979" y="323.3" font-size="9" font-weight="700" fill="#fff" text-anchor="middle" font-family="'DejaVu Sans','Segoe UI','Helvetica Neue',Arial,sans-serif">PK</text>
+<rect x="2993" y="314" width="22" height="12" rx="3" fill="#1F4E8C"/>
+<text x="3004" y="323.3" font-size="9" font-weight="700" fill="#fff" text-anchor="middle" font-family="'DejaVu Sans','Segoe UI','Helvetica Neue',Arial,sans-serif">FK</text>
+<text x="3026" y="324" font-size="13" fill="#1B2430" font-family="'DejaVu Sans Mono','Consolas','Menlo','Courier New',monospace" font-weight="700">permission_id</text>
+<text x="3310" y="324" font-size="12" fill="#5F6B7A" text-anchor="end" font-family="'DejaVu Sans Mono','Consolas','Menlo','Courier New',monospace">CHAR(36)</text>
+</g>
+<g id="tbl_workspace_member">
+<rect x="1803" y="303" width="360" height="120" rx="7" fill="#000" opacity="0.10"/>
+<rect x="1800" y="300" width="360" height="120" rx="7" fill="#FFFFFF" stroke="#1F4E8C" stroke-width="1.6"/>
+<path d="M1800,330 L1800,307 Q1800,300 1807,300 L2153,300 Q2160,300 2160,307 L2160,330 Z" fill="#1F4E8C"/>
+<text x="1980.0" y="321.0" font-size="17" font-weight="700" fill="#FFFFFF" text-anchor="middle" font-family="'DejaVu Sans','Segoe UI','Helvetica Neue',Arial,sans-serif">workspace_member</text>
+<rect x="1808" y="334" width="22" height="12" rx="3" fill="#C77700"/>
+<text x="1819" y="343.3" font-size="9" font-weight="700" fill="#fff" text-anchor="middle" font-family="'DejaVu Sans','Segoe UI','Helvetica Neue',Arial,sans-serif">PK</text>
+<rect x="1833" y="334" width="22" height="12" rx="3" fill="#1F4E8C"/>
+<text x="1844" y="343.3" font-size="9" font-weight="700" fill="#fff" text-anchor="middle" font-family="'DejaVu Sans','Segoe UI','Helvetica Neue',Arial,sans-serif">FK</text>
+<text x="1866" y="344" font-size="13" fill="#1B2430" font-family="'DejaVu Sans Mono','Consolas','Menlo','Courier New',monospace" font-weight="700">workspace_id</text>
+<text x="2150" y="344" font-size="12" fill="#5F6B7A" text-anchor="end" font-family="'DejaVu Sans Mono','Consolas','Menlo','Courier New',monospace">CHAR(36)</text>
+<rect x="1801" y="350" width="358" height="20" fill="#E8F0FA" opacity="0.55"/>
+<rect x="1808" y="354" width="22" height="12" rx="3" fill="#C77700"/>
+<text x="1819" y="363.3" font-size="9" font-weight="700" fill="#fff" text-anchor="middle" font-family="'DejaVu Sans','Segoe UI','Helvetica Neue',Arial,sans-serif">PK</text>
+<rect x="1833" y="354" width="22" height="12" rx="3" fill="#1F4E8C"/>
+<text x="1844" y="363.3" font-size="9" font-weight="700" fill="#fff" text-anchor="middle" font-family="'DejaVu Sans','Segoe UI','Helvetica Neue',Arial,sans-serif">FK</text>
+<text x="1866" y="364" font-size="13" fill="#1B2430" font-family="'DejaVu Sans Mono','Consolas','Menlo','Courier New',monospace" font-weight="700">user_id</text>
+<text x="2150" y="364" font-size="12" fill="#5F6B7A" text-anchor="end" font-family="'DejaVu Sans Mono','Consolas','Menlo','Courier New',monospace">CHAR(36)</text>
+<rect x="1808" y="374" width="22" height="12" rx="3" fill="#1F4E8C"/>
+<text x="1819" y="383.3" font-size="9" font-weight="700" fill="#fff" text-anchor="middle" font-family="'DejaVu Sans','Segoe UI','Helvetica Neue',Arial,sans-serif">FK</text>
+<text x="1866" y="384" font-size="13" fill="#1B2430" font-family="'DejaVu Sans Mono','Consolas','Menlo','Courier New',monospace">role_id</text>
+<text x="2150" y="384" font-size="12" fill="#5F6B7A" text-anchor="end" font-family="'DejaVu Sans Mono','Consolas','Menlo','Courier New',monospace">CHAR(36)</text>
+<rect x="1801" y="390" width="358" height="20" fill="#E8F0FA" opacity="0.55"/>
+<text x="1866" y="404" font-size="13" fill="#1B2430" font-family="'DejaVu Sans Mono','Consolas','Menlo','Courier New',monospace" font-style="italic">joined_at</text>
+<text x="2150" y="404" font-size="12" fill="#5F6B7A" text-anchor="end" font-family="'DejaVu Sans Mono','Consolas','Menlo','Courier New',monospace">TIMESTAMP</text>
+</g>
+<g id="tbl_project">
+<rect x="1803" y="503" width="360" height="220" rx="7" fill="#000" opacity="0.10"/>
+<rect x="1800" y="500" width="360" height="220" rx="7" fill="#FFFFFF" stroke="#1F4E8C" stroke-width="1.6"/>
+<path d="M1800,530 L1800,507 Q1800,500 1807,500 L2153,500 Q2160,500 2160,507 L2160,530 Z" fill="#1F4E8C"/>
+<text x="1980.0" y="521.0" font-size="17" font-weight="700" fill="#FFFFFF" text-anchor="middle" font-family="'DejaVu Sans','Segoe UI','Helvetica Neue',Arial,sans-serif">project</text>
+<rect x="1808" y="534" width="22" height="12" rx="3" fill="#C77700"/>
+<text x="1819" y="543.3" font-size="9" font-weight="700" fill="#fff" text-anchor="middle" font-family="'DejaVu Sans','Segoe UI','Helvetica Neue',Arial,sans-serif">PK</text>
+<text x="1866" y="544" font-size="13" fill="#1B2430" font-family="'DejaVu Sans Mono','Consolas','Menlo','Courier New',monospace" font-weight="700">id</text>
+<text x="2150" y="544" font-size="12" fill="#5F6B7A" text-anchor="end" font-family="'DejaVu Sans Mono','Consolas','Menlo','Courier New',monospace">CHAR(36)</text>
+<rect x="1801" y="550" width="358" height="20" fill="#E8F0FA" opacity="0.55"/>
+<rect x="1808" y="554" width="22" height="12" rx="3" fill="#1F4E8C"/>
+<text x="1819" y="563.3" font-size="9" font-weight="700" fill="#fff" text-anchor="middle" font-family="'DejaVu Sans','Segoe UI','Helvetica Neue',Arial,sans-serif">FK</text>
+<text x="1866" y="564" font-size="13" fill="#1B2430" font-family="'DejaVu Sans Mono','Consolas','Menlo','Courier New',monospace">workspace_id</text>
+<text x="2150" y="564" font-size="12" fill="#5F6B7A" text-anchor="end" font-family="'DejaVu Sans Mono','Consolas','Menlo','Courier New',monospace">CHAR(36)</text>
+<text x="1866" y="584" font-size="13" fill="#1B2430" font-family="'DejaVu Sans Mono','Consolas','Menlo','Courier New',monospace">name</text>
+<text x="2150" y="584" font-size="12" fill="#5F6B7A" text-anchor="end" font-family="'DejaVu Sans Mono','Consolas','Menlo','Courier New',monospace">VARCHAR(255)</text>
+<rect x="1801" y="590" width="358" height="20" fill="#E8F0FA" opacity="0.55"/>
+<text x="1866" y="604" font-size="13" fill="#1B2430" font-family="'DejaVu Sans Mono','Consolas','Menlo','Courier New',monospace" font-style="italic">description</text>
+<text x="2150" y="604" font-size="12" fill="#5F6B7A" text-anchor="end" font-family="'DejaVu Sans Mono','Consolas','Menlo','Courier New',monospace">TEXT</text>
+<text x="1866" y="624" font-size="13" fill="#1B2430" font-family="'DejaVu Sans Mono','Consolas','Menlo','Courier New',monospace">status</text>
+<text x="2150" y="624" font-size="12" fill="#5F6B7A" text-anchor="end" font-family="'DejaVu Sans Mono','Consolas','Menlo','Courier New',monospace">TINYINT</text>
+<rect x="1801" y="630" width="358" height="20" fill="#E8F0FA" opacity="0.55"/>
+<text x="1866" y="644" font-size="13" fill="#1B2430" font-family="'DejaVu Sans Mono','Consolas','Menlo','Courier New',monospace" font-style="italic">deadline</text>
+<text x="2150" y="644" font-size="12" fill="#5F6B7A" text-anchor="end" font-family="'DejaVu Sans Mono','Consolas','Menlo','Courier New',monospace">DATE</text>
+<rect x="1808" y="654" width="22" height="12" rx="3" fill="#1F4E8C"/>
+<text x="1819" y="663.3" font-size="9" font-weight="700" fill="#fff" text-anchor="middle" font-family="'DejaVu Sans','Segoe UI','Helvetica Neue',Arial,sans-serif">FK</text>
+<text x="1866" y="664" font-size="13" fill="#1B2430" font-family="'DejaVu Sans Mono','Consolas','Menlo','Courier New',monospace" font-style="italic">owner_id</text>
+<text x="2150" y="664" font-size="12" fill="#5F6B7A" text-anchor="end" font-family="'DejaVu Sans Mono','Consolas','Menlo','Courier New',monospace">CHAR(36)</text>
+<rect x="1801" y="670" width="358" height="20" fill="#E8F0FA" opacity="0.55"/>
+<text x="1866" y="684" font-size="13" fill="#1B2430" font-family="'DejaVu Sans Mono','Consolas','Menlo','Courier New',monospace" font-style="italic">created_at</text>
+<text x="2150" y="684" font-size="12" fill="#5F6B7A" text-anchor="end" font-family="'DejaVu Sans Mono','Consolas','Menlo','Courier New',monospace">TIMESTAMP</text>
+<text x="1866" y="704" font-size="13" fill="#1B2430" font-family="'DejaVu Sans Mono','Consolas','Menlo','Courier New',monospace" font-style="italic">updated_at</text>
+<text x="2150" y="704" font-size="12" fill="#5F6B7A" text-anchor="end" font-family="'DejaVu Sans Mono','Consolas','Menlo','Courier New',monospace">TIMESTAMP</text>
+</g>
+<g id="tbl_project_member">
+<rect x="1803" y="783" width="360" height="160" rx="7" fill="#000" opacity="0.10"/>
+<rect x="1800" y="780" width="360" height="160" rx="7" fill="#FFFFFF" stroke="#1F4E8C" stroke-width="1.6"/>
+<path d="M1800,810 L1800,787 Q1800,780 1807,780 L2153,780 Q2160,780 2160,787 L2160,810 Z" fill="#1F4E8C"/>
+<text x="1980.0" y="801.0" font-size="17" font-weight="700" fill="#FFFFFF" text-anchor="middle" font-family="'DejaVu Sans','Segoe UI','Helvetica Neue',Arial,sans-serif">project_member</text>
+<rect x="1808" y="814" width="22" height="12" rx="3" fill="#C77700"/>
+<text x="1819" y="823.3" font-size="9" font-weight="700" fill="#fff" text-anchor="middle" font-family="'DejaVu Sans','Segoe UI','Helvetica Neue',Arial,sans-serif">PK</text>
+<rect x="1833" y="814" width="22" height="12" rx="3" fill="#1F4E8C"/>
+<text x="1844" y="823.3" font-size="9" font-weight="700" fill="#fff" text-anchor="middle" font-family="'DejaVu Sans','Segoe UI','Helvetica Neue',Arial,sans-serif">FK</text>
+<text x="1866" y="824" font-size="13" fill="#1B2430" font-family="'DejaVu Sans Mono','Consolas','Menlo','Courier New',monospace" font-weight="700">project_id</text>
+<text x="2150" y="824" font-size="12" fill="#5F6B7A" text-anchor="end" font-family="'DejaVu Sans Mono','Consolas','Menlo','Courier New',monospace">CHAR(36)</text>
+<rect x="1801" y="830" width="358" height="20" fill="#E8F0FA" opacity="0.55"/>
+<rect x="1808" y="834" width="22" height="12" rx="3" fill="#1F4E8C"/>
+<text x="1819" y="843.3" font-size="9" font-weight="700" fill="#fff" text-anchor="middle" font-family="'DejaVu Sans','Segoe UI','Helvetica Neue',Arial,sans-serif">FK</text>
+<text x="1866" y="844" font-size="13" fill="#1B2430" font-family="'DejaVu Sans Mono','Consolas','Menlo','Courier New',monospace">workspace_id</text>
+<text x="2150" y="844" font-size="12" fill="#5F6B7A" text-anchor="end" font-family="'DejaVu Sans Mono','Consolas','Menlo','Courier New',monospace">CHAR(36)</text>
+<rect x="1808" y="854" width="22" height="12" rx="3" fill="#C77700"/>
+<text x="1819" y="863.3" font-size="9" font-weight="700" fill="#fff" text-anchor="middle" font-family="'DejaVu Sans','Segoe UI','Helvetica Neue',Arial,sans-serif">PK</text>
+<rect x="1833" y="854" width="22" height="12" rx="3" fill="#1F4E8C"/>
+<text x="1844" y="863.3" font-size="9" font-weight="700" fill="#fff" text-anchor="middle" font-family="'DejaVu Sans','Segoe UI','Helvetica Neue',Arial,sans-serif">FK</text>
+<text x="1866" y="864" font-size="13" fill="#1B2430" font-family="'DejaVu Sans Mono','Consolas','Menlo','Courier New',monospace" font-weight="700">user_id</text>
+<text x="2150" y="864" font-size="12" fill="#5F6B7A" text-anchor="end" font-family="'DejaVu Sans Mono','Consolas','Menlo','Courier New',monospace">CHAR(36)</text>
+<rect x="1801" y="870" width="358" height="20" fill="#E8F0FA" opacity="0.55"/>
+<rect x="1808" y="874" width="22" height="12" rx="3" fill="#C77700"/>
+<text x="1819" y="883.3" font-size="9" font-weight="700" fill="#fff" text-anchor="middle" font-family="'DejaVu Sans','Segoe UI','Helvetica Neue',Arial,sans-serif">PK</text>
+<rect x="1833" y="874" width="22" height="12" rx="3" fill="#1F4E8C"/>
+<text x="1844" y="883.3" font-size="9" font-weight="700" fill="#fff" text-anchor="middle" font-family="'DejaVu Sans','Segoe UI','Helvetica Neue',Arial,sans-serif">FK</text>
+<text x="1866" y="884" font-size="13" fill="#1B2430" font-family="'DejaVu Sans Mono','Consolas','Menlo','Courier New',monospace" font-weight="700">role_id</text>
+<text x="2150" y="884" font-size="12" fill="#5F6B7A" text-anchor="end" font-family="'DejaVu Sans Mono','Consolas','Menlo','Courier New',monospace">CHAR(36)</text>
+<text x="1866" y="904" font-size="13" fill="#1B2430" font-family="'DejaVu Sans Mono','Consolas','Menlo','Courier New',monospace">is_workspace_member</text>
+<text x="2150" y="904" font-size="12" fill="#5F6B7A" text-anchor="end" font-family="'DejaVu Sans Mono','Consolas','Menlo','Courier New',monospace">BOOLEAN</text>
+<rect x="1801" y="910" width="358" height="20" fill="#E8F0FA" opacity="0.55"/>
+<text x="1866" y="924" font-size="13" fill="#1B2430" font-family="'DejaVu Sans Mono','Consolas','Menlo','Courier New',monospace" font-style="italic">assigned_at</text>
+<text x="2150" y="924" font-size="12" fill="#5F6B7A" text-anchor="end" font-family="'DejaVu Sans Mono','Consolas','Menlo','Courier New',monospace">TIMESTAMP</text>
+</g>
+<g id="tbl_app_invitation">
+<rect x="1803" y="1003" width="360" height="280" rx="7" fill="#000" opacity="0.10"/>
+<rect x="1800" y="1000" width="360" height="280" rx="7" fill="#FFFFFF" stroke="#1F4E8C" stroke-width="1.6"/>
+<path d="M1800,1030 L1800,1007 Q1800,1000 1807,1000 L2153,1000 Q2160,1000 2160,1007 L2160,1030 Z" fill="#1F4E8C"/>
+<text x="1980.0" y="1021.0" font-size="17" font-weight="700" fill="#FFFFFF" text-anchor="middle" font-family="'DejaVu Sans','Segoe UI','Helvetica Neue',Arial,sans-serif">app_invitation</text>
+<rect x="1808" y="1034" width="22" height="12" rx="3" fill="#C77700"/>
+<text x="1819" y="1043.3" font-size="9" font-weight="700" fill="#fff" text-anchor="middle" font-family="'DejaVu Sans','Segoe UI','Helvetica Neue',Arial,sans-serif">PK</text>
+<text x="1866" y="1044" font-size="13" fill="#1B2430" font-family="'DejaVu Sans Mono','Consolas','Menlo','Courier New',monospace" font-weight="700">id</text>
+<text x="2150" y="1044" font-size="12" fill="#5F6B7A" text-anchor="end" font-family="'DejaVu Sans Mono','Consolas','Menlo','Courier New',monospace">CHAR(36)</text>
+<rect x="1801" y="1050" width="358" height="20" fill="#E8F0FA" opacity="0.55"/>
+<text x="1866" y="1064" font-size="13" fill="#1B2430" font-family="'DejaVu Sans Mono','Consolas','Menlo','Courier New',monospace">type</text>
+<text x="2150" y="1064" font-size="12" fill="#5F6B7A" text-anchor="end" font-family="'DejaVu Sans Mono','Consolas','Menlo','Courier New',monospace">TINYINT</text>
+<text x="1866" y="1084" font-size="13" fill="#1B2430" font-family="'DejaVu Sans Mono','Consolas','Menlo','Courier New',monospace">target_id</text>
+<text x="2150" y="1084" font-size="12" fill="#5F6B7A" text-anchor="end" font-family="'DejaVu Sans Mono','Consolas','Menlo','Courier New',monospace">CHAR(36)</text>
+<rect x="1801" y="1090" width="358" height="20" fill="#E8F0FA" opacity="0.55"/>
+<text x="1866" y="1104" font-size="13" fill="#1B2430" font-family="'DejaVu Sans Mono','Consolas','Menlo','Courier New',monospace">invited_email</text>
+<text x="2150" y="1104" font-size="12" fill="#5F6B7A" text-anchor="end" font-family="'DejaVu Sans Mono','Consolas','Menlo','Courier New',monospace">VARCHAR(255)</text>
+<rect x="1808" y="1114" width="22" height="12" rx="3" fill="#1F4E8C"/>
+<text x="1819" y="1123.3" font-size="9" font-weight="700" fill="#fff" text-anchor="middle" font-family="'DejaVu Sans','Segoe UI','Helvetica Neue',Arial,sans-serif">FK</text>
+<text x="1866" y="1124" font-size="13" fill="#1B2430" font-family="'DejaVu Sans Mono','Consolas','Menlo','Courier New',monospace" font-style="italic">invited_user_id</text>
+<text x="2150" y="1124" font-size="12" fill="#5F6B7A" text-anchor="end" font-family="'DejaVu Sans Mono','Consolas','Menlo','Courier New',monospace">CHAR(36)</text>
+<rect x="1801" y="1130" width="358" height="20" fill="#E8F0FA" opacity="0.55"/>
+<rect x="1808" y="1134" width="22" height="12" rx="3" fill="#1F4E8C"/>
+<text x="1819" y="1143.3" font-size="9" font-weight="700" fill="#fff" text-anchor="middle" font-family="'DejaVu Sans','Segoe UI','Helvetica Neue',Arial,sans-serif">FK</text>
+<text x="1866" y="1144" font-size="13" fill="#1B2430" font-family="'DejaVu Sans Mono','Consolas','Menlo','Courier New',monospace" font-style="italic">role_id</text>
+<text x="2150" y="1144" font-size="12" fill="#5F6B7A" text-anchor="end" font-family="'DejaVu Sans Mono','Consolas','Menlo','Courier New',monospace">CHAR(36)</text>
+<rect x="1808" y="1154" width="22" height="12" rx="3" fill="#1F4E8C"/>
+<text x="1819" y="1163.3" font-size="9" font-weight="700" fill="#fff" text-anchor="middle" font-family="'DejaVu Sans','Segoe UI','Helvetica Neue',Arial,sans-serif">FK</text>
+<text x="1866" y="1164" font-size="13" fill="#1B2430" font-family="'DejaVu Sans Mono','Consolas','Menlo','Courier New',monospace">invited_by</text>
+<text x="2150" y="1164" font-size="12" fill="#5F6B7A" text-anchor="end" font-family="'DejaVu Sans Mono','Consolas','Menlo','Courier New',monospace">CHAR(36)</text>
+<rect x="1801" y="1170" width="358" height="20" fill="#E8F0FA" opacity="0.55"/>
+<text x="1866" y="1184" font-size="13" fill="#1B2430" font-family="'DejaVu Sans Mono','Consolas','Menlo','Courier New',monospace">status</text>
+<text x="2150" y="1184" font-size="12" fill="#5F6B7A" text-anchor="end" font-family="'DejaVu Sans Mono','Consolas','Menlo','Courier New',monospace">TINYINT</text>
+<rect x="1808" y="1194" width="22" height="12" rx="3" fill="#6B3FA0"/>
+<text x="1819" y="1203.3" font-size="9" font-weight="700" fill="#fff" text-anchor="middle" font-family="'DejaVu Sans','Segoe UI','Helvetica Neue',Arial,sans-serif">UQ</text>
+<text x="1866" y="1204" font-size="13" fill="#1B2430" font-family="'DejaVu Sans Mono','Consolas','Menlo','Courier New',monospace">token</text>
+<text x="2150" y="1204" font-size="12" fill="#5F6B7A" text-anchor="end" font-family="'DejaVu Sans Mono','Consolas','Menlo','Courier New',monospace">VARCHAR(255)</text>
+<rect x="1801" y="1210" width="358" height="20" fill="#E8F0FA" opacity="0.55"/>
+<text x="1866" y="1224" font-size="13" fill="#1B2430" font-family="'DejaVu Sans Mono','Consolas','Menlo','Courier New',monospace">expires_at</text>
+<text x="2150" y="1224" font-size="12" fill="#5F6B7A" text-anchor="end" font-family="'DejaVu Sans Mono','Consolas','Menlo','Courier New',monospace">TIMESTAMP</text>
+<text x="1866" y="1244" font-size="13" fill="#1B2430" font-family="'DejaVu Sans Mono','Consolas','Menlo','Courier New',monospace" font-style="italic">created_at</text>
+<text x="2150" y="1244" font-size="12" fill="#5F6B7A" text-anchor="end" font-family="'DejaVu Sans Mono','Consolas','Menlo','Courier New',monospace">TIMESTAMP</text>
+<rect x="1801" y="1250" width="358" height="20" fill="#E8F0FA" opacity="0.55"/>
+<text x="1866" y="1264" font-size="13" fill="#1B2430" font-family="'DejaVu Sans Mono','Consolas','Menlo','Courier New',monospace" font-style="italic">responded_at</text>
+<text x="2150" y="1264" font-size="12" fill="#5F6B7A" text-anchor="end" font-family="'DejaVu Sans Mono','Consolas','Menlo','Courier New',monospace">TIMESTAMP</text>
+</g>
+<g id="tbl_project_task">
+<rect x="2383" y="303" width="360" height="280" rx="7" fill="#000" opacity="0.10"/>
+<rect x="2380" y="300" width="360" height="280" rx="7" fill="#FFFFFF" stroke="#2E7D4F" stroke-width="1.6"/>
+<path d="M2380,330 L2380,307 Q2380,300 2387,300 L2733,300 Q2740,300 2740,307 L2740,330 Z" fill="#2E7D4F"/>
+<text x="2560.0" y="321.0" font-size="17" font-weight="700" fill="#FFFFFF" text-anchor="middle" font-family="'DejaVu Sans','Segoe UI','Helvetica Neue',Arial,sans-serif">project_task</text>
+<rect x="2388" y="334" width="22" height="12" rx="3" fill="#C77700"/>
+<text x="2399" y="343.3" font-size="9" font-weight="700" fill="#fff" text-anchor="middle" font-family="'DejaVu Sans','Segoe UI','Helvetica Neue',Arial,sans-serif">PK</text>
+<text x="2446" y="344" font-size="13" fill="#1B2430" font-family="'DejaVu Sans Mono','Consolas','Menlo','Courier New',monospace" font-weight="700">id</text>
+<text x="2730" y="344" font-size="12" fill="#5F6B7A" text-anchor="end" font-family="'DejaVu Sans Mono','Consolas','Menlo','Courier New',monospace">CHAR(36)</text>
+<rect x="2381" y="350" width="358" height="20" fill="#E8F5EC" opacity="0.55"/>
+<rect x="2388" y="354" width="22" height="12" rx="3" fill="#1F4E8C"/>
+<text x="2399" y="363.3" font-size="9" font-weight="700" fill="#fff" text-anchor="middle" font-family="'DejaVu Sans','Segoe UI','Helvetica Neue',Arial,sans-serif">FK</text>
+<text x="2446" y="364" font-size="13" fill="#1B2430" font-family="'DejaVu Sans Mono','Consolas','Menlo','Courier New',monospace">project_id</text>
+<text x="2730" y="364" font-size="12" fill="#5F6B7A" text-anchor="end" font-family="'DejaVu Sans Mono','Consolas','Menlo','Courier New',monospace">CHAR(36)</text>
+<text x="2446" y="384" font-size="13" fill="#1B2430" font-family="'DejaVu Sans Mono','Consolas','Menlo','Courier New',monospace">title</text>
+<text x="2730" y="384" font-size="12" fill="#5F6B7A" text-anchor="end" font-family="'DejaVu Sans Mono','Consolas','Menlo','Courier New',monospace">VARCHAR(255)</text>
+<rect x="2381" y="390" width="358" height="20" fill="#E8F5EC" opacity="0.55"/>
+<text x="2446" y="404" font-size="13" fill="#1B2430" font-family="'DejaVu Sans Mono','Consolas','Menlo','Courier New',monospace" font-style="italic">description</text>
+<text x="2730" y="404" font-size="12" fill="#5F6B7A" text-anchor="end" font-family="'DejaVu Sans Mono','Consolas','Menlo','Courier New',monospace">TEXT</text>
+<text x="2446" y="424" font-size="13" fill="#1B2430" font-family="'DejaVu Sans Mono','Consolas','Menlo','Courier New',monospace">status</text>
+<text x="2730" y="424" font-size="12" fill="#5F6B7A" text-anchor="end" font-family="'DejaVu Sans Mono','Consolas','Menlo','Courier New',monospace">TINYINT</text>
+<rect x="2381" y="430" width="358" height="20" fill="#E8F5EC" opacity="0.55"/>
+<text x="2446" y="444" font-size="13" fill="#1B2430" font-family="'DejaVu Sans Mono','Consolas','Menlo','Courier New',monospace">priority</text>
+<text x="2730" y="444" font-size="12" fill="#5F6B7A" text-anchor="end" font-family="'DejaVu Sans Mono','Consolas','Menlo','Courier New',monospace">TINYINT</text>
+<rect x="2388" y="454" width="22" height="12" rx="3" fill="#1F4E8C"/>
+<text x="2399" y="463.3" font-size="9" font-weight="700" fill="#fff" text-anchor="middle" font-family="'DejaVu Sans','Segoe UI','Helvetica Neue',Arial,sans-serif">FK</text>
+<text x="2446" y="464" font-size="13" fill="#1B2430" font-family="'DejaVu Sans Mono','Consolas','Menlo','Courier New',monospace" font-style="italic">assignee_role_id</text>
+<text x="2730" y="464" font-size="12" fill="#5F6B7A" text-anchor="end" font-family="'DejaVu Sans Mono','Consolas','Menlo','Courier New',monospace">CHAR(36)</text>
+<rect x="2381" y="470" width="358" height="20" fill="#E8F5EC" opacity="0.55"/>
+<rect x="2388" y="474" width="22" height="12" rx="3" fill="#1F4E8C"/>
+<text x="2399" y="483.3" font-size="9" font-weight="700" fill="#fff" text-anchor="middle" font-family="'DejaVu Sans','Segoe UI','Helvetica Neue',Arial,sans-serif">FK</text>
+<text x="2446" y="484" font-size="13" fill="#1B2430" font-family="'DejaVu Sans Mono','Consolas','Menlo','Courier New',monospace" font-style="italic">assignee_user_id</text>
+<text x="2730" y="484" font-size="12" fill="#5F6B7A" text-anchor="end" font-family="'DejaVu Sans Mono','Consolas','Menlo','Courier New',monospace">CHAR(36)</text>
+<rect x="2388" y="494" width="22" height="12" rx="3" fill="#1F4E8C"/>
+<text x="2399" y="503.3" font-size="9" font-weight="700" fill="#fff" text-anchor="middle" font-family="'DejaVu Sans','Segoe UI','Helvetica Neue',Arial,sans-serif">FK</text>
+<text x="2446" y="504" font-size="13" fill="#1B2430" font-family="'DejaVu Sans Mono','Consolas','Menlo','Courier New',monospace" font-style="italic">created_by</text>
+<text x="2730" y="504" font-size="12" fill="#5F6B7A" text-anchor="end" font-family="'DejaVu Sans Mono','Consolas','Menlo','Courier New',monospace">CHAR(36)</text>
+<rect x="2381" y="510" width="358" height="20" fill="#E8F5EC" opacity="0.55"/>
+<text x="2446" y="524" font-size="13" fill="#1B2430" font-family="'DejaVu Sans Mono','Consolas','Menlo','Courier New',monospace" font-style="italic">due_date</text>
+<text x="2730" y="524" font-size="12" fill="#5F6B7A" text-anchor="end" font-family="'DejaVu Sans Mono','Consolas','Menlo','Courier New',monospace">DATE</text>
+<text x="2446" y="544" font-size="13" fill="#1B2430" font-family="'DejaVu Sans Mono','Consolas','Menlo','Courier New',monospace" font-style="italic">created_at</text>
+<text x="2730" y="544" font-size="12" fill="#5F6B7A" text-anchor="end" font-family="'DejaVu Sans Mono','Consolas','Menlo','Courier New',monospace">TIMESTAMP</text>
+<rect x="2381" y="550" width="358" height="20" fill="#E8F5EC" opacity="0.55"/>
+<text x="2446" y="564" font-size="13" fill="#1B2430" font-family="'DejaVu Sans Mono','Consolas','Menlo','Courier New',monospace" font-style="italic">updated_at</text>
+<text x="2730" y="564" font-size="12" fill="#5F6B7A" text-anchor="end" font-family="'DejaVu Sans Mono','Consolas','Menlo','Courier New',monospace">TIMESTAMP</text>
+</g>
+<g id="tbl_project_comment">
+<rect x="2383" y="643" width="360" height="140" rx="7" fill="#000" opacity="0.10"/>
+<rect x="2380" y="640" width="360" height="140" rx="7" fill="#FFFFFF" stroke="#2E7D4F" stroke-width="1.6"/>
+<path d="M2380,670 L2380,647 Q2380,640 2387,640 L2733,640 Q2740,640 2740,647 L2740,670 Z" fill="#2E7D4F"/>
+<text x="2560.0" y="661.0" font-size="17" font-weight="700" fill="#FFFFFF" text-anchor="middle" font-family="'DejaVu Sans','Segoe UI','Helvetica Neue',Arial,sans-serif">project_comment</text>
+<rect x="2388" y="674" width="22" height="12" rx="3" fill="#C77700"/>
+<text x="2399" y="683.3" font-size="9" font-weight="700" fill="#fff" text-anchor="middle" font-family="'DejaVu Sans','Segoe UI','Helvetica Neue',Arial,sans-serif">PK</text>
+<text x="2446" y="684" font-size="13" fill="#1B2430" font-family="'DejaVu Sans Mono','Consolas','Menlo','Courier New',monospace" font-weight="700">id</text>
+<text x="2730" y="684" font-size="12" fill="#5F6B7A" text-anchor="end" font-family="'DejaVu Sans Mono','Consolas','Menlo','Courier New',monospace">CHAR(36)</text>
+<rect x="2381" y="690" width="358" height="20" fill="#E8F5EC" opacity="0.55"/>
+<rect x="2388" y="694" width="22" height="12" rx="3" fill="#1F4E8C"/>
+<text x="2399" y="703.3" font-size="9" font-weight="700" fill="#fff" text-anchor="middle" font-family="'DejaVu Sans','Segoe UI','Helvetica Neue',Arial,sans-serif">FK</text>
+<text x="2446" y="704" font-size="13" fill="#1B2430" font-family="'DejaVu Sans Mono','Consolas','Menlo','Courier New',monospace">task_id</text>
+<text x="2730" y="704" font-size="12" fill="#5F6B7A" text-anchor="end" font-family="'DejaVu Sans Mono','Consolas','Menlo','Courier New',monospace">CHAR(36)</text>
+<rect x="2388" y="714" width="22" height="12" rx="3" fill="#1F4E8C"/>
+<text x="2399" y="723.3" font-size="9" font-weight="700" fill="#fff" text-anchor="middle" font-family="'DejaVu Sans','Segoe UI','Helvetica Neue',Arial,sans-serif">FK</text>
+<text x="2446" y="724" font-size="13" fill="#1B2430" font-family="'DejaVu Sans Mono','Consolas','Menlo','Courier New',monospace">user_id</text>
+<text x="2730" y="724" font-size="12" fill="#5F6B7A" text-anchor="end" font-family="'DejaVu Sans Mono','Consolas','Menlo','Courier New',monospace">CHAR(36)</text>
+<rect x="2381" y="730" width="358" height="20" fill="#E8F5EC" opacity="0.55"/>
+<text x="2446" y="744" font-size="13" fill="#1B2430" font-family="'DejaVu Sans Mono','Consolas','Menlo','Courier New',monospace">content</text>
+<text x="2730" y="744" font-size="12" fill="#5F6B7A" text-anchor="end" font-family="'DejaVu Sans Mono','Consolas','Menlo','Courier New',monospace">TEXT</text>
+<text x="2446" y="764" font-size="13" fill="#1B2430" font-family="'DejaVu Sans Mono','Consolas','Menlo','Courier New',monospace" font-style="italic">created_at</text>
+<text x="2730" y="764" font-size="12" fill="#5F6B7A" text-anchor="end" font-family="'DejaVu Sans Mono','Consolas','Menlo','Courier New',monospace">TIMESTAMP</text>
+</g>
+<g id="tbl_project_label">
+<rect x="2383" y="843" width="360" height="120" rx="7" fill="#000" opacity="0.10"/>
+<rect x="2380" y="840" width="360" height="120" rx="7" fill="#FFFFFF" stroke="#2E7D4F" stroke-width="1.6"/>
+<path d="M2380,870 L2380,847 Q2380,840 2387,840 L2733,840 Q2740,840 2740,847 L2740,870 Z" fill="#2E7D4F"/>
+<text x="2560.0" y="861.0" font-size="17" font-weight="700" fill="#FFFFFF" text-anchor="middle" font-family="'DejaVu Sans','Segoe UI','Helvetica Neue',Arial,sans-serif">project_label</text>
+<rect x="2388" y="874" width="22" height="12" rx="3" fill="#C77700"/>
+<text x="2399" y="883.3" font-size="9" font-weight="700" fill="#fff" text-anchor="middle" font-family="'DejaVu Sans','Segoe UI','Helvetica Neue',Arial,sans-serif">PK</text>
+<text x="2446" y="884" font-size="13" fill="#1B2430" font-family="'DejaVu Sans Mono','Consolas','Menlo','Courier New',monospace" font-weight="700">id</text>
+<text x="2730" y="884" font-size="12" fill="#5F6B7A" text-anchor="end" font-family="'DejaVu Sans Mono','Consolas','Menlo','Courier New',monospace">CHAR(36)</text>
+<rect x="2381" y="890" width="358" height="20" fill="#E8F5EC" opacity="0.55"/>
+<rect x="2388" y="894" width="22" height="12" rx="3" fill="#1F4E8C"/>
+<text x="2399" y="903.3" font-size="9" font-weight="700" fill="#fff" text-anchor="middle" font-family="'DejaVu Sans','Segoe UI','Helvetica Neue',Arial,sans-serif">FK</text>
+<text x="2446" y="904" font-size="13" fill="#1B2430" font-family="'DejaVu Sans Mono','Consolas','Menlo','Courier New',monospace">project_id</text>
+<text x="2730" y="904" font-size="12" fill="#5F6B7A" text-anchor="end" font-family="'DejaVu Sans Mono','Consolas','Menlo','Courier New',monospace">CHAR(36)</text>
+<text x="2446" y="924" font-size="13" fill="#1B2430" font-family="'DejaVu Sans Mono','Consolas','Menlo','Courier New',monospace">name</text>
+<text x="2730" y="924" font-size="12" fill="#5F6B7A" text-anchor="end" font-family="'DejaVu Sans Mono','Consolas','Menlo','Courier New',monospace">VARCHAR(100)</text>
+<rect x="2381" y="930" width="358" height="20" fill="#E8F5EC" opacity="0.55"/>
+<text x="2446" y="944" font-size="13" fill="#1B2430" font-family="'DejaVu Sans Mono','Consolas','Menlo','Courier New',monospace">color</text>
+<text x="2730" y="944" font-size="12" fill="#5F6B7A" text-anchor="end" font-family="'DejaVu Sans Mono','Consolas','Menlo','Courier New',monospace">VARCHAR(7)</text>
+</g>
+<g id="tbl_project_task_label">
+<rect x="2383" y="1023" width="360" height="80" rx="7" fill="#000" opacity="0.10"/>
+<rect x="2380" y="1020" width="360" height="80" rx="7" fill="#FFFFFF" stroke="#2E7D4F" stroke-width="1.6"/>
+<path d="M2380,1050 L2380,1027 Q2380,1020 2387,1020 L2733,1020 Q2740,1020 2740,1027 L2740,1050 Z" fill="#2E7D4F"/>
+<text x="2560.0" y="1041.0" font-size="17" font-weight="700" fill="#FFFFFF" text-anchor="middle" font-family="'DejaVu Sans','Segoe UI','Helvetica Neue',Arial,sans-serif">project_task_label</text>
+<rect x="2388" y="1054" width="22" height="12" rx="3" fill="#C77700"/>
+<text x="2399" y="1063.3" font-size="9" font-weight="700" fill="#fff" text-anchor="middle" font-family="'DejaVu Sans','Segoe UI','Helvetica Neue',Arial,sans-serif">PK</text>
+<rect x="2413" y="1054" width="22" height="12" rx="3" fill="#1F4E8C"/>
+<text x="2424" y="1063.3" font-size="9" font-weight="700" fill="#fff" text-anchor="middle" font-family="'DejaVu Sans','Segoe UI','Helvetica Neue',Arial,sans-serif">FK</text>
+<text x="2446" y="1064" font-size="13" fill="#1B2430" font-family="'DejaVu Sans Mono','Consolas','Menlo','Courier New',monospace" font-weight="700">task_id</text>
+<text x="2730" y="1064" font-size="12" fill="#5F6B7A" text-anchor="end" font-family="'DejaVu Sans Mono','Consolas','Menlo','Courier New',monospace">CHAR(36)</text>
+<rect x="2381" y="1070" width="358" height="20" fill="#E8F5EC" opacity="0.55"/>
+<rect x="2388" y="1074" width="22" height="12" rx="3" fill="#C77700"/>
+<text x="2399" y="1083.3" font-size="9" font-weight="700" fill="#fff" text-anchor="middle" font-family="'DejaVu Sans','Segoe UI','Helvetica Neue',Arial,sans-serif">PK</text>
+<rect x="2413" y="1074" width="22" height="12" rx="3" fill="#1F4E8C"/>
+<text x="2424" y="1083.3" font-size="9" font-weight="700" fill="#fff" text-anchor="middle" font-family="'DejaVu Sans','Segoe UI','Helvetica Neue',Arial,sans-serif">FK</text>
+<text x="2446" y="1084" font-size="13" fill="#1B2430" font-family="'DejaVu Sans Mono','Consolas','Menlo','Courier New',monospace" font-weight="700">label_id</text>
+<text x="2730" y="1084" font-size="12" fill="#5F6B7A" text-anchor="end" font-family="'DejaVu Sans Mono','Consolas','Menlo','Courier New',monospace">CHAR(36)</text>
+</g>
+<g id="tbl_project_activity_log">
+<rect x="2383" y="1163" width="360" height="160" rx="7" fill="#000" opacity="0.10"/>
+<rect x="2380" y="1160" width="360" height="160" rx="7" fill="#FFFFFF" stroke="#2E7D4F" stroke-width="1.6"/>
+<path d="M2380,1190 L2380,1167 Q2380,1160 2387,1160 L2733,1160 Q2740,1160 2740,1167 L2740,1190 Z" fill="#2E7D4F"/>
+<text x="2560.0" y="1181.0" font-size="17" font-weight="700" fill="#FFFFFF" text-anchor="middle" font-family="'DejaVu Sans','Segoe UI','Helvetica Neue',Arial,sans-serif">project_activity_log</text>
+<rect x="2388" y="1194" width="22" height="12" rx="3" fill="#C77700"/>
+<text x="2399" y="1203.3" font-size="9" font-weight="700" fill="#fff" text-anchor="middle" font-family="'DejaVu Sans','Segoe UI','Helvetica Neue',Arial,sans-serif">PK</text>
+<text x="2446" y="1204" font-size="13" fill="#1B2430" font-family="'DejaVu Sans Mono','Consolas','Menlo','Courier New',monospace" font-weight="700">id</text>
+<text x="2730" y="1204" font-size="12" fill="#5F6B7A" text-anchor="end" font-family="'DejaVu Sans Mono','Consolas','Menlo','Courier New',monospace">CHAR(36)</text>
+<rect x="2381" y="1210" width="358" height="20" fill="#E8F5EC" opacity="0.55"/>
+<rect x="2388" y="1214" width="22" height="12" rx="3" fill="#1F4E8C"/>
+<text x="2399" y="1223.3" font-size="9" font-weight="700" fill="#fff" text-anchor="middle" font-family="'DejaVu Sans','Segoe UI','Helvetica Neue',Arial,sans-serif">FK</text>
+<text x="2446" y="1224" font-size="13" fill="#1B2430" font-family="'DejaVu Sans Mono','Consolas','Menlo','Courier New',monospace" font-style="italic">task_id</text>
+<text x="2730" y="1224" font-size="12" fill="#5F6B7A" text-anchor="end" font-family="'DejaVu Sans Mono','Consolas','Menlo','Courier New',monospace">CHAR(36)</text>
+<rect x="2388" y="1234" width="22" height="12" rx="3" fill="#1F4E8C"/>
+<text x="2399" y="1243.3" font-size="9" font-weight="700" fill="#fff" text-anchor="middle" font-family="'DejaVu Sans','Segoe UI','Helvetica Neue',Arial,sans-serif">FK</text>
+<text x="2446" y="1244" font-size="13" fill="#1B2430" font-family="'DejaVu Sans Mono','Consolas','Menlo','Courier New',monospace" font-style="italic">user_id</text>
+<text x="2730" y="1244" font-size="12" fill="#5F6B7A" text-anchor="end" font-family="'DejaVu Sans Mono','Consolas','Menlo','Courier New',monospace">CHAR(36)</text>
+<rect x="2381" y="1250" width="358" height="20" fill="#E8F5EC" opacity="0.55"/>
+<text x="2446" y="1264" font-size="13" fill="#1B2430" font-family="'DejaVu Sans Mono','Consolas','Menlo','Courier New',monospace">action</text>
+<text x="2730" y="1264" font-size="12" fill="#5F6B7A" text-anchor="end" font-family="'DejaVu Sans Mono','Consolas','Menlo','Courier New',monospace">VARCHAR(100)</text>
+<text x="2446" y="1284" font-size="13" fill="#1B2430" font-family="'DejaVu Sans Mono','Consolas','Menlo','Courier New',monospace" font-style="italic">details</text>
+<text x="2730" y="1284" font-size="12" fill="#5F6B7A" text-anchor="end" font-family="'DejaVu Sans Mono','Consolas','Menlo','Courier New',monospace">JSON</text>
+<rect x="2381" y="1290" width="358" height="20" fill="#E8F5EC" opacity="0.55"/>
+<text x="2446" y="1304" font-size="13" fill="#1B2430" font-family="'DejaVu Sans Mono','Consolas','Menlo','Courier New',monospace" font-style="italic">created_at</text>
+<text x="2730" y="1304" font-size="12" fill="#5F6B7A" text-anchor="end" font-family="'DejaVu Sans Mono','Consolas','Menlo','Courier New',monospace">TIMESTAMP</text>
+</g>
+<g id="tbl_user_notification">
+<rect x="643" y="443" width="360" height="140" rx="7" fill="#000" opacity="0.10"/>
+<rect x="640" y="440" width="360" height="140" rx="7" fill="#FFFFFF" stroke="#2E7D4F" stroke-width="1.6"/>
+<path d="M640,470 L640,447 Q640,440 647,440 L993,440 Q1000,440 1000,447 L1000,470 Z" fill="#2E7D4F"/>
+<text x="820.0" y="461.0" font-size="17" font-weight="700" fill="#FFFFFF" text-anchor="middle" font-family="'DejaVu Sans','Segoe UI','Helvetica Neue',Arial,sans-serif">user_notification</text>
+<rect x="648" y="474" width="22" height="12" rx="3" fill="#C77700"/>
+<text x="659" y="483.3" font-size="9" font-weight="700" fill="#fff" text-anchor="middle" font-family="'DejaVu Sans','Segoe UI','Helvetica Neue',Arial,sans-serif">PK</text>
+<text x="706" y="484" font-size="13" fill="#1B2430" font-family="'DejaVu Sans Mono','Consolas','Menlo','Courier New',monospace" font-weight="700">id</text>
+<text x="990" y="484" font-size="12" fill="#5F6B7A" text-anchor="end" font-family="'DejaVu Sans Mono','Consolas','Menlo','Courier New',monospace">CHAR(36)</text>
+<rect x="641" y="490" width="358" height="20" fill="#E8F5EC" opacity="0.55"/>
+<rect x="648" y="494" width="22" height="12" rx="3" fill="#1F4E8C"/>
+<text x="659" y="503.3" font-size="9" font-weight="700" fill="#fff" text-anchor="middle" font-family="'DejaVu Sans','Segoe UI','Helvetica Neue',Arial,sans-serif">FK</text>
+<text x="706" y="504" font-size="13" fill="#1B2430" font-family="'DejaVu Sans Mono','Consolas','Menlo','Courier New',monospace">user_id</text>
+<text x="990" y="504" font-size="12" fill="#5F6B7A" text-anchor="end" font-family="'DejaVu Sans Mono','Consolas','Menlo','Courier New',monospace">CHAR(36)</text>
+<text x="706" y="524" font-size="13" fill="#1B2430" font-family="'DejaVu Sans Mono','Consolas','Menlo','Courier New',monospace">content</text>
+<text x="990" y="524" font-size="12" fill="#5F6B7A" text-anchor="end" font-family="'DejaVu Sans Mono','Consolas','Menlo','Courier New',monospace">VARCHAR(500)</text>
+<rect x="641" y="530" width="358" height="20" fill="#E8F5EC" opacity="0.55"/>
+<text x="706" y="544" font-size="13" fill="#1B2430" font-family="'DejaVu Sans Mono','Consolas','Menlo','Courier New',monospace">is_read</text>
+<text x="990" y="544" font-size="12" fill="#5F6B7A" text-anchor="end" font-family="'DejaVu Sans Mono','Consolas','Menlo','Courier New',monospace">BOOLEAN</text>
+<text x="706" y="564" font-size="13" fill="#1B2430" font-family="'DejaVu Sans Mono','Consolas','Menlo','Courier New',monospace" font-style="italic">created_at</text>
+<text x="990" y="564" font-size="12" fill="#5F6B7A" text-anchor="end" font-family="'DejaVu Sans Mono','Consolas','Menlo','Courier New',monospace">TIMESTAMP</text>
+</g>
+<g id="tbl_storage_node">
+<rect x="1223" y="903" width="360" height="320" rx="7" fill="#000" opacity="0.10"/>
+<rect x="1220" y="900" width="360" height="320" rx="7" fill="#FFFFFF" stroke="#B7791F" stroke-width="1.6"/>
+<path d="M1220,930 L1220,907 Q1220,900 1227,900 L1573,900 Q1580,900 1580,907 L1580,930 Z" fill="#B7791F"/>
+<text x="1400.0" y="921.0" font-size="17" font-weight="700" fill="#FFFFFF" text-anchor="middle" font-family="'DejaVu Sans','Segoe UI','Helvetica Neue',Arial,sans-serif">storage_node</text>
+<rect x="1228" y="934" width="22" height="12" rx="3" fill="#C77700"/>
+<text x="1239" y="943.3" font-size="9" font-weight="700" fill="#fff" text-anchor="middle" font-family="'DejaVu Sans','Segoe UI','Helvetica Neue',Arial,sans-serif">PK</text>
+<text x="1286" y="944" font-size="13" fill="#1B2430" font-family="'DejaVu Sans Mono','Consolas','Menlo','Courier New',monospace" font-weight="700">id</text>
+<text x="1570" y="944" font-size="12" fill="#5F6B7A" text-anchor="end" font-family="'DejaVu Sans Mono','Consolas','Menlo','Courier New',monospace">CHAR(36)</text>
+<rect x="1221" y="950" width="358" height="20" fill="#FBF2E0" opacity="0.55"/>
+<rect x="1228" y="954" width="22" height="12" rx="3" fill="#1F4E8C"/>
+<text x="1239" y="963.3" font-size="9" font-weight="700" fill="#fff" text-anchor="middle" font-family="'DejaVu Sans','Segoe UI','Helvetica Neue',Arial,sans-serif">FK</text>
+<text x="1286" y="964" font-size="13" fill="#1B2430" font-family="'DejaVu Sans Mono','Consolas','Menlo','Courier New',monospace">workspace_id</text>
+<text x="1570" y="964" font-size="12" fill="#5F6B7A" text-anchor="end" font-family="'DejaVu Sans Mono','Consolas','Menlo','Courier New',monospace">CHAR(36)</text>
+<rect x="1228" y="974" width="22" height="12" rx="3" fill="#1F4E8C"/>
+<text x="1239" y="983.3" font-size="9" font-weight="700" fill="#fff" text-anchor="middle" font-family="'DejaVu Sans','Segoe UI','Helvetica Neue',Arial,sans-serif">FK</text>
+<text x="1286" y="984" font-size="13" fill="#1B2430" font-family="'DejaVu Sans Mono','Consolas','Menlo','Courier New',monospace" font-style="italic">project_id</text>
+<text x="1570" y="984" font-size="12" fill="#5F6B7A" text-anchor="end" font-family="'DejaVu Sans Mono','Consolas','Menlo','Courier New',monospace">CHAR(36)</text>
+<rect x="1221" y="990" width="358" height="20" fill="#FBF2E0" opacity="0.55"/>
+<rect x="1228" y="994" width="22" height="12" rx="3" fill="#1F4E8C"/>
+<text x="1239" y="1003.3" font-size="9" font-weight="700" fill="#fff" text-anchor="middle" font-family="'DejaVu Sans','Segoe UI','Helvetica Neue',Arial,sans-serif">FK</text>
+<text x="1286" y="1004" font-size="13" fill="#1B2430" font-family="'DejaVu Sans Mono','Consolas','Menlo','Courier New',monospace" font-style="italic">parent_id</text>
+<text x="1570" y="1004" font-size="12" fill="#5F6B7A" text-anchor="end" font-family="'DejaVu Sans Mono','Consolas','Menlo','Courier New',monospace">CHAR(36)</text>
+<text x="1286" y="1024" font-size="13" fill="#1B2430" font-family="'DejaVu Sans Mono','Consolas','Menlo','Courier New',monospace">name</text>
+<text x="1570" y="1024" font-size="12" fill="#5F6B7A" text-anchor="end" font-family="'DejaVu Sans Mono','Consolas','Menlo','Courier New',monospace">VARCHAR(255)</text>
+<rect x="1221" y="1030" width="358" height="20" fill="#FBF2E0" opacity="0.55"/>
+<text x="1286" y="1044" font-size="13" fill="#1B2430" font-family="'DejaVu Sans Mono','Consolas','Menlo','Courier New',monospace">type</text>
+<text x="1570" y="1044" font-size="12" fill="#5F6B7A" text-anchor="end" font-family="'DejaVu Sans Mono','Consolas','Menlo','Courier New',monospace">TINYINT</text>
+<text x="1286" y="1064" font-size="13" fill="#1B2430" font-family="'DejaVu Sans Mono','Consolas','Menlo','Courier New',monospace" font-style="italic">mime_type</text>
+<text x="1570" y="1064" font-size="12" fill="#5F6B7A" text-anchor="end" font-family="'DejaVu Sans Mono','Consolas','Menlo','Courier New',monospace">VARCHAR(127)</text>
+<rect x="1221" y="1070" width="358" height="20" fill="#FBF2E0" opacity="0.55"/>
+<text x="1286" y="1084" font-size="13" fill="#1B2430" font-family="'DejaVu Sans Mono','Consolas','Menlo','Courier New',monospace" font-style="italic">storage_path</text>
+<text x="1570" y="1084" font-size="12" fill="#5F6B7A" text-anchor="end" font-family="'DejaVu Sans Mono','Consolas','Menlo','Courier New',monospace">VARCHAR(500)</text>
+<text x="1286" y="1104" font-size="13" fill="#1B2430" font-family="'DejaVu Sans Mono','Consolas','Menlo','Courier New',monospace" font-style="italic">size_bytes</text>
+<text x="1570" y="1104" font-size="12" fill="#5F6B7A" text-anchor="end" font-family="'DejaVu Sans Mono','Consolas','Menlo','Courier New',monospace">BIGINT UNSIGNED</text>
+<rect x="1221" y="1110" width="358" height="20" fill="#FBF2E0" opacity="0.55"/>
+<rect x="1228" y="1114" width="22" height="12" rx="3" fill="#1F4E8C"/>
+<text x="1239" y="1123.3" font-size="9" font-weight="700" fill="#fff" text-anchor="middle" font-family="'DejaVu Sans','Segoe UI','Helvetica Neue',Arial,sans-serif">FK</text>
+<text x="1286" y="1124" font-size="13" fill="#1B2430" font-family="'DejaVu Sans Mono','Consolas','Menlo','Courier New',monospace" font-style="italic">created_by</text>
+<text x="1570" y="1124" font-size="12" fill="#5F6B7A" text-anchor="end" font-family="'DejaVu Sans Mono','Consolas','Menlo','Courier New',monospace">CHAR(36)</text>
+<rect x="1228" y="1134" width="22" height="12" rx="3" fill="#1F4E8C"/>
+<text x="1239" y="1143.3" font-size="9" font-weight="700" fill="#fff" text-anchor="middle" font-family="'DejaVu Sans','Segoe UI','Helvetica Neue',Arial,sans-serif">FK</text>
+<text x="1286" y="1144" font-size="13" fill="#1B2430" font-family="'DejaVu Sans Mono','Consolas','Menlo','Courier New',monospace" font-style="italic">updated_by</text>
+<text x="1570" y="1144" font-size="12" fill="#5F6B7A" text-anchor="end" font-family="'DejaVu Sans Mono','Consolas','Menlo','Courier New',monospace">CHAR(36)</text>
+<rect x="1221" y="1150" width="358" height="20" fill="#FBF2E0" opacity="0.55"/>
+<text x="1286" y="1164" font-size="13" fill="#1B2430" font-family="'DejaVu Sans Mono','Consolas','Menlo','Courier New',monospace" font-style="italic">created_at</text>
+<text x="1570" y="1164" font-size="12" fill="#5F6B7A" text-anchor="end" font-family="'DejaVu Sans Mono','Consolas','Menlo','Courier New',monospace">TIMESTAMP</text>
+<text x="1286" y="1184" font-size="13" fill="#1B2430" font-family="'DejaVu Sans Mono','Consolas','Menlo','Courier New',monospace" font-style="italic">deleted_at</text>
+<text x="1570" y="1184" font-size="12" fill="#5F6B7A" text-anchor="end" font-family="'DejaVu Sans Mono','Consolas','Menlo','Courier New',monospace">TIMESTAMP</text>
+<rect x="1221" y="1190" width="358" height="20" fill="#FBF2E0" opacity="0.55"/>
+<text x="1286" y="1204" font-size="13" fill="#1B2430" font-family="'DejaVu Sans Mono','Consolas','Menlo','Courier New',monospace" font-style="italic">updated_at</text>
+<text x="1570" y="1204" font-size="12" fill="#5F6B7A" text-anchor="end" font-family="'DejaVu Sans Mono','Consolas','Menlo','Courier New',monospace">TIMESTAMP</text>
+</g>
+<g id="tbl_storage_node_role">
+<rect x="1223" y="1283" width="360" height="80" rx="7" fill="#000" opacity="0.10"/>
+<rect x="1220" y="1280" width="360" height="80" rx="7" fill="#FFFFFF" stroke="#B7791F" stroke-width="1.6"/>
+<path d="M1220,1310 L1220,1287 Q1220,1280 1227,1280 L1573,1280 Q1580,1280 1580,1287 L1580,1310 Z" fill="#B7791F"/>
+<text x="1400.0" y="1301.0" font-size="17" font-weight="700" fill="#FFFFFF" text-anchor="middle" font-family="'DejaVu Sans','Segoe UI','Helvetica Neue',Arial,sans-serif">storage_node_role</text>
+<rect x="1228" y="1314" width="22" height="12" rx="3" fill="#C77700"/>
+<text x="1239" y="1323.3" font-size="9" font-weight="700" fill="#fff" text-anchor="middle" font-family="'DejaVu Sans','Segoe UI','Helvetica Neue',Arial,sans-serif">PK</text>
+<rect x="1253" y="1314" width="22" height="12" rx="3" fill="#1F4E8C"/>
+<text x="1264" y="1323.3" font-size="9" font-weight="700" fill="#fff" text-anchor="middle" font-family="'DejaVu Sans','Segoe UI','Helvetica Neue',Arial,sans-serif">FK</text>
+<text x="1286" y="1324" font-size="13" fill="#1B2430" font-family="'DejaVu Sans Mono','Consolas','Menlo','Courier New',monospace" font-weight="700">node_id</text>
+<text x="1570" y="1324" font-size="12" fill="#5F6B7A" text-anchor="end" font-family="'DejaVu Sans Mono','Consolas','Menlo','Courier New',monospace">CHAR(36)</text>
+<rect x="1221" y="1330" width="358" height="20" fill="#FBF2E0" opacity="0.55"/>
+<rect x="1228" y="1334" width="22" height="12" rx="3" fill="#C77700"/>
+<text x="1239" y="1343.3" font-size="9" font-weight="700" fill="#fff" text-anchor="middle" font-family="'DejaVu Sans','Segoe UI','Helvetica Neue',Arial,sans-serif">PK</text>
+<rect x="1253" y="1334" width="22" height="12" rx="3" fill="#1F4E8C"/>
+<text x="1264" y="1343.3" font-size="9" font-weight="700" fill="#fff" text-anchor="middle" font-family="'DejaVu Sans','Segoe UI','Helvetica Neue',Arial,sans-serif">FK</text>
+<text x="1286" y="1344" font-size="13" fill="#1B2430" font-family="'DejaVu Sans Mono','Consolas','Menlo','Courier New',monospace" font-weight="700">role_id</text>
+<text x="1570" y="1344" font-size="12" fill="#5F6B7A" text-anchor="end" font-family="'DejaVu Sans Mono','Consolas','Menlo','Courier New',monospace">CHAR(36)</text>
+</g>
+<g id="tbl_storage_node_label">
+<rect x="1223" y="1423" width="360" height="120" rx="7" fill="#000" opacity="0.10"/>
+<rect x="1220" y="1420" width="360" height="120" rx="7" fill="#FFFFFF" stroke="#B7791F" stroke-width="1.6"/>
+<path d="M1220,1450 L1220,1427 Q1220,1420 1227,1420 L1573,1420 Q1580,1420 1580,1427 L1580,1450 Z" fill="#B7791F"/>
+<text x="1400.0" y="1441.0" font-size="17" font-weight="700" fill="#FFFFFF" text-anchor="middle" font-family="'DejaVu Sans','Segoe UI','Helvetica Neue',Arial,sans-serif">storage_node_label</text>
+<rect x="1228" y="1454" width="22" height="12" rx="3" fill="#C77700"/>
+<text x="1239" y="1463.3" font-size="9" font-weight="700" fill="#fff" text-anchor="middle" font-family="'DejaVu Sans','Segoe UI','Helvetica Neue',Arial,sans-serif">PK</text>
+<text x="1286" y="1464" font-size="13" fill="#1B2430" font-family="'DejaVu Sans Mono','Consolas','Menlo','Courier New',monospace" font-weight="700">id</text>
+<text x="1570" y="1464" font-size="12" fill="#5F6B7A" text-anchor="end" font-family="'DejaVu Sans Mono','Consolas','Menlo','Courier New',monospace">CHAR(36)</text>
+<rect x="1221" y="1470" width="358" height="20" fill="#FBF2E0" opacity="0.55"/>
+<rect x="1228" y="1474" width="22" height="12" rx="3" fill="#1F4E8C"/>
+<text x="1239" y="1483.3" font-size="9" font-weight="700" fill="#fff" text-anchor="middle" font-family="'DejaVu Sans','Segoe UI','Helvetica Neue',Arial,sans-serif">FK</text>
+<text x="1286" y="1484" font-size="13" fill="#1B2430" font-family="'DejaVu Sans Mono','Consolas','Menlo','Courier New',monospace">node_id</text>
+<text x="1570" y="1484" font-size="12" fill="#5F6B7A" text-anchor="end" font-family="'DejaVu Sans Mono','Consolas','Menlo','Courier New',monospace">CHAR(36)</text>
+<text x="1286" y="1504" font-size="13" fill="#1B2430" font-family="'DejaVu Sans Mono','Consolas','Menlo','Courier New',monospace">label</text>
+<text x="1570" y="1504" font-size="12" fill="#5F6B7A" text-anchor="end" font-family="'DejaVu Sans Mono','Consolas','Menlo','Courier New',monospace">VARCHAR(100)</text>
+<rect x="1221" y="1510" width="358" height="20" fill="#FBF2E0" opacity="0.55"/>
+<text x="1286" y="1524" font-size="13" fill="#1B2430" font-family="'DejaVu Sans Mono','Consolas','Menlo','Courier New',monospace" font-style="italic">created_at</text>
+<text x="1570" y="1524" font-size="12" fill="#5F6B7A" text-anchor="end" font-family="'DejaVu Sans Mono','Consolas','Menlo','Courier New',monospace">TIMESTAMP</text>
+</g>
+<g id="tbl_chat_room">
+<rect x="1223" y="63" width="360" height="200" rx="7" fill="#000" opacity="0.10"/>
+<rect x="1220" y="60" width="360" height="200" rx="7" fill="#FFFFFF" stroke="#0E7C86" stroke-width="1.6"/>
+<path d="M1220,90 L1220,67 Q1220,60 1227,60 L1573,60 Q1580,60 1580,67 L1580,90 Z" fill="#0E7C86"/>
+<text x="1400.0" y="81.0" font-size="17" font-weight="700" fill="#FFFFFF" text-anchor="middle" font-family="'DejaVu Sans','Segoe UI','Helvetica Neue',Arial,sans-serif">chat_room</text>
+<rect x="1228" y="94" width="22" height="12" rx="3" fill="#C77700"/>
+<text x="1239" y="103.3" font-size="9" font-weight="700" fill="#fff" text-anchor="middle" font-family="'DejaVu Sans','Segoe UI','Helvetica Neue',Arial,sans-serif">PK</text>
+<text x="1286" y="104" font-size="13" fill="#1B2430" font-family="'DejaVu Sans Mono','Consolas','Menlo','Courier New',monospace" font-weight="700">id</text>
+<text x="1570" y="104" font-size="12" fill="#5F6B7A" text-anchor="end" font-family="'DejaVu Sans Mono','Consolas','Menlo','Courier New',monospace">CHAR(36)</text>
+<rect x="1221" y="110" width="358" height="20" fill="#E4F4F5" opacity="0.55"/>
+<rect x="1228" y="114" width="22" height="12" rx="3" fill="#1F4E8C"/>
+<text x="1239" y="123.3" font-size="9" font-weight="700" fill="#fff" text-anchor="middle" font-family="'DejaVu Sans','Segoe UI','Helvetica Neue',Arial,sans-serif">FK</text>
+<text x="1286" y="124" font-size="13" fill="#1B2430" font-family="'DejaVu Sans Mono','Consolas','Menlo','Courier New',monospace">workspace_id</text>
+<text x="1570" y="124" font-size="12" fill="#5F6B7A" text-anchor="end" font-family="'DejaVu Sans Mono','Consolas','Menlo','Courier New',monospace">CHAR(36)</text>
+<rect x="1228" y="134" width="22" height="12" rx="3" fill="#1F4E8C"/>
+<text x="1239" y="143.3" font-size="9" font-weight="700" fill="#fff" text-anchor="middle" font-family="'DejaVu Sans','Segoe UI','Helvetica Neue',Arial,sans-serif">FK</text>
+<text x="1286" y="144" font-size="13" fill="#1B2430" font-family="'DejaVu Sans Mono','Consolas','Menlo','Courier New',monospace" font-style="italic">project_id</text>
+<text x="1570" y="144" font-size="12" fill="#5F6B7A" text-anchor="end" font-family="'DejaVu Sans Mono','Consolas','Menlo','Courier New',monospace">CHAR(36)</text>
+<rect x="1221" y="150" width="358" height="20" fill="#E4F4F5" opacity="0.55"/>
+<text x="1286" y="164" font-size="13" fill="#1B2430" font-family="'DejaVu Sans Mono','Consolas','Menlo','Courier New',monospace" font-style="italic">name</text>
+<text x="1570" y="164" font-size="12" fill="#5F6B7A" text-anchor="end" font-family="'DejaVu Sans Mono','Consolas','Menlo','Courier New',monospace">VARCHAR(255)</text>
+<text x="1286" y="184" font-size="13" fill="#1B2430" font-family="'DejaVu Sans Mono','Consolas','Menlo','Courier New',monospace">type</text>
+<text x="1570" y="184" font-size="12" fill="#5F6B7A" text-anchor="end" font-family="'DejaVu Sans Mono','Consolas','Menlo','Courier New',monospace">TINYINT</text>
+<rect x="1221" y="190" width="358" height="20" fill="#E4F4F5" opacity="0.55"/>
+<text x="1286" y="204" font-size="13" fill="#1B2430" font-family="'DejaVu Sans Mono','Consolas','Menlo','Courier New',monospace">is_private</text>
+<text x="1570" y="204" font-size="12" fill="#5F6B7A" text-anchor="end" font-family="'DejaVu Sans Mono','Consolas','Menlo','Courier New',monospace">BOOLEAN</text>
+<rect x="1228" y="214" width="22" height="12" rx="3" fill="#1F4E8C"/>
+<text x="1239" y="223.3" font-size="9" font-weight="700" fill="#fff" text-anchor="middle" font-family="'DejaVu Sans','Segoe UI','Helvetica Neue',Arial,sans-serif">FK</text>
+<text x="1286" y="224" font-size="13" fill="#1B2430" font-family="'DejaVu Sans Mono','Consolas','Menlo','Courier New',monospace" font-style="italic">created_by</text>
+<text x="1570" y="224" font-size="12" fill="#5F6B7A" text-anchor="end" font-family="'DejaVu Sans Mono','Consolas','Menlo','Courier New',monospace">CHAR(36)</text>
+<rect x="1221" y="230" width="358" height="20" fill="#E4F4F5" opacity="0.55"/>
+<text x="1286" y="244" font-size="13" fill="#1B2430" font-family="'DejaVu Sans Mono','Consolas','Menlo','Courier New',monospace" font-style="italic">created_at</text>
+<text x="1570" y="244" font-size="12" fill="#5F6B7A" text-anchor="end" font-family="'DejaVu Sans Mono','Consolas','Menlo','Courier New',monospace">TIMESTAMP</text>
+</g>
+<g id="tbl_chat_room_member">
+<rect x="1223" y="323" width="360" height="100" rx="7" fill="#000" opacity="0.10"/>
+<rect x="1220" y="320" width="360" height="100" rx="7" fill="#FFFFFF" stroke="#0E7C86" stroke-width="1.6"/>
+<path d="M1220,350 L1220,327 Q1220,320 1227,320 L1573,320 Q1580,320 1580,327 L1580,350 Z" fill="#0E7C86"/>
+<text x="1400.0" y="341.0" font-size="17" font-weight="700" fill="#FFFFFF" text-anchor="middle" font-family="'DejaVu Sans','Segoe UI','Helvetica Neue',Arial,sans-serif">chat_room_member</text>
+<rect x="1228" y="354" width="22" height="12" rx="3" fill="#C77700"/>
+<text x="1239" y="363.3" font-size="9" font-weight="700" fill="#fff" text-anchor="middle" font-family="'DejaVu Sans','Segoe UI','Helvetica Neue',Arial,sans-serif">PK</text>
+<rect x="1253" y="354" width="22" height="12" rx="3" fill="#1F4E8C"/>
+<text x="1264" y="363.3" font-size="9" font-weight="700" fill="#fff" text-anchor="middle" font-family="'DejaVu Sans','Segoe UI','Helvetica Neue',Arial,sans-serif">FK</text>
+<text x="1286" y="364" font-size="13" fill="#1B2430" font-family="'DejaVu Sans Mono','Consolas','Menlo','Courier New',monospace" font-weight="700">room_id</text>
+<text x="1570" y="364" font-size="12" fill="#5F6B7A" text-anchor="end" font-family="'DejaVu Sans Mono','Consolas','Menlo','Courier New',monospace">CHAR(36)</text>
+<rect x="1221" y="370" width="358" height="20" fill="#E4F4F5" opacity="0.55"/>
+<rect x="1228" y="374" width="22" height="12" rx="3" fill="#C77700"/>
+<text x="1239" y="383.3" font-size="9" font-weight="700" fill="#fff" text-anchor="middle" font-family="'DejaVu Sans','Segoe UI','Helvetica Neue',Arial,sans-serif">PK</text>
+<rect x="1253" y="374" width="22" height="12" rx="3" fill="#1F4E8C"/>
+<text x="1264" y="383.3" font-size="9" font-weight="700" fill="#fff" text-anchor="middle" font-family="'DejaVu Sans','Segoe UI','Helvetica Neue',Arial,sans-serif">FK</text>
+<text x="1286" y="384" font-size="13" fill="#1B2430" font-family="'DejaVu Sans Mono','Consolas','Menlo','Courier New',monospace" font-weight="700">user_id</text>
+<text x="1570" y="384" font-size="12" fill="#5F6B7A" text-anchor="end" font-family="'DejaVu Sans Mono','Consolas','Menlo','Courier New',monospace">CHAR(36)</text>
+<text x="1286" y="404" font-size="13" fill="#1B2430" font-family="'DejaVu Sans Mono','Consolas','Menlo','Courier New',monospace" font-style="italic">joined_at</text>
+<text x="1570" y="404" font-size="12" fill="#5F6B7A" text-anchor="end" font-family="'DejaVu Sans Mono','Consolas','Menlo','Courier New',monospace">TIMESTAMP</text>
+</g>
+<g id="tbl_chat_message">
+<rect x="1223" y="483" width="360" height="160" rx="7" fill="#000" opacity="0.10"/>
+<rect x="1220" y="480" width="360" height="160" rx="7" fill="#FFFFFF" stroke="#0E7C86" stroke-width="1.6"/>
+<path d="M1220,510 L1220,487 Q1220,480 1227,480 L1573,480 Q1580,480 1580,487 L1580,510 Z" fill="#0E7C86"/>
+<text x="1400.0" y="501.0" font-size="17" font-weight="700" fill="#FFFFFF" text-anchor="middle" font-family="'DejaVu Sans','Segoe UI','Helvetica Neue',Arial,sans-serif">chat_message</text>
+<rect x="1228" y="514" width="22" height="12" rx="3" fill="#C77700"/>
+<text x="1239" y="523.3" font-size="9" font-weight="700" fill="#fff" text-anchor="middle" font-family="'DejaVu Sans','Segoe UI','Helvetica Neue',Arial,sans-serif">PK</text>
+<text x="1286" y="524" font-size="13" fill="#1B2430" font-family="'DejaVu Sans Mono','Consolas','Menlo','Courier New',monospace" font-weight="700">id</text>
+<text x="1570" y="524" font-size="12" fill="#5F6B7A" text-anchor="end" font-family="'DejaVu Sans Mono','Consolas','Menlo','Courier New',monospace">CHAR(36)</text>
+<rect x="1221" y="530" width="358" height="20" fill="#E4F4F5" opacity="0.55"/>
+<rect x="1228" y="534" width="22" height="12" rx="3" fill="#1F4E8C"/>
+<text x="1239" y="543.3" font-size="9" font-weight="700" fill="#fff" text-anchor="middle" font-family="'DejaVu Sans','Segoe UI','Helvetica Neue',Arial,sans-serif">FK</text>
+<text x="1286" y="544" font-size="13" fill="#1B2430" font-family="'DejaVu Sans Mono','Consolas','Menlo','Courier New',monospace">room_id</text>
+<text x="1570" y="544" font-size="12" fill="#5F6B7A" text-anchor="end" font-family="'DejaVu Sans Mono','Consolas','Menlo','Courier New',monospace">CHAR(36)</text>
+<rect x="1228" y="554" width="22" height="12" rx="3" fill="#1F4E8C"/>
+<text x="1239" y="563.3" font-size="9" font-weight="700" fill="#fff" text-anchor="middle" font-family="'DejaVu Sans','Segoe UI','Helvetica Neue',Arial,sans-serif">FK</text>
+<text x="1286" y="564" font-size="13" fill="#1B2430" font-family="'DejaVu Sans Mono','Consolas','Menlo','Courier New',monospace" font-style="italic">sender_id</text>
+<text x="1570" y="564" font-size="12" fill="#5F6B7A" text-anchor="end" font-family="'DejaVu Sans Mono','Consolas','Menlo','Courier New',monospace">CHAR(36)</text>
+<rect x="1221" y="570" width="358" height="20" fill="#E4F4F5" opacity="0.55"/>
+<rect x="1228" y="574" width="22" height="12" rx="3" fill="#1F4E8C"/>
+<text x="1239" y="583.3" font-size="9" font-weight="700" fill="#fff" text-anchor="middle" font-family="'DejaVu Sans','Segoe UI','Helvetica Neue',Arial,sans-serif">FK</text>
+<text x="1286" y="584" font-size="13" fill="#1B2430" font-family="'DejaVu Sans Mono','Consolas','Menlo','Courier New',monospace" font-style="italic">parent_id</text>
+<text x="1570" y="584" font-size="12" fill="#5F6B7A" text-anchor="end" font-family="'DejaVu Sans Mono','Consolas','Menlo','Courier New',monospace">CHAR(36)</text>
+<text x="1286" y="604" font-size="13" fill="#1B2430" font-family="'DejaVu Sans Mono','Consolas','Menlo','Courier New',monospace">message_text</text>
+<text x="1570" y="604" font-size="12" fill="#5F6B7A" text-anchor="end" font-family="'DejaVu Sans Mono','Consolas','Menlo','Courier New',monospace">TEXT</text>
+<rect x="1221" y="610" width="358" height="20" fill="#E4F4F5" opacity="0.55"/>
+<text x="1286" y="624" font-size="13" fill="#1B2430" font-family="'DejaVu Sans Mono','Consolas','Menlo','Courier New',monospace" font-style="italic">created_at</text>
+<text x="1570" y="624" font-size="12" fill="#5F6B7A" text-anchor="end" font-family="'DejaVu Sans Mono','Consolas','Menlo','Courier New',monospace">TIMESTAMP</text>
+</g>
+<g id="tbl_chat_message_attachment">
+<rect x="1223" y="703" width="360" height="140" rx="7" fill="#000" opacity="0.10"/>
+<rect x="1220" y="700" width="360" height="140" rx="7" fill="#FFFFFF" stroke="#0E7C86" stroke-width="1.6"/>
+<path d="M1220,730 L1220,707 Q1220,700 1227,700 L1573,700 Q1580,700 1580,707 L1580,730 Z" fill="#0E7C86"/>
+<text x="1400.0" y="721.0" font-size="17" font-weight="700" fill="#FFFFFF" text-anchor="middle" font-family="'DejaVu Sans','Segoe UI','Helvetica Neue',Arial,sans-serif">chat_message_attachment</text>
+<rect x="1228" y="734" width="22" height="12" rx="3" fill="#C77700"/>
+<text x="1239" y="743.3" font-size="9" font-weight="700" fill="#fff" text-anchor="middle" font-family="'DejaVu Sans','Segoe UI','Helvetica Neue',Arial,sans-serif">PK</text>
+<text x="1286" y="744" font-size="13" fill="#1B2430" font-family="'DejaVu Sans Mono','Consolas','Menlo','Courier New',monospace" font-weight="700">id</text>
+<text x="1570" y="744" font-size="12" fill="#5F6B7A" text-anchor="end" font-family="'DejaVu Sans Mono','Consolas','Menlo','Courier New',monospace">CHAR(36)</text>
+<rect x="1221" y="750" width="358" height="20" fill="#E4F4F5" opacity="0.55"/>
+<rect x="1228" y="754" width="22" height="12" rx="3" fill="#1F4E8C"/>
+<text x="1239" y="763.3" font-size="9" font-weight="700" fill="#fff" text-anchor="middle" font-family="'DejaVu Sans','Segoe UI','Helvetica Neue',Arial,sans-serif">FK</text>
+<text x="1286" y="764" font-size="13" fill="#1B2430" font-family="'DejaVu Sans Mono','Consolas','Menlo','Courier New',monospace">message_id</text>
+<text x="1570" y="764" font-size="12" fill="#5F6B7A" text-anchor="end" font-family="'DejaVu Sans Mono','Consolas','Menlo','Courier New',monospace">CHAR(36)</text>
+<rect x="1228" y="774" width="22" height="12" rx="3" fill="#1F4E8C"/>
+<text x="1239" y="783.3" font-size="9" font-weight="700" fill="#fff" text-anchor="middle" font-family="'DejaVu Sans','Segoe UI','Helvetica Neue',Arial,sans-serif">FK</text>
+<text x="1286" y="784" font-size="13" fill="#1B2430" font-family="'DejaVu Sans Mono','Consolas','Menlo','Courier New',monospace" font-style="italic">storage_node_id</text>
+<text x="1570" y="784" font-size="12" fill="#5F6B7A" text-anchor="end" font-family="'DejaVu Sans Mono','Consolas','Menlo','Courier New',monospace">CHAR(36)</text>
+<rect x="1221" y="790" width="358" height="20" fill="#E4F4F5" opacity="0.55"/>
+<text x="1286" y="804" font-size="13" fill="#1B2430" font-family="'DejaVu Sans Mono','Consolas','Menlo','Courier New',monospace">file_url</text>
+<text x="1570" y="804" font-size="12" fill="#5F6B7A" text-anchor="end" font-family="'DejaVu Sans Mono','Consolas','Menlo','Courier New',monospace">VARCHAR(500)</text>
+<text x="1286" y="824" font-size="13" fill="#1B2430" font-family="'DejaVu Sans Mono','Consolas','Menlo','Courier New',monospace">file_name</text>
+<text x="1570" y="824" font-size="12" fill="#5F6B7A" text-anchor="end" font-family="'DejaVu Sans Mono','Consolas','Menlo','Courier New',monospace">VARCHAR(255)</text>
+</g>
+<g id="tbl_calendar_event">
+<rect x="643" y="643" width="360" height="220" rx="7" fill="#000" opacity="0.10"/>
+<rect x="640" y="640" width="360" height="220" rx="7" fill="#FFFFFF" stroke="#A23B72" stroke-width="1.6"/>
+<path d="M640,670 L640,647 Q640,640 647,640 L993,640 Q1000,640 1000,647 L1000,670 Z" fill="#A23B72"/>
+<text x="820.0" y="661.0" font-size="17" font-weight="700" fill="#FFFFFF" text-anchor="middle" font-family="'DejaVu Sans','Segoe UI','Helvetica Neue',Arial,sans-serif">calendar_event</text>
+<rect x="648" y="674" width="22" height="12" rx="3" fill="#C77700"/>
+<text x="659" y="683.3" font-size="9" font-weight="700" fill="#fff" text-anchor="middle" font-family="'DejaVu Sans','Segoe UI','Helvetica Neue',Arial,sans-serif">PK</text>
+<text x="706" y="684" font-size="13" fill="#1B2430" font-family="'DejaVu Sans Mono','Consolas','Menlo','Courier New',monospace" font-weight="700">id</text>
+<text x="990" y="684" font-size="12" fill="#5F6B7A" text-anchor="end" font-family="'DejaVu Sans Mono','Consolas','Menlo','Courier New',monospace">CHAR(36)</text>
+<rect x="641" y="690" width="358" height="20" fill="#F8E9F1" opacity="0.55"/>
+<rect x="648" y="694" width="22" height="12" rx="3" fill="#1F4E8C"/>
+<text x="659" y="703.3" font-size="9" font-weight="700" fill="#fff" text-anchor="middle" font-family="'DejaVu Sans','Segoe UI','Helvetica Neue',Arial,sans-serif">FK</text>
+<text x="706" y="704" font-size="13" fill="#1B2430" font-family="'DejaVu Sans Mono','Consolas','Menlo','Courier New',monospace" font-style="italic">project_id</text>
+<text x="990" y="704" font-size="12" fill="#5F6B7A" text-anchor="end" font-family="'DejaVu Sans Mono','Consolas','Menlo','Courier New',monospace">CHAR(36)</text>
+<text x="706" y="724" font-size="13" fill="#1B2430" font-family="'DejaVu Sans Mono','Consolas','Menlo','Courier New',monospace">title</text>
+<text x="990" y="724" font-size="12" fill="#5F6B7A" text-anchor="end" font-family="'DejaVu Sans Mono','Consolas','Menlo','Courier New',monospace">VARCHAR(255)</text>
+<rect x="641" y="730" width="358" height="20" fill="#F8E9F1" opacity="0.55"/>
+<text x="706" y="744" font-size="13" fill="#1B2430" font-family="'DejaVu Sans Mono','Consolas','Menlo','Courier New',monospace" font-style="italic">description</text>
+<text x="990" y="744" font-size="12" fill="#5F6B7A" text-anchor="end" font-family="'DejaVu Sans Mono','Consolas','Menlo','Courier New',monospace">TEXT</text>
+<text x="706" y="764" font-size="13" fill="#1B2430" font-family="'DejaVu Sans Mono','Consolas','Menlo','Courier New',monospace" font-style="italic">location</text>
+<text x="990" y="764" font-size="12" fill="#5F6B7A" text-anchor="end" font-family="'DejaVu Sans Mono','Consolas','Menlo','Courier New',monospace">VARCHAR(255)</text>
+<rect x="641" y="770" width="358" height="20" fill="#F8E9F1" opacity="0.55"/>
+<text x="706" y="784" font-size="13" fill="#1B2430" font-family="'DejaVu Sans Mono','Consolas','Menlo','Courier New',monospace">start_time</text>
+<text x="990" y="784" font-size="12" fill="#5F6B7A" text-anchor="end" font-family="'DejaVu Sans Mono','Consolas','Menlo','Courier New',monospace">DATETIME</text>
+<text x="706" y="804" font-size="13" fill="#1B2430" font-family="'DejaVu Sans Mono','Consolas','Menlo','Courier New',monospace">end_time</text>
+<text x="990" y="804" font-size="12" fill="#5F6B7A" text-anchor="end" font-family="'DejaVu Sans Mono','Consolas','Menlo','Courier New',monospace">DATETIME</text>
+<rect x="641" y="810" width="358" height="20" fill="#F8E9F1" opacity="0.55"/>
+<text x="706" y="824" font-size="13" fill="#1B2430" font-family="'DejaVu Sans Mono','Consolas','Menlo','Courier New',monospace">is_all_day</text>
+<text x="990" y="824" font-size="12" fill="#5F6B7A" text-anchor="end" font-family="'DejaVu Sans Mono','Consolas','Menlo','Courier New',monospace">BOOLEAN</text>
+<rect x="648" y="834" width="22" height="12" rx="3" fill="#1F4E8C"/>
+<text x="659" y="843.3" font-size="9" font-weight="700" fill="#fff" text-anchor="middle" font-family="'DejaVu Sans','Segoe UI','Helvetica Neue',Arial,sans-serif">FK</text>
+<text x="706" y="844" font-size="13" fill="#1B2430" font-family="'DejaVu Sans Mono','Consolas','Menlo','Courier New',monospace" font-style="italic">created_by</text>
+<text x="990" y="844" font-size="12" fill="#5F6B7A" text-anchor="end" font-family="'DejaVu Sans Mono','Consolas','Menlo','Courier New',monospace">CHAR(36)</text>
+</g>
+<g id="tbl_user_session">
+<rect x="63" y="63" width="360" height="260" rx="7" fill="#000" opacity="0.10"/>
+<rect x="60" y="60" width="360" height="260" rx="7" fill="#FFFFFF" stroke="#B4432F" stroke-width="1.6"/>
+<path d="M60,90 L60,67 Q60,60 67,60 L413,60 Q420,60 420,67 L420,90 Z" fill="#B4432F"/>
+<text x="240.0" y="81.0" font-size="17" font-weight="700" fill="#FFFFFF" text-anchor="middle" font-family="'DejaVu Sans','Segoe UI','Helvetica Neue',Arial,sans-serif">user_session</text>
+<rect x="68" y="94" width="22" height="12" rx="3" fill="#C77700"/>
+<text x="79" y="103.3" font-size="9" font-weight="700" fill="#fff" text-anchor="middle" font-family="'DejaVu Sans','Segoe UI','Helvetica Neue',Arial,sans-serif">PK</text>
+<text x="126" y="104" font-size="13" fill="#1B2430" font-family="'DejaVu Sans Mono','Consolas','Menlo','Courier New',monospace" font-weight="700">id</text>
+<text x="410" y="104" font-size="12" fill="#5F6B7A" text-anchor="end" font-family="'DejaVu Sans Mono','Consolas','Menlo','Courier New',monospace">CHAR(36)</text>
+<rect x="61" y="110" width="358" height="20" fill="#FBEDE9" opacity="0.55"/>
+<rect x="68" y="114" width="22" height="12" rx="3" fill="#1F4E8C"/>
+<text x="79" y="123.3" font-size="9" font-weight="700" fill="#fff" text-anchor="middle" font-family="'DejaVu Sans','Segoe UI','Helvetica Neue',Arial,sans-serif">FK</text>
+<text x="126" y="124" font-size="13" fill="#1B2430" font-family="'DejaVu Sans Mono','Consolas','Menlo','Courier New',monospace">user_id</text>
+<text x="410" y="124" font-size="12" fill="#5F6B7A" text-anchor="end" font-family="'DejaVu Sans Mono','Consolas','Menlo','Courier New',monospace">CHAR(36)</text>
+<rect x="68" y="134" width="22" height="12" rx="3" fill="#6B3FA0"/>
+<text x="79" y="143.3" font-size="9" font-weight="700" fill="#fff" text-anchor="middle" font-family="'DejaVu Sans','Segoe UI','Helvetica Neue',Arial,sans-serif">UQ</text>
+<text x="126" y="144" font-size="13" fill="#1B2430" font-family="'DejaVu Sans Mono','Consolas','Menlo','Courier New',monospace">refresh_token_hash</text>
+<text x="410" y="144" font-size="12" fill="#5F6B7A" text-anchor="end" font-family="'DejaVu Sans Mono','Consolas','Menlo','Courier New',monospace">VARCHAR(64)</text>
+<rect x="61" y="150" width="358" height="20" fill="#FBEDE9" opacity="0.55"/>
+<rect x="68" y="154" width="22" height="12" rx="3" fill="#1F4E8C"/>
+<text x="79" y="163.3" font-size="9" font-weight="700" fill="#fff" text-anchor="middle" font-family="'DejaVu Sans','Segoe UI','Helvetica Neue',Arial,sans-serif">FK</text>
+<text x="126" y="164" font-size="13" fill="#1B2430" font-family="'DejaVu Sans Mono','Consolas','Menlo','Courier New',monospace" font-style="italic">replaced_by_session_id</text>
+<text x="410" y="164" font-size="12" fill="#5F6B7A" text-anchor="end" font-family="'DejaVu Sans Mono','Consolas','Menlo','Courier New',monospace">CHAR(36)</text>
+<text x="126" y="184" font-size="13" fill="#1B2430" font-family="'DejaVu Sans Mono','Consolas','Menlo','Courier New',monospace" font-style="italic">device_id</text>
+<text x="410" y="184" font-size="12" fill="#5F6B7A" text-anchor="end" font-family="'DejaVu Sans Mono','Consolas','Menlo','Courier New',monospace">VARCHAR(255)</text>
+<rect x="61" y="190" width="358" height="20" fill="#FBEDE9" opacity="0.55"/>
+<text x="126" y="204" font-size="13" fill="#1B2430" font-family="'DejaVu Sans Mono','Consolas','Menlo','Courier New',monospace" font-style="italic">device_info</text>
+<text x="410" y="204" font-size="12" fill="#5F6B7A" text-anchor="end" font-family="'DejaVu Sans Mono','Consolas','Menlo','Courier New',monospace">VARCHAR(255)</text>
+<text x="126" y="224" font-size="13" fill="#1B2430" font-family="'DejaVu Sans Mono','Consolas','Menlo','Courier New',monospace" font-style="italic">ip_address</text>
+<text x="410" y="224" font-size="12" fill="#5F6B7A" text-anchor="end" font-family="'DejaVu Sans Mono','Consolas','Menlo','Courier New',monospace">VARCHAR(45)</text>
+<rect x="61" y="230" width="358" height="20" fill="#FBEDE9" opacity="0.55"/>
+<text x="126" y="244" font-size="13" fill="#1B2430" font-family="'DejaVu Sans Mono','Consolas','Menlo','Courier New',monospace">is_revoked</text>
+<text x="410" y="244" font-size="12" fill="#5F6B7A" text-anchor="end" font-family="'DejaVu Sans Mono','Consolas','Menlo','Courier New',monospace">BOOLEAN</text>
+<text x="126" y="264" font-size="13" fill="#1B2430" font-family="'DejaVu Sans Mono','Consolas','Menlo','Courier New',monospace">expires_at</text>
+<text x="410" y="264" font-size="12" fill="#5F6B7A" text-anchor="end" font-family="'DejaVu Sans Mono','Consolas','Menlo','Courier New',monospace">TIMESTAMP</text>
+<rect x="61" y="270" width="358" height="20" fill="#FBEDE9" opacity="0.55"/>
+<text x="126" y="284" font-size="13" fill="#1B2430" font-family="'DejaVu Sans Mono','Consolas','Menlo','Courier New',monospace" font-style="italic">created_at</text>
+<text x="410" y="284" font-size="12" fill="#5F6B7A" text-anchor="end" font-family="'DejaVu Sans Mono','Consolas','Menlo','Courier New',monospace">TIMESTAMP</text>
+<text x="126" y="304" font-size="13" fill="#1B2430" font-family="'DejaVu Sans Mono','Consolas','Menlo','Courier New',monospace" font-style="italic">updated_at</text>
+<text x="410" y="304" font-size="12" fill="#5F6B7A" text-anchor="end" font-family="'DejaVu Sans Mono','Consolas','Menlo','Courier New',monospace">TIMESTAMP</text>
+</g>
+<g id="tbl_user_2fa_code">
+<rect x="63" y="383" width="360" height="200" rx="7" fill="#000" opacity="0.10"/>
+<rect x="60" y="380" width="360" height="200" rx="7" fill="#FFFFFF" stroke="#B4432F" stroke-width="1.6"/>
+<path d="M60,410 L60,387 Q60,380 67,380 L413,380 Q420,380 420,387 L420,410 Z" fill="#B4432F"/>
+<text x="240.0" y="401.0" font-size="17" font-weight="700" fill="#FFFFFF" text-anchor="middle" font-family="'DejaVu Sans','Segoe UI','Helvetica Neue',Arial,sans-serif">user_2fa_code</text>
+<rect x="68" y="414" width="22" height="12" rx="3" fill="#C77700"/>
+<text x="79" y="423.3" font-size="9" font-weight="700" fill="#fff" text-anchor="middle" font-family="'DejaVu Sans','Segoe UI','Helvetica Neue',Arial,sans-serif">PK</text>
+<text x="126" y="424" font-size="13" fill="#1B2430" font-family="'DejaVu Sans Mono','Consolas','Menlo','Courier New',monospace" font-weight="700">id</text>
+<text x="410" y="424" font-size="12" fill="#5F6B7A" text-anchor="end" font-family="'DejaVu Sans Mono','Consolas','Menlo','Courier New',monospace">CHAR(36)</text>
+<rect x="61" y="430" width="358" height="20" fill="#FBEDE9" opacity="0.55"/>
+<rect x="68" y="434" width="22" height="12" rx="3" fill="#1F4E8C"/>
+<text x="79" y="443.3" font-size="9" font-weight="700" fill="#fff" text-anchor="middle" font-family="'DejaVu Sans','Segoe UI','Helvetica Neue',Arial,sans-serif">FK</text>
+<text x="126" y="444" font-size="13" fill="#1B2430" font-family="'DejaVu Sans Mono','Consolas','Menlo','Courier New',monospace">user_id</text>
+<text x="410" y="444" font-size="12" fill="#5F6B7A" text-anchor="end" font-family="'DejaVu Sans Mono','Consolas','Menlo','Courier New',monospace">CHAR(36)</text>
+<text x="126" y="464" font-size="13" fill="#1B2430" font-family="'DejaVu Sans Mono','Consolas','Menlo','Courier New',monospace">code_hash</text>
+<text x="410" y="464" font-size="12" fill="#5F6B7A" text-anchor="end" font-family="'DejaVu Sans Mono','Consolas','Menlo','Courier New',monospace">VARCHAR(255)</text>
+<rect x="61" y="470" width="358" height="20" fill="#FBEDE9" opacity="0.55"/>
+<text x="126" y="484" font-size="13" fill="#1B2430" font-family="'DejaVu Sans Mono','Consolas','Menlo','Courier New',monospace">failed_attempts</text>
+<text x="410" y="484" font-size="12" fill="#5F6B7A" text-anchor="end" font-family="'DejaVu Sans Mono','Consolas','Menlo','Courier New',monospace">TINYINT UNSIGNED</text>
+<text x="126" y="504" font-size="13" fill="#1B2430" font-family="'DejaVu Sans Mono','Consolas','Menlo','Courier New',monospace">max_attempts</text>
+<text x="410" y="504" font-size="12" fill="#5F6B7A" text-anchor="end" font-family="'DejaVu Sans Mono','Consolas','Menlo','Courier New',monospace">TINYINT UNSIGNED</text>
+<rect x="61" y="510" width="358" height="20" fill="#FBEDE9" opacity="0.55"/>
+<text x="126" y="524" font-size="13" fill="#1B2430" font-family="'DejaVu Sans Mono','Consolas','Menlo','Courier New',monospace">expires_at</text>
+<text x="410" y="524" font-size="12" fill="#5F6B7A" text-anchor="end" font-family="'DejaVu Sans Mono','Consolas','Menlo','Courier New',monospace">TIMESTAMP</text>
+<text x="126" y="544" font-size="13" fill="#1B2430" font-family="'DejaVu Sans Mono','Consolas','Menlo','Courier New',monospace">is_used</text>
+<text x="410" y="544" font-size="12" fill="#5F6B7A" text-anchor="end" font-family="'DejaVu Sans Mono','Consolas','Menlo','Courier New',monospace">BOOLEAN</text>
+<rect x="61" y="550" width="358" height="20" fill="#FBEDE9" opacity="0.55"/>
+<text x="126" y="564" font-size="13" fill="#1B2430" font-family="'DejaVu Sans Mono','Consolas','Menlo','Courier New',monospace" font-style="italic">created_at</text>
+<text x="410" y="564" font-size="12" fill="#5F6B7A" text-anchor="end" font-family="'DejaVu Sans Mono','Consolas','Menlo','Courier New',monospace">TIMESTAMP</text>
+</g>
+<g id="tbl_jwt_blacklisted_token">
+<rect x="63" y="643" width="360" height="140" rx="7" fill="#000" opacity="0.10"/>
+<rect x="60" y="640" width="360" height="140" rx="7" fill="#FFFFFF" stroke="#B4432F" stroke-width="1.6"/>
+<path d="M60,670 L60,647 Q60,640 67,640 L413,640 Q420,640 420,647 L420,670 Z" fill="#B4432F"/>
+<text x="240.0" y="661.0" font-size="17" font-weight="700" fill="#FFFFFF" text-anchor="middle" font-family="'DejaVu Sans','Segoe UI','Helvetica Neue',Arial,sans-serif">jwt_blacklisted_token</text>
+<rect x="68" y="674" width="22" height="12" rx="3" fill="#C77700"/>
+<text x="79" y="683.3" font-size="9" font-weight="700" fill="#fff" text-anchor="middle" font-family="'DejaVu Sans','Segoe UI','Helvetica Neue',Arial,sans-serif">PK</text>
+<text x="126" y="684" font-size="13" fill="#1B2430" font-family="'DejaVu Sans Mono','Consolas','Menlo','Courier New',monospace" font-weight="700">id</text>
+<text x="410" y="684" font-size="12" fill="#5F6B7A" text-anchor="end" font-family="'DejaVu Sans Mono','Consolas','Menlo','Courier New',monospace">CHAR(36)</text>
+<rect x="61" y="690" width="358" height="20" fill="#FBEDE9" opacity="0.55"/>
+<rect x="68" y="694" width="22" height="12" rx="3" fill="#6B3FA0"/>
+<text x="79" y="703.3" font-size="9" font-weight="700" fill="#fff" text-anchor="middle" font-family="'DejaVu Sans','Segoe UI','Helvetica Neue',Arial,sans-serif">UQ</text>
+<text x="126" y="704" font-size="13" fill="#1B2430" font-family="'DejaVu Sans Mono','Consolas','Menlo','Courier New',monospace">jti</text>
+<text x="410" y="704" font-size="12" fill="#5F6B7A" text-anchor="end" font-family="'DejaVu Sans Mono','Consolas','Menlo','Courier New',monospace">VARCHAR(255)</text>
+<rect x="68" y="714" width="22" height="12" rx="3" fill="#1F4E8C"/>
+<text x="79" y="723.3" font-size="9" font-weight="700" fill="#fff" text-anchor="middle" font-family="'DejaVu Sans','Segoe UI','Helvetica Neue',Arial,sans-serif">FK</text>
+<text x="126" y="724" font-size="13" fill="#1B2430" font-family="'DejaVu Sans Mono','Consolas','Menlo','Courier New',monospace">user_id</text>
+<text x="410" y="724" font-size="12" fill="#5F6B7A" text-anchor="end" font-family="'DejaVu Sans Mono','Consolas','Menlo','Courier New',monospace">CHAR(36)</text>
+<rect x="61" y="730" width="358" height="20" fill="#FBEDE9" opacity="0.55"/>
+<text x="126" y="744" font-size="13" fill="#1B2430" font-family="'DejaVu Sans Mono','Consolas','Menlo','Courier New',monospace">expires_at</text>
+<text x="410" y="744" font-size="12" fill="#5F6B7A" text-anchor="end" font-family="'DejaVu Sans Mono','Consolas','Menlo','Courier New',monospace">TIMESTAMP</text>
+<text x="126" y="764" font-size="13" fill="#1B2430" font-family="'DejaVu Sans Mono','Consolas','Menlo','Courier New',monospace" font-style="italic">created_at</text>
+<text x="410" y="764" font-size="12" fill="#5F6B7A" text-anchor="end" font-family="'DejaVu Sans Mono','Consolas','Menlo','Courier New',monospace">TIMESTAMP</text>
+</g>
+<g id="tbl_data_protection_keys">
+<rect x="63" y="863" width="360" height="100" rx="7" fill="#000" opacity="0.10"/>
+<rect x="60" y="860" width="360" height="100" rx="7" fill="#FFFFFF" stroke="#B4432F" stroke-width="1.6"/>
+<path d="M60,890 L60,867 Q60,860 67,860 L413,860 Q420,860 420,867 L420,890 Z" fill="#B4432F"/>
+<text x="240.0" y="881.0" font-size="17" font-weight="700" fill="#FFFFFF" text-anchor="middle" font-family="'DejaVu Sans','Segoe UI','Helvetica Neue',Arial,sans-serif">data_protection_keys</text>
+<rect x="68" y="894" width="22" height="12" rx="3" fill="#C77700"/>
+<text x="79" y="903.3" font-size="9" font-weight="700" fill="#fff" text-anchor="middle" font-family="'DejaVu Sans','Segoe UI','Helvetica Neue',Arial,sans-serif">PK</text>
+<text x="126" y="904" font-size="13" fill="#1B2430" font-family="'DejaVu Sans Mono','Consolas','Menlo','Courier New',monospace" font-weight="700">id</text>
+<text x="410" y="904" font-size="12" fill="#5F6B7A" text-anchor="end" font-family="'DejaVu Sans Mono','Consolas','Menlo','Courier New',monospace">INT</text>
+<rect x="61" y="910" width="358" height="20" fill="#FBEDE9" opacity="0.55"/>
+<text x="126" y="924" font-size="13" fill="#1B2430" font-family="'DejaVu Sans Mono','Consolas','Menlo','Courier New',monospace" font-style="italic">friendly_name</text>
+<text x="410" y="924" font-size="12" fill="#5F6B7A" text-anchor="end" font-family="'DejaVu Sans Mono','Consolas','Menlo','Courier New',monospace">LONGTEXT</text>
+<text x="126" y="944" font-size="13" fill="#1B2430" font-family="'DejaVu Sans Mono','Consolas','Menlo','Courier New',monospace" font-style="italic">xml</text>
+<text x="410" y="944" font-size="12" fill="#5F6B7A" text-anchor="end" font-family="'DejaVu Sans Mono','Consolas','Menlo','Courier New',monospace">LONGTEXT</text>
+</g>
+</g>
+<g transform="translate(60,1766)" font-size="13" fill="#1B2430">
+<rect x="0" y="-12" width="22" height="12" rx="3" fill="#C77700"/><text x="11" y="-2.7" font-size="9" font-weight="700" fill="#fff" text-anchor="middle">PK</text><text x="30" y="0">elsődleges kulcs</text>
+<rect x="170" y="-12" width="22" height="12" rx="3" fill="#1F4E8C"/><text x="181" y="-2.7" font-size="9" font-weight="700" fill="#fff" text-anchor="middle">FK</text><text x="200" y="0">idegen kulcs</text>
+<rect x="310" y="-12" width="22" height="12" rx="3" fill="#6B3FA0"/><text x="321" y="-2.7" font-size="9" font-weight="700" fill="#fff" text-anchor="middle">UQ</text><text x="340" y="0">egyedi (unique)</text>
+<text x="470" y="0" font-style="italic">dőlt név = NULL megengedett</text>
+<path d="M700,-6 L713,-12 M700,-6 L713,0 M700,-6 L713,-6 M700,-6 L690,-6" stroke="#444" stroke-width="1.8" fill="none"/><text x="722" y="0">N oldal (sok)</text>
+<path d="M850,-12 L850,0 M857,-12 L857,0 M850,-6 L866,-6" stroke="#444" stroke-width="1.8"/><text x="876" y="0">pontosan 1 (kötelező szülő)</text>
+<path d="M1090,-12 L1090,0 M1090,-6 L1100,-6" stroke="#444" stroke-width="1.8"/><circle cx="1100" cy="-6" r="3.6" fill="#fff" stroke="#444" stroke-width="1.6"/><text x="1112" y="0">0..1 (opcionális szülő, NULL FK)</text>
+<text x="0" y="26" fill="#5F6B7A" font-size="13">Minden kapcsolat a szülőtábla id oszlopára (elsődleges kulcs) hivatkozik; a vonal színe a gyermektábla moduljának színe.</text>
+</g>
+</svg>

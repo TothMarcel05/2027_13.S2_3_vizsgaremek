@@ -19,6 +19,11 @@ public partial class Workspace
     public string Name { get; set; } = null!;
 
     /// <summary>
+    /// Workspace leírása
+    /// </summary>
+    public string? Description { get; set; }
+
+    /// <summary>
     /// Tulajdonos felhasználó
     /// </summary>
     public Guid OwnerId { get; set; }

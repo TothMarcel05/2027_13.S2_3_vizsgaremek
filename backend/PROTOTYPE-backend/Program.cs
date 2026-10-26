@@ -15,10 +15,9 @@ using PROTOTYPE_backend.Services.Workspaces;
 using Scalar.AspNetCore;
 using System.Text;
 using System.Threading.RateLimiting;
+using Microsoft.AspNetCore.DataProtection;
 
 var builder = WebApplication.CreateBuilder(args);
-
-
 
 builder.Services.AddControllers();
 
@@ -31,6 +30,8 @@ builder.Services.AddDbContext<AppDbContext>(options =>
 
 builder.Services.AddHttpContextAccessor();
 
+builder.Services.AddDataProtection()
+    .PersistKeysToDbContext<AppDbContext>();
 
 builder.Services.AddScoped<ISoftDeleteService, SoftDeleteService>();
 builder.Services.AddScoped<IWorkspaceService, WorkspaceService>();
@@ -40,7 +41,6 @@ builder.Services.AddScoped<IAuthService, AuthService>();
 builder.Services.AddScoped<ICalendarService, CalendarService>();
 builder.Services.AddScoped<ITokenService, TokenService>();
 builder.Services.AddScoped<IUserService, UserService>();
-
 
 var jwtSection = builder.Configuration.GetSection("JwtSettings");
 

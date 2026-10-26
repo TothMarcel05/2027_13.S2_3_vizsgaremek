@@ -95,6 +95,7 @@ CREATE TABLE app_user (
 CREATE TABLE workspace (
     id                  CHAR(36)        PRIMARY KEY DEFAULT (UUID()) COMMENT 'Workspace azonosító (UUID)',
     name                VARCHAR(255)    NOT NULL COMMENT 'Workspace neve',
+    description         TEXT            COMMENT 'Workspace leírása', 
     owner_id            CHAR(36)        NOT NULL COMMENT 'Tulajdonos felhasználó',
     storage_quota_bytes BIGINT UNSIGNED NOT NULL DEFAULT 26843545600 COMMENT 'Tárhelykvóta bájtban (alapértelmezett: 25 GB)',
     created_at          TIMESTAMP       DEFAULT CURRENT_TIMESTAMP COMMENT 'Létrehozás ideje',
@@ -491,5 +492,11 @@ CREATE TABLE jwt_blacklisted_token (
 
 CREATE INDEX idx_blacklist_jti ON jwt_blacklisted_token(jti);
 CREATE INDEX idx_blacklist_expires ON jwt_blacklisted_token(expires_at);
+
+CREATE TABLE data_protection_keys (
+    id          INT AUTO_INCREMENT PRIMARY KEY COMMENT 'Elsődleges kulcs',
+    friendly_name LONGTEXT NULL               COMMENT 'Opcionális barátságos név',
+    xml         LONGTEXT NULL               COMMENT 'A titkosító főkulcs XML formátumban'
+) ENGINE=InnoDB COMMENT='ASP.NET Core DataProtection főkulcsok perzisztens tárolása';
 
 SET FOREIGN_KEY_CHECKS = 1;

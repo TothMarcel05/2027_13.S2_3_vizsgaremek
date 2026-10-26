@@ -2,10 +2,11 @@
 using System.Collections.Generic;
 using Microsoft.EntityFrameworkCore;
 using PROTOTYPE_backend.Models;
+using Microsoft.AspNetCore.DataProtection.EntityFrameworkCore;
 
 namespace PROTOTYPE_backend.Data;
 
-public partial class AppDbContext : DbContext
+public partial class AppDbContext : DbContext, IDataProtectionKeyContext
 {
     public AppDbContext(DbContextOptions<AppDbContext> options)
         : base(options)
@@ -27,6 +28,8 @@ public partial class AppDbContext : DbContext
     public virtual DbSet<ChatRoom> ChatRooms { get; set; }
 
     public virtual DbSet<ChatRoomMember> ChatRoomMembers { get; set; }
+
+    public virtual DbSet<DataProtectionKey> DataProtectionKeys { get; set; }
 
     public virtual DbSet<EnumLookup> EnumLookups { get; set; }
 
@@ -481,6 +484,23 @@ public partial class AppDbContext : DbContext
             entity.HasOne(d => d.User).WithMany(p => p.ChatRoomMembers)
                 .HasForeignKey(d => d.UserId)
                 .HasConstraintName("fk_crm_user");
+        });
+
+        modelBuilder.Entity<DataProtectionKey>(entity =>
+        {
+            entity.HasKey(e => e.Id).HasName("PRIMARY");
+
+            entity.ToTable("data_protection_keys", tb => tb.HasComment("ASP.NET Core DataProtection főkulcsok perzisztens tárolása"));
+
+            entity.Property(e => e.Id)
+                .HasComment("Elsődleges kulcs")
+                .HasColumnName("id");
+            entity.Property(e => e.FriendlyName)
+                .HasComment("Opcionális barátságos név")
+                .HasColumnName("friendly_name");
+            entity.Property(e => e.Xml)
+                .HasComment("A titkosító főkulcs XML formátumban")
+                .HasColumnName("xml");
         });
 
         modelBuilder.Entity<EnumLookup>(entity =>
@@ -1105,6 +1125,27 @@ public partial class AppDbContext : DbContext
                 .HasConstraintName("fk_u2c_user");
         });
 
+        modelBuilder.Entity<DataProtectionKey>(entity =>
+        {
+            entity.HasKey(e => e.Id).HasName("PRIMARY");
+
+            entity.ToTable("data_protection_keys", tb => tb.HasComment("ASP.NET Core DataProtection főkulcsok perzisztens tárolása"));
+
+            entity.Property(e => e.Id)
+                .HasComment("Elsődleges kulcs")
+                .HasColumnName("id");
+
+            entity.Property(e => e.FriendlyName)
+                .HasComment("Opcionális barátságos név")
+                .HasColumnName("friendly_name");
+
+            entity.Property(e => e.Xml)
+                .HasComment("A titkosító főkulcs XML formátumban")
+                .HasColumnName("xml");
+        });
+
+        OnModelCreatingPartial(modelBuilder);
+
         modelBuilder.Entity<UserNotification>(entity =>
         {
             entity.HasKey(e => e.Id).HasName("PRIMARY");
@@ -1219,6 +1260,10 @@ public partial class AppDbContext : DbContext
                 .HasComment("Létrehozás ideje")
                 .HasColumnType("timestamp")
                 .HasColumnName("created_at");
+            entity.Property(e => e.Description)
+                .HasComment("Workspace leírása")
+                .HasColumnType("text")
+                .HasColumnName("description");
             entity.Property(e => e.Name)
                 .HasMaxLength(255)
                 .HasComment("Workspace neve")

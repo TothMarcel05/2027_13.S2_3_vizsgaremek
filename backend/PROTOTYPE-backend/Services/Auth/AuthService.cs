@@ -271,7 +271,7 @@ namespace PROTOTYPE_backend.Services.Auth
             user.TwoFactorRecoveryCodes = JsonSerializer.Serialize(hashes);
             await _context.SaveChangesAsync();
 
-            return plain;   // egyszer mutasd meg a felhasználónak
+            return plain; 
         }
 
         public async Task<AuthResponseDto> RefreshAsync(string refreshToken)
