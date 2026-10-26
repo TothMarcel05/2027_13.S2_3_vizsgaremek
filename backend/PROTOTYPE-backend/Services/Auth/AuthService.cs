@@ -242,9 +242,19 @@ namespace PROTOTYPE_backend.Services.Auth
             if (user.Is2faEnabled)
                 throw new InvalidOperationException("A 2FA már be van kapcsolva!");
 
-            var secret = Base32Encoding.ToString(KeyGeneration.GenerateRandomKey(20));
-            user.TwoFactorSecret = _protector.Protect(secret);
-            await _context.SaveChangesAsync();
+            string secret;
+
+            // Ha még nincs aktiválva a 2FA, de már generáltunk secret-et, újrahasznosítjuk
+            if (!string.IsNullOrEmpty(user.TwoFactorSecret))
+            {
+                secret = _protector.Unprotect(user.TwoFactorSecret);
+            }
+            else
+            {
+                secret = Base32Encoding.ToString(KeyGeneration.GenerateRandomKey(20));
+                user.TwoFactorSecret = _protector.Protect(secret);
+                await _context.SaveChangesAsync();
+            }
 
             const string issuer = "PROTOTYPE";
             var uri = $"otpauth://totp/{Uri.EscapeDataString(issuer)}:{Uri.EscapeDataString(user.Email)}" +

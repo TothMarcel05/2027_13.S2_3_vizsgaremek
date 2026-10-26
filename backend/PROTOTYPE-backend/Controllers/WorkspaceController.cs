@@ -12,7 +12,7 @@ namespace PROTOTYPE_backend.Controllers
 {
     [ApiController]
     [Route("api/workspace")]
-    //[Authorize]
+    [Authorize]
     public class WorkspaceController : ControllerBase
     {
         private readonly IWorkspaceService _workspaceService;
@@ -25,7 +25,13 @@ namespace PROTOTYPE_backend.Controllers
         [HttpPost]
         public async Task<IActionResult> CreateWorkspace([FromBody] CreateWorkspaceDto dto)
         {
-            var workspace = await _workspaceService.CreateWorkspaceAsync(dto.UserId, dto.WorkspaceName);
+            var userIdClaim = User.FindFirstValue(ClaimTypes.NameIdentifier);
+            if (!Guid.TryParse(userIdClaim, out var userId))
+            {
+                return Unauthorized();
+            }
+
+            var workspace = await _workspaceService.CreateWorkspaceAsync(userId, dto);
             return Ok(workspace);
         }
 
@@ -38,7 +44,7 @@ namespace PROTOTYPE_backend.Controllers
         }
 
 
-        [HttpGet("/workspaces/{workspaceId}")]
+        [HttpGet("workspaces/{workspaceId}")]
         public async Task<IActionResult> GetWorkspaceData(Guid WorkspaceId)
         {
             var workspace = await _workspaceService.GetWorkspaceDataAsync(WorkspaceId);
@@ -51,14 +57,14 @@ namespace PROTOTYPE_backend.Controllers
             return Ok(workspace);
         }
 
-        [HttpGet("/workspaces/{workspaceId}/projects")]
+        [HttpGet("workspaces/{workspaceId}/projects")]
         public async Task<IActionResult> GetWorkspaceProjects(Guid workspaceId, [FromQuery] int page = 1, [FromQuery] int limit = 20, [FromQuery] sbyte? status = null)
         {
             var projects = await _workspaceService.GetWorkspaceProjectAsync(workspaceId, page, limit, status);
             return Ok(projects);
         }
 
-        [HttpGet("/workspaces/{workspaceId}/members")]
+        [HttpGet("workspaces/{workspaceId}/members")]
         public async Task<IActionResult> GetWorkspaceMembers(Guid workspaceId, [FromQuery] int page = 1, [FromQuery] int limit = 50, [FromQuery] Guid? Role = null)
         {
             var members = await _workspaceService.GetWorkspaceMembersAsync(workspaceId, page, limit, Role);

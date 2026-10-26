@@ -24,16 +24,17 @@ namespace PROTOTYPE_backend.Services.Workspaces
             _tokenService = tokenService ;
         }
 
-        public async Task<Workspace> CreateWorkspaceAsync(Guid userId, string WorkspaceName)
+        public async Task<Workspace> CreateWorkspaceAsync(Guid userId, CreateWorkspaceDto dto)
         {
             var existingWorkspace = await _context.Workspaces
-                .FirstOrDefaultAsync(w => w.Name == WorkspaceName && w.OwnerId == userId);
+                .FirstOrDefaultAsync(w => w.Name == dto.WorkspaceName && w.OwnerId == userId);
 
             var workspace = new Workspace
             {
-                Name = WorkspaceName,
+                Name = dto.WorkspaceName,
                 OwnerId = userId,
                 CreatedAt = DateTime.UtcNow,
+                Description = dto.Description, 
             };
 
             _context.Workspaces.Add(workspace);

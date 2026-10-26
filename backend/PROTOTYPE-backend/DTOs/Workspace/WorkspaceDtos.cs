@@ -6,8 +6,8 @@ namespace PROTOTYPE_backend.DTOs.Workspace;
 
 
 public record CreateWorkspaceDto(
-    [Required] Guid UserId,
-    [Required] string WorkspaceName
+    [Required] string WorkspaceName,
+    string Description
 );
 
 public record UsersWorkspaceListResponseDto(
