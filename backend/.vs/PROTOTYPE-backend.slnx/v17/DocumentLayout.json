@@ -1,7 +1,24 @@
 {
   "Version": 1,
-  "WorkspaceRootPath": "C:\\Users\\Kecskem\u00E9ti Mil\u00E1n\\Documents\\GitHub\\TMD_KM_TO-DO_Project\\backend\\",
-  "Documents": [],
+  "WorkspaceRootPath": "C:\\Users\\marce\\Documents\\GitHub\\2027_13.S2_3_vizsgaremek\\backend\\",
+  "Documents": [
+    {
+      "AbsoluteMoniker": "D:0:0:{709D5F3C-AE65-16AB-703F-30F362550762}|PROTOTYPE-backend\\PROTOTYPE-backend.csproj|c:\\users\\marce\\documents\\github\\2027_13.s2_3_vizsgaremek\\backend\\prototype-backend\\controllers\\workspacecontroller.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{709D5F3C-AE65-16AB-703F-30F362550762}|PROTOTYPE-backend\\PROTOTYPE-backend.csproj|solutionrelative:prototype-backend\\controllers\\workspacecontroller.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{709D5F3C-AE65-16AB-703F-30F362550762}|PROTOTYPE-backend\\PROTOTYPE-backend.csproj|c:\\users\\marce\\documents\\github\\2027_13.s2_3_vizsgaremek\\backend\\prototype-backend\\services\\workspaces\\workspaceservice.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{709D5F3C-AE65-16AB-703F-30F362550762}|PROTOTYPE-backend\\PROTOTYPE-backend.csproj|solutionrelative:prototype-backend\\services\\workspaces\\workspaceservice.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{709D5F3C-AE65-16AB-703F-30F362550762}|PROTOTYPE-backend\\PROTOTYPE-backend.csproj|c:\\users\\marce\\documents\\github\\2027_13.s2_3_vizsgaremek\\backend\\prototype-backend\\services\\workspaces\\iworkspaceservice.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{709D5F3C-AE65-16AB-703F-30F362550762}|PROTOTYPE-backend\\PROTOTYPE-backend.csproj|solutionrelative:prototype-backend\\services\\workspaces\\iworkspaceservice.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{709D5F3C-AE65-16AB-703F-30F362550762}|PROTOTYPE-backend\\PROTOTYPE-backend.csproj|c:\\users\\marce\\documents\\github\\2027_13.s2_3_vizsgaremek\\backend\\prototype-backend\\dtos\\workspace\\workspacedtos.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{709D5F3C-AE65-16AB-703F-30F362550762}|PROTOTYPE-backend\\PROTOTYPE-backend.csproj|solutionrelative:prototype-backend\\dtos\\workspace\\workspacedtos.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    }
+  ],
   "DocumentGroupContainers": [
     {
       "Orientation": 0,
@@ -9,11 +26,71 @@
       "DocumentGroups": [
         {
           "DockedWidth": 200,
-          "SelectedChildIndex": -1,
+          "SelectedChildIndex": 2,
           "Children": [
             {
               "$type": "Bookmark",
               "Name": "ST:0:0:{1c4feeaa-4718-4aa9-859d-94ce25d182ba}"
+            },
+            {
+              "$type": "Bookmark",
+              "Name": "ST:0:0:{aa2115a1-9712-457b-9047-dbb71ca2cdd2}"
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 0,
+              "Title": "WorkspaceController.cs",
+              "DocumentMoniker": "C:\\Users\\marce\\Documents\\GitHub\\2027_13.S2_3_vizsgaremek\\backend\\PROTOTYPE-backend\\Controllers\\WorkspaceController.cs",
+              "RelativeDocumentMoniker": "PROTOTYPE-backend\\Controllers\\WorkspaceController.cs",
+              "ToolTip": "C:\\Users\\marce\\Documents\\GitHub\\2027_13.S2_3_vizsgaremek\\backend\\PROTOTYPE-backend\\Controllers\\WorkspaceController.cs",
+              "RelativeToolTip": "PROTOTYPE-backend\\Controllers\\WorkspaceController.cs",
+              "ViewState": "AgIAACYAAAAAAAAAAAAwwEIAAAAAAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2026-10-26T12:19:19.037Z",
+              "EditorCaption": ""
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 1,
+              "Title": "WorkspaceService.cs",
+              "DocumentMoniker": "C:\\Users\\marce\\Documents\\GitHub\\2027_13.S2_3_vizsgaremek\\backend\\PROTOTYPE-backend\\Services\\Workspaces\\WorkspaceService.cs",
+              "RelativeDocumentMoniker": "PROTOTYPE-backend\\Services\\Workspaces\\WorkspaceService.cs",
+              "ToolTip": "C:\\Users\\marce\\Documents\\GitHub\\2027_13.S2_3_vizsgaremek\\backend\\PROTOTYPE-backend\\Services\\Workspaces\\WorkspaceService.cs",
+              "RelativeToolTip": "PROTOTYPE-backend\\Services\\Workspaces\\WorkspaceService.cs",
+              "ViewState": "AgIAADIAAAAAAAAAAAAwwFoAAAAcAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2026-10-26T12:06:37.004Z",
+              "EditorCaption": ""
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 2,
+              "Title": "IWorkspaceService.cs",
+              "DocumentMoniker": "C:\\Users\\marce\\Documents\\GitHub\\2027_13.S2_3_vizsgaremek\\backend\\PROTOTYPE-backend\\Services\\Workspaces\\IWorkspaceService.cs",
+              "RelativeDocumentMoniker": "PROTOTYPE-backend\\Services\\Workspaces\\IWorkspaceService.cs",
+              "ToolTip": "C:\\Users\\marce\\Documents\\GitHub\\2027_13.S2_3_vizsgaremek\\backend\\PROTOTYPE-backend\\Services\\Workspaces\\IWorkspaceService.cs",
+              "RelativeToolTip": "PROTOTYPE-backend\\Services\\Workspaces\\IWorkspaceService.cs",
+              "ViewState": "AgIAAAAAAAAAAAAAAAAAAA4AAACMAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2026-10-26T12:02:53.398Z",
+              "EditorCaption": ""
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 3,
+              "Title": "WorkspaceDtos.cs",
+              "DocumentMoniker": "C:\\Users\\marce\\Documents\\GitHub\\2027_13.S2_3_vizsgaremek\\backend\\PROTOTYPE-backend\\DTOs\\Workspace\\WorkspaceDtos.cs",
+              "RelativeDocumentMoniker": "PROTOTYPE-backend\\DTOs\\Workspace\\WorkspaceDtos.cs",
+              "ToolTip": "C:\\Users\\marce\\Documents\\GitHub\\2027_13.S2_3_vizsgaremek\\backend\\PROTOTYPE-backend\\DTOs\\Workspace\\WorkspaceDtos.cs",
+              "RelativeToolTip": "PROTOTYPE-backend\\DTOs\\Workspace\\WorkspaceDtos.cs",
+              "ViewState": "AgIAAAgAAAAAAAAAAAAQwCMAAAAAAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2026-10-26T11:53:02.007Z",
+              "EditorCaption": ""
+            },
+            {
+              "$type": "Bookmark",
+              "Name": "ST:0:0:{cce594b6-0c39-4442-ba28-10c64ac7e89f}"
             }
           ]
         }
