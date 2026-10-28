@@ -1,6 +1,4 @@
-﻿// KM
-
-using Microsoft.IdentityModel.Tokens;
+﻿using Microsoft.IdentityModel.Tokens;
 using PROTOTYPE_backend.Models;
 using System.Globalization;
 using System.IdentityModel.Tokens.Jwt;
@@ -14,21 +12,21 @@ namespace PROTOTYPE_backend.Services.Token
     public class TokenService : ITokenService
     {
         private readonly IConfiguration _configuration;
+        private static readonly JwtSecurityTokenHandler TokenHandler = new();
 
-        public TokenService(IConfiguration configuration) 
+        public TokenService(IConfiguration configuration)
         {
             _configuration = configuration;
         }
 
         public string GenerateGlobalToken(AppUser user)
-        { 
-            var claims = new List<Claim>
-            {
+        {
+            List<Claim> claims = [
                 new(ClaimTypes.NameIdentifier, user.Id.ToString()),
                 new(ClaimTypes.Email, user.Email),
                 new(ClaimTypes.Role, user.GlobalRole.ToString()),
                 new(JwtRegisteredClaimNames.Jti, Guid.NewGuid().ToString())
-            };
+            ];
 
             return BuildJwt(claims);
         }
@@ -36,26 +34,23 @@ namespace PROTOTYPE_backend.Services.Token
         public string GenerateWorkspaceToken(
             AppUser user,
             Guid workspaceId,
-            Dictionary<string, List<string>> AllRolesNPermissions
-            ) 
+            Dictionary<string, List<string>> allRolesNPermissions)
         {
-            var claims = new List<Claim>
-            {
+            List<Claim> claims = [
                 new(ClaimTypes.NameIdentifier, user.Id.ToString()),
                 new(ClaimTypes.Email, user.Email),
                 new(ClaimTypes.Role, user.GlobalRole.ToString()),
                 new("active_workspace_id", workspaceId.ToString()),
                 new(JwtRegisteredClaimNames.Jti, Guid.NewGuid().ToString())
-            };
+            ];
 
-            string allRolesNPermissions = JsonSerializer.Serialize(AllRolesNPermissions);
-
-            claims.Add(new Claim("all_roles_permissions", allRolesNPermissions));
+            string serializedPermissions = JsonSerializer.Serialize(allRolesNPermissions);
+            claims.Add(new Claim("all_roles_permissions", serializedPermissions));
 
             return BuildJwt(claims);
         }
 
-        public string GenerateRefreshToken() 
+        public string GenerateRefreshToken()
         {
             var randomNumber = new byte[64];
             using var rng = RandomNumberGenerator.Create();
@@ -64,15 +59,15 @@ namespace PROTOTYPE_backend.Services.Token
         }
 
         public string GenerateTwoFactorToken(AppUser user) =>
-            BuildJwt(new[] { new Claim(ClaimTypes.NameIdentifier, user.Id.ToString()) },
-             audienceSuffix: "-2fa", expiryMinutes: 5);
+            BuildJwt([new Claim(ClaimTypes.NameIdentifier, user.Id.ToString())],
+                audienceSuffix: "-2fa", expiryMinutes: 5);
 
         public Guid? ValidateTwoFactorToken(string token)
         {
             var jwt = _configuration.GetSection("JwtSettings");
             try
             {
-                var principal = new JwtSecurityTokenHandler().ValidateToken(token, new TokenValidationParameters
+                var principal = TokenHandler.ValidateToken(token, new TokenValidationParameters
                 {
                     ValidateIssuer = true,
                     ValidIssuer = jwt["Issuer"],
@@ -86,8 +81,12 @@ namespace PROTOTYPE_backend.Services.Token
 
                 return Guid.TryParse(principal.FindFirstValue(ClaimTypes.NameIdentifier), out var id) ? id : null;
             }
-            catch { return null; }
+            catch
+            {
+                return null;
+            }
         }
+
         private string BuildJwt(IEnumerable<Claim> claims, string? audienceSuffix = null, double? expiryMinutes = null)
         {
             var jwtSettings = _configuration.GetSection("JwtSettings");
@@ -107,9 +106,7 @@ namespace PROTOTYPE_backend.Services.Token
                 SigningCredentials = new SigningCredentials(key, SecurityAlgorithms.HmacSha256)
             };
 
-            var handler = new JwtSecurityTokenHandler();
-            return handler.WriteToken(handler.CreateToken(tokenDescriptor));
+            return TokenHandler.WriteToken(TokenHandler.CreateToken(tokenDescriptor));
         }
-
     }
 }

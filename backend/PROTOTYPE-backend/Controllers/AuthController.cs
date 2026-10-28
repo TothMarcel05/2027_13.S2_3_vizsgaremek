@@ -1,11 +1,8 @@
-﻿// KM
-
-using Microsoft.AspNetCore.Authorization;
-using Microsoft.AspNetCore.Http;
+﻿using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using PROTOTYPE_backend.DTOs.Auth;
+using PROTOTYPE_backend.Extensions;
 using PROTOTYPE_backend.Services.Auth;
-using System.Security.Claims;
 
 namespace PROTOTYPE_backend.Controllers
 {
@@ -21,6 +18,7 @@ namespace PROTOTYPE_backend.Controllers
             _authService = authService;
         }
 
+        // 1. REGISZTRÁCIÓ
         [AllowAnonymous]
         [HttpPost("register")]
         public async Task<IActionResult> Register([FromBody] RegisterDto dto)
@@ -28,7 +26,7 @@ namespace PROTOTYPE_backend.Controllers
             try
             {
                 var result = await _authService.CreateUserAsync(dto);
-                return Ok(result); 
+                return Ok(result);
             }
             catch (Exception ex)
             {
@@ -36,6 +34,7 @@ namespace PROTOTYPE_backend.Controllers
             }
         }
 
+        // 2. BEJELENTKEZÉS
         [AllowAnonymous]
         [HttpPost("login")]
         public async Task<IActionResult> Login([FromBody] LoginDto dto)
@@ -43,7 +42,7 @@ namespace PROTOTYPE_backend.Controllers
             try
             {
                 var result = await _authService.LoginAsync(dto);
-                return Ok(result); 
+                return Ok(result);
             }
             catch (UnauthorizedAccessException ex)
             {
@@ -51,53 +50,48 @@ namespace PROTOTYPE_backend.Controllers
             }
         }
 
-        [Authorize]
+        // 3. 2FA BEÁLLÍTÁS KEZDÉSE
         [HttpPost("2fa/setup")]
         public async Task<IActionResult> TwoFactorSetup()
         {
-            var userIdClaim = User.FindFirstValue(ClaimTypes.NameIdentifier);
-            if (!Guid.TryParse(userIdClaim, out var userId))
-            {
-                return Unauthorized();
-            }
-
             try
             {
+                var userId = User.GetUserId();
                 var result = await _authService.BeginTwoFactorSetupAsync(userId);
                 return Ok(result);
             }
-            catch (InvalidOperationException ex)
-            {
-                return BadRequest(new { message = ex.Message });
-            }
-        }
-
-        [Authorize]
-        [HttpPost("2fa/enable")]
-        public async Task<IActionResult> EnableTwoFactor([FromBody] TwoFactorCodeDto dto)
-        {
-            var userIdClaim = User.FindFirstValue(ClaimTypes.NameIdentifier);
-            if (!Guid.TryParse(userIdClaim, out var userId))
+            catch (UnauthorizedAccessException)
             {
                 return Unauthorized();
             }
-
-            try
-            {
-                var recoveryCodes = await _authService.EnableTwoFactorAsync(userId, dto.Code);
-                return Ok(new { recoveryCodes });
-            }
-            catch (ArgumentException ex)
-            {
-                return BadRequest(new { message = ex.Message });
-            }
             catch (InvalidOperationException ex)
             {
                 return BadRequest(new { message = ex.Message });
             }
         }
 
-        [AllowAnonymous] 
+        // 4. 2FA ENGEDÉLYEZÉSE / VERIFIKÁCIÓJA SETUP UTÁN
+        [HttpPost("2fa/enable")]
+        public async Task<IActionResult> EnableTwoFactor([FromBody] TwoFactorCodeDto dto)
+        {
+            try
+            {
+                var userId = User.GetUserId();
+                var recoveryCodes = await _authService.EnableTwoFactorAsync(userId, dto.Code);
+                return Ok(new { recoveryCodes });
+            }
+            catch (UnauthorizedAccessException)
+            {
+                return Unauthorized();
+            }
+            catch (Exception ex) when (ex is ArgumentException || ex is InvalidOperationException)
+            {
+                return BadRequest(new { message = ex.Message });
+            }
+        }
+
+        // 5. 2FA BEJELENTKEZÉS IGAZOLÁSA
+        [AllowAnonymous]
         [HttpPost("2fa/verify")]
         public async Task<IActionResult> VerifyTwoFactor([FromBody] TwoFactorLoginDto dto)
         {
@@ -112,6 +106,7 @@ namespace PROTOTYPE_backend.Controllers
             }
         }
 
+        // 6. TOKEN FRISSÍTÉS
         [AllowAnonymous]
         [HttpPost("refresh")]
         public async Task<IActionResult> Refresh([FromBody] RefreshTokenRequestDto dto)
@@ -127,18 +122,20 @@ namespace PROTOTYPE_backend.Controllers
             }
         }
 
-        [Authorize]
+        // 7. KIJELENTKEZÉS
         [HttpPost("logout")]
         public async Task<IActionResult> Logout([FromBody] RefreshTokenRequestDto dto)
         {
-            var userIdClaim = User.FindFirstValue(ClaimTypes.NameIdentifier);
-            if (!Guid.TryParse(userIdClaim, out var userId))
+            try
+            {
+                var userId = User.GetUserId();
+                await _authService.LogoutAsync(userId, dto.RefreshToken);
+                return NoContent();
+            }
+            catch (UnauthorizedAccessException)
             {
                 return Unauthorized();
             }
-
-            await _authService.LogoutAsync(userId, dto.RefreshToken);
-            return NoContent(); 
         }
     }
 }
