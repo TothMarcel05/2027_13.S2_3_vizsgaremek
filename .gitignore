@@ -155,6 +155,8 @@ appsettings.json
 # Build és átmeneti mappák
 [Bb]in/
 [Oo]bj/
+obj/
+bin/
 .vs/
 [Tt]est[Rr]esult*/
 
