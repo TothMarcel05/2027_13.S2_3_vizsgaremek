@@ -14,6 +14,13 @@ namespace PROTOTYPE_backend.DTOs.Storage
         [Required] Guid UserId
     );
 
+    public record CreateFolderDto(
+        [Required] Guid WorkspaceId,
+        Guid? ProjectId,
+        Guid? ParentId,
+        [Required] string FolderName
+    );
+
     public record ShareNodeDto(
         [Required] Guid NodeId,
         [Required] Guid RoleId
@@ -21,11 +28,12 @@ namespace PROTOTYPE_backend.DTOs.Storage
 
     public record StorageNodeResponseDto(
         Guid Id,
+        Guid WorkspaceId,
         string Name,
         sbyte Type,
         string? MimeType,
-        ulong SizeBytes,
-        DateTime CreatedAt,
+        ulong? SizeBytes,
+        DateTime? CreatedAt,
         List<string> Labels
     );
 }
