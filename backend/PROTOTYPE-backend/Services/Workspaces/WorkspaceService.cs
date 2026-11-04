@@ -1,6 +1,4 @@
-﻿using Microsoft.AspNetCore.Mvc;
-using Microsoft.AspNetCore.Mvc.RazorPages;
-using Microsoft.EntityFrameworkCore;
+﻿using Microsoft.EntityFrameworkCore;
 using PROTOTYPE_backend.Data;
 using PROTOTYPE_backend.DTOs.Workspace;
 using PROTOTYPE_backend.Models;
@@ -19,43 +17,54 @@ namespace PROTOTYPE_backend.Services.Workspaces
 
         public WorkspaceService(AppDbContext context, ITokenService tokenService)
         {
-
             _context = context;
-            _tokenService = tokenService ;
+            _tokenService = tokenService;
         }
 
-        //POST /workspace
-        public async Task<CreateWorkspaceDto> CreateWorkspaceAsync(Guid userId, CreateWorkspaceDto dto)
+        public async Task<WorkspaceDataResponseDto> CreateWorkspaceAsync(Guid userId, CreateWorkspaceDto dto)
         {
             var existingWorkspace = await _context.Workspaces
-                .FirstOrDefaultAsync(w => w.Name == dto.WorkspaceName && w.OwnerId == userId);
+                .FirstOrDefaultAsync(w => w.Name == dto.workspaceName && w.OwnerId == userId);
+
+            if (existingWorkspace != null)
+            {
+                throw new Exception("Már létezik ilyen nevű munkaterület ehhez a felhasználóhoz!");
+            }
 
             var workspace = new Workspace
             {
-                Name = dto.WorkspaceName,
+                Name = dto.workspaceName,
                 OwnerId = userId,
                 CreatedAt = DateTime.UtcNow,
-                Description = dto.Description,
+                Description = dto.description,
+                StorageQuotaBytes = 0 
             };
 
             _context.Workspaces.Add(workspace);
             await _context.SaveChangesAsync();
-            return new CreateWorkspaceDto(workspace.Name, userId, workspace.Description);
-        }
 
-        //GET /workspace/user/{userId}
-        public async Task<List<UsersWorkspaceListResponseDto>> GetUserWorkspacesAsync(Guid userId)
-        {
             var user = await _context.AppUsers.FirstOrDefaultAsync(u => u.Id == userId);
 
-            if (user == null)
+            return new WorkspaceDataResponseDto(
+                workspace.Id,
+                workspace.Name,
+                workspace.OwnerId,
+                user?.Name ?? "Ismeretlen",
+                workspace.StorageQuotaBytes
+            );
+        }
+
+        public async Task<List<WorkspaceResponseDto>> GetUserWorkspacesAsync(Guid userId)
+        {
+            var userExists = await _context.AppUsers.AnyAsync(u => u.Id == userId);
+            if (!userExists)
             {
                 throw new Exception("Nem létezik a felhasználó!");
             }
 
             return await _context.Workspaces
                 .Where(w => w.OwnerId == userId || w.WorkspaceMembers.Any(m => m.UserId == userId))
-                .Select(w => new UsersWorkspaceListResponseDto(
+                .Select(w => new WorkspaceResponseDto(
                     w.Id,
                     w.Name,
                     w.OwnerId
@@ -63,11 +72,10 @@ namespace PROTOTYPE_backend.Services.Workspaces
                 .ToListAsync();
         }
 
-        //GET /workspace/workspaces/{workspaceId}
-        public async Task<WorkspaceDataResponseDto?> GetWorkspaceDataAsync(Guid WorkspaceId)
+        public async Task<WorkspaceDataResponseDto?> GetWorkspaceDataAsync(Guid workspaceId)
         {
             return await _context.Workspaces
-                .Where(w => w.Id == WorkspaceId)
+                .Where(w => w.Id == workspaceId)
                 .Select(w => new WorkspaceDataResponseDto(
                     w.Id,
                     w.Name,
@@ -78,19 +86,18 @@ namespace PROTOTYPE_backend.Services.Workspaces
                 .FirstOrDefaultAsync();
         }
 
+        public async Task<List<WorkspaceProjectResponseDto>> GetWorkspaceProjectsAsync(Guid workspaceId, int page = 1, int limit = 20, sbyte? status = null)
+        {
+            var query = _context.Projects.Where(p => p.WorkspaceId == workspaceId);
 
-        //GET /workspace/workspaces/{workspaceId}/projects
-        public async Task<List<WorkspaceProjectResponseDto>> GetWorkspaceProjectAsync(Guid WorkspaceId, int Page = 1, int Limit = 20, sbyte? Status = null) {
-            var query = _context.Projects
-                .Where(p => p.WorkspaceId == WorkspaceId);
-
-            if (Status.HasValue)
+            if (status.HasValue)
             {
-                query = query.Where(p => p.Status == Status.Value);
+                query = query.Where(p => p.Status == status.Value);
             }
+
             return await query
-                .Skip((Page - 1) * Limit)
-                .Take(Limit)
+                .Skip((page - 1) * limit)
+                .Take(limit)
                 .Select(p => new WorkspaceProjectResponseDto(
                     p.WorkspaceId,
                     p.Id,
@@ -102,21 +109,19 @@ namespace PROTOTYPE_backend.Services.Workspaces
                 .ToListAsync();
         }
 
-
-        //GET /workspace/workspaces/{workspaceId}/members
-        public async Task<List<WorkspaceMembersResponseDto>> GetWorkspaceMembersAsync(Guid WorkspaceId, int Page = 1, int Limit = 50, Guid? Role = null)
+        public async Task<List<WorkspaceMemberResponseDto>> GetWorkspaceMembersAsync(Guid workspaceId, int page = 1, int limit = 50, Guid? role = null)
         {
-            var query = _context.WorkspaceMembers
-                .Where(p => p.WorkspaceId == WorkspaceId);
+            var query = _context.WorkspaceMembers.Where(p => p.WorkspaceId == workspaceId);
 
-            if (Role.HasValue)
+            if (role.HasValue)
             {
-                query = query.Where(p => p.RoleId == Role.Value);
+                query = query.Where(p => p.RoleId == role.Value);
             }
+
             return await query
-                .Skip((Page - 1) * Limit)
-                .Take(Limit)
-                .Select(p => new WorkspaceMembersResponseDto(
+                .Skip((page - 1) * limit)
+                .Take(limit)
+                .Select(p => new WorkspaceMemberResponseDto(
                     p.WorkspaceId,
                     p.UserId,
                     p.User.Name,
@@ -126,23 +131,30 @@ namespace PROTOTYPE_backend.Services.Workspaces
                 .ToListAsync();
         }
 
-        //POST /workspace/workspaces/{workspaceId}/project
-        public async Task<CreateProjectDto> CreateProjectAsync(Guid workspaceId, string name, string? description, DateOnly? deadline, Guid? ownerId)
+        public async Task<WorkspaceProjectResponseDto> CreateProjectAsync(Guid workspaceId, CreateProjectDto dto)
         {
             var project = new Project
             {
                 WorkspaceId = workspaceId,
-                Name = name,
-                Description = description,
-                Deadline = deadline.HasValue ? deadline.Value : null,
-                OwnerId = ownerId,
-                Status = 1, 
+                Name = dto.name,
+                Description = dto.description,
+                Deadline = dto.deadline,
+                OwnerId = dto.ownerId,
+                Status = 1,
                 CreatedAt = DateTime.UtcNow
             };
 
             _context.Projects.Add(project);
             await _context.SaveChangesAsync();
-            return new CreateProjectDto(project.Name, project.Description, project.Deadline, project.OwnerId);
+
+            return new WorkspaceProjectResponseDto(
+                project.WorkspaceId,
+                project.Id,
+                project.Name,
+                project.Status,
+                project.Description,
+                project.Deadline
+            );
         }
 
         public async Task<string> SwitchWorkspaceAsync(Guid userId, Guid workspaceId)
@@ -169,6 +181,17 @@ namespace PROTOTYPE_backend.Services.Workspaces
             };
 
             return _tokenService.GenerateWorkspaceToken(user, workspaceId, rolesNPermissions);
+        }
+
+        public async Task<bool> DeleteWorkspaceAsync(Guid workspaceId)
+        {
+            var workspace = await _context.Workspaces.FindAsync(workspaceId);
+            if (workspace == null)
+                return false;
+
+            _context.Workspaces.Remove(workspace);
+            await _context.SaveChangesAsync();
+            return true;
         }
     }
 }

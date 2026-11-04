@@ -2,7 +2,6 @@
 using Microsoft.AspNetCore.Mvc;
 using PROTOTYPE_backend.DTOs.Auth;
 using PROTOTYPE_backend.DTOs.Workspace;
-using PROTOTYPE_backend.Models;
 using PROTOTYPE_backend.Services.Workspaces;
 using System;
 using System.Security.Claims;
@@ -35,7 +34,6 @@ namespace PROTOTYPE_backend.Controllers
             return Ok(workspace);
         }
 
-
         [HttpGet("user/{userId}")]
         public async Task<IActionResult> GetUserWorkspaces(Guid userId)
         {
@@ -43,11 +41,10 @@ namespace PROTOTYPE_backend.Controllers
             return Ok(workspaces);
         }
 
-
-        [HttpGet("workspaces/{workspaceId}")]
-        public async Task<IActionResult> GetWorkspaceData(Guid WorkspaceId)
+        [HttpGet("{workspaceId}")]
+        public async Task<IActionResult> GetWorkspaceData(Guid workspaceId)
         {
-            var workspace = await _workspaceService.GetWorkspaceDataAsync(WorkspaceId);
+            var workspace = await _workspaceService.GetWorkspaceDataAsync(workspaceId);
 
             if (workspace == null)
             {
@@ -57,24 +54,24 @@ namespace PROTOTYPE_backend.Controllers
             return Ok(workspace);
         }
 
-        [HttpGet("workspaces/{workspaceId}/projects")]
+        [HttpGet("{workspaceId}/projects")]
         public async Task<IActionResult> GetWorkspaceProjects(Guid workspaceId, [FromQuery] int page = 1, [FromQuery] int limit = 20, [FromQuery] sbyte? status = null)
         {
-            var projects = await _workspaceService.GetWorkspaceProjectAsync(workspaceId, page, limit, status);
+            var projects = await _workspaceService.GetWorkspaceProjectsAsync(workspaceId, page, limit, status);
             return Ok(projects);
         }
 
-        [HttpGet("workspaces/{workspaceId}/members")]
-        public async Task<IActionResult> GetWorkspaceMembers(Guid workspaceId, [FromQuery] int page = 1, [FromQuery] int limit = 50, [FromQuery] Guid? Role = null)
+        [HttpGet("{workspaceId}/members")]
+        public async Task<IActionResult> GetWorkspaceMembers(Guid workspaceId, [FromQuery] int page = 1, [FromQuery] int limit = 50, [FromQuery] Guid? role = null)
         {
-            var members = await _workspaceService.GetWorkspaceMembersAsync(workspaceId, page, limit, Role);
+            var members = await _workspaceService.GetWorkspaceMembersAsync(workspaceId, page, limit, role);
             return Ok(members);
         }
 
         [HttpPost("{workspaceId}/project")]
         public async Task<IActionResult> CreateProject(Guid workspaceId, [FromBody] CreateProjectDto dto)
         {
-            var project = await _workspaceService.CreateProjectAsync(workspaceId, dto.Name, dto.Description, dto.Deadline, dto.OwnerId);
+            var project = await _workspaceService.CreateProjectAsync(workspaceId, dto);
             return Ok(project);
         }
 
@@ -89,6 +86,16 @@ namespace PROTOTYPE_backend.Controllers
             var token = await _workspaceService.SwitchWorkspaceAsync(userId, workspaceId);
 
             return Ok(new WorkspaceTokenDto(token));
+        }
+
+        [HttpDelete("{workspaceId}")]
+        public async Task<IActionResult> DeleteWorkspace(Guid workspaceId)
+        {
+            var result = await _workspaceService.DeleteWorkspaceAsync(workspaceId);
+            if (!result)
+                return NotFound(new { message = "A megadott munkaterület nem található." });
+
+            return Ok(new { message = "A munkaterület sikeresen törölve lett." });
         }
     }
 }
