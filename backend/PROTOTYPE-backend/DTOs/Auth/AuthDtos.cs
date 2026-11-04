@@ -101,5 +101,13 @@ namespace PROTOTYPE_backend.DTOs.Auth
             string Description
         );
 
+    public record AddPermToRoletDto
+        (
+            Dictionary<sbyte, string> idNCodes
+        );
 
+    public record AddPermToRoleResultDto
+        (
+            List<string> codes
+        );
 }

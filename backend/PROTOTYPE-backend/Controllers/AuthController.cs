@@ -189,7 +189,7 @@ namespace PROTOTYPE_backend.Controllers
                 return Unauthorized();
             }
         }
-        [HttpPatch("roles/{id}")]
+        [HttpPatch("roles/{id}/modify")]
         public async Task<IActionResult> ModifyRole(Guid id, ModifyRoleDto dto)
         {
             try
@@ -202,7 +202,7 @@ namespace PROTOTYPE_backend.Controllers
                 return Unauthorized();
             }
         }
-        [HttpDelete("roles/{id}")]
+        [HttpDelete("roles/{id}/remove")]
         public async Task<IActionResult> RemoveRole(Guid id)
         {
             try

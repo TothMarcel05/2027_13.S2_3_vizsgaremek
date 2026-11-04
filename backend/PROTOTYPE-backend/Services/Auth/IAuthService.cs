@@ -20,5 +20,6 @@ namespace PROTOTYPE_backend.Services.Auth
         Task<CreateRoleResultDto> CreateRoleAsync(CreateRoleDto dto);
         Task<ModifyRoleResultDto> ModifyRoleAsync(Guid roleId, ModifyRoleDto dto);
         Task<bool> RemoveRoleAsync(Guid roleId);
+        Task<AddPermToRoleResultDto> AddPermissionToRoleAsync(Guid roleId, AddPermToRoletDto dto);
     }
 }

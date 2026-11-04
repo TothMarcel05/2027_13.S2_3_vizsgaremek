@@ -406,6 +406,17 @@ namespace PROTOTYPE_backend.Services.Auth
 
             return true;
         }
+
+        public async Task<AddPermToRoleResultDto> AddPermissionToRoleAsync(Guid roleId, AddPermToRoletDto dto) 
+        {
+            var role = await _context.AppRoles
+                .Include(p => p.Permissions)
+                .FirstOrDefaultAsync(r => r.Id == roleId);
+
+            if (role == null) throw new Exception("Az adott role nem található!");
+
+            
+        }
     }
 }
 
