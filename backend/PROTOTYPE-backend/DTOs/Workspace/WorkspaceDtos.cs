@@ -51,7 +51,7 @@ public record WorkspaceMembersResponseDto(
 public record CreateProjectDto(
     [Required] string Name,
     string? Description,
-    DateTime? Deadline,
+    DateOnly? Deadline,
     Guid? OwnerId
 );
 
