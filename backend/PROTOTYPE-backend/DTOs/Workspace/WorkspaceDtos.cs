@@ -4,126 +4,141 @@ using System.ComponentModel.DataAnnotations;
 
 namespace PROTOTYPE_backend.DTOs.Workspace;
 
+#region Request DTOs
 
-//POST /workspace
+/// <summary>
+/// Új munkaterület létrehozására szolgáló kérés.
+/// </summary>
 public record CreateWorkspaceDto(
-    [Required] string WorkspaceName,
+    [Required] string workspaceName,
     Guid userId,
-    string? Description
+    string? description
 );
 
-//GET /workspace/user/{userId}
-public record UsersWorkspaceListResponseDto(
-    Guid WorkspaceId,
-    string WorkspaceName,
-    Guid OwnerId
-);
-
-//GET /workspace/workspaces/{workspaceId}
-public record WorkspaceDataResponseDto(
-    Guid WorkspaceId,
-    string WorkspaceName,
-    Guid OwnerId,
-    string OwnerName,
-    ulong Storage
-);
-
-//GET /workspace/workspaces/{workspaceId}/projects
-public record WorkspaceProjectResponseDto(
-    Guid WorkspaceId,
-    Guid ProjectId,
-    string ProjectName,
-    sbyte Status,
-    string? Description,
-    DateOnly? Deadline
-);
-
-//GET /workspace/workspaces/{workspaceId}/members
-public record WorkspaceMembersResponseDto(
-    Guid WorkspaceId,
-    Guid MemberId,
-    string MemberName,
-    Guid Role,
-    DateTime? JoinedAt
-);
-
-//POST /workspace/workspaces/{workspaceId}/project
-public record CreateProjectDto(
-    [Required] string Name,
-    string? Description,
-    DateOnly? Deadline,
-    Guid? OwnerId
-);
-
-//POST /workspace/workspaces/{workspaceId}/switch
-public record SwitchWorkspaceDto(
-    [Required] Guid WorkspaceId
-);
-
-//PUT /workspace/workspaces/{workspaceId}
+/// <summary>
+/// Munkaterület adatainak módosítására szolgáló kérés.
+/// </summary>
 public record WorkspaceDataChangeDto(
-    [Required] string WorkspaceName,
-    string? Description
+    [Required] string workspaceName,
+    string? description
 );
 
-//DELETE /workspace/workspaces/{workspaceId}
-public record WorkspaceDataChangeResponseDto(
-    Guid WorkspaceId,
-    string WorkspaceName,
-    string? Description
-);
-
-//PUT /workspace/workspaces/{workspaceId}/owner
+/// <summary>
+/// Tulajdonjog átruházására szolgáló kérés.
+/// </summary>
 public record WorkspaceOwnerChangeDto(
-    [Required] Guid NewOwnerId
+    [Required] Guid newOwnerId
 );
 
-public record WorkspaceOwnerChangeResponseDto(
-    Guid WorkspaceId,
-    string WorkspaceName,
-    Guid OwnerId,
-    string OwnerName,
-    Guid RoleId
+/// <summary>
+/// Munkaterület váltásra szolgáló kérés.
+/// </summary>
+public record SwitchWorkspaceDto(
+    [Required] Guid workspaceId
 );
 
-//PUT /workspace/workspaces/{workspaceId}/members/{memberId}/role
+/// <summary>
+/// Tag szerepkörének módosítására szolgáló kérés.
+/// </summary>
 public record WorkspaceMemberRoleChangeDto(
-    [Required] Guid RoleId
+    [Required] Guid roleId
 );
 
-public record WorkspaceMemberRoleChangeResponseDto(
-    Guid WorkspaceId,
-    string WorkspaceName,
-    Guid MemberId,
-    string Member,
-    Guid RoleId
+/// <summary>
+/// Új projekt létrehozására szolgáló kérés a munkaterületen belül.
+/// </summary>
+public record CreateProjectDto(
+    [Required] string name,
+    string? description,
+    DateOnly? deadline,
+    Guid? ownerId
 );
 
-//DELETE /workspace/workspaces/{workspaceId}/members/{memberId}
+#endregion
 
-//GET /workspace/workspaces/{id}/storage/usage
+#region Response DTOs
+
+/// <summary>
+/// Felhasználó munkaterületeinek listázásakor visszakapott elem.
+/// </summary>
+public record UsersWorkspaceListResponseDto(
+    Guid workspaceId,
+    string workspaceName,
+    Guid ownerId
+);
+
+/// <summary>
+/// Munkaterület részletes adatait tartalmazó válasz.
+/// </summary>
+public record WorkspaceDataResponseDto(
+    Guid workspaceId,
+    string workspaceName,
+    Guid ownerId,
+    string ownerName,
+    ulong storage
+);
+
+/// <summary>
+/// Munkaterület adatmódosításának válasz DTO-ja.
+/// </summary>
+public record WorkspaceDataChangeResponseDto(
+    Guid workspaceId,
+    string workspaceName,
+    string? description
+);
+
+/// <summary>
+/// Tulajdonosváltás eredményének válasz DTO-ja.
+/// </summary>
+public record WorkspaceOwnerChangeResponseDto(
+    Guid workspaceId,
+    string workspaceName,
+    Guid ownerId,
+    string ownerName,
+    Guid roleId
+);
+
+/// <summary>
+/// Tárhelyhasználati statisztikát tartalmazó válasz.
+/// </summary>
 public record WorkspaceStorageUsageResponseDto(
-    Guid WorkspaceId,
-    string WorkspaceName,
-    ulong StorageUsed
+    Guid workspaceId,
+    string workspaceName,
+    ulong storageUsed
 );
 
-
-//Other DTOs
-public record SelectWorkspaceDto(
-    [Required(ErrorMessage = "Munkaterület azonosítója kötelező!")] Guid WorkspaceId
+/// <summary>
+/// Munkaterület tagjának adatait és szerepkörét leíró válasz.
+/// </summary>
+public record WorkspaceMembersResponseDto(
+    Guid workspaceId,
+    Guid memberId,
+    string memberName,
+    Guid role,
+    DateTime? joinedAt
 );
 
-public record SelectWorkspaceResponseDto(
-    string AccessToken,
-    Guid WorkspaceId,
-    string WorkspaceName,
-    List<string> Roles,
-    List<string> Permissions
+/// <summary>
+/// Tag szerepkörmódosításának válasz DTO-ja.
+/// </summary>
+public record WorkspaceMemberRoleChangeResponseDto(
+    Guid workspaceId,
+    string workspaceName,
+    Guid memberId,
+    string member,
+    Guid roleId
 );
 
-public record UserWorkspaceRoleDto(
-    Guid WorkspaceId,
-    string Role
+/// <summary>
+/// Munkaterülethez tartozó projektek listázásakor használt válasz DTO.
+/// </summary>
+public record WorkspaceProjectResponseDto(
+    Guid workspaceId,
+    Guid projectId,
+    string projectName,
+    sbyte status,
+    string? description,
+    DateOnly? deadline
 );
 
+#endregion

@@ -28,5 +28,8 @@ namespace PROTOTYPE_backend.Services.Workspaces
 
         //POST /workspace/workspaces/{workspaceId}/switch
         Task<string> SwitchWorkspaceAsync(Guid userId, Guid workspaceId);
+
+        //PUT /workspace/workspaces/{workspaceId}
+
     }
 }
