@@ -8,8 +8,11 @@ namespace PROTOTYPE_backend.Services.Workspaces
 {
     public interface IWorkspaceService
     {
-        Task<IEnumerable<Workspace>> GetUserWorkspacesAsync(Guid userId);
-        Task<Workspace> CreateWorkspaceAsync(Guid userId, CreateWorkspaceDto dto);
+        //POST /workspace
+        Task<CreateWorkspaceDto> CreateWorkspaceAsync(Guid userId, CreateWorkspaceDto dto);
+
+        //GET /workspace/user/{userId}
+        Task<List<UsersWorkspaceListResponseDto>> GetUserWorkspacesAsync(Guid userId);
         Task<WorkspaceDataResponseDto?> GetWorkspaceDataAsync(Guid WorkspaceId);
         Task<List<WorkspaceProjectResponseDto>> GetWorkspaceProjectAsync(Guid WorkspaceId, int Page = 1, int Limit = 20,sbyte? Status = null);
         Task<List<WorkspaceMembersResponseDto>> GetWorkspaceMembersAsync(Guid WorkspaceId, int Page = 1, int Limit = 50, Guid? Role = null);

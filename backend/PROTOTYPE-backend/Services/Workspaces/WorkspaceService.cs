@@ -24,7 +24,8 @@ namespace PROTOTYPE_backend.Services.Workspaces
             _tokenService = tokenService ;
         }
 
-        public async Task<Workspace> CreateWorkspaceAsync(Guid userId, CreateWorkspaceDto dto)
+        //POST /workspace
+        public async Task<CreateWorkspaceDto> CreateWorkspaceAsync(Guid userId, CreateWorkspaceDto dto)
         {
             var existingWorkspace = await _context.Workspaces
                 .FirstOrDefaultAsync(w => w.Name == dto.WorkspaceName && w.OwnerId == userId);
@@ -34,12 +35,32 @@ namespace PROTOTYPE_backend.Services.Workspaces
                 Name = dto.WorkspaceName,
                 OwnerId = userId,
                 CreatedAt = DateTime.UtcNow,
-                Description = dto.Description, 
+                Description = dto.Description,
             };
 
             _context.Workspaces.Add(workspace);
             await _context.SaveChangesAsync();
-            return workspace;
+            return new CreateWorkspaceDto(workspace.Name, userId, workspace.Description);
+        }
+
+        //GET /workspace/user/{userId}
+        public async Task<List<UsersWorkspaceListResponseDto>> GetUserWorkspacesAsync(Guid userId)
+        {
+            var user = await _context.AppUsers.FirstOrDefaultAsync(u => u.Id == userId);
+
+            if (user == null)
+            {
+                throw new Exception("Nem létezik a felhasználó!");
+            }
+
+            return await _context.Workspaces
+                .Where(w => w.OwnerId == userId || w.WorkspaceMembers.Any(m => m.UserId == userId))
+                .Select(w => new UsersWorkspaceListResponseDto(
+                    w.Id,
+                    w.Name,
+                    w.OwnerId
+                ))
+                .ToListAsync();
         }
 
         public async Task<WorkspaceDataResponseDto?> GetWorkspaceDataAsync(Guid WorkspaceId)
@@ -100,20 +121,7 @@ namespace PROTOTYPE_backend.Services.Workspaces
                 .ToListAsync();
         }
 
-        public async Task<IEnumerable<Workspace>> GetUserWorkspacesAsync(Guid userId)
-        {
-            var user  = _context.AppUsers.FirstOrDefaultAsync(u => u.Id == userId);
 
-            if (user == null)
-            {
-                throw new Exception("Nem létezik a felhasználó!");
-            }
-
-
-            return await _context.Workspaces
-                .Where(w => w.OwnerId == userId || w.WorkspaceMembers.Any(m => m.UserId == userId))
-                .ToListAsync();
-        }
 
 
 

@@ -12,7 +12,7 @@ namespace PROTOTYPE_backend.Controllers
 {
     [ApiController]
     [Route("api/workspace")]
-    [Authorize]
+    //[Authorize]
     public class WorkspaceController : ControllerBase
     {
         private readonly IWorkspaceService _workspaceService;
@@ -25,13 +25,13 @@ namespace PROTOTYPE_backend.Controllers
         [HttpPost]
         public async Task<IActionResult> CreateWorkspace([FromBody] CreateWorkspaceDto dto)
         {
-            var userIdClaim = User.FindFirstValue(ClaimTypes.NameIdentifier);
+            /*var userIdClaim = User.FindFirstValue(ClaimTypes.NameIdentifier);
             if (!Guid.TryParse(userIdClaim, out var userId))
             {
                 return Unauthorized();
-            }
+            }*/
 
-            var workspace = await _workspaceService.CreateWorkspaceAsync(userId, dto);
+            var workspace = await _workspaceService.CreateWorkspaceAsync(dto.userId, dto);
             return Ok(workspace);
         }
 
