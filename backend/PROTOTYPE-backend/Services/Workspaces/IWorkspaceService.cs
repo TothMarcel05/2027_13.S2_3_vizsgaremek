@@ -1,35 +1,26 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Threading.Tasks;
-using PROTOTYPE_backend.Models;
 using PROTOTYPE_backend.DTOs.Workspace;
 
 namespace PROTOTYPE_backend.Services.Workspaces
 {
     public interface IWorkspaceService
     {
-        //POST /workspace
-        Task<CreateWorkspaceDto> CreateWorkspaceAsync(Guid userId, CreateWorkspaceDto dto);
+        Task<WorkspaceDataResponseDto> CreateWorkspaceAsync(Guid userId, CreateWorkspaceDto dto);
 
-        //GET /workspace/user/{userId}
-        Task<List<UsersWorkspaceListResponseDto>> GetUserWorkspacesAsync(Guid userId);
-        
-        //GET /workspace/workspaces/{workspaceId}
-        Task<WorkspaceDataResponseDto?> GetWorkspaceDataAsync(Guid WorkspaceId);
+        Task<List<WorkspaceResponseDto>> GetUserWorkspacesAsync(Guid userId);
 
-        //GET /workspace/workspaces/{workspaceId}/projects
-        Task<List<WorkspaceProjectResponseDto>> GetWorkspaceProjectAsync(Guid WorkspaceId, int Page = 1, int Limit = 20,sbyte? Status = null);
+        Task<WorkspaceDataResponseDto?> GetWorkspaceDataAsync(Guid workspaceId);
 
-        //GET /workspace/workspaces/{workspaceId}/members
-        Task<List<WorkspaceMembersResponseDto>> GetWorkspaceMembersAsync(Guid WorkspaceId, int Page = 1, int Limit = 50, Guid? Role = null);
+        Task<List<WorkspaceProjectResponseDto>> GetWorkspaceProjectsAsync(Guid workspaceId, int page = 1, int limit = 20, sbyte? status = null);
 
-        //POST /workspace/workspaces/{workspaceId}/project
-        Task<CreateProjectDto> CreateProjectAsync(Guid workspaceId, string name, string? description, DateOnly? deadline, Guid? ownerId);
+        Task<List<WorkspaceMemberResponseDto>> GetWorkspaceMembersAsync(Guid workspaceId, int page = 1, int limit = 50, Guid? role = null);
 
-        //POST /workspace/workspaces/{workspaceId}/switch
+        Task<WorkspaceProjectResponseDto> CreateProjectAsync(Guid workspaceId, CreateProjectDto dto);
+
         Task<string> SwitchWorkspaceAsync(Guid userId, Guid workspaceId);
 
-        //PUT /workspace/workspaces/{workspaceId}
-
+        Task<bool> DeleteWorkspaceAsync (Guid workspaceId);
     }
 }
