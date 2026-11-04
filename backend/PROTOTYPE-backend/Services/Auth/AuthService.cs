@@ -375,10 +375,10 @@ namespace PROTOTYPE_backend.Services.Auth
             return new CreateRoleResultDto(newRole.Id, newRole.CreatedAt);
         }
 
-        public async Task<ModifyRoleResultDto> ModifyRoleAsync(ModifyRoleDto dto) 
+        public async Task<ModifyRoleResultDto> ModifyRoleAsync(Guid Id, ModifyRoleDto dto) 
         {
             var role = await _context.AppRoles
-                .FirstOrDefaultAsync(r => r.Id == dto.Id);
+                .FirstOrDefaultAsync(r => r.Id == Id);
 
             if (role == null) throw new Exception("A megadott role nem található!");
 

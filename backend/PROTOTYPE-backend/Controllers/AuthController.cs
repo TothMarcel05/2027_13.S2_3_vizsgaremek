@@ -137,5 +137,83 @@ namespace PROTOTYPE_backend.Controllers
                 return Unauthorized();
             }
         }
+        [HttpGet("permissions")]
+        public async Task<IActionResult> GetPermissions(string query) 
+        {
+            try
+            {
+                await _authService.GetPermissionsByCatAsync(query);
+                return Ok();
+            }
+            catch (UnauthorizedAccessException) 
+            {
+                return Unauthorized();
+            }
+        }
+        [HttpGet("roles")]
+        public async Task<IActionResult> GetRoles(string query)
+        {
+            try
+            {
+                await _authService.GetRolesAsync(query);
+                return Ok();
+            }
+            catch (UnauthorizedAccessException)
+            {
+                return Unauthorized();
+            }
+        }
+        [HttpGet("roles/{id}")]
+        public async Task<IActionResult> GetSpecificRole(Guid id)
+        {
+            try
+            {
+                await _authService.GetSpecificRoleAsync(id);
+                return Ok();
+            }
+            catch (UnauthorizedAccessException)
+            {
+                return Unauthorized();
+            }
+        }
+        [HttpPost("roles")]
+        public async Task<IActionResult> CreateRole(CreateRoleDto dto)
+        {
+            try
+            {
+                var result = await _authService.CreateRoleAsync(dto);
+                return Ok(result);
+            }
+            catch (UnauthorizedAccessException)
+            {
+                return Unauthorized();
+            }
+        }
+        [HttpPatch("roles/{id}")]
+        public async Task<IActionResult> ModifyRole(Guid id, ModifyRoleDto dto)
+        {
+            try
+            {
+                var result = await _authService.ModifyRoleAsync(id, dto);
+                return Ok(result);
+            }
+            catch (UnauthorizedAccessException)
+            {
+                return Unauthorized();
+            }
+        }
+        [HttpDelete("roles/{id}")]
+        public async Task<IActionResult> RemoveRole(Guid id)
+        {
+            try
+            {
+                var result = await _authService.RemoveRoleAsync(id);
+                return NoContent();
+            }
+            catch (UnauthorizedAccessException)
+            {
+                return Unauthorized();
+            }
+        }
     }
 }

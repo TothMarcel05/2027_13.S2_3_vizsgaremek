@@ -18,7 +18,7 @@ namespace PROTOTYPE_backend.Services.Auth
         Task<RolesResultDto> GetRolesAsync(string query);
         Task<SpecificRoleResultDto> GetSpecificRoleAsync(Guid roleId);
         Task<CreateRoleResultDto> CreateRoleAsync(CreateRoleDto dto);
-        Task<ModifyRoleResultDto> ModifyRoleAsync(ModifyRoleDto dto);
+        Task<ModifyRoleResultDto> ModifyRoleAsync(Guid roleId, ModifyRoleDto dto);
         Task<bool> RemoveRoleAsync(Guid roleId);
     }
 }

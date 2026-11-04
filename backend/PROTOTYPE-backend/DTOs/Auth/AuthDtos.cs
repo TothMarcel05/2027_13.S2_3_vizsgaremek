@@ -90,7 +90,6 @@ namespace PROTOTYPE_backend.DTOs.Auth
 
     public record ModifyRoleDto
         (
-            Guid Id,
             string Name,
             string Description
         );
