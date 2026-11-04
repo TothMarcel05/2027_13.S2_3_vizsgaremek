@@ -14,5 +14,11 @@ namespace PROTOTYPE_backend.Services.Auth
         Task<AuthResponseDto> VerifyTwoFactorAsync(TwoFactorLoginDto dto);
         Task<TwoFactorSetupDto> BeginTwoFactorSetupAsync(Guid userId);
         Task<List<string>> EnableTwoFactorAsync(Guid userId, string code);
+        Task<PermissionResultDtos> GetPermissionsByCatAsync(string query);
+        Task<RolesResultDto> GetRolesAsync(string query);
+        Task<SpecificRoleResultDto> GetSpecificRoleAsync(Guid roleId);
+        Task<CreateRoleResultDto> CreateRoleAsync(CreateRoleDto dto);
+        Task<ModifyRoleResultDto> ModifyRoleAsync(ModifyRoleDto dto);
+        Task<bool> RemoveRoleAsync(Guid roleId);
     }
 }

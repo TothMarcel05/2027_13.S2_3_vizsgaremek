@@ -92,7 +92,7 @@ namespace PROTOTYPE_backend.Services.Auth
         public async Task<LoginResultDto> LoginAsync(LoginDto loginDto)
         {
             var user = await _context.AppUsers
-        .FirstOrDefaultAsync(u => u.Email == loginDto.Email && u.DeletedAt == null);
+                .FirstOrDefaultAsync(u => u.Email == loginDto.Email && u.DeletedAt == null);
 
             if (user == null || !BCrypt.Net.BCrypt.EnhancedVerify(loginDto.Password, user.PasswordHash))
                 throw new UnauthorizedAccessException("Érvénytelen e-mail cím vagy jelszó!");
@@ -307,6 +307,104 @@ namespace PROTOTYPE_backend.Services.Auth
                 _tokenService.GenerateGlobalToken(user),
                 newRefresh,
                 new UserDto(user.Id, user.Name, user.Email, user.CreatedAt));
+        }
+
+        public async Task<PermissionResultDtos> GetPermissionsByCatAsync(string query) 
+        {
+            if(!sbyte.TryParse(query, out sbyte scopeId)) throw new Exception("Nem található a kategória!");
+            
+            var permissions = await _context.Permissions
+                .AsNoTracking()
+                .Where(p => p.Scope == scopeId)
+                .ToListAsync();
+
+            var result = new PermissionResultDtos
+            (
+                new Dictionary<sbyte, List<string>> { { scopeId, permissions.Select(p => p.Code).ToList() } }
+            );
+
+            return result;
+        }
+
+        public async Task<RolesResultDto> GetRolesAsync(string query) 
+        {
+            if (query == null) throw new Exception("URL tartalma nem megfelelő!");
+
+            var roles = await _context.AppRoles
+                .ToListAsync();
+
+            return new RolesResultDto(roles.Select(r => r.Name).ToList());
+        }
+
+        public async Task<SpecificRoleResultDto> GetSpecificRoleAsync(Guid roleId) 
+        {
+            var role = await _context.AppRoles
+                .FirstOrDefaultAsync(r => r.Id == roleId);
+
+            if (role == null) throw new Exception("A megadott role nem található!");
+
+            return new SpecificRoleResultDto
+                (
+                    roleId,
+                    role.Name,
+                    role.Description ?? "",
+                    role.IsSystem,
+                    role?.CreatedAt
+                );
+        }
+
+        public async Task<CreateRoleResultDto> CreateRoleAsync(CreateRoleDto dto) 
+        {
+            var role = await _context.AppRoles
+                .FirstOrDefaultAsync(r => r.Id == dto.Id);
+
+            if (role == null) throw new Exception("A megadott role már szerepel!");
+
+            var newRole = new AppRole
+            {
+                Id = Guid.NewGuid(),
+                Name = dto.Name,
+                Description = dto.Description,
+                IsSystem = false,
+                CreatedAt = DateTime.UtcNow
+            };
+
+            _context.AppRoles.Add(newRole);
+            await _context.SaveChangesAsync();
+
+            return new CreateRoleResultDto(newRole.Id, newRole.CreatedAt);
+        }
+
+        public async Task<ModifyRoleResultDto> ModifyRoleAsync(ModifyRoleDto dto) 
+        {
+            var role = await _context.AppRoles
+                .FirstOrDefaultAsync(r => r.Id == dto.Id);
+
+            if (role == null) throw new Exception("A megadott role nem található!");
+
+            if (role.IsSystem == false)
+            {
+                role.Name = dto.Name;
+                role.Description = dto.Description;
+            }
+            else throw new Exception("Az adott role nem módosítható!");
+            
+            await _context.SaveChangesAsync();
+
+            return new ModifyRoleResultDto(role.Id, role.Name, role.Description);
+        }
+
+        public async Task<bool> RemoveRoleAsync(Guid roleId) 
+        {
+            var role = await _context.AppRoles
+                .FirstOrDefaultAsync(r => r.Id == roleId);
+
+            if (role == null) throw new Exception("A megadott role nem található!");
+
+            _context.AppRoles.Remove(role);
+            await _context.SaveChangesAsync();
+
+            return true;
         }
     }
 }
