@@ -54,7 +54,6 @@ namespace PROTOTYPE_backend.Services.SoftDelete
                 var node = await _context.StorageNodes.FindAsync(nodeId);
                 if (node == null || node.DeletedAt == null) return false;
 
-                // Ellenőrzés: lejárt-e a megőrzési idő
                 if (node.DeletedAt.Value.AddDays(RetentionDays) < DateTime.UtcNow) return false;
 
                 node.DeletedAt = null;
