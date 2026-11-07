@@ -10,7 +10,7 @@ using System.Threading.Tasks;
 namespace PROTOTYPE_backend.Controllers
 {
     [ApiController]
-    [Route("api/workspace")]
+    [Route("api/workspaces")] // A táblázat a /workspaces végpontot használja
     //[Authorize]
     public class WorkspaceController : ControllerBase
     {
@@ -24,16 +24,12 @@ namespace PROTOTYPE_backend.Controllers
         [HttpPost]
         public async Task<IActionResult> CreateWorkspace([FromBody] CreateWorkspaceDto dto)
         {
-            /*var userIdClaim = User.FindFirstValue(ClaimTypes.NameIdentifier);
-            if (!Guid.TryParse(userIdClaim, out var userId))
-            {
-                return Unauthorized();
-            }*/
-
             var workspace = await _workspaceService.CreateWorkspaceAsync(dto.userId, dto);
             return Ok(workspace);
         }
 
+        // Ha a user saját listáját kéred, egy query paraméter tisztább lenne, 
+        // de meghagytam a korábbi user/{userId} útvonalat is kompatibilitás miatt.
         [HttpGet("user/{userId}")]
         public async Task<IActionResult> GetUserWorkspaces(Guid userId)
         {
@@ -45,12 +41,7 @@ namespace PROTOTYPE_backend.Controllers
         public async Task<IActionResult> GetWorkspaceData(Guid workspaceId)
         {
             var workspace = await _workspaceService.GetWorkspaceDataAsync(workspaceId);
-
-            if (workspace == null)
-            {
-                return NotFound(new { message = "A megadott munkaterület nem található." });
-            }
-
+            if (workspace == null) return NotFound(new { message = "A megadott munkaterület nem található." });
             return Ok(workspace);
         }
 
@@ -79,12 +70,9 @@ namespace PROTOTYPE_backend.Controllers
         public async Task<ActionResult<WorkspaceTokenDto>> SwitchWorkspace(Guid workspaceId)
         {
             var userIdClaim = User.FindFirstValue(ClaimTypes.NameIdentifier);
-
-            if (!Guid.TryParse(userIdClaim, out var userId))
-                return Unauthorized();
+            if (!Guid.TryParse(userIdClaim, out var userId)) return Unauthorized();
 
             var token = await _workspaceService.SwitchWorkspaceAsync(userId, workspaceId);
-
             return Ok(new WorkspaceTokenDto(token));
         }
 
@@ -92,10 +80,48 @@ namespace PROTOTYPE_backend.Controllers
         public async Task<IActionResult> DeleteWorkspace(Guid workspaceId)
         {
             var result = await _workspaceService.DeleteWorkspaceAsync(workspaceId);
-            if (!result)
-                return NotFound(new { message = "A megadott munkaterület nem található." });
-
+            if (!result) return NotFound(new { message = "A megadott munkaterület nem található." });
             return Ok(new { message = "A munkaterület sikeresen törölve lett." });
+        }
+
+        [HttpGet("{workspaceId}/storage")]
+        public async Task<IActionResult> GetWorkspaceStorage(Guid workspaceId)
+        {
+            var storage = await _workspaceService.GetWorkspaceStorageAsync(workspaceId);
+            if (storage == null) return NotFound(new { message = "A megadott munkaterület nem található." });
+            return Ok(storage);
+        }
+
+        [HttpPut("{workspaceId}")]
+        public async Task<IActionResult> UpdateWorkspace(Guid workspaceId, [FromBody] WorkspaceDataChangeDto dto)
+        {
+            var result = await _workspaceService.UpdateWorkspaceAsync(workspaceId, dto);
+            if (result == null) return NotFound(new { message = "A megadott munkaterület nem található." });
+            return Ok(result);
+        }
+
+        [HttpPut("{workspaceId}/owner")]
+        public async Task<IActionResult> ChangeWorkspaceOwner(Guid workspaceId, [FromBody] WorkspaceOwnerChangeDto dto)
+        {
+            var result = await _workspaceService.ChangeWorkspaceOwnerAsync(workspaceId, dto);
+            if (result == null) return NotFound(new { message = "A megadott munkaterület nem található." });
+            return Ok(result);
+        }
+
+        [HttpPut("{workspaceId}/members/{userId}")]
+        public async Task<IActionResult> UpdateMemberRole(Guid workspaceId, Guid userId, [FromBody] WorkspaceMemberRoleChangeDto dto)
+        {
+            var result = await _workspaceService.UpdateMemberRoleAsync(workspaceId, userId, dto);
+            if (result == null) return NotFound(new { message = "A tag vagy munkaterület nem található." });
+            return Ok(result);
+        }
+
+        [HttpDelete("{workspaceId}/members/{userId}")]
+        public async Task<IActionResult> RemoveMember(Guid workspaceId, Guid userId)
+        {
+            var result = await _workspaceService.RemoveMemberAsync(workspaceId, userId);
+            if (!result) return NotFound(new { message = "A tag vagy munkaterület nem található." });
+            return Ok(new { message = "A tag sikeresen el lett távolítva." });
         }
     }
 }
