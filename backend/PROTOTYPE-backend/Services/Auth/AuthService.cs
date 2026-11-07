@@ -104,7 +104,6 @@ namespace PROTOTYPE_backend.Services.Auth
             }
 
             return new LoginResultDto(false, null, null, await IssueTokensAsync(user));
-
         }
 
         public async Task<AuthResponseDto> VerifyTwoFactorAsync(TwoFactorLoginDto dto)
@@ -415,8 +414,57 @@ namespace PROTOTYPE_backend.Services.Auth
 
             if (role == null) throw new Exception("Az adott role nem található!");
 
-            
+            var permissions = await _context.Permissions
+                .Where(p => dto.codes.Contains(p.Code))
+                .ToListAsync();
+
+            foreach (var permission in permissions) 
+            {
+                if (role.Permissions.Any(rp => rp.Id == permission.Id)) continue;
+                role.Permissions.Add(permission);
+            }
+
+            await _context.SaveChangesAsync();
+
+            return new AddPermToRoleResultDto(permissions.Select(p=>p.Code.ToString()).ToList());
         }
+
+        public async Task<bool> CloseSessionAsync(Guid id) 
+        {
+            var session = await _context.UserSessions
+                .FirstOrDefaultAsync(us => us.Id == id);
+
+            if (session == null) throw new Exception("Nem található a munkamenet!");
+
+            session.IsRevoked = true;
+            session.UpdatedAt = DateTime.UtcNow;
+
+            await _context.SaveChangesAsync();
+
+            return true;
+        }
+        public async Task<bool> CloseSessionsAsync()
+        {
+            await _context.UserSessions
+                .Where(s => !s.IsRevoked) // Opcionális: csak azokat frissítjük, amik még nincsenek visszavonva
+                .ExecuteUpdateAsync(s => s
+                    .SetProperty(x => x.IsRevoked, true)
+                    .SetProperty(x => x.UpdatedAt, DateTime.UtcNow));
+
+            return true;
+        }
+
+
+
+        /*public async Task<ResetPwdResultDto> ResetPwdAsync(Guid userId, ResetPwdDto dto) 
+        {
+            var user = await _context.AppUsers
+                .FirstOrDefaultAsync(u => u.Id == userId);
+
+            if (user == null) throw new Exception("Nem található a felhasználó!");
+
+
+        }*/
     }
 }
 

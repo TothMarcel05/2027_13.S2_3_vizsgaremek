@@ -103,11 +103,23 @@ namespace PROTOTYPE_backend.DTOs.Auth
 
     public record AddPermToRoletDto
         (
-            Dictionary<sbyte, string> idNCodes
+            List<string> codes
         );
 
     public record AddPermToRoleResultDto
         (
             List<string> codes
+        );
+
+    public record ResetPwdDto
+        (
+            [Required]
+            string currPwd,
+            [Required]
+            string newPwd
+        );
+    public record ResetPwdResultDto
+        (
+            DateTime UpdatedAt
         );
 }

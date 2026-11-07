@@ -215,5 +215,44 @@ namespace PROTOTYPE_backend.Controllers
                 return Unauthorized();
             }
         }
+        [HttpPost("roles/{id}/permission")]
+        public async Task<IActionResult> AddPermToRole(Guid id, AddPermToRoletDto dto) 
+        {
+            try
+            {
+                var result = await _authService.AddPermissionToRoleAsync(id, dto);
+                return Ok(result);
+            } 
+            catch (UnauthorizedAccessException) 
+            {
+                return Unauthorized();
+            }
+        }
+        [HttpDelete("auth/sessions/{id}")]
+        public async Task<IActionResult> CloseSession(Guid id) 
+        {
+            try
+            {
+                await _authService.CloseSessionAsync(id);
+                return NoContent();
+            }
+            catch (UnauthorizedAccessException) 
+            {
+                return Unauthorized();
+            }
+        }
+        [HttpDelete("auth/sessions")]
+        public async Task<IActionResult> CloseSessions()
+        {
+            try
+            {
+                await _authService.CloseSessionsAsync();
+                return NoContent();
+            }
+            catch (UnauthorizedAccessException)
+            {
+                return Unauthorized();
+            }
+        }
     }
 }

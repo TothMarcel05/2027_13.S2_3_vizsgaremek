@@ -92,6 +92,17 @@ CREATE TABLE app_user (
     two_factor_recovery_codes   TEXT         NULL COMMENT '2FA helyreállító kódok'
 ) ENGINE=InnoDB COMMENT='Alkalmazás felhasználói és 2FA beállításaik';
 
+CREATE TABLE password_reset_token (
+    id          CHAR(36)     PRIMARY KEY DEFAULT (UUID()) COMMENT 'Azonosító',
+    user_id     CHAR(36)     NOT NULL COMMENT 'Felhasználó',
+    token_hash  VARCHAR(255) NOT NULL UNIQUE COMMENT 'Token hash',
+    expires_at  TIMESTAMP    NOT NULL COMMENT 'Lejárat ideje',
+    is_used     BOOLEAN      NOT NULL DEFAULT FALSE COMMENT 'Felhasználták-e',
+    created_at  TIMESTAMP    DEFAULT CURRENT_TIMESTAMP COMMENT 'Létrehozás ideje',
+
+    CONSTRAINT fk_prt_user FOREIGN KEY (user_id) REFERENCES app_user(id) ON DELETE CASCADE
+) ENGINE=InnoDB COMMENT='Jelszóvisszaállító kérések és tokenek';
+
 CREATE TABLE workspace (
     id                  CHAR(36)        PRIMARY KEY DEFAULT (UUID()) COMMENT 'Workspace azonosító (UUID)',
     name                VARCHAR(255)    NOT NULL COMMENT 'Workspace neve',

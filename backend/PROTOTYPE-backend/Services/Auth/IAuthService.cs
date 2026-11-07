@@ -21,5 +21,8 @@ namespace PROTOTYPE_backend.Services.Auth
         Task<ModifyRoleResultDto> ModifyRoleAsync(Guid roleId, ModifyRoleDto dto);
         Task<bool> RemoveRoleAsync(Guid roleId);
         Task<AddPermToRoleResultDto> AddPermissionToRoleAsync(Guid roleId, AddPermToRoletDto dto);
+        Task<bool> CloseSessionAsync(Guid id);
+        Task<bool> CloseSessionsAsync();
+        //Task<ResetPwdResultDto> ResetPwdAsync(Guid userId, ResetPwdDto dto);
     }
 }
