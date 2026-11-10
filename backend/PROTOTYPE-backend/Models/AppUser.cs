@@ -87,6 +87,8 @@ public partial class AppUser
 
     public virtual ICollection<JwtBlacklistedToken> JwtBlacklistedTokens { get; set; } = new List<JwtBlacklistedToken>();
 
+    public virtual ICollection<PasswordResetToken> PasswordResetTokens { get; set; } = new List<PasswordResetToken>();
+
     public virtual ICollection<ProjectActivityLog> ProjectActivityLogs { get; set; } = new List<ProjectActivityLog>();
 
     public virtual ICollection<ProjectComment> ProjectComments { get; set; } = new List<ProjectComment>();

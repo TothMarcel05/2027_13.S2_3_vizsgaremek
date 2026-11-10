@@ -2,11 +2,10 @@
 using System.Collections.Generic;
 using Microsoft.EntityFrameworkCore;
 using PROTOTYPE_backend.Models;
-using Microsoft.AspNetCore.DataProtection.EntityFrameworkCore;
 
 namespace PROTOTYPE_backend.Data;
 
-public partial class AppDbContext : DbContext, IDataProtectionKeyContext
+public partial class AppDbContext : DbContext
 {
     public AppDbContext(DbContextOptions<AppDbContext> options)
         : base(options)
@@ -34,6 +33,8 @@ public partial class AppDbContext : DbContext, IDataProtectionKeyContext
     public virtual DbSet<EnumLookup> EnumLookups { get; set; }
 
     public virtual DbSet<JwtBlacklistedToken> JwtBlacklistedTokens { get; set; }
+
+    public virtual DbSet<PasswordResetToken> PasswordResetTokens { get; set; }
 
     public virtual DbSet<Permission> Permissions { get; set; }
 
@@ -565,6 +566,43 @@ public partial class AppDbContext : DbContext, IDataProtectionKeyContext
             entity.HasOne(d => d.User).WithMany(p => p.JwtBlacklistedTokens)
                 .HasForeignKey(d => d.UserId)
                 .HasConstraintName("fk_blacklist_user");
+        });
+
+        modelBuilder.Entity<PasswordResetToken>(entity =>
+        {
+            entity.HasKey(e => e.Id).HasName("PRIMARY");
+
+            entity.ToTable("password_reset_token", tb => tb.HasComment("Jelszóvisszaállító kérések és tokenek"));
+
+            entity.HasIndex(e => e.UserId, "fk_prt_user");
+
+            entity.HasIndex(e => e.TokenHash, "token_hash").IsUnique();
+
+            entity.Property(e => e.Id)
+                .HasComment("Azonosító")
+                .HasColumnName("id");
+            entity.Property(e => e.CreatedAt)
+                .HasDefaultValueSql("CURRENT_TIMESTAMP")
+                .HasComment("Létrehozás ideje")
+                .HasColumnType("timestamp")
+                .HasColumnName("created_at");
+            entity.Property(e => e.ExpiresAt)
+                .HasComment("Lejárat ideje")
+                .HasColumnType("timestamp")
+                .HasColumnName("expires_at");
+            entity.Property(e => e.IsUsed)
+                .HasComment("Felhasználták-e")
+                .HasColumnName("is_used");
+            entity.Property(e => e.TokenHash)
+                .HasComment("Token hash")
+                .HasColumnName("token_hash");
+            entity.Property(e => e.UserId)
+                .HasComment("Felhasználó")
+                .HasColumnName("user_id");
+
+            entity.HasOne(d => d.User).WithMany(p => p.PasswordResetTokens)
+                .HasForeignKey(d => d.UserId)
+                .HasConstraintName("fk_prt_user");
         });
 
         modelBuilder.Entity<Permission>(entity =>
@@ -1124,27 +1162,6 @@ public partial class AppDbContext : DbContext, IDataProtectionKeyContext
                 .HasForeignKey(d => d.UserId)
                 .HasConstraintName("fk_u2c_user");
         });
-
-        modelBuilder.Entity<DataProtectionKey>(entity =>
-        {
-            entity.HasKey(e => e.Id).HasName("PRIMARY");
-
-            entity.ToTable("data_protection_keys", tb => tb.HasComment("ASP.NET Core DataProtection főkulcsok perzisztens tárolása"));
-
-            entity.Property(e => e.Id)
-                .HasComment("Elsődleges kulcs")
-                .HasColumnName("id");
-
-            entity.Property(e => e.FriendlyName)
-                .HasComment("Opcionális barátságos név")
-                .HasColumnName("friendly_name");
-
-            entity.Property(e => e.Xml)
-                .HasComment("A titkosító főkulcs XML formátumban")
-                .HasColumnName("xml");
-        });
-
-        OnModelCreatingPartial(modelBuilder);
 
         modelBuilder.Entity<UserNotification>(entity =>
         {

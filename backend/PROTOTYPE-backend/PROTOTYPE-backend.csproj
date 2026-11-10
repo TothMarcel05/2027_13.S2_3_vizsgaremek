@@ -25,6 +25,10 @@
 		<PackageReference Include="Scalar.AspNetCore" Version="2.17.8" />
 		<PackageReference Include="Swashbuckle.AspNetCore" Version="6.6.2" />
 		<PackageReference Include="System.IdentityModel.Tokens.Jwt" Version="8.23.0" />
+		<Compile Remove="Services/**" />
+		<Compile Remove="Controllers/**" />
+		<Compile Remove="Extensions/**" />
+		<Compile Remove="Authorization/**" />
 	</ItemGroup>
 
 	<ItemGroup>
