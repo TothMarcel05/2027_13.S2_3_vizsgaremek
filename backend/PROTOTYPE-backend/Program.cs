@@ -1,5 +1,6 @@
 
 using Microsoft.AspNetCore.Authentication.JwtBearer;
+
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.DataProtection;
 using Microsoft.AspNetCore.RateLimiting;
@@ -30,10 +31,6 @@ builder.Services.AddDbContext<AppDbContext>(options =>
     options.UseMySql(connectionString, ServerVersion.AutoDetect(connectionString)));
 
 builder.Services.AddHttpContextAccessor();
-
-builder.Services.AddDataProtection()
-    .PersistKeysToDbContext<AppDbContext>();
-
 
 builder.Services.AddScoped<ISoftDeleteService, SoftDeleteService>();
 builder.Services.AddScoped<IWorkspaceService, WorkspaceService>();
