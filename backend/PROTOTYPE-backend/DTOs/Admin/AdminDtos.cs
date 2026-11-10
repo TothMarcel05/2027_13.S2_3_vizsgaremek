@@ -15,7 +15,13 @@ namespace PROTOTYPE_backend.DTOs.Admin
 
     public record UpdateUserRoleDto(
         [Required] Guid UserId,
-        [Required] sbyte NewGlobalRole 
+        [Required] Guid NewRole 
+    );
+
+
+    public record UpdateUserGlobalRoleDto(
+        [Required] Guid UserId,
+        [Required] sbyte NewGlobalRole
     );
 
     public record SystemOverviewStatsDto(

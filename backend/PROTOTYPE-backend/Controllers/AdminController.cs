@@ -17,6 +17,23 @@ namespace PROTOTYPE_backend.Controllers
             _adminService = adminService;
         }
 
+        [HttpPut("user/role")]
+        public async Task<IActionResult> UpdateUserRole([FromBody] UpdateUserRoleDto dto)
+        {
+            var success = await _adminService.UpdateUserRoleAsync(dto);
+            if (!success) return NotFound("A megadott felhasználó nem található.");
+
+            return Ok(new { message = "A felhasználó szerepköre sikeresen frissítve." });
+        }
+        [HttpPut("user/globalRole")]
+        public async Task<IActionResult> UpdateUserGlobalRole([FromBody] UpdateUserGlobalRoleDto dto)
+        {
+            var success = await _adminService.UpdateUserGlobalRoleAsync(dto);
+            if (!success) return NotFound("A megadott felhasználó nem található.");
+
+            return Ok(new { message = "A felhasználó szerepköre sikeresen frissítve." });
+        }
+
         [HttpGet("users")]
         public async Task<IActionResult> GetAllUsers()
         {
@@ -29,15 +46,6 @@ namespace PROTOTYPE_backend.Controllers
         {
             var stats = await _adminService.GetSystemStatsAsync();
             return Ok(stats);
-        }
-
-        [HttpPut("user/role")]
-        public async Task<IActionResult> UpdateUserRole([FromBody] UpdateUserRoleDto dto)
-        {
-            var success = await _adminService.UpdateUserGlobalRoleAsync(dto);
-            if (!success) return NotFound("A megadott felhasználó nem található.");
-
-            return Ok(new { message = "A felhasználó szerepköre sikeresen frissítve." });
         }
 
         [HttpPut("user/{userId}/toggle-status")]

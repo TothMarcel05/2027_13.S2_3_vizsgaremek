@@ -1,7 +1,9 @@
 ﻿using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
+using PROTOTYPE_backend.DTOs.SoftDelete;
 using PROTOTYPE_backend.DTOs.Storage;
 using PROTOTYPE_backend.Extensions;
+using PROTOTYPE_backend.Services.SoftDelete;
 using PROTOTYPE_backend.Services.Storage;
 
 namespace PROTOTYPE_backend.Controllers
@@ -12,10 +14,12 @@ namespace PROTOTYPE_backend.Controllers
     public class StorageController : ControllerBase
     {
         private readonly IStorageService _storageService;
+        private readonly ISoftDeleteService _softDeleteService;
 
-        public StorageController(IStorageService storageService)
+        public StorageController(IStorageService storageService, ISoftDeleteService softDeleteService)
         {
             _storageService = storageService;
+            _softDeleteService = softDeleteService;
         }
 
         // POST /api/storage/upload -> Fájl feltöltése (multipart/form-data)
@@ -123,6 +127,38 @@ namespace PROTOTYPE_backend.Controllers
             }
 
             return Ok(new { message = "Sikeresen helyreállítva." });
+        }
+
+        [HttpPost("delete")]
+        public async Task<IActionResult> SoftDelete([FromBody] SoftDeleteRequestDto dto)
+        {
+            var success = await _softDeleteService.SoftDeleteAsync(dto);
+            if (!success) return BadRequest("A törlés nem hajtható végre vagy az elem nem található.");
+
+            return Ok(new { message = "Az elem sikeresen Soft-Delete állapotba került." });
+        }
+
+        [HttpPost("restore")]
+        public async Task<IActionResult> Restore([FromBody] RestoreRequestDto dto)
+        {
+            var success = await _softDeleteService.RestoreAsync(dto);
+            if (!success) return BadRequest("A visszaállítás nem lehetséges (a megőrzési idő lejárt vagy az elem nem található).");
+
+            return Ok(new { message = "Az elem sikeresen visszaállításra került." });
+        }
+
+        [HttpGet("trash/{userId}")]
+        public async Task<IActionResult> GetTrash(Guid userId)
+        {
+            var deletedItems = await _softDeleteService.GetDeletedItemsAsync(userId);
+            return Ok(deletedItems);
+        }
+
+        [HttpDelete("purge-expired")]
+        public async Task<IActionResult> PurgeExpired()
+        {
+            var count = await _softDeleteService.HardDeleteExpiredItemsAsync();
+            return Ok(new { message = $"{count} db lejárt rekord véglegesen törölve lett." });
         }
     }
 }

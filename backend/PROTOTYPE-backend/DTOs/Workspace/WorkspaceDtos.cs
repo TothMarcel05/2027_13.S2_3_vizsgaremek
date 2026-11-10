@@ -34,7 +34,6 @@ public record CreateProjectDto(
     DateOnly? deadline,
     Guid? ownerId
 );
-
 #endregion
 
 #region Response DTOs
@@ -99,3 +98,4 @@ public record WorkspaceProjectResponseDto(
 );
 
 #endregion
+

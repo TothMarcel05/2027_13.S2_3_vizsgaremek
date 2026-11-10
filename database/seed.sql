@@ -9,6 +9,7 @@ SET NAMES utf8mb4;
 -- ------------------------------------------------------------
 SET FOREIGN_KEY_CHECKS = 0;
 
+TRUNCATE TABLE password_reset_token;
 TRUNCATE TABLE jwt_blacklisted_token;
 TRUNCATE TABLE user_2fa_code;
 TRUNCATE TABLE user_session;
@@ -59,11 +60,11 @@ INSERT INTO app_user (id, name, email, password_hash, avatar_url, created_at, up
     ('01000000-0000-4000-8000-000000000014', 'Juhász Kata', 'kata.juhasz@example.com', '$2b$13$W0mOfc4nafZjxytxElQUxembHbg2PsyMTWuZC7.ja8e/X8rTExkdW', '/uploads/avatars/14.png', '2026-04-27 17:30:00', '2026-05-06 17:30:00', 1, NULL, FALSE, 0, NULL, NULL);
 
 -- workspace (4 sor)
-INSERT INTO workspace (id, name, owner_id, created_at) VALUES
-    ('02000000-0000-4000-8000-000000000001', 'Okligon Fejlesztő Csapat', '01000000-0000-4000-8000-000000000002', '2026-03-03 10:00:00'),
-    ('02000000-0000-4000-8000-000000000002', 'Marketing és Kommunikáció', '01000000-0000-4000-8000-000000000004', '2026-06-22 09:00:00'),
-    ('02000000-0000-4000-8000-000000000003', 'Iskolai Vizsgaremek', '01000000-0000-4000-8000-000000000003', '2026-04-06 08:30:00'),
-    ('02000000-0000-4000-8000-000000000004', 'Admin tesztterület', '01000000-0000-4000-8000-000000000001', '2026-03-02 09:00:00');
+INSERT INTO workspace (id, name, description, owner_id, created_at) VALUES
+    ('02000000-0000-4000-8000-000000000001', 'Okligon Fejlesztő Csapat', 'Az Okligon termék fejlesztőcsapatának közös munkaterülete.', '01000000-0000-4000-8000-000000000002', '2026-03-03 10:00:00'),
+    ('02000000-0000-4000-8000-000000000002', 'Marketing és Kommunikáció', 'A marketing- és kommunikációs csapat kampányai és anyagai.', '01000000-0000-4000-8000-000000000004', '2026-06-22 09:00:00'),
+    ('02000000-0000-4000-8000-000000000003', 'Iskolai Vizsgaremek', 'A záróvizsga-projekt (vizsgaremek) csapatmunkájának tere.', '01000000-0000-4000-8000-000000000003', '2026-04-06 08:30:00'),
+    ('02000000-0000-4000-8000-000000000004', 'Admin tesztterület', 'Adminisztrátori tesztelésre fenntartott, üres munkaterület.', '01000000-0000-4000-8000-000000000001', '2026-03-02 09:00:00');
 
 -- ============================================================
 -- 2. RBAC (GLOBÁLIS SZEREPKÖR + JOGOSULTSÁG)
@@ -1542,6 +1543,19 @@ INSERT INTO user_2fa_code (id, user_id, code_hash, failed_attempts, max_attempts
     ('16000000-0000-4000-8000-000000000005', '01000000-0000-4000-8000-000000000004', '$2b$10$mhAbHWI7CPqBHzldoUYiQuEEE/G1H7mdx//L6OhdGViHcQxEN55WS', 5, 5, DATE_SUB(NOW(), INTERVAL 1 DAY), FALSE, '2026-09-28 09:04:00'),
     ('16000000-0000-4000-8000-000000000006', '01000000-0000-4000-8000-000000000004', '$2b$10$mhAbHWI7CPqBHzldoUYiQuEEE/G1H7mdx//L6OhdGViHcQxEN55WS', 0, 5, DATE_ADD(NOW(), INTERVAL 10 MINUTE), FALSE, '2026-09-30 09:00:00');
 
+-- password_reset_token (6 sor)
+-- Aktív (nem használt, nem lejárt) tesztelhető tokenek – a hash a nyers token SHA-256 hex értéke:
+--   gergo.kiss@example.com     -> TESZT-RESET-GERGO-0001
+--   zsofia.molnar@example.com  -> TESZT-RESET-ZSOFIA-0001
+-- (ha az alkalmazás más hash-algoritmust használ a tokenekhez, ezeket az értékeket generáld újra)
+INSERT INTO password_reset_token (id, user_id, token_hash, expires_at, is_used, created_at) VALUES
+    ('18000000-0000-4000-8000-000000000001', '01000000-0000-4000-8000-000000000005', '536001d25b167cfdf4031444f46d0c5ffda88d8c259eda28bd534ef571492d00', DATE_SUB(NOW(), INTERVAL 2 DAY), TRUE, '2026-09-28 10:00:00'),
+    ('18000000-0000-4000-8000-000000000002', '01000000-0000-4000-8000-000000000006', 'a041a20d6be654e30e62043986fbaf6771d165b8b2939ed64a8130d6ab03260c', DATE_SUB(NOW(), INTERVAL 1 DAY), FALSE, '2026-09-29 09:20:00'),
+    ('18000000-0000-4000-8000-000000000003', '01000000-0000-4000-8000-000000000007', '4fb2c7e5896774ddded3eeb6323f58905dc0b2be24c68d8735955da8dfe50b1f', DATE_ADD(NOW(), INTERVAL 30 MINUTE), FALSE, '2026-09-30 08:50:00'),
+    ('18000000-0000-4000-8000-000000000004', '01000000-0000-4000-8000-000000000008', 'e238e8339e526b1852036fd12af51c8e0b416ce3940320c5790e6ce1fb91e7ee', DATE_ADD(NOW(), INTERVAL 45 MINUTE), FALSE, '2026-09-30 08:55:00'),
+    ('18000000-0000-4000-8000-000000000005', '01000000-0000-4000-8000-000000000009', 'aa7d030514297eab2518f37a410b42eb6754720264b691fd80ec3296988bf809', DATE_SUB(NOW(), INTERVAL 5 DAY), FALSE, '2026-09-24 14:10:00'),
+    ('18000000-0000-4000-8000-000000000006', '01000000-0000-4000-8000-000000000012', '3f9b57e6b5defbf3026e885b7a0bf71a8ff1b46f55d3dcf0871e7ea159aec400', DATE_SUB(NOW(), INTERVAL 10 DAY), TRUE, '2026-09-19 17:45:00');
+
 -- jwt_blacklisted_token (8 sor)
 INSERT INTO jwt_blacklisted_token (id, jti, user_id, expires_at, created_at) VALUES
     ('17000000-0000-4000-8000-000000000001', '74da996f-85e9-4163-a2a7-ceee770293ec', '01000000-0000-4000-8000-000000000002', DATE_ADD(NOW(), INTERVAL 30 MINUTE), '2026-09-30 01:00:00'),
@@ -1555,31 +1569,33 @@ INSERT INTO jwt_blacklisted_token (id, jti, user_id, expires_at, created_at) VAL
 
 -- ============================================================
 -- Kész. Sorok száma táblánként:
---   app_user                   14
---   workspace                  4
---   permission                 19
---   app_role                   12
---   role_permission            85
---   workspace_member           22
---   project                    9
---   project_member             35
---   app_invitation             6
---   project_label              30
---   project_task               65
---   project_task_label         72
---   project_comment            90
---   project_activity_log       298
---   user_notification          116
---   storage_node               47
---   storage_node_role          63
---   storage_node_label         22
---   chat_room                  9
---   chat_room_member           40
---   chat_message               166
---   chat_message_attachment    27
---   calendar_event             91
---   user_session               25
---   user_2fa_code              6
---   jwt_blacklisted_token      8
---   ÖSSZESEN: 1381
+--   app_user                     14
+--   password_reset_token         6
+--   workspace                    4
+--   permission                   19
+--   app_role                     12
+--   role_permission              85
+--   workspace_member             22
+--   project                      9
+--   project_member               35
+--   app_invitation               6
+--   project_task                 65
+--   project_comment              90
+--   project_label                30
+--   project_task_label           72
+--   project_activity_log         298
+--   user_notification            116
+--   storage_node                 47
+--   storage_node_role            63
+--   storage_node_label           22
+--   chat_room                    9
+--   chat_room_member             40
+--   chat_message                 166
+--   chat_message_attachment      27
+--   calendar_event               91
+--   user_session                 25
+--   user_2fa_code                6
+--   jwt_blacklisted_token        8
+--   ÖSSZESEN: 1387
 -- ============================================================
+-- Nincs seedelve: enum_lookup (az adatbázis.sql tölti fel), data_protection_keys (az ASP.NET Core hozza létre induláskor).

@@ -7,7 +7,8 @@ namespace PROTOTYPE_backend.Services.Admin
     public interface IAdminService
     {
         Task<IEnumerable<UserAdminViewDto>> GetAllUsersAsync();
-        Task<bool> UpdateUserGlobalRoleAsync(UpdateUserRoleDto dto);
+        Task<bool> UpdateUserlRoleAsync(UpdateUserRoleDto dto);
+        Task<bool> UpdateUserGlobalRoleAsync(UpdateUserGlobalRoleDto dto);
         Task<SystemOverviewStatsDto> GetSystemStatsAsync();
         Task<bool> ToggleUserStatusAsync(string userId);
     }

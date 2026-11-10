@@ -35,7 +35,19 @@ namespace PROTOTYPE_backend.Services.Admin
             ));
         }
 
-        public async Task<bool> UpdateUserGlobalRoleAsync(UpdateUserRoleDto dto)
+        public async Task<bool> UpdateUserRoleAsync(UpdateUserRoleDto dto)
+        {
+            var existingWorkspace = await _context.WorkspaceMembers
+                .FirstOrDefaultAsync(w => w.UserId == dto.UserId);
+            if (existingWorkspace == null) return false;
+
+            existingWorkspace.RoleId = dto.NewRole;
+
+            await _context.SaveChangesAsync();
+            return true;
+        }
+
+        public async Task<bool> UpdateUserGlobalRoleAsync(UpdateUserGlobalRoleDto dto)
         {
             var user = await _context.AppUsers.FindAsync(dto.UserId);
             if (user == null) return false;

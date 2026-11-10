@@ -1,6 +1,8 @@
 ﻿using Microsoft.EntityFrameworkCore;
-using PROTOTYPE_backend.Models;
 using PROTOTYPE_backend.Data;
+using PROTOTYPE_backend.DTOs.Project;
+using PROTOTYPE_backend.DTOs.Workspace;
+using PROTOTYPE_backend.Models;
 using System;
 using System.Threading.Tasks;
 
@@ -13,6 +15,17 @@ namespace PROTOTYPE_backend.Services.Projects
         public ProjectService(AppDbContext context)
         {
             _context = context;
+        }
+
+        public async Task<List<ProjectResponseDto>> GetWorkspaceByIdAsync(Guid workspaceId)
+        {
+            var workspace = await _context.Projects.AnyAsync(w => w.WorkspaceId == workspaceId);
+            if (!workspace) throw new Exception("Nem létezik a munkaterület!");
+
+            return await _context.Projects
+                .Where(w => w.WorkspaceId == workspaceId)
+                .Select(w => new ProjectResponseDto(w.Id, w.Name, w.WorkspaceId))
+                .ToListAsync();
         }
 
         public async Task<ProjectTask> CreateTaskAsync(Guid projectId, string title, string? description, byte priority, DateTime? dueDate, Guid? assigneeId)

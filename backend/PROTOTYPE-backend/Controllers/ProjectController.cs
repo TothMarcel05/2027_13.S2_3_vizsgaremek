@@ -8,7 +8,7 @@ using System.Threading.Tasks;
 namespace PROTOTYPE_backend.Controllers
 {
     [ApiController]
-    [Route("api/project")]
+    [Route("api/projects")]
     public class ProjectController : ControllerBase
     {
         private readonly IProjectService _projectService;
@@ -16,6 +16,12 @@ namespace PROTOTYPE_backend.Controllers
         public ProjectController(IProjectService projectService)
         {
             _projectService = projectService;
+        }
+        [HttpGet("{workspaceId}/projects")]
+        public async Task<IActionResult> GetWorkspaceProjects(Guid workspaceId, [FromQuery] int page = 1, [FromQuery] int limit = 20, [FromQuery] sbyte? status = null)
+        {
+            var projects = await _projectService.GetWorkspaceByIdAsync(workspaceId);
+            return Ok(projects);
         }
 
         [HttpPost("{projectId}/task")]
@@ -26,7 +32,7 @@ namespace PROTOTYPE_backend.Controllers
         }
 
         [HttpPut("task/{taskId}/status")]
-        public async Task<IActionResult> UpdateTaskStatus(Guid taskId, [FromBody] UpdateTaskStatusRequestDto dto)
+        public async Task<IActionResult> UpdateTaskStatus(Guid taskId, [FromBody] ProjectDtos dto)
         {
             var success = await _projectService.UpdateTaskStatusAsync(taskId, dto.NewStatus);
             if (!success) return NotFound();

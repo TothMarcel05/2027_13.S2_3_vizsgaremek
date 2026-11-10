@@ -10,7 +10,7 @@ using System.Threading.Tasks;
 namespace PROTOTYPE_backend.Controllers
 {
     [ApiController]
-    [Route("api/workspaces")] // A táblázat a /workspaces végpontot használja
+    [Route("api/workspaces")] 
     //[Authorize]
     public class WorkspaceController : ControllerBase
     {
@@ -21,17 +21,8 @@ namespace PROTOTYPE_backend.Controllers
             _workspaceService = workspaceService;
         }
 
-        [HttpPost]
-        public async Task<IActionResult> CreateWorkspace([FromBody] CreateWorkspaceDto dto)
-        {
-            var workspace = await _workspaceService.CreateWorkspaceAsync(dto.userId, dto);
-            return Ok(workspace);
-        }
-
-        // Ha a user saját listáját kéred, egy query paraméter tisztább lenne, 
-        // de meghagytam a korábbi user/{userId} útvonalat is kompatibilitás miatt.
         [HttpGet("user/{userId}")]
-        public async Task<IActionResult> GetUserWorkspaces(Guid userId)
+        public async Task<IActionResult> GetUserWorkspaces(Guid userId, [FromQuery] int page = 1, [FromQuery] int limit = 20)
         {
             var workspaces = await _workspaceService.GetUserWorkspacesAsync(userId);
             return Ok(workspaces);
@@ -45,12 +36,6 @@ namespace PROTOTYPE_backend.Controllers
             return Ok(workspace);
         }
 
-        [HttpGet("{workspaceId}/projects")]
-        public async Task<IActionResult> GetWorkspaceProjects(Guid workspaceId, [FromQuery] int page = 1, [FromQuery] int limit = 20, [FromQuery] sbyte? status = null)
-        {
-            var projects = await _workspaceService.GetWorkspaceProjectsAsync(workspaceId, page, limit, status);
-            return Ok(projects);
-        }
 
         [HttpGet("{workspaceId}/members")]
         public async Task<IActionResult> GetWorkspaceMembers(Guid workspaceId, [FromQuery] int page = 1, [FromQuery] int limit = 50, [FromQuery] Guid? role = null)
@@ -58,6 +43,30 @@ namespace PROTOTYPE_backend.Controllers
             var members = await _workspaceService.GetWorkspaceMembersAsync(workspaceId, page, limit, role);
             return Ok(members);
         }
+
+
+        [HttpGet("{workspaceId}/storage")]
+        public async Task<IActionResult> GetWorkspaceStorage(Guid workspaceId)
+        {
+            var storage = await _workspaceService.GetWorkspaceStorageAsync(workspaceId);
+            if (storage == null) return NotFound(new { message = "A megadott munkaterület nem található." });
+            return Ok(storage);
+        }
+
+        [HttpGet("{workspaceId}/projects")]
+        public async Task<IActionResult> GetWorkspaceProjects(Guid workspaceId, [FromQuery] int page = 1, [FromQuery] int limit = 20, [FromQuery] sbyte? status = null)
+        {
+            var projects = await _workspaceService.GetWorkspaceProjectsAsync(workspaceId, page, limit, status);
+            return Ok(projects);
+        }
+
+        [HttpPost]
+        public async Task<IActionResult> CreateWorkspace([FromBody] CreateWorkspaceDto dto)
+        {
+            var workspace = await _workspaceService.CreateWorkspaceAsync(dto.userId, dto);
+            return Ok(workspace);
+        }
+
 
         [HttpPost("{workspaceId}/project")]
         public async Task<IActionResult> CreateProject(Guid workspaceId, [FromBody] CreateProjectDto dto)
@@ -84,13 +93,7 @@ namespace PROTOTYPE_backend.Controllers
             return Ok(new { message = "A munkaterület sikeresen törölve lett." });
         }
 
-        [HttpGet("{workspaceId}/storage")]
-        public async Task<IActionResult> GetWorkspaceStorage(Guid workspaceId)
-        {
-            var storage = await _workspaceService.GetWorkspaceStorageAsync(workspaceId);
-            if (storage == null) return NotFound(new { message = "A megadott munkaterület nem található." });
-            return Ok(storage);
-        }
+
 
         [HttpPut("{workspaceId}")]
         public async Task<IActionResult> UpdateWorkspace(Guid workspaceId, [FromBody] WorkspaceDataChangeDto dto)
@@ -123,5 +126,8 @@ namespace PROTOTYPE_backend.Controllers
             if (!result) return NotFound(new { message = "A tag vagy munkaterület nem található." });
             return Ok(new { message = "A tag sikeresen el lett távolítva." });
         }
+
+
     }
+
 }
