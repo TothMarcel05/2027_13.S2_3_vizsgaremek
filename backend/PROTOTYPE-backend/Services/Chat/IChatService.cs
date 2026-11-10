@@ -15,5 +15,7 @@ namespace PROTOTYPE_backend.Services.Chat
         Task<IEnumerable<ChatMessageDto>> GetRoomMessagesAsync(Guid userId, Guid roomId, int page = 1, int limit = 50);
 
         Task<bool> IsUserMemberOfRoomAsync(Guid userId, Guid roomId);
+        Task DeleteMessageAsync(Guid userId, Guid messageId);
+        Task<ChatMessageDto> SendMessageAsync(Guid userId, Guid roomId, SendMessageDto dto);
     }
 }

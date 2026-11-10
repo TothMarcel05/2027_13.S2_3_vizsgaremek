@@ -24,5 +24,6 @@ namespace PROTOTYPE_backend.Services.Auth
         Task<bool> CloseSessionAsync(Guid id);
         Task<bool> CloseSessionsAsync();
         //Task<ResetPwdResultDto> ResetPwdAsync(Guid userId, ResetPwdDto dto);
+        Task<DisabledTwoFactorResultDto> DisableTwoFactorAsync(Guid userId, string password);  
     }
 }

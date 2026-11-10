@@ -105,6 +105,21 @@ namespace PROTOTYPE_backend.Controllers
                 return Unauthorized(new { message = ex.Message });
             }
         }
+        [HttpDelete("2fa/disable")]
+        public async Task<IActionResult> DisableTwoFactor([FromBody] string password) 
+        {
+            try
+            {
+                var userId = User.GetUserId();
+                var result = _authService.DisableTwoFactorAsnyc(userId, password);
+
+                return Ok(result);
+            }
+            catch (UnauthorizedAccessException ex) 
+            {
+                return Unauthorized();
+            }
+        }
 
         // 6. TOKEN FRISSÍTÉS
         [AllowAnonymous]

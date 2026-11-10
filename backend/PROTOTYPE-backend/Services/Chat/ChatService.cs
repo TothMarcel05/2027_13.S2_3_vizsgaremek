@@ -172,7 +172,23 @@ namespace PROTOTYPE_backend.Services.Chat
                 .ToListAsync();
         }
 
-        // 4. ÜZENET MENTÉSE ÉS MELLÉKLETEK CSATOLÁSA
+        // 4. ÜZENET KÜLDÉSE (A Controller SendMessage akciójához)
+        public async Task<ChatMessageDto> SendMessageAsync(Guid userId, Guid roomId, SendMessageDto dto)
+        {
+            // Biztosítjuk, hogy a DTO-ban a szoba azonosítója meggyezzen az URL paraméterrel
+            var requestDto = dto with { RoomId = roomId };
+
+            var messageDto = await SaveMessageAsync(userId, requestDto);
+
+            if (messageDto == null)
+            {
+                throw new UnauthorizedAccessException("Nem vagy tagja ennek a csevegőszobának!");
+            }
+
+            return messageDto;
+        }
+
+        // 5. ÜZENET MENTÉSE ÉS MELLÉKLETEK CSATOLÁSA (Háttérlogika)
         public async Task<ChatMessageDto?> SaveMessageAsync(Guid userId, SendMessageDto dto)
         {
             var isMember = await IsUserMemberOfRoomAsync(userId, dto.RoomId);
@@ -227,7 +243,7 @@ namespace PROTOTYPE_backend.Services.Chat
             );
         }
 
-        // 5. ÜZENETHISTÓRIA LEKÉRDEZÉSE
+        // 6. ÜZENETHISTÓRIA LEKÉRDEZÉSE
         public async Task<IEnumerable<ChatMessageDto>> GetRoomMessagesAsync(Guid userId, Guid roomId, int page = 1, int limit = 50)
         {
             var isMember = await IsUserMemberOfRoomAsync(userId, roomId);
@@ -256,7 +272,27 @@ namespace PROTOTYPE_backend.Services.Chat
                 .ToListAsync();
         }
 
-        // 6. TAGSÁG ELLENŐRZÉSE
+        // 7. SAJÁT ÜZENET TÖRLÉSE (DELETE /chat/messages/{id})
+        public async Task DeleteMessageAsync(Guid userId, Guid messageId)
+        {
+            var message = await _context.ChatMessages
+                .FirstOrDefaultAsync(m => m.Id == messageId);
+
+            if (message == null)
+            {
+                throw new KeyNotFoundException("Az üzenet nem található!");
+            }
+
+            if (message.SenderId != userId)
+            {
+                throw new UnauthorizedAccessException("Csak a saját üzenetedet törölheted!");
+            }
+
+            _context.ChatMessages.Remove(message);
+            await _context.SaveChangesAsync();
+        }
+
+        // 8. TAGSÁG ELLENŐRZÉSE
         public async Task<bool> IsUserMemberOfRoomAsync(Guid userId, Guid roomId)
         {
             return await _context.ChatRoomMembers

@@ -1,4 +1,5 @@
-﻿using System.ComponentModel.DataAnnotations;
+﻿using Microsoft.AspNetCore.Components.Web;
+using System.ComponentModel.DataAnnotations;
 
 namespace PROTOTYPE_backend.DTOs.Auth
 {
@@ -121,5 +122,12 @@ namespace PROTOTYPE_backend.DTOs.Auth
     public record ResetPwdResultDto
         (
             DateTime UpdatedAt
+        );
+
+    public record DisabledTwoFactorResultDto
+        (
+            DateTime At,
+            bool active
+               
         );
 }

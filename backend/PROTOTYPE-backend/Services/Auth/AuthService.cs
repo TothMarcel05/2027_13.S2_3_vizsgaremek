@@ -283,6 +283,42 @@ namespace PROTOTYPE_backend.Services.Auth
             return plain; 
         }
 
+        public async Task<DisabledTwoFactorResultDto> DisableTwoFactorAsync(Guid userId, string password)
+        {
+            // 1. Felhasználó lekérése
+            var user = await _context.AppUsers
+                .FirstOrDefaultAsync(u => u.Id == userId);
+
+            if (user == null)
+                throw new KeyNotFoundException("A felhasználó nem található!");
+
+            // 2. Jelszó ellenőrzése (Hasher segítségével)
+            if (string.IsNullOrWhiteSpace(password) || !BCrypt.Net.BCrypt.EnhancedVerify(password, user.PasswordHash))
+            {
+                throw new UnauthorizedAccessException("Hibás jelszó!");
+            }
+
+            // 3. Ellenőrzés: be van-e egyáltalán kapcsolva?
+            if (!user.Is2faEnabled)
+                throw new InvalidOperationException("A 2FA nincs bekapcsolva ezen a fiókon!");
+
+            // 4. 2FA beállítások alaphelyzetbe állítása az app_user táblában
+            user.Is2faEnabled = false;
+            user.TwoFactorType = 0; // 0 = None (enum_lookup alapján)
+            user.TwoFactorSecret = null;
+            user.TwoFactorRecoveryCodes = null;
+
+            // 5. Az összes meglévő 2FA kód törlése a felhasználóhoz (ha van)
+            await _context.User2faCodes
+                .Where(c => c.UserId == userId)
+                .ExecuteDeleteAsync();
+
+            // 6. Változások mentése (a user frissítéséhez)
+            await _context.SaveChangesAsync();
+
+            return new DisabledTwoFactorResultDto(DateTime.UtcNow, user.Is2faEnabled);
+        }
+
         public async Task<AuthResponseDto> RefreshAsync(string refreshToken)
         {
             var hash = HashToken(refreshToken);

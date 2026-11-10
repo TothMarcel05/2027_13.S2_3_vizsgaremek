@@ -1,4 +1,5 @@
 ﻿using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.SignalR;
 using PROTOTYPE_backend.DTOs.Chat;
 using PROTOTYPE_backend.Extensions;

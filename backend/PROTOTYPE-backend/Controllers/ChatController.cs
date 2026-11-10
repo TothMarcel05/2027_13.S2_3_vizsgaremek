@@ -44,5 +44,23 @@ namespace PROTOTYPE_backend.Controllers
             var messages = await _chatService.GetRoomMessagesAsync(userId, roomId, page, limit);
             return Ok(messages);
         }
+
+        // POST /api/chat/rooms/{roomId:guid}/messages -> Üzenet küldése a csevegőszobába
+        [HttpPost("rooms/{roomId:guid}/messages")]
+        public async Task<IActionResult> SendMessage(Guid roomId, [FromBody] SendMessageDto dto)
+        {
+            var userId = User.GetUserId();
+            var message = await _chatService.SendMessageAsync(userId, roomId, dto);
+            return Ok(message);
+        }
+
+        // DELETE /api/chat/messages/{messageId:guid} -> Saját üzenet törlése
+        [HttpDelete("messages/{messageId:guid}")]
+        public async Task<IActionResult> DeleteMessage(Guid messageId)
+        {
+            var userId = User.GetUserId();
+            await _chatService.DeleteMessageAsync(userId, messageId);
+            return NoContent();
+        }
     }
 }
