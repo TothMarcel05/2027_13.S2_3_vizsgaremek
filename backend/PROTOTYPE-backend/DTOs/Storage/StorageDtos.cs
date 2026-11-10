@@ -5,6 +5,13 @@ using Microsoft.AspNetCore.Http;
 
 namespace PROTOTYPE_backend.DTOs.Storage
 {
+
+    #region Request DTOs
+
+    public record GetNodesRequestDto(
+        [Required] Guid WorkspaceId,
+        [Required] Guid? NodeId
+    );
     public record UploadFileDto(
         [Required] Guid WorkspaceId,
         Guid? ProjectId,
@@ -36,4 +43,17 @@ namespace PROTOTYPE_backend.DTOs.Storage
         DateTime? CreatedAt,
         List<string> Labels
     );
+
+    #endregion
+
+    #region Response DTOs
+    public record NodeDataChangeResponseDto(
+        Guid Id,
+        Guid WorkspaceId,
+        string Name,
+        string? StoragePath
+
+    );
+
+    #endregion 
 }

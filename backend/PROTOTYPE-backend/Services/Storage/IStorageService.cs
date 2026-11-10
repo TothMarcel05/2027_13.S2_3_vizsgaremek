@@ -9,6 +9,7 @@ namespace PROTOTYPE_backend.Services.Storage
     public interface IStorageService
     {
         // Fájl- és mappa műveletek
+
         Task<StorageNodeResponseDto> UploadFileAsync(UploadFileDto dto);
         Task<StorageNodeResponseDto> CreateFolderAsync(Guid workspaceId, Guid? projectId, Guid? parentId, string folderName, Guid userId);
         Task<(Stream FileStream, string ContentType, string FileName)?> GetFileStreamAsync(Guid nodeId);
