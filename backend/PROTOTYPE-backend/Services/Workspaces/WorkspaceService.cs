@@ -21,6 +21,19 @@ namespace PROTOTYPE_backend.Services.Workspaces
             _tokenService = tokenService;
         }
 
+        public async Task<List<WorkspaceResponseDto>> GetUserWorkspacesAsync(Guid userId, int page = 1, int limit = 20)
+        {
+            var userExists = await _context.AppUsers.AnyAsync(u => u.Id == userId);
+            if (!userExists) throw new Exception("Nem létezik a felhasználó!");
+
+            return await _context.Workspaces
+                .Where(w => w.OwnerId == userId || w.WorkspaceMembers.Any(m => m.UserId == userId))
+                .Skip((page - 1) * limit)
+                .Take(limit)
+                .Select(w => new WorkspaceResponseDto(w.Id, w.Name, w.OwnerId))
+                .ToListAsync();
+        }
+
         public async Task<WorkspaceDataResponseDto> CreateWorkspaceAsync(Guid userId, CreateWorkspaceDto dto)
         {
             var existingWorkspace = await _context.Workspaces
@@ -48,16 +61,6 @@ namespace PROTOTYPE_backend.Services.Workspaces
             );
         }
 
-        public async Task<List<WorkspaceResponseDto>> GetUserWorkspacesAsync(Guid userId)
-        {
-            var userExists = await _context.AppUsers.AnyAsync(u => u.Id == userId);
-            if (!userExists) throw new Exception("Nem létezik a felhasználó!");
-
-            return await _context.Workspaces
-                .Where(w => w.OwnerId == userId || w.WorkspaceMembers.Any(m => m.UserId == userId))
-                .Select(w => new WorkspaceResponseDto(w.Id, w.Name, w.OwnerId))
-                .ToListAsync();
-        }
 
         public async Task<WorkspaceDataResponseDto?> GetWorkspaceDataAsync(Guid workspaceId)
         {
