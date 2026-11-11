@@ -60,6 +60,14 @@ namespace PROTOTYPE_backend.Controllers
         }
 
 
+        [HttpDelete("{userId}")]
+        public async Task<IActionResult> RemoveUser(Guid userId)
+        {
+            var success = await _adminService.RemoveUserAsync(userId);
+            if (!success) return NotFound("A megadott felhasználó nem található.");
+
+            return Ok(new { message = "A felhasználó sikeresen eltávolítva." });
+        }
 
         [HttpPut("user/{userId}/toggle-status")]
         public async Task<IActionResult> ToggleUserStatus(string userId)
@@ -68,15 +76,6 @@ namespace PROTOTYPE_backend.Controllers
             if (!success) return NotFound("A megadott felhasználó nem található.");
 
             return Ok(new { message = "A felhasználó fiókstátusza sikeresen módosítva." });
-        }
-
-        [HttpDelete("{userId}")]
-        public async Task<IActionResult> RemoveUser(Guid userId)
-        {
-            var success = await _adminService.RemoveUserAsync(userId);
-            if (!success) return NotFound("A megadott felhasználó nem található.");
-
-            return Ok(new { message = "A felhasználó sikeresen eltávolítva." });
         }
     }
 }

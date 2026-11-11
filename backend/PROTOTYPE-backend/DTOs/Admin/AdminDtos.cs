@@ -44,7 +44,5 @@ namespace PROTOTYPE_backend.DTOs.Admin
         string roleName,
         List<string> permission
     );
-
-
     #endregion
 }
