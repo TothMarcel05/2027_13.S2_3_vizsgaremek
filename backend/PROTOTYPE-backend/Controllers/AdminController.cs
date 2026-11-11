@@ -17,21 +17,11 @@ namespace PROTOTYPE_backend.Controllers
             _adminService = adminService;
         }
 
-        [HttpPut("user/role")]
-        public async Task<IActionResult> UpdateUserRole([FromBody] UpdateUserRoleDto dto)
+        [HttpGet("roles")]
+        public async Task<IActionResult> GetRolesAndPermissions()
         {
-            var success = await _adminService.UpdateUserRoleAsync(dto);
-            if (!success) return NotFound("A megadott felhasználó nem található.");
-
-            return Ok(new { message = "A felhasználó szerepköre sikeresen frissítve." });
-        }
-        [HttpPut("user/globalRole")]
-        public async Task<IActionResult> UpdateUserGlobalRole([FromBody] UpdateUserGlobalRoleDto dto)
-        {
-            var success = await _adminService.UpdateUserGlobalRoleAsync(dto);
-            if (!success) return NotFound("A megadott felhasználó nem található.");
-
-            return Ok(new { message = "A felhasználó szerepköre sikeresen frissítve." });
+            var roles = await _adminService.GetRolesAndPermissionsAsync();
+            return Ok(roles);
         }
 
         [HttpGet("users")]
@@ -48,6 +38,29 @@ namespace PROTOTYPE_backend.Controllers
             return Ok(stats);
         }
 
+
+        [HttpPut("user/role")]
+
+        public async Task<IActionResult> UpdateUserRole([FromBody] UpdateUserRoleDto dto)
+        {
+            var success = await _adminService.UpdateUserRoleAsync(dto);
+            if (!success) return NotFound("A megadott felhasználó nem található.");
+
+            return Ok(new { message = "A felhasználó szerepköre sikeresen frissítve." });
+        }
+
+
+        [HttpPut("user/globalRole")]
+        public async Task<IActionResult> UpdateUserGlobalRole([FromBody] UpdateUserGlobalRoleDto dto)
+        {
+            var success = await _adminService.UpdateUserGlobalRoleAsync(dto);
+            if (!success) return NotFound("A megadott felhasználó nem található.");
+
+            return Ok(new { message = "A felhasználó szerepköre sikeresen frissítve." });
+        }
+
+
+
         [HttpPut("user/{userId}/toggle-status")]
         public async Task<IActionResult> ToggleUserStatus(string userId)
         {
@@ -55,6 +68,15 @@ namespace PROTOTYPE_backend.Controllers
             if (!success) return NotFound("A megadott felhasználó nem található.");
 
             return Ok(new { message = "A felhasználó fiókstátusza sikeresen módosítva." });
+        }
+
+        [HttpDelete("{userId}")]
+        public async Task<IActionResult> RemoveUser(Guid userId)
+        {
+            var success = await _adminService.RemoveUserAsync(userId);
+            if (!success) return NotFound("A megadott felhasználó nem található.");
+
+            return Ok(new { message = "A felhasználó sikeresen eltávolítva." });
         }
     }
 }

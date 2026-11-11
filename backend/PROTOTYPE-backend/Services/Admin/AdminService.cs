@@ -17,6 +17,17 @@ namespace PROTOTYPE_backend.Services.Admin
             _context = context;
         }
 
+        public async Task<List<UserRoleResponse>> GetRolesAndPermissionsAsync(Guid roleId)
+        {
+            return await _context.AppRoles
+                .Select(r => new UserRoleResponse(
+                    r.Id,
+                    r.Name,
+                    r.Permissions.Select(p => p.Code).ToList()
+                    ))
+                .ToListAsync();     
+        }
+
         public async Task<IEnumerable<UserAdminViewDto>> GetAllUsersAsync()
         {
             var users = await _context.AppUsers
@@ -91,6 +102,18 @@ namespace PROTOTYPE_backend.Services.Admin
             }
 
             user.UpdatedAt = DateTime.UtcNow;
+            await _context.SaveChangesAsync();
+            return true;
+        }
+
+        public async Task<bool> RemoveUserAsync(Guid userId)
+        {
+            var user = await _context.AppUsers
+                .FirstOrDefaultAsync(u =>  u.Id == userId);
+
+            if (user == null) return false;
+
+            _context.AppUsers.Remove(user);
             await _context.SaveChangesAsync();
             return true;
         }

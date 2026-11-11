@@ -82,6 +82,20 @@ namespace PROTOTYPE_backend.Controllers
             return Ok(folder);
         }
 
+        [HttpPut("nodes/change-data")]
+        public async Task<IActionResult> ChangeNodeData([FromBody] GetNodesRequestDto dto)
+        {
+            try
+            {
+                var result = await _storageService.ChangeNodeData(dto);
+                return Ok(result);
+            }
+            catch (ArgumentException ex)
+            {
+                return NotFound(new { message = ex.Message });
+            }
+        }
+
         [HttpDelete("nodes/{id:guid}")]
         public async Task<IActionResult> SoftDeleteNode(Guid id)
         {

@@ -19,10 +19,8 @@ namespace PROTOTYPE_backend.Services.Storage
             _context = context;
         }
 
-        // 1. FÁJL FELTÖLTÉSE (KVÓTA ELLENŐRZÉSSEL ÉS ROLBACK PROTKOLLAL)
         public async Task<StorageNodeResponseDto> UploadFileAsync(UploadFileDto dto)
         {
-            // A) Munkaterület tárhelykvótájának ellenőrzése
             var workspace = await _context.Workspaces.FindAsync(dto.WorkspaceId);
             if (workspace == null)
             {
@@ -38,7 +36,6 @@ namespace PROTOTYPE_backend.Services.Storage
                 throw new InvalidOperationException("A feltöltés meghiúsult: a munkaterület tárhelykvótája betelt.");
             }
 
-            // B) Fájl kiírása a fizikai lemezre
             var uploadsFolder = Path.Combine(Directory.GetCurrentDirectory(), "Uploads");
             if (!Directory.Exists(uploadsFolder))
             {
@@ -55,7 +52,6 @@ namespace PROTOTYPE_backend.Services.Storage
                     await dto.File.CopyToAsync(stream);
                 }
 
-                // C) StorageNode rekord mentése az adatbázisba (Explicit GUID és DeletedAt = null)
                 var nodeId = Guid.NewGuid();
                 var node = new StorageNode
                 {
@@ -64,13 +60,13 @@ namespace PROTOTYPE_backend.Services.Storage
                     ProjectId = dto.ProjectId,
                     ParentId = dto.ParentId,
                     Name = dto.File.FileName,
-                    Type = 2, // 2 = file (storage_type)
+                    Type = 2, 
                     MimeType = dto.File.ContentType,
                     StoragePath = filePath,
                     SizeBytes = (ulong)dto.File.Length,
                     CreatedBy = dto.UserId,
                     CreatedAt = DateTime.UtcNow,
-                    DeletedAt = null // Felülírjuk az SQL DEFAULT CURRENT_TIMESTAMP értékét!
+                    DeletedAt = null 
                 };
 
                 _context.StorageNodes.Add(node);
@@ -104,7 +100,6 @@ namespace PROTOTYPE_backend.Services.Storage
             }
             catch
             {
-                // Rollback: Ha az adatbázis mentés elhasal, töröljük az árva fájlt a lemezről
                 if (File.Exists(filePath))
                 {
                     File.Delete(filePath);
@@ -113,7 +108,6 @@ namespace PROTOTYPE_backend.Services.Storage
             }
         }
 
-        // 2. MAPPA LÉTREHOZÁSA (STORAGE TYPE = 1)
         public async Task<StorageNodeResponseDto> CreateFolderAsync(Guid workspaceId, Guid? projectId, Guid? parentId, string folderName, Guid userId)
         {
             var folderNode = new StorageNode
@@ -123,7 +117,7 @@ namespace PROTOTYPE_backend.Services.Storage
                 ProjectId = projectId,
                 ParentId = parentId,
                 Name = folderName,
-                Type = 1, // 1 = folder (storage_type)
+                Type = 1, 
                 CreatedBy = userId,
                 CreatedAt = DateTime.UtcNow,
                 DeletedAt = null
@@ -144,7 +138,6 @@ namespace PROTOTYPE_backend.Services.Storage
             );
         }
 
-        // 3. FÁJL LETÖLTÉSE / STREAMING
         public async Task<(Stream FileStream, string ContentType, string FileName)?> GetFileStreamAsync(Guid nodeId)
         {
             var node = await _context.StorageNodes
@@ -162,7 +155,6 @@ namespace PROTOTYPE_backend.Services.Storage
             return (memoryStream, contentType, node.Name);
         }
 
-        // 4. NODEOK LEKÉRDEZÉSE CÍMKE SZŰRÉSSEL
         public async Task<IEnumerable<StorageNodeResponseDto>> GetNodesByWorkspaceAsync(Guid workspaceId, string? tagFilter)
         {
             var query = _context.StorageNodes
@@ -189,7 +181,6 @@ namespace PROTOTYPE_backend.Services.Storage
                 n.StorageNodeLabels.Select(l => l.Label).ToList()
             ));
         }
-        // 5. NODE MEGOSZTÁSA SZEREPKÖRREL (Direct Many-to-Many via EF Core Navigation)
         public async Task<bool> ShareNodeWithRoleAsync(Guid nodeId, Guid roleId)
         {
             var node = await _context.StorageNodes
@@ -203,7 +194,7 @@ namespace PROTOTYPE_backend.Services.Storage
                 return false;
             }
 
-            // Ha a szerepkör még nincs hozzárendelve a csomóponthoz, hozzáadjuk a navigációs gyűjteményhez
+
             if (!node.Roles.Any(r => r.Id == roleId))
             {
                 node.Roles.Add(role);
@@ -213,7 +204,6 @@ namespace PROTOTYPE_backend.Services.Storage
             return true;
         }
 
-        // 6. SOFT DELETE ÉS VISSZAÁLLÍTÁS
         public async Task<bool> SoftDeleteNodeAsync(Guid nodeId, Guid userId)
         {
             var node = await _context.StorageNodes.FindAsync(nodeId);
@@ -240,6 +230,23 @@ namespace PROTOTYPE_backend.Services.Storage
             node.DeletedAt = null;
             await _context.SaveChangesAsync();
             return true;
+        }
+
+        public async Task<NodeDataChangeResponseDto> ChangeNodeData(GetNodesRequestDto dto)
+        {
+            var node = await _context.StorageNodes.FindAsync(dto.NodeId);
+            if (node == null || node.DeletedAt != null)
+            {
+                throw new ArgumentException("A megadott csomópont nem található vagy törölt.");
+            }
+
+            await _context.SaveChangesAsync();
+            return new NodeDataChangeResponseDto(
+                node.Id,
+                node.WorkspaceId,
+                node.Name,
+                node.StoragePath
+            );
         }
     }
 }

@@ -38,7 +38,7 @@ namespace PROTOTYPE_backend.Services.Notification
                 .OrderByDescending(n => n.CreatedAt)
                 .Skip((page - 1) * limit)
                 .Take(limit)
-                .Select(n => new NotificationResultDto(n.Id, n.Content, n.IsRead, n.CreatedAt))
+                .Select(n => new NotificationResultDto(n.Content, n.IsRead, n.CreatedAt))
                 .ToListAsync();
 
             return new PagedResultDto<NotificationResultDto>
