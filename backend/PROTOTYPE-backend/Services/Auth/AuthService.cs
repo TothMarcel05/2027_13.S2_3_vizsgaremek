@@ -7,7 +7,9 @@ using Microsoft.EntityFrameworkCore;
 using OtpNet;
 using PROTOTYPE_backend.Data;
 using PROTOTYPE_backend.DTOs.Auth;
+using PROTOTYPE_backend.DTOs.Workspace;
 using PROTOTYPE_backend.Models;
+using PROTOTYPE_backend.Services.Email;
 using PROTOTYPE_backend.Services.Token;
 using System.Security.Cryptography;
 using System.Text;
@@ -21,18 +23,25 @@ namespace PROTOTYPE_backend.Services.Auth
         private readonly IHttpContextAccessor _httpContextAccessor;
         private readonly AppDbContext _context;
         private readonly IDataProtector _protector;
+        private readonly IConfiguration _config;
+        private readonly IEmailService _emailService;
 
         public AuthService(
             ITokenService tokenService,
             IHttpContextAccessor httpContextAccessor,
             AppDbContext context,
-            IDataProtectionProvider protector
+            IDataProtectionProvider protector,
+            IConfiguration config,
+            IEmailService emailService
             ) 
         {
             _tokenService = tokenService;
             _httpContextAccessor = httpContextAccessor;
             _context = context;
             _protector = protector.CreateProtector("TwoFactorAuth");
+            _config = config;
+            _emailService = emailService;
+            
         }
 
         private string GetClientIpAddress() 
@@ -490,17 +499,96 @@ namespace PROTOTYPE_backend.Services.Auth
             return true;
         }
 
+        public async Task<List<UserSessionsResponseDto>> GetSessionsAsync(int page, int limit) 
+        {
+            return await _context.UserSessions
+                .Skip((page - 1) * limit)
+                .Take(limit)
+                .Select(us => new UserSessionsResponseDto(us.Id, us.UserId, us.DeviceId, us.DeviceInfo, us.IpAddress, us.IsRevoked, us.ExpiresAt, us.UpdatedAt, us.CreatedAt))
+                .ToListAsync();
+        }
 
+        public async Task RequestPasswordResetAsync(string email)
+        {
+            // 1. User megkeresése email alapján
+            var user = await _context.AppUsers
+                .FirstOrDefaultAsync(u => u.Email == email);
 
-        /*public async Task<ResetPwdResultDto> ResetPwdAsync(Guid userId, ResetPwdDto dto) 
+            // Biztonsági okokból nem dobunk hibát, ha nincs ilyen email
+            if (user == null) return;
+
+            // 2. Nyers token generálása (Kryptografiailag biztonságos)
+            string rawToken = Convert.ToBase64String(RandomNumberGenerator.GetBytes(32));
+
+            // 3. Token lehashelése az adatbázisban való tároláshoz (SHA-256)
+            string tokenHash;
+            using (var sha256 = SHA256.Create())
+            {
+                byte[] inputBytes = Encoding.UTF8.GetBytes(rawToken);
+                byte[] hashBytes = sha256.ComputeHash(inputBytes);
+                tokenHash = Convert.ToBase64String(hashBytes);
+            }
+
+            // 4. Régi, még fel nem használt tokenek inaktiválása/törlése a felhasználóhoz
+            var existingTokens = await _context.PasswordResetTokens
+                .Where(prt => prt.UserId == user.Id && !prt.IsUsed)
+                .ToListAsync();
+
+            foreach (var token in existingTokens)
+            {
+                token.IsUsed = true; // A régi tokeneket érvénytelenítjük
+            }
+
+            // 5. Új token mentése az adatbázisba (IsUsed = false!)
+            var prt = new PasswordResetToken
+            {
+                Id = Guid.NewGuid(),
+                UserId = user.Id,
+                TokenHash = tokenHash, // 👈 Az adatbázisba a HASH kerül
+                IsUsed = false,        // 👈 Aktív marad, amíg fel nem használja!
+                CreatedAt = DateTime.UtcNow,
+                ExpiresAt = DateTime.UtcNow.AddMinutes(10)
+            };
+
+            _context.PasswordResetTokens.Add(prt);
+            await _context.SaveChangesAsync();
+
+            // 6. Link generálása (a NYERS token kerül a linkbe!)
+            var baseUrl = _config["FrontendUrl"];
+            var resetLink = $"{baseUrl}/reset-password?token={Uri.EscapeDataString(rawToken)}&email={Uri.EscapeDataString(email)}";
+
+            // 7. E-mail küldése
+            await _emailService.SendPasswordResetEmailAsync(user.Email, resetLink);
+        }
+
+        public async Task<bool> ResetPasswordAsync(string email, string token, ResetPwdDto dto) 
         {
             var user = await _context.AppUsers
-                .FirstOrDefaultAsync(u => u.Id == userId);
+                .FirstOrDefaultAsync(u => u.Email == email);
 
-            if (user == null) throw new Exception("Nem található a felhasználó!");
+            if (user == null) return false;
 
+            string hashedToken;
+            using (var sha256 = SHA256.Create())
+            {
+                byte[] inputBytes = Encoding.UTF8.GetBytes(token);
+                byte[] hashBytes = sha256.ComputeHash(inputBytes);
+                hashedToken = Convert.ToBase64String(hashBytes);
+            }
 
-        }*/
+            var validToken = await _context.PasswordResetTokens
+                .FirstOrDefaultAsync(t => t.UserId == user.Id && t.TokenHash == hashedToken && !t.IsUsed && t.ExpiresAt > DateTime.UtcNow);
+
+            if (validToken == null) return false;
+
+            user.UpdatedAt = DateTime.UtcNow;
+            user.PasswordHash = BCrypt.Net.BCrypt.EnhancedHashPassword(dto.newPwd, 13);
+            validToken.IsUsed = true;
+
+            await _context.SaveChangesAsync();
+
+            return true;
+        }
     }
 }
 

@@ -10,6 +10,7 @@ using PROTOTYPE_backend.Data;
 using PROTOTYPE_backend.Services.Admin;
 using PROTOTYPE_backend.Services.Auth;
 using PROTOTYPE_backend.Services.Calendar;
+using PROTOTYPE_backend.Services.Email;
 using PROTOTYPE_backend.Services.SoftDelete;
 using PROTOTYPE_backend.Services.Storage;
 using PROTOTYPE_backend.Services.Token;
@@ -41,6 +42,7 @@ builder.Services.AddScoped<ICalendarService, CalendarService>();
 builder.Services.AddScoped<ITokenService, TokenService>();
 builder.Services.AddScoped<IUserService, UserService>();
 builder.Services.AddScoped<IAuthorizationHandler, PermissionHandler>();
+builder.Services.AddScoped<IEmailService, EmailService>();
 
 
 var jwtSection = builder.Configuration.GetSection("JwtSettings");

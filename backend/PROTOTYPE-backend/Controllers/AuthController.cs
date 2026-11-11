@@ -111,7 +111,7 @@ namespace PROTOTYPE_backend.Controllers
             try
             {
                 var userId = User.GetUserId();
-                var result = _authService.DisableTwoFactorAsnyc(userId, password);
+                var result = _authService.DisableTwoFactorAsync(userId, password);
 
                 return Ok(result);
             }
@@ -269,5 +269,45 @@ namespace PROTOTYPE_backend.Controllers
                 return Unauthorized();
             }
         }
+        [HttpGet("sessions")]
+        public async Task<IActionResult> GetUserSessions(int page, int limit) 
+        {
+            try
+            {
+                var result = await _authService.GetSessionsAsync(page, limit);
+                return Ok(result);
+            }
+            catch (UnauthorizedAccessException) 
+            {
+                return Unauthorized();
+            }
+        }
+        [HttpPost("password-reset")]
+        public async Task<IActionResult> RequestPasswordReset([FromQuery] string email) 
+        {
+            try
+            {
+                await _authService.RequestPasswordResetAsync(email);
+                return Ok();
+            }
+            catch (UnauthorizedAccessException)
+            {
+                return Unauthorized();
+            }
+        }
+        [HttpPut("password-reset")]
+        public async Task<IActionResult> PasswordReset([FromQuery] string email, [FromQuery] string token, [FromBody] ResetPwdDto dto)
+        {
+            try
+            {
+                await _authService.ResetPasswordAsync(email, token, dto);
+                return Ok();
+            }
+            catch (UnauthorizedAccessException)
+            {
+                return Unauthorized();
+            }
+        }
+
     }
 }

@@ -23,7 +23,9 @@ namespace PROTOTYPE_backend.Services.Auth
         Task<AddPermToRoleResultDto> AddPermissionToRoleAsync(Guid roleId, AddPermToRoletDto dto);
         Task<bool> CloseSessionAsync(Guid id);
         Task<bool> CloseSessionsAsync();
-        //Task<ResetPwdResultDto> ResetPwdAsync(Guid userId, ResetPwdDto dto);
-        Task<DisabledTwoFactorResultDto> DisableTwoFactorAsync(Guid userId, string password);  
+        Task<DisabledTwoFactorResultDto> DisableTwoFactorAsync(Guid userId, string password);
+        Task<List<UserSessionsResponseDto>> GetSessionsAsync(int page, int limit);
+        Task RequestPasswordResetAsync(string email);
+        Task<bool> ResetPasswordAsync(string email, string token, ResetPwdDto dto);
     }
 }

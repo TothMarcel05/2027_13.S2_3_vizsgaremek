@@ -115,13 +115,7 @@ namespace PROTOTYPE_backend.DTOs.Auth
     public record ResetPwdDto
         (
             [Required]
-            string currPwd,
-            [Required]
             string newPwd
-        );
-    public record ResetPwdResultDto
-        (
-            DateTime UpdatedAt
         );
 
     public record DisabledTwoFactorResultDto
@@ -129,5 +123,18 @@ namespace PROTOTYPE_backend.DTOs.Auth
             DateTime At,
             bool active
                
+        );
+
+    public record UserSessionsResponseDto
+        (
+            Guid sessionId,
+            Guid userId,
+            string? deviceId,
+            string? deviceInfo,
+            string? ipAddress,
+            bool isRevoked,
+            DateTime expiresAt,
+            DateTime? updatedAt,
+            DateTime? createdAt
         );
 }
