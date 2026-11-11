@@ -3,6 +3,8 @@ using System.ComponentModel.DataAnnotations;
 
 namespace PROTOTYPE_backend.DTOs.Admin
 {
+
+    #region Request DTOs
     public record UserAdminViewDto(
         Guid Id,
         string Name,
@@ -31,4 +33,16 @@ namespace PROTOTYPE_backend.DTOs.Admin
         int TotalProjects,
         int TotalTasks
     );
+
+    #endregion
+
+
+    #region Response DTOs
+    public record UserRoleResponse
+    (
+        Guid roleId,
+        string roleName,
+        List<string> permission
+    );
+    #endregion
 }

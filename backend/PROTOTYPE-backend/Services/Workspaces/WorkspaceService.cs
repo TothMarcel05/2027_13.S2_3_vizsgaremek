@@ -143,7 +143,6 @@ namespace PROTOTYPE_backend.Services.Workspaces
             var workspace = await _context.Workspaces.FindAsync(workspaceId);
             if (workspace == null) return null;
 
-            // Később kiegészíthető a fájlok valós méretének összegzésével
             ulong calculatedUsedStorage = 0;
 
             return new WorkspaceStorageUsageResponseDto(workspace.Id, workspace.Name, calculatedUsedStorage);

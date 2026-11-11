@@ -6,7 +6,7 @@ using PROTOTYPE_backend.Services.Calendar;
 
 namespace PROTOTYPE_backend.Controllers
 {
-    [Authorize] // Minden végponthoz bejelentkezés szükséges
+    [Authorize] 
     [ApiController]
     [Route("api/calendar")]
     public class CalendarController : ControllerBase
