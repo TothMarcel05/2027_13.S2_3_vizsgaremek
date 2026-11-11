@@ -11,5 +11,9 @@ namespace PROTOTYPE_backend.Services.Projects
         Task<List<ProjectResponseDto>> GetWorkspaceByIdAsync(Guid workspaceId);
         Task<ProjectTask> CreateTaskAsync(Guid projectId, string title, string? description, byte priority, DateTime? dueDate, Guid? assigneeId );
         Task<bool> UpdateTaskStatusAsync(Guid taskId, byte newStatus);
+        Task<ProjectDataDto?> UpdateProjectAsync(Guid projectId, UpdateProjectDto dto);
+        Task<bool> DeleteProjectAsync(Guid projectId);
+        Task<ProjectTaskResponseDto?> UpdateTaskAsync(Guid taskId, UpdateTaskDto dto);
+        Task<bool> DeleteTaskAsync(Guid taskId);
     }
 }
