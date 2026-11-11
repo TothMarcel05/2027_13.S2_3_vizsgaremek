@@ -5,15 +5,7 @@ namespace PROTOTYPE_backend.DTOs.Admin
 {
 
     #region Request DTOs
-    public record UserAdminViewDto(
-        Guid Id,
-        string Name,
-        string Email,
-        sbyte GlobalRole,
-        bool Is2FaEnabled,
-        DateTime CreatedAt,
-        DateTime? DeletedAt
-    );
+
 
     public record UpdateUserRoleDto(
         [Required] Guid UserId,
@@ -26,6 +18,23 @@ namespace PROTOTYPE_backend.DTOs.Admin
         [Required] sbyte NewGlobalRole
     );
 
+
+
+    #endregion
+
+
+    #region Response DTOs
+
+    public record UserAdminViewDto(
+        Guid Id,
+        string Name,
+        string Email,
+        sbyte GlobalRole,
+        bool Is2FaEnabled,
+        DateTime CreatedAt,
+        DateTime? DeletedAt
+    );
+
     public record SystemOverviewStatsDto(
         int TotalUsers,
         int ActiveUsers,
@@ -33,12 +42,7 @@ namespace PROTOTYPE_backend.DTOs.Admin
         int TotalProjects,
         int TotalTasks
     );
-
-    #endregion
-
-
-    #region Response DTOs
-    public record UserRoleResponse
+    public record UserRoleResponseDto
     (
         Guid roleId,
         string roleName,

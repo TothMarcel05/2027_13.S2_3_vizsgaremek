@@ -17,10 +17,10 @@ namespace PROTOTYPE_backend.Services.Admin
             _context = context;
         }
 
-        public async Task<List<UserRoleResponse>> GetRolesAndPermissionsAsync()
+        public async Task<List<UserRoleResponseDto>> GetRolesAndPermissionsAsync()
         {
             return await _context.AppRoles
-                .Select(r => new UserRoleResponse(
+                .Select(r => new UserRoleResponseDto(
                     r.Id,
                     r.Name,
                     r.Permissions.Select(p => p.Code).ToList()

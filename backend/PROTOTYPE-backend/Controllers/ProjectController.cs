@@ -99,7 +99,6 @@ namespace PROTOTYPE_backend.Controllers
             return Ok(new { message = "Projekt sikeresen törölve." });
         }
 
-
         [HttpDelete("/tasks/{taskId}")]
         public async Task<IActionResult> DeleteTask(Guid taskId)
         {
