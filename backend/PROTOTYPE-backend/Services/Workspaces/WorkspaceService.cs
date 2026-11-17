@@ -117,14 +117,48 @@ namespace PROTOTYPE_backend.Services.Workspaces
             var user = await _context.AppUsers.FirstOrDefaultAsync(u => u.Id == userId && u.DeletedAt == null)
                 ?? throw new UnauthorizedAccessException("Érvénytelen felhasználó!");
 
-            var membership = await _context.WorkspaceMembers
+            var rolesNPermissions = new Dictionary<string, List<string>>();
+
+            // 1. Workspace-szintű jogosultságok lekérése
+            var workspaceMembership = await _context.WorkspaceMembers
                 .Where(m => m.UserId == userId && m.WorkspaceId == workspaceId)
-                .Select(m => new { RoleName = m.Role.Name, Permissions = m.Role.Permissions.Select(p => p.Code).ToList() })
+                .Select(m => new
+                {
+                    Permissions = m.Role.Permissions.Select(p => p.Code).ToList()
+                })
                 .FirstOrDefaultAsync();
 
-            if (membership == null) throw new Exception("Nincs hozzáférésed ehhez a munkaterülethez!");
+            // Ha nem tagja a workspace-nek és nem is SystemAdmin, utasítsuk el
+            if (workspaceMembership == null && user.GlobalRole != 2)
+            {
+                throw new UnauthorizedAccessException("Nincs hozzáférésed ehhez a munkaterülethez!");
+            }
 
-            var rolesNPermissions = new Dictionary<string, List<string>> { [membership.RoleName] = membership.Permissions };
+            if (workspaceMembership != null)
+            {
+                // A KULCS a workspaceId (stringként), nem a RoleName!
+                rolesNPermissions[workspaceId.ToString()] = workspaceMembership.Permissions.Distinct().ToList();
+            }
+
+            // 2. Projekt-szintű jogosultságok lekérése az adott workspace-en belül
+            var projectMemberships = await _context.ProjectMembers
+                .Where(pm => pm.UserId == userId && pm.WorkspaceId == workspaceId)
+                .Select(pm => new
+                {
+                    pm.ProjectId,
+                    Permissions = pm.Role.Permissions.Select(p => p.Code).ToList()
+                })
+                .ToListAsync();
+
+            // Csoportosítjuk projectId szerint (mivel egy usernek több role-ja is lehet egy projektben)
+            foreach (var projectGroup in projectMemberships.GroupBy(pm => pm.ProjectId))
+            {
+                rolesNPermissions[projectGroup.Key.ToString()] = projectGroup
+                    .SelectMany(pm => pm.Permissions)
+                    .Distinct()
+                    .ToList();
+            }
+
             return _tokenService.GenerateWorkspaceToken(user, workspaceId, rolesNPermissions);
         }
 
@@ -204,6 +238,86 @@ namespace PROTOTYPE_backend.Services.Workspaces
 
             _context.WorkspaceMembers.Remove(membership);
             await _context.SaveChangesAsync();
+            return true;
+        }
+        public async Task<ReserveTaskResultDto> ReserveTaskAsync(ReserveTaskDto dto)
+        {
+            // 1. Aktív felhasználó ellenőrzése
+            var user = await _context.AppUsers
+                .FirstOrDefaultAsync(u => u.Id == dto.assigneeId && u.DeletedAt == null)
+                ?? throw new KeyNotFoundException("Nem található a felhasználó!");
+
+            // 2. Feladat lekérdezése úgy, hogy biztosan az adott projekthez tartozzon
+            var task = await _context.ProjectTasks
+                .FirstOrDefaultAsync(t => t.Id == dto.id && t.ProjectId == dto.projectId)
+                ?? throw new KeyNotFoundException("Nem található a feladat a megadott projektben!");
+
+            // 3. Már foglalt-e?
+            if (task.AssigneeUserId != null)
+            {
+                throw new InvalidOperationException("A feladat már hozzá van rendelve valakihez!");
+            }
+
+            // 4. Projekttagság és meghirdetett szerepkör ellenőrzése
+            var isEligible = await _context.ProjectMembers.AnyAsync(pm =>
+                pm.ProjectId == dto.projectId &&
+                pm.UserId == user.Id &&
+                (pm.RoleId == task.AssigneeRoleId));
+
+            if (!isEligible)
+            {
+                throw new UnauthorizedAccessException("A felhasználó nem tagja a projektnek, vagy nincs meg a feladathoz szükséges szerepköre!");
+            }
+
+            // 5. Módosítás és MENTÉS az adatbázisba
+            task.AssigneeUserId = user.Id;
+            task.UpdatedAt = DateTime.UtcNow;
+
+            await _context.SaveChangesAsync();
+
+            return new ReserveTaskResultDto(task.UpdatedAt, user.Id);
+        }
+
+        public async Task<bool> UnReserveTaskAsync(ReserveTaskDto dto)
+        {
+            // 1. Aktív felhasználó ellenőrzése
+            var user = await _context.AppUsers
+                .FirstOrDefaultAsync(u => u.Id == dto.assigneeId && u.DeletedAt == null)
+                ?? throw new KeyNotFoundException("Nem található a felhasználó!");
+
+            // 2. Feladat lekérdezése az adott projektben
+            var task = await _context.ProjectTasks
+                .FirstOrDefaultAsync(t => t.Id == dto.id && t.ProjectId == dto.projectId)
+                ?? throw new KeyNotFoundException("Nem található a feladat a megadott projektben!");
+
+            // 3. Ellenőrizzük, hogy foglalt-e és valóban ő foglalta-e le
+            if (task.AssigneeUserId == null)
+            {
+                throw new InvalidOperationException("A feladat még nincs hozzárendelve senkihez!");
+            }
+
+            if (task.AssigneeUserId != user.Id)
+            {
+                throw new UnauthorizedAccessException("Csak a saját magad által lefoglalt feladatot mondhatod le!");
+            }
+
+            // 4. Projekttagság és meghirdetett szerepkör ellenőrzése
+            var isEligible = await _context.ProjectMembers.AnyAsync(pm =>
+                pm.ProjectId == dto.projectId &&
+                pm.UserId == user.Id &&
+                (task.AssigneeRoleId == null || pm.RoleId == task.AssigneeRoleId));
+
+            if (!isEligible)
+            {
+                throw new UnauthorizedAccessException("A felhasználó nem tagja a projektnek, vagy nincs meg a feladathoz szükséges szerepköre!");
+            }
+
+            // 5. Módosítás és mentés az adatbázisba
+            task.AssigneeUserId = null;
+            task.UpdatedAt = DateTime.UtcNow;
+
+            await _context.SaveChangesAsync();
+
             return true;
         }
     }

@@ -121,6 +121,44 @@ namespace PROTOTYPE_backend.Controllers
             }
         }
 
+        [HttpPost("me/2fa/enable-email")]
+        public async Task<IActionResult> EnableEmailTwoFactor([FromBody] EnableEmailTwoFactorDto dto)
+        {
+            try
+            {
+                var userId = User.GetUserId();
+                var recoveryCodes = await _authService.EnableEmailTwoFactorAsync(userId, dto.Password);
+                return Ok(new { recoveryCodes });
+            }
+            catch (UnauthorizedAccessException ex)
+            {
+                return Unauthorized(new { message = ex.Message });
+            }
+            catch (InvalidOperationException ex)
+            {
+                return BadRequest(new { message = ex.Message });
+            }
+        }
+
+        [HttpPost("me/2fa/recovery-codes")]
+        public async Task<IActionResult> RegenerateRecoveryCodes([FromBody] RegenerateRecoveryCodesDto dto)
+        {
+            try
+            {
+                var userId = User.GetUserId();
+                var recoveryCodes = await _authService.RegenerateRecoveryCodesAsync(userId, dto.Password);
+                return Ok(new { recoveryCodes });
+            }
+            catch (UnauthorizedAccessException ex)
+            {
+                return Unauthorized(new { message = ex.Message });
+            }
+            catch (InvalidOperationException ex)
+            {
+                return BadRequest(new { message = ex.Message });
+            }
+        }
+
         // 6. TOKEN FRISSÍTÉS
         [AllowAnonymous]
         [HttpPost("refresh")]

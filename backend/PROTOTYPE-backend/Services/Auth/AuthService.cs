@@ -108,7 +108,7 @@ namespace PROTOTYPE_backend.Services.Auth
 
             if (user.Is2faEnabled)
             {
-                // if (user.TwoFactorType == 2) await SendEmailCodeAsync(user);   // lásd lent
+                if (user.TwoFactorType == 2) await SendEmailCodeAsync(user);   // lásd lent
                 return new LoginResultDto(true, user.TwoFactorType, _tokenService.GenerateTwoFactorToken(user), null);
             }
 
@@ -124,8 +124,12 @@ namespace PROTOTYPE_backend.Services.Auth
                 .FirstOrDefaultAsync(u => u.Id == userId && u.DeletedAt == null && u.Is2faEnabled)
                 ?? throw new UnauthorizedAccessException("Érvénytelen felhasználó!");
 
-            var ok = user.TwoFactorType == 1 && VerifyTotp(user, dto.Code);
-            // email típusnál: ok = await VerifyEmailCodeAsync(user, dto.Code);
+            bool ok = user.TwoFactorType switch
+            {
+                1 => VerifyTotp(user, dto.Code),
+                2 => await VerifyEmailCodeAsync(user, dto.Code),
+                _ => false
+            };
 
             if (!ok && !await TryUseRecoveryCodeAsync(user, dto.Code))
                 throw new UnauthorizedAccessException("Érvénytelen kód!");
@@ -327,6 +331,125 @@ namespace PROTOTYPE_backend.Services.Auth
 
             return new DisabledTwoFactorResultDto(DateTime.UtcNow, user.Is2faEnabled);
         }
+
+        private async Task SendEmailCodeAsync(AppUser user)
+        {
+            // 1. Korábbi aktív kódok érvénytelenítése
+            await _context.User2faCodes
+                .Where(c => c.UserId == user.Id && !c.IsUsed)
+                .ExecuteUpdateAsync(s => s.SetProperty(x => x.IsUsed, true));
+
+            // 2. 6 számjegyű kód generálása és hashelése
+            var code = RandomNumberGenerator.GetInt32(100000, 1000000).ToString();
+            var codeHash = HashToken(code);
+
+            // 3. Mentés az adatbázisba (5 perces lejárattal)
+            var entry = new User2faCode
+            {
+                Id = Guid.NewGuid(),
+                UserId = user.Id,
+                CodeHash = codeHash,
+                FailedAttempts = 0,
+                MaxAttempts = 5,
+                ExpiresAt = DateTime.UtcNow.AddMinutes(5),
+                IsUsed = false,
+                CreatedAt = DateTime.UtcNow
+            };
+
+            _context.User2faCodes.Add(entry);
+            await _context.SaveChangesAsync();
+
+            // 4. Kód kiküldése e-mailben
+            await _emailService.SendTwoFactorCodeEmailAsync(user.Email, code);
+        }
+
+        private async Task<bool> VerifyEmailCodeAsync(AppUser user, string code)
+        {
+            var now = DateTime.UtcNow;
+            var activeCode = await _context.User2faCodes
+                .Where(c => c.UserId == user.Id && !c.IsUsed && c.ExpiresAt > now)
+                .OrderByDescending(c => c.CreatedAt)
+                .FirstOrDefaultAsync();
+
+            if (activeCode == null) return false;
+
+            if (activeCode.CodeHash != HashToken(code.Trim()))
+            {
+                activeCode.FailedAttempts++;
+                if (activeCode.FailedAttempts >= activeCode.MaxAttempts)
+                {
+                    activeCode.IsUsed = true; // Túl sok hibás próbálkozás -> érvénytelenítjük
+                }
+                await _context.SaveChangesAsync();
+                return false;
+            }
+
+            // Sikeres ellenőrzés
+            activeCode.IsUsed = true;
+            await _context.SaveChangesAsync();
+            return true;
+        }
+
+        public async Task<List<string>> EnableEmailTwoFactorAsync(Guid userId, string password)
+        {
+            var user = await _context.AppUsers.FirstOrDefaultAsync(u => u.Id == userId && u.DeletedAt == null)
+                ?? throw new UnauthorizedAccessException("Érvénytelen felhasználó!");
+
+            if (user.Is2faEnabled)
+                throw new InvalidOperationException("A 2FA már be van kapcsolva!");
+
+            if (!BCrypt.Net.BCrypt.EnhancedVerify(password, user.PasswordHash))
+                throw new UnauthorizedAccessException("Hibás jelszó!");
+
+            var (plain, hashes) = GenerateRecoveryCodes();
+
+            user.Is2faEnabled = true;
+            user.TwoFactorType = 2; // 2 = Email (enum_lookup alapján)[cite: 3]
+            user.TwoFactorSecret = null;
+            user.TwoFactorRecoveryCodes = JsonSerializer.Serialize(hashes);
+
+            await _context.SaveChangesAsync();
+            return plain;
+        }
+
+        public async Task<List<string>> RegenerateRecoveryCodesAsync(Guid userId, string password)
+        {
+            var user = await _context.AppUsers.FirstOrDefaultAsync(u => u.Id == userId && u.DeletedAt == null)
+                ?? throw new UnauthorizedAccessException("Érvénytelen felhasználó!");
+
+            if (!user.Is2faEnabled)
+                throw new InvalidOperationException("A 2FA nincs bekapcsolva!");
+
+            if (!BCrypt.Net.BCrypt.EnhancedVerify(password, user.PasswordHash))
+                throw new UnauthorizedAccessException("Hibás jelszó!");
+
+            var (plain, hashes) = GenerateRecoveryCodes();
+            user.TwoFactorRecoveryCodes = JsonSerializer.Serialize(hashes);
+
+            await _context.SaveChangesAsync();
+            return plain;
+        }
+
+        public async Task ResendTwoFactorEmailCodeAsync(string twoFactorToken)
+        {
+            var userId = _tokenService.ValidateTwoFactorToken(twoFactorToken)
+                ?? throw new UnauthorizedAccessException("Lejárt vagy érvénytelen 2FA munkamenet!");
+
+            var user = await _context.AppUsers
+                .FirstOrDefaultAsync(u => u.Id == userId && u.DeletedAt == null && u.Is2faEnabled && u.TwoFactorType == 2)
+                ?? throw new InvalidOperationException("Ehhez a fiókhoz nem kérhető e-mailes 2FA kód!");
+
+            // Opcionális: 30 mp várakozás kikényszerítése az utolsó kiküldés óta
+            var recentCode = await _context.User2faCodes
+                .Where(c => c.UserId == user.Id && c.CreatedAt > DateTime.UtcNow.AddSeconds(-30))
+                .AnyAsync();
+
+            if (recentCode)
+                throw new InvalidOperationException("Kérjük, várj 30 másodpercet az újraküldés előtt!");
+
+            await SendEmailCodeAsync(user);
+        }
+
 
         public async Task<AuthResponseDto> RefreshAsync(string refreshToken)
         {
@@ -591,4 +714,3 @@ namespace PROTOTYPE_backend.Services.Auth
         }
     }
 }
-
