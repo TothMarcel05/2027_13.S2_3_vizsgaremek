@@ -32,7 +32,7 @@ builder.Services.AddSwaggerGen(c =>
 
     c.AddSecurityDefinition("Bearer", new OpenApiSecurityScheme
     {
-        Description = "Illeszd be a JWT tokent (a 'Bearer' szót nem kell elé írni!)",
+        Description = "Illeszd be a JWT tokent!",
         Name = "Authorization",
         In = ParameterLocation.Header,
         Type = SecuritySchemeType.Http,

@@ -1,7 +1,7 @@
 -- ============================================================
 -- seed.sql – tesztadatok a TMD_KM_ProjectManagerApp adatbázishoz
 -- ============================================================
--- BELÉPÉSI ADATOK (a jelszavak ismertek, a hash bcrypt $2b$13$ formátumú)
+-- BELÉPÉSI ADATOK (a jelszavak ismertek, a hash BCrypt.Net EnhancedHashPassword(jelszó, 13) formátum: SHA-384 + Base64 + bcrypt, $2a$13$ – az API EnhancedVerify-vel ellenőrzi)
 --   SystemAdmin:
 --     marcel.toth@example.com        – Tóth Marcel       – Marcel2026!Admin
 --     milan.kecskemeti@example.com   – Kecskeméti Milán  – Milan2026!Admin
@@ -14,8 +14,7 @@
 --   * Az admin fiókoknál és a 2FA nélküli felhasználóknál jelszóval be lehet lépni az API-n.
 --   * Anna (Authenticator) és Bence, Eszter (e-mailes 2FA) fiókjánál a 2FA be van kapcsolva,
 --     ott a belépéshez második faktor is kell. A 2FA kódok hash-e a 123456 értéké.
---   * Ha az API más jelszó-hash algoritmust használ (pl. előzetes SHA-hash, Argon2, PBKDF2),
---     a belépés nem fog működni – ilyenkor a password_hash értékeket az API-val kell újragenerálni.
+--   * A user_2fa_code.code_hash ugyanezzel a sémával készült; ha az API a 2FA kódokat másképp hash-eli, azt is igazítsd.
 -- ============================================================
 USE TMD_KM_ProjectManagerApp;
 SET NAMES utf8mb4;
@@ -62,21 +61,21 @@ SET FOREIGN_KEY_CHECKS = 1;
 -- ============================================================
 -- app_user (15 sor)
 INSERT INTO app_user (id, name, email, password_hash, avatar_url, created_at, updated_at, global_role, deleted_at, is_2fa_enabled, two_factor_type, two_factor_secret, two_factor_recovery_codes) VALUES
-    ('01000000-0000-4000-8000-000000000001', 'Tóth Marcel', 'marcel.toth@example.com', '$2b$13$Z91SEoWdshrnSpuwOgmGeue.oDtjhvOB8xJanfBnSpRfGWOCC2h9e', NULL, '2026-03-02 08:15:00', '2026-03-09 08:15:00', 2, NULL, FALSE, 0, NULL, NULL),
-    ('01000000-0000-4000-8000-000000000002', 'Nagy Anna', 'anna.nagy@example.com', '$2b$13$fK0WTK6H0abF8qKr3Uz52OHTJEsJlbPeZFfHpDfxsIY1Mh3gDT4Ty', '/uploads/avatars/2.png', '2026-03-03 09:05:00', '2026-03-27 09:05:00', 1, NULL, TRUE, 1, 'enc:v1:/76DoxO5VxaOiUpJdSTgpbS3k08G2bVe', '["6956-8554", "7917-2485", "7533-9166", "2907-7970", "9296-9045", "7523-9595", "5237-7880", "8851-9404"]'),
-    ('01000000-0000-4000-8000-000000000003', 'Szabó Bence', 'bence.szabo@example.com', '$2b$13$fK0WTK6H0abF8qKr3Uz52OHTJEsJlbPeZFfHpDfxsIY1Mh3gDT4Ty', NULL, '2026-03-04 10:20:00', '2026-04-06 10:20:00', 1, NULL, TRUE, 2, NULL, NULL),
-    ('01000000-0000-4000-8000-000000000004', 'Tóth Eszter', 'eszter.toth@example.com', '$2b$13$fK0WTK6H0abF8qKr3Uz52OHTJEsJlbPeZFfHpDfxsIY1Mh3gDT4Ty', '/uploads/avatars/4.png', '2026-03-06 11:40:00', '2026-03-07 11:40:00', 1, NULL, TRUE, 2, NULL, NULL),
-    ('01000000-0000-4000-8000-000000000005', 'Horváth Dávid', 'david.horvath@example.com', '$2b$13$fK0WTK6H0abF8qKr3Uz52OHTJEsJlbPeZFfHpDfxsIY1Mh3gDT4Ty', NULL, '2026-03-09 14:00:00', '2026-04-14 14:00:00', 1, NULL, FALSE, 0, NULL, NULL),
-    ('01000000-0000-4000-8000-000000000006', 'Varga Lilla', 'lilla.varga@example.com', '$2b$13$fK0WTK6H0abF8qKr3Uz52OHTJEsJlbPeZFfHpDfxsIY1Mh3gDT4Ty', '/uploads/avatars/6.png', '2026-03-11 09:30:00', '2026-03-25 09:30:00', 1, NULL, FALSE, 0, NULL, NULL),
-    ('01000000-0000-4000-8000-000000000007', 'Kiss Gergő', 'gergo.kiss@example.com', '$2b$13$fK0WTK6H0abF8qKr3Uz52OHTJEsJlbPeZFfHpDfxsIY1Mh3gDT4Ty', NULL, '2026-03-16 13:10:00', '2026-03-24 13:10:00', 1, NULL, FALSE, 0, NULL, NULL),
-    ('01000000-0000-4000-8000-000000000008', 'Molnár Zsófia', 'zsofia.molnar@example.com', '$2b$13$fK0WTK6H0abF8qKr3Uz52OHTJEsJlbPeZFfHpDfxsIY1Mh3gDT4Ty', '/uploads/avatars/8.png', '2026-03-23 16:45:00', '2026-03-26 16:45:00', 1, NULL, FALSE, 0, NULL, NULL),
-    ('01000000-0000-4000-8000-000000000009', 'Németh Péter', 'peter.nemeth@example.com', '$2b$13$fK0WTK6H0abF8qKr3Uz52OHTJEsJlbPeZFfHpDfxsIY1Mh3gDT4Ty', NULL, '2026-04-01 08:50:00', '2026-05-04 08:50:00', 1, NULL, FALSE, 0, NULL, NULL),
-    ('01000000-0000-4000-8000-000000000010', 'Farkas Réka', 'reka.farkas@example.com', '$2b$13$fK0WTK6H0abF8qKr3Uz52OHTJEsJlbPeZFfHpDfxsIY1Mh3gDT4Ty', '/uploads/avatars/10.png', '2026-04-07 10:00:00', '2026-04-13 10:00:00', 1, NULL, FALSE, 0, NULL, NULL),
-    ('01000000-0000-4000-8000-000000000011', 'Balogh Tamás', 'tamas.balogh@example.com', '$2b$13$fK0WTK6H0abF8qKr3Uz52OHTJEsJlbPeZFfHpDfxsIY1Mh3gDT4Ty', NULL, '2026-04-14 15:25:00', '2026-05-23 15:25:00', 1, NULL, FALSE, 0, NULL, NULL),
-    ('01000000-0000-4000-8000-000000000012', 'Papp Nóra', 'nora.papp@example.com', '$2b$13$fK0WTK6H0abF8qKr3Uz52OHTJEsJlbPeZFfHpDfxsIY1Mh3gDT4Ty', '/uploads/avatars/12.png', '2026-04-20 12:00:00', '2026-05-17 12:00:00', 1, NULL, FALSE, 0, NULL, NULL),
-    ('01000000-0000-4000-8000-000000000013', 'Takács Ádám', 'adam.takacs@example.com', '$2b$13$fK0WTK6H0abF8qKr3Uz52OHTJEsJlbPeZFfHpDfxsIY1Mh3gDT4Ty', NULL, '2026-04-22 09:15:00', '2026-05-22 09:15:00', 1, NULL, FALSE, 0, NULL, NULL),
-    ('01000000-0000-4000-8000-000000000014', 'Juhász Kata', 'kata.juhasz@example.com', '$2b$13$fK0WTK6H0abF8qKr3Uz52OHTJEsJlbPeZFfHpDfxsIY1Mh3gDT4Ty', '/uploads/avatars/14.png', '2026-04-27 17:30:00', '2026-05-06 17:30:00', 1, NULL, FALSE, 0, NULL, NULL),
-    ('01000000-0000-4000-8000-000000000015', 'Kecskeméti Milán', 'milan.kecskemeti@example.com', '$2b$13$a7VLDxrEEKGNzW8VyFq8eOkzJVyCdxMPpBZ2C4xE4KZaC8Y/NXezS', NULL, '2026-03-02 08:45:00', '2026-03-10 08:45:00', 2, NULL, FALSE, 0, NULL, NULL);
+    ('01000000-0000-4000-8000-000000000001', 'Tóth Marcel', 'marcel.toth@example.com', '$2a$13$YAQgPXgmE/jAotQQERJVtuVivvKlMj1mX8vn3Qj7JzSZBV6KY8V3m', NULL, '2026-03-02 08:15:00', '2026-03-09 08:15:00', 2, NULL, FALSE, 0, NULL, NULL),
+    ('01000000-0000-4000-8000-000000000002', 'Nagy Anna', 'anna.nagy@example.com', '$2a$13$JrhVqcEYYRRdCBhDJZUnPuYC698mUNBPGgnKEoE5VZZW4TyOjvQxK', '/uploads/avatars/2.png', '2026-03-03 09:05:00', '2026-03-27 09:05:00', 1, NULL, TRUE, 1, 'enc:v1:/76DoxO5VxaOiUpJdSTgpbS3k08G2bVe', '["6956-8554", "7917-2485", "7533-9166", "2907-7970", "9296-9045", "7523-9595", "5237-7880", "8851-9404"]'),
+    ('01000000-0000-4000-8000-000000000003', 'Szabó Bence', 'bence.szabo@example.com', '$2a$13$JrhVqcEYYRRdCBhDJZUnPuYC698mUNBPGgnKEoE5VZZW4TyOjvQxK', NULL, '2026-03-04 10:20:00', '2026-04-06 10:20:00', 1, NULL, TRUE, 2, NULL, NULL),
+    ('01000000-0000-4000-8000-000000000004', 'Tóth Eszter', 'eszter.toth@example.com', '$2a$13$JrhVqcEYYRRdCBhDJZUnPuYC698mUNBPGgnKEoE5VZZW4TyOjvQxK', '/uploads/avatars/4.png', '2026-03-06 11:40:00', '2026-03-07 11:40:00', 1, NULL, TRUE, 2, NULL, NULL),
+    ('01000000-0000-4000-8000-000000000005', 'Horváth Dávid', 'david.horvath@example.com', '$2a$13$JrhVqcEYYRRdCBhDJZUnPuYC698mUNBPGgnKEoE5VZZW4TyOjvQxK', NULL, '2026-03-09 14:00:00', '2026-04-14 14:00:00', 1, NULL, FALSE, 0, NULL, NULL),
+    ('01000000-0000-4000-8000-000000000006', 'Varga Lilla', 'lilla.varga@example.com', '$2a$13$JrhVqcEYYRRdCBhDJZUnPuYC698mUNBPGgnKEoE5VZZW4TyOjvQxK', '/uploads/avatars/6.png', '2026-03-11 09:30:00', '2026-03-25 09:30:00', 1, NULL, FALSE, 0, NULL, NULL),
+    ('01000000-0000-4000-8000-000000000007', 'Kiss Gergő', 'gergo.kiss@example.com', '$2a$13$JrhVqcEYYRRdCBhDJZUnPuYC698mUNBPGgnKEoE5VZZW4TyOjvQxK', NULL, '2026-03-16 13:10:00', '2026-03-24 13:10:00', 1, NULL, FALSE, 0, NULL, NULL),
+    ('01000000-0000-4000-8000-000000000008', 'Molnár Zsófia', 'zsofia.molnar@example.com', '$2a$13$JrhVqcEYYRRdCBhDJZUnPuYC698mUNBPGgnKEoE5VZZW4TyOjvQxK', '/uploads/avatars/8.png', '2026-03-23 16:45:00', '2026-03-26 16:45:00', 1, NULL, FALSE, 0, NULL, NULL),
+    ('01000000-0000-4000-8000-000000000009', 'Németh Péter', 'peter.nemeth@example.com', '$2a$13$JrhVqcEYYRRdCBhDJZUnPuYC698mUNBPGgnKEoE5VZZW4TyOjvQxK', NULL, '2026-04-01 08:50:00', '2026-05-04 08:50:00', 1, NULL, FALSE, 0, NULL, NULL),
+    ('01000000-0000-4000-8000-000000000010', 'Farkas Réka', 'reka.farkas@example.com', '$2a$13$JrhVqcEYYRRdCBhDJZUnPuYC698mUNBPGgnKEoE5VZZW4TyOjvQxK', '/uploads/avatars/10.png', '2026-04-07 10:00:00', '2026-04-13 10:00:00', 1, NULL, FALSE, 0, NULL, NULL),
+    ('01000000-0000-4000-8000-000000000011', 'Balogh Tamás', 'tamas.balogh@example.com', '$2a$13$JrhVqcEYYRRdCBhDJZUnPuYC698mUNBPGgnKEoE5VZZW4TyOjvQxK', NULL, '2026-04-14 15:25:00', '2026-05-23 15:25:00', 1, NULL, FALSE, 0, NULL, NULL),
+    ('01000000-0000-4000-8000-000000000012', 'Papp Nóra', 'nora.papp@example.com', '$2a$13$JrhVqcEYYRRdCBhDJZUnPuYC698mUNBPGgnKEoE5VZZW4TyOjvQxK', '/uploads/avatars/12.png', '2026-04-20 12:00:00', '2026-05-17 12:00:00', 1, NULL, FALSE, 0, NULL, NULL),
+    ('01000000-0000-4000-8000-000000000013', 'Takács Ádám', 'adam.takacs@example.com', '$2a$13$JrhVqcEYYRRdCBhDJZUnPuYC698mUNBPGgnKEoE5VZZW4TyOjvQxK', NULL, '2026-04-22 09:15:00', '2026-05-22 09:15:00', 1, NULL, FALSE, 0, NULL, NULL),
+    ('01000000-0000-4000-8000-000000000014', 'Juhász Kata', 'kata.juhasz@example.com', '$2a$13$JrhVqcEYYRRdCBhDJZUnPuYC698mUNBPGgnKEoE5VZZW4TyOjvQxK', '/uploads/avatars/14.png', '2026-04-27 17:30:00', '2026-05-06 17:30:00', 1, NULL, FALSE, 0, NULL, NULL),
+    ('01000000-0000-4000-8000-000000000015', 'Kecskeméti Milán', 'milan.kecskemeti@example.com', '$2a$13$fY.pvchqWSDAMl.dgEpQEuGpOzONspow5AWR12OZHqud7TtdOYCjy', NULL, '2026-03-02 08:45:00', '2026-03-10 08:45:00', 2, NULL, FALSE, 0, NULL, NULL);
 
 -- workspace (4 sor)
 INSERT INTO workspace (id, name, description, owner_id, created_at) VALUES
@@ -1561,12 +1560,12 @@ INSERT INTO user_session (id, user_id, refresh_token_hash, replaced_by_session_i
 
 -- user_2fa_code (6 sor)
 INSERT INTO user_2fa_code (id, user_id, code_hash, failed_attempts, max_attempts, expires_at, is_used, created_at) VALUES
-    ('16000000-0000-4000-8000-000000000001', '01000000-0000-4000-8000-000000000003', '$2b$13$OVK.LXLNUAvmtWLzOmdl9eScITyHgBa5EGYLUN9QskEUAm6IJ46hi', 1, 5, DATE_SUB(NOW(), INTERVAL 3 DAY), TRUE, '2026-09-25 08:03:00'),
-    ('16000000-0000-4000-8000-000000000002', '01000000-0000-4000-8000-000000000003', '$2b$13$OVK.LXLNUAvmtWLzOmdl9eScITyHgBa5EGYLUN9QskEUAm6IJ46hi', 5, 5, DATE_SUB(NOW(), INTERVAL 1 DAY), FALSE, '2026-09-28 09:03:00'),
-    ('16000000-0000-4000-8000-000000000003', '01000000-0000-4000-8000-000000000003', '$2b$13$OVK.LXLNUAvmtWLzOmdl9eScITyHgBa5EGYLUN9QskEUAm6IJ46hi', 0, 5, DATE_ADD(NOW(), INTERVAL 10 MINUTE), FALSE, '2026-09-30 09:00:00'),
-    ('16000000-0000-4000-8000-000000000004', '01000000-0000-4000-8000-000000000004', '$2b$13$OVK.LXLNUAvmtWLzOmdl9eScITyHgBa5EGYLUN9QskEUAm6IJ46hi', 1, 5, DATE_SUB(NOW(), INTERVAL 3 DAY), TRUE, '2026-09-25 08:04:00'),
-    ('16000000-0000-4000-8000-000000000005', '01000000-0000-4000-8000-000000000004', '$2b$13$OVK.LXLNUAvmtWLzOmdl9eScITyHgBa5EGYLUN9QskEUAm6IJ46hi', 5, 5, DATE_SUB(NOW(), INTERVAL 1 DAY), FALSE, '2026-09-28 09:04:00'),
-    ('16000000-0000-4000-8000-000000000006', '01000000-0000-4000-8000-000000000004', '$2b$13$OVK.LXLNUAvmtWLzOmdl9eScITyHgBa5EGYLUN9QskEUAm6IJ46hi', 0, 5, DATE_ADD(NOW(), INTERVAL 10 MINUTE), FALSE, '2026-09-30 09:00:00');
+    ('16000000-0000-4000-8000-000000000001', '01000000-0000-4000-8000-000000000003', '$2a$13$JjukBCpRYuN/npNLKACoXuPNVn/VL.kNkm2vJa1J5bUgZM1/lHaKC', 1, 5, DATE_SUB(NOW(), INTERVAL 3 DAY), TRUE, '2026-09-25 08:03:00'),
+    ('16000000-0000-4000-8000-000000000002', '01000000-0000-4000-8000-000000000003', '$2a$13$JjukBCpRYuN/npNLKACoXuPNVn/VL.kNkm2vJa1J5bUgZM1/lHaKC', 5, 5, DATE_SUB(NOW(), INTERVAL 1 DAY), FALSE, '2026-09-28 09:03:00'),
+    ('16000000-0000-4000-8000-000000000003', '01000000-0000-4000-8000-000000000003', '$2a$13$JjukBCpRYuN/npNLKACoXuPNVn/VL.kNkm2vJa1J5bUgZM1/lHaKC', 0, 5, DATE_ADD(NOW(), INTERVAL 10 MINUTE), FALSE, '2026-09-30 09:00:00'),
+    ('16000000-0000-4000-8000-000000000004', '01000000-0000-4000-8000-000000000004', '$2a$13$JjukBCpRYuN/npNLKACoXuPNVn/VL.kNkm2vJa1J5bUgZM1/lHaKC', 1, 5, DATE_SUB(NOW(), INTERVAL 3 DAY), TRUE, '2026-09-25 08:04:00'),
+    ('16000000-0000-4000-8000-000000000005', '01000000-0000-4000-8000-000000000004', '$2a$13$JjukBCpRYuN/npNLKACoXuPNVn/VL.kNkm2vJa1J5bUgZM1/lHaKC', 5, 5, DATE_SUB(NOW(), INTERVAL 1 DAY), FALSE, '2026-09-28 09:04:00'),
+    ('16000000-0000-4000-8000-000000000006', '01000000-0000-4000-8000-000000000004', '$2a$13$JjukBCpRYuN/npNLKACoXuPNVn/VL.kNkm2vJa1J5bUgZM1/lHaKC', 0, 5, DATE_ADD(NOW(), INTERVAL 10 MINUTE), FALSE, '2026-09-30 09:00:00');
 
 -- password_reset_token (6 sor)
 -- Aktív (nem használt, nem lejárt) tesztelhető tokenek – a hash a nyers token SHA-256 hex értéke:
