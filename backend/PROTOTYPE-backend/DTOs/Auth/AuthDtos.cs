@@ -137,4 +137,10 @@ namespace PROTOTYPE_backend.DTOs.Auth
             DateTime? updatedAt,
             DateTime? createdAt
         );
+
+    public record EnableEmailTwoFactorDto(string Password);
+
+    public record RegenerateRecoveryCodesDto(string Password);
+
+    public record ResendTwoFactorDto(string TwoFactorToken);
 }

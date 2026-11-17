@@ -40,7 +40,8 @@ public class PermissionHandler : AuthorizationHandler<PermissionRequirement>
             // Kinyerjük a workspaceId-t vagy projectId-t az Route Data-ból vagy Query/Header-ből
             string? currentContextId = httpContext?.GetRouteValue("workspaceId")?.ToString()
                                      ?? httpContext?.GetRouteValue("projectId")?.ToString()
-                                     ?? httpContext?.Request.Headers["X-Workspace-Id"].FirstOrDefault();
+                                     ?? httpContext?.Request.Headers["X-Workspace-Id"].FirstOrDefault()
+                                     ?? context.User.FindFirstValue("active_workspace_id");
 
             var rolesAndPermissions = JsonSerializer.Deserialize<Dictionary<string, List<string>>>(permissionsJson);
 

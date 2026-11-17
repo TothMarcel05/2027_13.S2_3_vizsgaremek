@@ -27,5 +27,8 @@ namespace PROTOTYPE_backend.Services.Auth
         Task<List<UserSessionsResponseDto>> GetSessionsAsync(int page, int limit);
         Task RequestPasswordResetAsync(string email);
         Task<bool> ResetPasswordAsync(string email, string token, ResetPwdDto dto);
+        Task<List<string>> EnableEmailTwoFactorAsync(Guid userId, string password);
+        Task<List<string>> RegenerateRecoveryCodesAsync(Guid userId, string password);
+        Task ResendTwoFactorEmailCodeAsync(string twoFactorToken);
     }
 }

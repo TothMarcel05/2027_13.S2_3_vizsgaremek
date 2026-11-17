@@ -34,6 +34,14 @@ public record CreateProjectDto(
     DateOnly? deadline,
     Guid? ownerId
 );
+
+public record ReserveTaskDto
+    (
+        Guid id,
+        Guid projectId,
+        Guid assigneeId
+    );
+
 #endregion
 
 #region Response DTOs
@@ -96,6 +104,12 @@ public record WorkspaceProjectResponseDto(
     string? description,
     DateOnly? deadline
 );
+
+public record ReserveTaskResultDto
+    (
+        DateTime? updatedAt,
+        Guid assigneeId
+    );
 
 #endregion
 

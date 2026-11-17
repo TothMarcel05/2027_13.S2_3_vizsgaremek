@@ -20,6 +20,7 @@ namespace PROTOTYPE_backend.Services.Workspaces
         Task<WorkspaceOwnerChangeResponseDto?> ChangeWorkspaceOwnerAsync(Guid workspaceId, WorkspaceOwnerChangeDto dto);
         Task<WorkspaceMemberRoleChangeResponseDto?> UpdateMemberRoleAsync(Guid workspaceId, Guid userId, WorkspaceMemberRoleChangeDto dto);
         Task<bool> RemoveMemberAsync(Guid workspaceId, Guid userId);
-
+        Task<ReserveTaskResultDto> ReserveTaskAsync(ReserveTaskDto dto);
+        Task<bool> UnReserveTaskAsync(ReserveTaskDto dto);
     }
 }
