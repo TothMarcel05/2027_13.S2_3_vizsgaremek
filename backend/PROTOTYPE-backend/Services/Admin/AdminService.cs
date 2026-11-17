@@ -1,121 +1,163 @@
-﻿using System;
+﻿using Microsoft.EntityFrameworkCore;
+using PROTOTYPE_backend.Data;
+using PROTOTYPE_backend.DTOs.Admin;
+using PROTOTYPE_backend.Models;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
-using Microsoft.EntityFrameworkCore;
-using PROTOTYPE_backend.Data;
-using PROTOTYPE_backend.DTOs.Admin;
 
-namespace PROTOTYPE_backend.Services.Admin
+namespace PROTOTYPE_backend.Services.Admin;
+
+public class AdminService : IAdminService
 {
-    public class AdminService : IAdminService
+    private readonly AppDbContext _context;
+
+    public AdminService(AppDbContext context)
     {
-        private readonly AppDbContext _context;
+        _context = context;
+    }
 
-        public AdminService(AppDbContext context)
+    public async Task<List<UserRoleResponseDto>> GetRolesAndPermissionsAsync()
+    {
+        return await _context.AppRoles
+            .Select(r => new UserRoleResponseDto(
+                r.Id,
+                r.Name,
+                r.Permissions.Select(p => p.Code).ToList()
+            ))
+            .ToListAsync();
+    }
+
+    public async Task<UserRoleResponseDto> CreateRoleAsync(CreateRoleDto dto)
+    {
+        if (await _context.AppRoles.AnyAsync(r => r.Name == dto.Name))
         {
-            _context = context;
+            throw new InvalidOperationException("Ez a szerepkör név már foglalt.");
         }
 
-        public async Task<List<UserRoleResponseDto>> GetRolesAndPermissionsAsync()
+        var newRole = new AppRole
         {
-            return await _context.AppRoles
-                .Select(r => new UserRoleResponseDto(
-                    r.Id,
-                    r.Name,
-                    r.Permissions.Select(p => p.Code).ToList()
-                    ))
-                .ToListAsync();     
-        }
+            Id = Guid.NewGuid(),
+            Name = dto.Name,
+            IsSystem = false, 
+            CreatedAt = DateTime.UtcNow,
+            Permissions = new List<Permission>()
+        };
 
-        public async Task<IEnumerable<UserAdminViewDto>> GetAllUsersAsync()
+        if (dto.Permissions != null && dto.Permissions.Any())
         {
-            var users = await _context.AppUsers
-                .AsNoTracking()
-                .OrderByDescending(u => u.CreatedAt)
+            var permissions = await _context.Permissions
+                .Where(p => dto.Permissions.Contains(p.Code))
                 .ToListAsync();
 
-            return users.Select(u => new UserAdminViewDto(
-                u.Id,
-                u.Name,
-                u.Email,
-                u.GlobalRole,
-                u.Is2faEnabled,
-                u.CreatedAt,
-                u.DeletedAt
-            ));
+            newRole.Permissions = permissions;
         }
 
-        public async Task<bool> UpdateUserRoleAsync(UpdateUserRoleDto dto)
+        _context.AppRoles.Add(newRole);
+        await _context.SaveChangesAsync();
+
+        return new UserRoleResponseDto(
+            newRole.Id,
+            newRole.Name,
+            newRole.Permissions.Select(p => p.Code).ToList()
+        );
+    }
+
+    public async Task<bool> UpdateRolePermissionsAsync(Guid roleId, UpdateRolePermissionsDto dto)
+    {
+        var role = await _context.AppRoles
+            .Include(r => r.Permissions)
+            .FirstOrDefaultAsync(r => r.Id == roleId);
+
+        if (role == null) return false;
+
+        var newPermissions = await _context.Permissions
+            .Where(p => dto.Permissions.Contains(p.Code))
+            .ToListAsync();
+
+        role.Permissions.Clear();
+        foreach (var permission in newPermissions)
         {
-            var existingWorkspace = await _context.WorkspaceMembers
-                .FirstOrDefaultAsync(w => w.UserId == dto.UserId);
-            if (existingWorkspace == null) return false;
-
-            existingWorkspace.RoleId = dto.NewRole;
-
-            await _context.SaveChangesAsync();
-            return true;
+            role.Permissions.Add(permission);
         }
 
-        public async Task<bool> UpdateUserGlobalRoleAsync(UpdateUserGlobalRoleDto dto)
+        await _context.SaveChangesAsync();
+
+        return true;
+    }
+
+    public async Task<IEnumerable<UserAdminViewDto>> GetAllUsersAsync(int page = 1, string? search = null)
+    {
+        var query = _context.AppUsers.AsNoTracking().AsQueryable();
+
+        if (!string.IsNullOrWhiteSpace(search))
         {
-            var user = await _context.AppUsers.FindAsync(dto.UserId);
-            if (user == null) return false;
-
-            user.GlobalRole = dto.NewGlobalRole;
-            user.UpdatedAt = DateTime.UtcNow;
-
-            await _context.SaveChangesAsync();
-            return true;
+            var searchLower = search.ToLower();
+            query = query.Where(u => u.Name.ToLower().Contains(searchLower) || u.Email.ToLower().Contains(searchLower));
         }
 
-        public async Task<SystemOverviewStatsDto> GetSystemStatsAsync()
-        {
-            var totalUsers = await _context.AppUsers.CountAsync();
-            var activeUsers = await _context.AppUsers.CountAsync(u => u.DeletedAt == null);
-            var totalWorkspaces = await _context.Workspaces.CountAsync();
-            var totalProjects = await _context.Projects.CountAsync();
-            var totalTasks = await _context.ProjectTasks.CountAsync();
+        int pageSize = 20; 
 
-            return new SystemOverviewStatsDto(
-                totalUsers,
-                activeUsers,
-                totalWorkspaces,
-                totalProjects,
-                totalTasks
-            );
-        }
+        var users = await query
+            .OrderByDescending(u => u.CreatedAt)
+            .Skip((page - 1) * pageSize)
+            .Take(pageSize)
+            .ToListAsync();
 
-        public async Task<bool> ToggleUserStatusAsync(string userId)
-        {
-            var user = await _context.AppUsers.FindAsync(userId);
-            if (user == null) return false;
+        return users.Select(u => new UserAdminViewDto(
+            u.Id,
+            u.Name,
+            u.Email,
+            u.GlobalRole,
+            u.Is2faEnabled,
+            u.CreatedAt,
+            u.DeletedAt
+        ));
+    }
 
-            if (user.DeletedAt == null)
-            {
-                user.DeletedAt = DateTime.UtcNow;
-            }
-            else
-            {
-                user.DeletedAt = null;
-            }
+    public async Task<bool> UpdateUserGlobalRoleAsync(Guid userId, UpdateUserGlobalRoleDto dto)
+    {
+        var user = await _context.AppUsers.FindAsync(userId);
+        if (user == null) return false;
 
-            user.UpdatedAt = DateTime.UtcNow;
-            await _context.SaveChangesAsync();
-            return true;
-        }
+        user.GlobalRole = dto.NewGlobalRole;
+        user.UpdatedAt = DateTime.UtcNow;
 
-        public async Task<bool> RemoveUserAsync(Guid userId)
-        {
-            var user = await _context.AppUsers
-                .FirstOrDefaultAsync(u =>  u.Id == userId);
+        await _context.SaveChangesAsync();
+        return true;
+    }
 
-            if (user == null) return false;
+    public async Task<SystemOverviewStatsDto> GetSystemStatsAsync()
+    {
+        return new SystemOverviewStatsDto(
+            await _context.AppUsers.CountAsync(),
+            await _context.AppUsers.CountAsync(u => u.DeletedAt == null),
+            await _context.Workspaces.CountAsync(),
+            await _context.Projects.CountAsync(),
+            await _context.ProjectTasks.CountAsync()
+        );
+    }
 
-            _context.AppUsers.Remove(user);
-            await _context.SaveChangesAsync();
-            return true;
-        }
+    public async Task<bool> ToggleUserStatusAsync(Guid userId)
+    {
+        var user = await _context.AppUsers.FindAsync(userId);
+        if (user == null) return false;
+
+        user.DeletedAt = user.DeletedAt == null ? DateTime.UtcNow : null;
+        user.UpdatedAt = DateTime.UtcNow;
+
+        await _context.SaveChangesAsync();
+        return true;
+    }
+
+    public async Task<bool> RemoveUserAsync(Guid userId)
+    {
+        var user = await _context.AppUsers.FindAsync(userId);
+        if (user == null) return false;
+
+        _context.AppUsers.Remove(user);
+        await _context.SaveChangesAsync();
+        return true;
     }
 }

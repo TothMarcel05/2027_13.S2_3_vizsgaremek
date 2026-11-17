@@ -1,81 +1,77 @@
-﻿using System.Threading.Tasks;
+﻿using System;
+using System.Threading.Tasks;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using PROTOTYPE_backend.DTOs.Admin;
 using PROTOTYPE_backend.Services.Admin;
 
-namespace PROTOTYPE_backend.Controllers
+namespace PROTOTYPE_backend.Controllers;
+
+[ApiController]
+[Route("api")]
+// [Authorize(Roles = "SystemAdmin")] 
+public class AdminController : ControllerBase
 {
-    [ApiController]
-    [Route("api/[controller]")]
-    public class AdminController : ControllerBase
+    private readonly IAdminService _adminService;
+
+    public AdminController(IAdminService adminService)
     {
-        private readonly IAdminService _adminService;
+        _adminService = adminService;
+    }
 
-        public AdminController(IAdminService adminService)
-        {
-            _adminService = adminService;
-        }
+    [HttpGet("roles")]
+    public async Task<IActionResult> GetRolesAndPermissions()
+    {
+        var roles = await _adminService.GetRolesAndPermissionsAsync();
+        return Ok(roles);
+    }
 
-        [HttpGet("roles")]
-        public async Task<IActionResult> GetRolesAndPermissions()
-        {
-            var roles = await _adminService.GetRolesAndPermissionsAsync();
-            return Ok(roles);
-        }
+    [HttpPost("roles")]
+    public async Task<IActionResult> CreateRole([FromBody] CreateRoleDto dto)
+    {
+        var role = await _adminService.CreateRoleAsync(dto);
+        return CreatedAtAction(nameof(GetRolesAndPermissions), new { id = role.RoleId }, role);
+    }
 
-        [HttpGet("users")]
-        public async Task<IActionResult> GetAllUsers()
-        {
-            var users = await _adminService.GetAllUsersAsync();
-            return Ok(users);
-        }
+    [HttpPut("roles/{id}/permissions")]
+    public async Task<IActionResult> UpdateRolePermissions(Guid id, [FromBody] UpdateRolePermissionsDto dto)
+    {
+        var success = await _adminService.UpdateRolePermissionsAsync(id, dto);
+        if (!success) return NotFound(new { message = "A szerepkör nem található." });
 
-        [HttpGet("stats")]
-        public async Task<IActionResult> GetSystemStats()
-        {
-            var stats = await _adminService.GetSystemStatsAsync();
-            return Ok(stats);
-        }
+        return Ok(new { message = "Jogosultságok frissítve." });
+    }
 
+    [HttpGet("admin/users")]
+    public async Task<IActionResult> GetAllUsers([FromQuery] int page = 1, [FromQuery] string? search = null)
+    {
+        var users = await _adminService.GetAllUsersAsync(page, search);
+        return Ok(users);
+    }
 
-        [HttpPut("user/role")]
+    [HttpGet("admin/stats")]
+    public async Task<IActionResult> GetSystemStats()
+    {
+        var stats = await _adminService.GetSystemStatsAsync();
+        return Ok(stats);
+    }
 
-        public async Task<IActionResult> UpdateUserRole([FromBody] UpdateUserRoleDto dto)
-        {
-            var success = await _adminService.UpdateUserRoleAsync(dto);
-            if (!success) return NotFound("A megadott felhasználó nem található.");
+    [HttpPut("admin/users/{id}/role")]
+    public async Task<IActionResult> UpdateUserGlobalRole(Guid id, [FromBody] UpdateUserGlobalRoleDto dto)
+    {
+        var success = await _adminService.UpdateUserGlobalRoleAsync(id, dto);
+        if (!success) return NotFound(new { message = "A megadott felhasználó nem található." });
 
-            return Ok(new { message = "A felhasználó szerepköre sikeresen frissítve." });
-        }
+        return Ok(new { message = "A felhasználó szerepköre sikeresen frissítve." });
+    }
 
+    [HttpDelete("admin/users/{id}")]
+    public async Task<IActionResult> RemoveUser(Guid id)
+    {
 
-        [HttpPut("user/globalRole")]
-        public async Task<IActionResult> UpdateUserGlobalRole([FromBody] UpdateUserGlobalRoleDto dto)
-        {
-            var success = await _adminService.UpdateUserGlobalRoleAsync(dto);
-            if (!success) return NotFound("A megadott felhasználó nem található.");
+        var success = await _adminService.RemoveUserAsync(id);
+        if (!success) return NotFound(new { message = "A megadott felhasználó nem található." });
 
-            return Ok(new { message = "A felhasználó szerepköre sikeresen frissítve." });
-        }
-
-
-        [HttpDelete("{userId}")]
-        public async Task<IActionResult> RemoveUser(Guid userId)
-        {
-            var success = await _adminService.RemoveUserAsync(userId);
-            if (!success) return NotFound("A megadott felhasználó nem található.");
-
-            return Ok(new { message = "A felhasználó sikeresen eltávolítva." });
-        }
-
-        [HttpPut("user/{userId}/toggle-status")]
-        public async Task<IActionResult> ToggleUserStatus(string userId)
-        {
-            var success = await _adminService.ToggleUserStatusAsync(userId);
-            if (!success) return NotFound("A megadott felhasználó nem található.");
-
-            return Ok(new { message = "A felhasználó fiókstátusza sikeresen módosítva." });
-        }
+        return Ok(new { message = "A felhasználó sikeresen eltávolítva." });
     }
 }

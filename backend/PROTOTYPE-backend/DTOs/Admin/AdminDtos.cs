@@ -1,52 +1,50 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 
-namespace PROTOTYPE_backend.DTOs.Admin
-{
+namespace PROTOTYPE_backend.DTOs.Admin;
 
-    #region Request DTOs
+#region Request DTOs
 
+public record CreateRoleDto(
+    [Required] string Name,
+    List<string> Permissions
+);
 
-    public record UpdateUserRoleDto(
-        [Required] Guid UserId,
-        [Required] Guid NewRole 
-    );
+public record UpdateRolePermissionsDto(
+    [Required] List<string> Permissions
+);
 
+public record UpdateUserGlobalRoleDto(
+    [Required] sbyte NewGlobalRole
+);
 
-    public record UpdateUserGlobalRoleDto(
-        [Required] Guid UserId,
-        [Required] sbyte NewGlobalRole
-    );
+#endregion
 
+#region Response DTOs
 
+public record UserAdminViewDto(
+    Guid Id,
+    string Name,
+    string Email,
+    sbyte GlobalRole,
+    bool Is2FaEnabled,
+    DateTime CreatedAt,
+    DateTime? DeletedAt
+);
 
-    #endregion
+public record SystemOverviewStatsDto(
+    int TotalUsers,
+    int ActiveUsers,
+    int TotalWorkspaces,
+    int TotalProjects,
+    int TotalTasks
+);
 
+public record UserRoleResponseDto(
+    Guid RoleId,
+    string RoleName,
+    List<string> Permissions 
+);
 
-    #region Response DTOs
-
-    public record UserAdminViewDto(
-        Guid Id,
-        string Name,
-        string Email,
-        sbyte GlobalRole,
-        bool Is2FaEnabled,
-        DateTime CreatedAt,
-        DateTime? DeletedAt
-    );
-
-    public record SystemOverviewStatsDto(
-        int TotalUsers,
-        int ActiveUsers,
-        int TotalWorkspaces,
-        int TotalProjects,
-        int TotalTasks
-    );
-    public record UserRoleResponseDto
-    (
-        Guid roleId,
-        string roleName,
-        List<string> permission
-    );
-    #endregion
-}
+#endregion
