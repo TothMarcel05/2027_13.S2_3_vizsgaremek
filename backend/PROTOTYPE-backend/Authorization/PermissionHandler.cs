@@ -38,10 +38,11 @@ public class PermissionHandler : AuthorizationHandler<PermissionRequirement>
             var httpContext = _httpContextAccessor.HttpContext;
 
             // Kinyerjük a workspaceId-t vagy projectId-t az Route Data-ból vagy Query/Header-ből
-            string? currentContextId = httpContext?.GetRouteValue("workspaceId")?.ToString()
-                                     ?? httpContext?.GetRouteValue("projectId")?.ToString()
-                                     ?? httpContext?.Request.Headers["X-Workspace-Id"].FirstOrDefault()
-                                     ?? context.User.FindFirstValue("active_workspace_id");
+            string? currentContextId = httpContext?.GetRouteValue("projectId")?.ToString()
+                         ?? httpContext?.GetRouteValue("workspaceId")?.ToString()
+                         ?? httpContext?.Request.Headers["X-Project-Id"].FirstOrDefault()
+                         ?? httpContext?.Request.Headers["X-Workspace-Id"].FirstOrDefault()
+                         ?? context.User.FindFirstValue("active_workspace_id");
 
             var rolesAndPermissions = JsonSerializer.Deserialize<Dictionary<string, List<string>>>(permissionsJson);
 
@@ -52,19 +53,6 @@ public class PermissionHandler : AuthorizationHandler<PermissionRequirement>
                 {
                     // Csak az ADOTT kontextushoz tartozó jogosultságokat ellenőrizzük!
                     if (contextPermissions.Contains(requirement.Permission))
-                    {
-                        context.Succeed(requirement);
-                    }
-                }
-                else
-                {
-                    // HA globális a kérés (nincs konkrét workspace a művelet mögött), 
-                    // vagy fallback képpen nézzük az összeset:
-                    var hasPermission = rolesAndPermissions.Values
-                        .SelectMany(permissionsList => permissionsList)
-                        .Contains(requirement.Permission);
-
-                    if (hasPermission)
                     {
                         context.Succeed(requirement);
                     }
