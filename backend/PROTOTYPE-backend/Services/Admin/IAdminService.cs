@@ -8,7 +8,7 @@ namespace PROTOTYPE_backend.Services.Admin;
 public interface IAdminService
 {
     Task<List<UserRoleResponseDto>> GetRolesAndPermissionsAsync();
-    Task<UserRoleResponseDto> CreateRoleAsync(CreateRoleDto dto);
+    Task<UserRoleResponseDto> CreateRoleAsync(AdminCreateRoleDto dto);
     Task<bool> UpdateRolePermissionsAsync(Guid roleId, UpdateRolePermissionsDto dto);
 
     Task<IEnumerable<UserAdminViewDto>> GetAllUsersAsync(int page = 1, string? search = null);

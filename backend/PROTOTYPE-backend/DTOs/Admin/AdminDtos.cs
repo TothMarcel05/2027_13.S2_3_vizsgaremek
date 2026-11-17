@@ -6,7 +6,7 @@ namespace PROTOTYPE_backend.DTOs.Admin;
 
 #region Request DTOs
 
-public record CreateRoleDto(
+public record AdminCreateRoleDto(
     [Required] string Name,
     List<string> Permissions
 );

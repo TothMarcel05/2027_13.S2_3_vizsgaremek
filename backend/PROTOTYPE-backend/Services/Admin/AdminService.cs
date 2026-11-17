@@ -29,7 +29,7 @@ public class AdminService : IAdminService
             .ToListAsync();
     }
 
-    public async Task<UserRoleResponseDto> CreateRoleAsync(CreateRoleDto dto)
+    public async Task<UserRoleResponseDto> CreateRoleAsync(AdminCreateRoleDto dto)
     {
         if (await _context.AppRoles.AnyAsync(r => r.Name == dto.Name))
         {

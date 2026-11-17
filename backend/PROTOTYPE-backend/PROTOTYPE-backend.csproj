@@ -8,6 +8,10 @@
 	</PropertyGroup>
 
 	<ItemGroup>
+	  <Content Remove="appsettings.Development.json" />
+	</ItemGroup>
+
+	<ItemGroup>
 		<PackageReference Include="BCrypt.Net-Next" Version="4.2.0" />
 		<PackageReference Include="MailKit" Version="5.0.0" />
 		<PackageReference Include="Microsoft.AspNetCore.Authentication.JwtBearer" Version="8.0.0" />
@@ -31,6 +35,10 @@
 
 	<ItemGroup>
 		<Folder Include="Models\" />
+	</ItemGroup>
+
+	<ItemGroup>
+	  <None Include="appsettings.Development.json" />
 	</ItemGroup>
 
 </Project>

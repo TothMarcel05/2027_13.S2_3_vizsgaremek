@@ -27,7 +27,7 @@ public class AdminController : ControllerBase
     }
 
     [HttpPost("roles")]
-    public async Task<IActionResult> CreateRole([FromBody] CreateRoleDto dto)
+    public async Task<IActionResult> CreateRole([FromBody] AdminCreateRoleDto dto)
     {
         var role = await _adminService.CreateRoleAsync(dto);
         return CreatedAtAction(nameof(GetRolesAndPermissions), new { id = role.RoleId }, role);
