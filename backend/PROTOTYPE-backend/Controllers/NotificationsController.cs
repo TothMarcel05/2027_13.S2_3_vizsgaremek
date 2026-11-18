@@ -2,6 +2,7 @@
 using Microsoft.AspNetCore.Mvc;
 using PROTOTYPE_backend.DTOs.Auth;
 using PROTOTYPE_backend.DTOs.Notification;
+using PROTOTYPE_backend.Extensions;
 using PROTOTYPE_backend.Services.Notification;
 using System;
 using System.Security.Claims;
@@ -22,10 +23,18 @@ namespace PROTOTYPE_backend.Controllers
         }
 
         [HttpGet("/notifications")]
-        public async Task<IActionResult> GetNotifications(Guid userId, int page = 1, int limit = 20, bool unreadOnly = false)
+        public async Task<IActionResult> GetNotifications(int page = 1, int limit = 20, bool unreadOnly = false)
         {
-            var notification = await _notificationService.GetNotificationsAsync(userId);
-            return Ok(notification);
+            try
+            {
+                var userId = User.GetUserId();
+                var notification = await _notificationService.GetNotificationsAsync(userId);
+                return Ok(notification);
+            }
+            catch (UnauthorizedAccessException) 
+            {
+                return Unauthorized();
+            }
         }
 
 

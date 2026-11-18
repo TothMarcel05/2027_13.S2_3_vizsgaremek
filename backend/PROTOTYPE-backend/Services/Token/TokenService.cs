@@ -1,4 +1,5 @@
-﻿using Microsoft.IdentityModel.Tokens;
+﻿using Microsoft.Extensions.Logging;
+using Microsoft.IdentityModel.Tokens;
 using PROTOTYPE_backend.Models;
 using System.Globalization;
 using System.IdentityModel.Tokens.Jwt;
@@ -12,21 +13,26 @@ namespace PROTOTYPE_backend.Services.Token
     public class TokenService : ITokenService
     {
         private readonly IConfiguration _configuration;
+        private readonly ILogger<TokenService> _logger;
         private static readonly JwtSecurityTokenHandler TokenHandler = new();
 
-        public TokenService(IConfiguration configuration)
+        public TokenService(IConfiguration configuration, ILogger<TokenService> logger)
         {
             _configuration = configuration;
+            _logger = logger;
         }
 
         public string GenerateGlobalToken(AppUser user)
         {
+            var jti = Guid.NewGuid().ToString();
             List<Claim> claims = [
                 new(ClaimTypes.NameIdentifier, user.Id.ToString()),
                 new(ClaimTypes.Email, user.Email),
                 new(ClaimTypes.Role, user.GlobalRole.ToString()),
-                new(JwtRegisteredClaimNames.Jti, Guid.NewGuid().ToString())
+                new(JwtRegisteredClaimNames.Jti, jti)
             ];
+
+            _logger.LogInformation("Globális JWT token generálva. UserId: {UserId}, Jti: {Jti}", user.Id, jti);
 
             return BuildJwt(claims);
         }
@@ -36,16 +42,21 @@ namespace PROTOTYPE_backend.Services.Token
             Guid workspaceId,
             Dictionary<string, List<string>> allRolesNPermissions)
         {
+            var jti = Guid.NewGuid().ToString();
             List<Claim> claims = [
                 new(ClaimTypes.NameIdentifier, user.Id.ToString()),
                 new(ClaimTypes.Email, user.Email),
                 new(ClaimTypes.Role, user.GlobalRole.ToString()),
                 new("active_workspace_id", workspaceId.ToString()),
-                new(JwtRegisteredClaimNames.Jti, Guid.NewGuid().ToString())
+                new(JwtRegisteredClaimNames.Jti, jti)
             ];
 
             string serializedPermissions = JsonSerializer.Serialize(allRolesNPermissions);
             claims.Add(new Claim("all_roles_permissions", serializedPermissions));
+
+            _logger.LogInformation(
+                "Workspace JWT token generálva. UserId: {UserId}, WorkspaceId: {WorkspaceId}, Jti: {Jti}",
+                user.Id, workspaceId, jti);
 
             return BuildJwt(claims);
         }
@@ -58,9 +69,12 @@ namespace PROTOTYPE_backend.Services.Token
             return Convert.ToBase64String(randomNumber);
         }
 
-        public string GenerateTwoFactorToken(AppUser user) =>
-            BuildJwt([new Claim(ClaimTypes.NameIdentifier, user.Id.ToString())],
+        public string GenerateTwoFactorToken(AppUser user)
+        {
+            _logger.LogDebug("2FA ideiglenes token generálva. UserId: {UserId}", user.Id);
+            return BuildJwt([new Claim(ClaimTypes.NameIdentifier, user.Id.ToString())],
                 audienceSuffix: "-2fa", expiryMinutes: 5);
+        }
 
         public Guid? ValidateTwoFactorToken(string token)
         {
@@ -81,8 +95,14 @@ namespace PROTOTYPE_backend.Services.Token
 
                 return Guid.TryParse(principal.FindFirstValue(ClaimTypes.NameIdentifier), out var id) ? id : null;
             }
-            catch
+            catch (SecurityTokenExpiredException)
             {
+                _logger.LogWarning("Lejárt 2FA token érvényesítési kísérlet.");
+                return null;
+            }
+            catch (Exception ex)
+            {
+                _logger.LogWarning(ex, "Érvénytelen 2FA token érvényesítési kísérlet.");
                 return null;
             }
         }
@@ -90,8 +110,13 @@ namespace PROTOTYPE_backend.Services.Token
         private string BuildJwt(IEnumerable<Claim> claims, string? audienceSuffix = null, double? expiryMinutes = null)
         {
             var jwtSettings = _configuration.GetSection("JwtSettings");
-            var secretKey = jwtSettings["Secret"]
-                ?? throw new InvalidOperationException("A JWT Secret nincsen konfigurálva.");
+            var secretKey = jwtSettings["Secret"];
+
+            if (string.IsNullOrEmpty(secretKey))
+            {
+                _logger.LogCritical("A JWT Secret nincs konfigurálva az appsettings-ben!");
+                throw new InvalidOperationException("A JWT Secret nincsen konfigurálva.");
+            }
 
             var key = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(secretKey));
             var expiry = expiryMinutes

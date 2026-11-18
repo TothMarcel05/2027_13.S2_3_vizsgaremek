@@ -4,6 +4,7 @@ using System.IO;
 using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.Extensions.Logging;
 using PROTOTYPE_backend.Data;
 using PROTOTYPE_backend.DTOs.Storage;
 using PROTOTYPE_backend.Models;
@@ -13,10 +14,12 @@ namespace PROTOTYPE_backend.Services.Storage
     public class StorageService : IStorageService
     {
         private readonly AppDbContext _context;
+        private readonly ILogger<StorageService> _logger;
 
-        public StorageService(AppDbContext context)
+        public StorageService(AppDbContext context, ILogger<StorageService> logger)
         {
             _context = context;
+            _logger = logger;
         }
 
         public async Task<StorageNodeResponseDto> UploadFileAsync(UploadFileDto dto)
@@ -24,6 +27,9 @@ namespace PROTOTYPE_backend.Services.Storage
             var workspace = await _context.Workspaces.FindAsync(dto.WorkspaceId);
             if (workspace == null)
             {
+                _logger.LogWarning(
+                    "Fájlfeltöltés elutasítva: a munkaterület nem található. WorkspaceId: {WorkspaceId}, UserId: {UserId}",
+                    dto.WorkspaceId, dto.UserId);
                 throw new ArgumentException("A megadott munkaterület nem található.");
             }
 
@@ -33,6 +39,9 @@ namespace PROTOTYPE_backend.Services.Storage
 
             if ((ulong)(currentUsedBytes + dto.File.Length) > workspace.StorageQuotaBytes)
             {
+                _logger.LogWarning(
+                    "Fájlfeltöltés elutasítva kvótatúllépés miatt. WorkspaceId: {WorkspaceId}, UserId: {UserId}, Használt: {UsedBytes}, Fájlméret: {FileSize}, Kvóta: {Quota}",
+                    dto.WorkspaceId, dto.UserId, currentUsedBytes, dto.File.Length, workspace.StorageQuotaBytes);
                 throw new InvalidOperationException("A feltöltés meghiúsult: a munkaterület tárhelykvótája betelt.");
             }
 
@@ -40,6 +49,7 @@ namespace PROTOTYPE_backend.Services.Storage
             if (!Directory.Exists(uploadsFolder))
             {
                 Directory.CreateDirectory(uploadsFolder);
+                _logger.LogInformation("Uploads könyvtár létrehozva: {UploadsFolder}", uploadsFolder);
             }
 
             var uniqueFileName = $"{Guid.NewGuid()}_{dto.File.FileName}";
@@ -60,13 +70,13 @@ namespace PROTOTYPE_backend.Services.Storage
                     ProjectId = dto.ProjectId,
                     ParentId = dto.ParentId,
                     Name = dto.File.FileName,
-                    Type = 2, 
+                    Type = 2,
                     MimeType = dto.File.ContentType,
                     StoragePath = filePath,
                     SizeBytes = (ulong)dto.File.Length,
                     CreatedBy = dto.UserId,
                     CreatedAt = DateTime.UtcNow,
-                    DeletedAt = null 
+                    DeletedAt = null
                 };
 
                 _context.StorageNodes.Add(node);
@@ -87,6 +97,10 @@ namespace PROTOTYPE_backend.Services.Storage
 
                 await _context.SaveChangesAsync();
 
+                _logger.LogInformation(
+                    "Fájl sikeresen feltöltve. NodeId: {NodeId}, WorkspaceId: {WorkspaceId}, ProjectId: {ProjectId}, UserId: {UserId}, Méret: {SizeBytes} bájt",
+                    nodeId, dto.WorkspaceId, dto.ProjectId, dto.UserId, dto.File.Length);
+
                 return new StorageNodeResponseDto(
                     node.Id,
                     node.WorkspaceId,
@@ -98,11 +112,24 @@ namespace PROTOTYPE_backend.Services.Storage
                     dto.Labels ?? new List<string>()
                 );
             }
-            catch
+            catch (Exception ex)
             {
+                _logger.LogError(
+                    ex,
+                    "Fájlfeltöltési tranzakció megszakadt. WorkspaceId: {WorkspaceId}, UserId: {UserId}, Fájlnév: {FileName}",
+                    dto.WorkspaceId, dto.UserId, dto.File.FileName);
+
                 if (File.Exists(filePath))
                 {
-                    File.Delete(filePath);
+                    try
+                    {
+                        File.Delete(filePath);
+                        _logger.LogInformation("Kompenzáció: sikertelen feltöltés utáni árva fájl törölve: {FilePath}", filePath);
+                    }
+                    catch (Exception deleteEx)
+                    {
+                        _logger.LogError(deleteEx, "Kompenzációs hiba: nem sikerült törölni az árva fájlt a lemezről: {FilePath}", filePath);
+                    }
                 }
                 throw;
             }
@@ -117,7 +144,7 @@ namespace PROTOTYPE_backend.Services.Storage
                 ProjectId = projectId,
                 ParentId = parentId,
                 Name = folderName,
-                Type = 1, 
+                Type = 1,
                 CreatedBy = userId,
                 CreatedAt = DateTime.UtcNow,
                 DeletedAt = null
@@ -125,6 +152,10 @@ namespace PROTOTYPE_backend.Services.Storage
 
             _context.StorageNodes.Add(folderNode);
             await _context.SaveChangesAsync();
+
+            _logger.LogInformation(
+                "Új mappa létrehozva. NodeId: {NodeId}, WorkspaceId: {WorkspaceId}, ProjectId: {ProjectId}, UserId: {UserId}",
+                folderNode.Id, workspaceId, projectId, userId);
 
             return new StorageNodeResponseDto(
                 folderNode.Id,
@@ -144,10 +175,21 @@ namespace PROTOTYPE_backend.Services.Storage
                 .AsNoTracking()
                 .FirstOrDefaultAsync(n => n.Id == nodeId && n.Type == 2 && n.DeletedAt == null);
 
-            if (node == null || string.IsNullOrEmpty(node.StoragePath) || !File.Exists(node.StoragePath))
+            if (node == null)
             {
+                _logger.LogWarning("Fájlletöltés sikertelen: a node nem található vagy törölt. NodeId: {NodeId}", nodeId);
                 return null;
             }
+
+            if (string.IsNullOrEmpty(node.StoragePath) || !File.Exists(node.StoragePath))
+            {
+                _logger.LogError(
+                    "Adatinkonzisztencia: a fájl szerepel az adatbázisban, de hiányzik a fizikai lemezről. NodeId: {NodeId}, StoragePath: {StoragePath}",
+                    nodeId, node.StoragePath);
+                return null;
+            }
+
+            _logger.LogDebug("Fájl folyam megnyitva letöltéshez. NodeId: {NodeId}, Méret: {SizeBytes} bájt", nodeId, node.SizeBytes);
 
             var memoryStream = new FileStream(node.StoragePath, FileMode.Open, FileAccess.Read, FileShare.Read);
             var contentType = node.MimeType ?? "application/octet-stream";
@@ -181,6 +223,7 @@ namespace PROTOTYPE_backend.Services.Storage
                 n.StorageNodeLabels.Select(l => l.Label).ToList()
             ));
         }
+
         public async Task<bool> ShareNodeWithRoleAsync(Guid nodeId, Guid roleId)
         {
             var node = await _context.StorageNodes
@@ -191,14 +234,15 @@ namespace PROTOTYPE_backend.Services.Storage
 
             if (node == null || role == null)
             {
+                _logger.LogWarning("Node jogosultság-megosztás sikertelen: érvénytelen node vagy role. NodeId: {NodeId}, RoleId: {RoleId}", nodeId, roleId);
                 return false;
             }
-
 
             if (!node.Roles.Any(r => r.Id == roleId))
             {
                 node.Roles.Add(role);
                 await _context.SaveChangesAsync();
+                _logger.LogInformation("Storage node megosztva szerepkörrel. NodeId: {NodeId}, RoleId: {RoleId}", nodeId, roleId);
             }
 
             return true;
@@ -209,6 +253,7 @@ namespace PROTOTYPE_backend.Services.Storage
             var node = await _context.StorageNodes.FindAsync(nodeId);
             if (node == null || node.DeletedAt != null)
             {
+                _logger.LogWarning("Soft delete sikertelen: a node nem található vagy már törölve van. NodeId: {NodeId}, UserId: {UserId}", nodeId, userId);
                 return false;
             }
 
@@ -216,6 +261,7 @@ namespace PROTOTYPE_backend.Services.Storage
             node.UpdatedBy = userId;
 
             await _context.SaveChangesAsync();
+            _logger.LogInformation("Storage node lomtárba helyezve. NodeId: {NodeId}, UserId: {UserId}", nodeId, userId);
             return true;
         }
 
@@ -224,11 +270,13 @@ namespace PROTOTYPE_backend.Services.Storage
             var node = await _context.StorageNodes.FindAsync(nodeId);
             if (node == null || node.DeletedAt == null)
             {
+                _logger.LogWarning("Node visszaállítása sikertelen: nem található vagy nincs a lomtárban. NodeId: {NodeId}", nodeId);
                 return false;
             }
 
             node.DeletedAt = null;
             await _context.SaveChangesAsync();
+            _logger.LogInformation("Storage node visszaállítva a lomtárból. NodeId: {NodeId}", nodeId);
             return true;
         }
 
@@ -237,10 +285,13 @@ namespace PROTOTYPE_backend.Services.Storage
             var node = await _context.StorageNodes.FindAsync(dto.NodeId);
             if (node == null || node.DeletedAt != null)
             {
+                _logger.LogWarning("Node adatmódosítás sikertelen: nem található vagy törölt. NodeId: {NodeId}", dto.NodeId);
                 throw new ArgumentException("A megadott csomópont nem található vagy törölt.");
             }
 
             await _context.SaveChangesAsync();
+            _logger.LogInformation("Storage node adatai módosítva. NodeId: {NodeId}", node.Id);
+
             return new NodeDataChangeResponseDto(
                 node.Id,
                 node.WorkspaceId,
