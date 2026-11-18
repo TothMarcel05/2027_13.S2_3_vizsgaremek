@@ -138,6 +138,47 @@ namespace PROTOTYPE_backend.Services.SoftDelete
 
             return true;
         }
+        public async Task<int> HardDeleteExpiredItemsAsync()
+        {
+            var cutoffDate = DateTime.UtcNow.AddDays(-RetentionDays);
+
+            var expiredNodes = await _context.StorageNodes
+                .Where(n => n.DeletedAt != null && n.DeletedAt <= cutoffDate)
+                .ToListAsync();
+
+            if (expiredNodes.Count == 0)
+            {
+                _logger.LogDebug("Lejárt elemek végleges törlése lefutott: nem volt törölhető elem. CutoffDate: {CutoffDate}", cutoffDate);
+                return 0;
+            }
+
+            // Fizikai fájlok törlése a lemezről a végleges adatbázis-törlés előtt
+            foreach (var node in expiredNodes.Where(n => n.Type == 2 && !string.IsNullOrEmpty(n.StoragePath)))
+            {
+                try
+                {
+                    if (File.Exists(node.StoragePath))
+                    {
+                        File.Delete(node.StoragePath);
+                    }
+                }
+                catch (Exception ex)
+                {
+                    _logger.LogError(ex, "Nem sikerült törölni a lejárt fizikai fájlt a lemezről. NodeId: {NodeId}, StoragePath: {StoragePath}",
+                        node.Id, node.StoragePath);
+                }
+            }
+
+            _context.StorageNodes.RemoveRange(expiredNodes);
+            var deletedCount = await _context.SaveChangesAsync();
+
+            _logger.LogInformation(
+                "Lejárt elemek végleges törlése (hard delete) befejeződött. Törölt rekordok száma: {DeletedCount}, CutoffDate: {CutoffDate}",
+                deletedCount, cutoffDate);
+
+            return deletedCount;
+        }
+
 
         public async Task<IEnumerable<DeletedItemDto>> GetDeletedItemsAsync(Guid userId)
         {
@@ -159,3 +200,8 @@ namespace PROTOTYPE_backend.Services.SoftDelete
                     expiresAt > DateTime.UtcNow
                 ));
             }
+
+            return result;
+        }
+    }
+}
