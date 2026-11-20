@@ -1,5 +1,6 @@
 ﻿using Microsoft.EntityFrameworkCore;
-using PROTOTYPE_backend.Data; // cseréld a saját DbContext namespace-edre
+using Microsoft.Extensions.Logging;
+using PROTOTYPE_backend.Data;
 using PROTOTYPE_backend.DTOs.Calendar;
 using PROTOTYPE_backend.Models;
 
@@ -8,10 +9,12 @@ namespace PROTOTYPE_backend.Services.Calendar
     public class CalendarService : ICalendarService
     {
         private readonly AppDbContext _context;
+        private readonly ILogger<CalendarService> _logger;
 
-        public CalendarService(AppDbContext context)
+        public CalendarService(AppDbContext context, ILogger<CalendarService> logger)
         {
             _context = context;
+            _logger = logger;
         }
 
         // 1. LÉTREHOZÁS
@@ -19,6 +22,9 @@ namespace PROTOTYPE_backend.Services.Calendar
         {
             if (dto.EndTime < dto.StartTime)
             {
+                _logger.LogWarning(
+                    "Naptáresemény létrehozása elutasítva: érvénytelen időintervallum. UserId: {UserId}, StartTime: {StartTime}, EndTime: {EndTime}",
+                    userId, dto.StartTime, dto.EndTime);
                 throw new ArgumentException("A befejezés ideje nem lehet korábbi a kezdés idejénél.");
             }
 
@@ -30,6 +36,9 @@ namespace PROTOTYPE_backend.Services.Calendar
 
                 if (!isMember)
                 {
+                    _logger.LogWarning(
+                        "Jogosulatlan naptáresemény-létrehozási kísérlet projekthez. UserId: {UserId}, ProjectId: {ProjectId}",
+                        userId, dto.ProjectId.Value);
                     throw new UnauthorizedAccessException("Nincs jogosultságod eseményt hozzáadni ehhez a projekthez.");
                 }
             }
@@ -50,6 +59,10 @@ namespace PROTOTYPE_backend.Services.Calendar
             _context.CalendarEvents.Add(calendarEvent);
             await _context.SaveChangesAsync();
 
+            _logger.LogInformation(
+                "Új naptáresemény létrehozva. EventId: {EventId}, ProjectId: {ProjectId}, UserId: {UserId}, StartTime: {StartTime}, IsAllDay: {IsAllDay}",
+                calendarEvent.Id, calendarEvent.ProjectId, userId, calendarEvent.StartTime, calendarEvent.IsAllDay);
+
             return MapToDto(calendarEvent);
         }
 
@@ -58,11 +71,18 @@ namespace PROTOTYPE_backend.Services.Calendar
         {
             if (dto.EndTime < dto.StartTime)
             {
+                _logger.LogWarning(
+                    "Naptáresemény módosítása elutasítva: érvénytelen időintervallum. EventId: {EventId}, StartTime: {StartTime}, EndTime: {EndTime}",
+                    id, dto.StartTime, dto.EndTime);
                 throw new ArgumentException("A befejezés ideje nem lehet korábbi a kezdés idejénél.");
             }
 
             var calendarEvent = await _context.CalendarEvents.FindAsync(id);
-            if (calendarEvent == null) return null;
+            if (calendarEvent == null)
+            {
+                _logger.LogWarning("Naptáresemény módosítása sikertelen: az esemény nem található. EventId: {EventId}", id);
+                return null;
+            }
 
             calendarEvent.ProjectId = dto.ProjectId;
             calendarEvent.Title = dto.Title;
@@ -74,17 +94,28 @@ namespace PROTOTYPE_backend.Services.Calendar
 
             await _context.SaveChangesAsync();
 
+            _logger.LogInformation(
+                "Naptáresemény módosítva. EventId: {EventId}, ProjectId: {ProjectId}, StartTime: {StartTime}",
+                calendarEvent.Id, calendarEvent.ProjectId, calendarEvent.StartTime);
+
             return MapToDto(calendarEvent);
         }
 
-        // 3. TÖRLEÉS
+        // 3. TÖRLÉS
         public async Task<bool> DeleteDateAsync(Guid id)
         {
             var calendarEvent = await _context.CalendarEvents.FindAsync(id);
-            if (calendarEvent == null) return false;
+            if (calendarEvent == null)
+            {
+                _logger.LogWarning("Naptáresemény törlése sikertelen: az esemény nem található. EventId: {EventId}", id);
+                return false;
+            }
 
+            var projectId = calendarEvent.ProjectId;
             _context.CalendarEvents.Remove(calendarEvent);
             await _context.SaveChangesAsync();
+
+            _logger.LogInformation("Naptáresemény törölve. EventId: {EventId}, ProjectId: {ProjectId}", id, projectId);
 
             return true;
         }
@@ -92,8 +123,15 @@ namespace PROTOTYPE_backend.Services.Calendar
         // 4. EGYEDI LEKÉRDEZÉS
         public async Task<DateDto?> GetDateByIdAsync(Guid id)
         {
-            var calendarEvent = await _context.CalendarEvents.FindAsync(id);
-            if (calendarEvent == null) return null;
+            var calendarEvent = await _context.CalendarEvents
+                .AsNoTracking()
+                .FirstOrDefaultAsync(e => e.Id == id);
+
+            if (calendarEvent == null)
+            {
+                _logger.LogDebug("Naptáresemény lekérdezése: nem található rekord. EventId: {EventId}", id);
+                return null;
+            }
 
             return MapToDto(calendarEvent);
         }
@@ -102,6 +140,7 @@ namespace PROTOTYPE_backend.Services.Calendar
         public async Task<IEnumerable<DateDto>> GetDatesByRangeAsync(DateTime start, DateTime end, Guid userId, Guid? projectId = null)
         {
             var query = _context.CalendarEvents
+                .AsNoTracking()
                 .Where(e => e.StartTime <= end && e.EndTime >= start);
 
             if (projectId.HasValue)

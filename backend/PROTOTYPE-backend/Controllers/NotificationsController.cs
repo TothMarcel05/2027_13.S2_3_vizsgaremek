@@ -1,67 +1,151 @@
-﻿using Microsoft.AspNetCore.Authorization;
+﻿using System;
+using System.Threading.Tasks;
+using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
-using PROTOTYPE_backend.DTOs.Auth;
-using PROTOTYPE_backend.DTOs.Notification;
+using Microsoft.Extensions.Logging;
 using PROTOTYPE_backend.Extensions;
 using PROTOTYPE_backend.Services.Notification;
-using System;
-using System.Security.Claims;
-using System.Threading.Tasks;
 
 namespace PROTOTYPE_backend.Controllers
 {
+    [Authorize]
     [ApiController]
-    [Route("api/workspaces")]
-    //[Authorize]
+    [Route("api/notifications")]
     public class NotificationsController : ControllerBase
     {
         private readonly INotificationService _notificationService;
+        private readonly ILogger<NotificationsController> _logger;
 
-        public NotificationsController(INotificationService notificationService)
+        public NotificationsController(INotificationService notificationService, ILogger<NotificationsController> logger)
         {
             _notificationService = notificationService;
+            _logger = logger;
         }
 
-        [HttpGet("/notifications")]
-        public async Task<IActionResult> GetNotifications(int page = 1, int limit = 20, bool unreadOnly = false)
+        // 1. GET /api/notifications?page=1&limit=20&unreadOnly=true
+        [HttpGet]
+        [ProducesResponseType(StatusCodes.Status200OK)]
+        [ProducesResponseType(StatusCodes.Status400BadRequest)]
+        [ProducesResponseType(StatusCodes.Status401Unauthorized)]
+        [ProducesResponseType(StatusCodes.Status404NotFound)]
+        [ProducesResponseType(StatusCodes.Status500InternalServerError)]
+        public async Task<IActionResult> GetNotifications(
+            [FromQuery] int page = 1,
+            [FromQuery] int limit = 20,
+            [FromQuery] bool unreadOnly = false)
+        {
+            if (page < 1 || limit < 1 || limit > 100)
+            {
+                return BadRequest(new { message = "Érvénytelen lapozási paraméterek (page >= 1, 1 <= limit <= 100)." });
+            }
+
+            try
+            {
+                var userId = User.GetUserId();
+                var notifications = await _notificationService.GetNotificationsAsync(userId, page, limit, unreadOnly);
+                return Ok(notifications);
+            }
+            catch (UnauthorizedAccessException)
+            {
+                return Unauthorized(new { message = "Érvénytelen vagy lejárt hitelesítés." });
+            }
+            catch (KeyNotFoundException ex)
+            {
+                return NotFound(new { message = ex.Message });
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError(ex, "Váratlan hiba történt az értesítések lekérdezésekor.");
+                return StatusCode(StatusCodes.Status500InternalServerError, new { message = "Szerveroldali hiba történt az értesítések lekérdezésekor." });
+            }
+        }
+
+        // 2. GET /api/notifications/unread-count
+        [HttpGet("unread-count")]
+        [ProducesResponseType(StatusCodes.Status200OK)]
+        [ProducesResponseType(StatusCodes.Status401Unauthorized)]
+        [ProducesResponseType(StatusCodes.Status404NotFound)]
+        [ProducesResponseType(StatusCodes.Status500InternalServerError)]
+        public async Task<IActionResult> GetUnreadNotificationsCount()
         {
             try
             {
                 var userId = User.GetUserId();
-                var notification = await _notificationService.GetNotificationsAsync(userId);
-                return Ok(notification);
+                var unreadCount = await _notificationService.GetUnreadNotificationsCountAsync(userId);
+                return Ok(new { count = unreadCount });
             }
-            catch (UnauthorizedAccessException) 
+            catch (UnauthorizedAccessException)
             {
-                return Unauthorized();
+                return Unauthorized(new { message = "Érvénytelen vagy lejárt hitelesítés." });
+            }
+            catch (KeyNotFoundException ex)
+            {
+                return NotFound(new { message = ex.Message });
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError(ex, "Váratlan hiba történt az olvasatlan értesítések számának lekérdezésekor.");
+                return StatusCode(StatusCodes.Status500InternalServerError, new { message = "Szerveroldali hiba történt." });
             }
         }
 
-
-        [HttpGet("/notifications/unread-count")]
-        public async Task<IActionResult> GetUnreadNotifications(Guid userId)
+        // 3. PUT /api/notifications/{id}/read
+        [HttpPut("{id:guid}/read")]
+        [ProducesResponseType(StatusCodes.Status200OK)]
+        [ProducesResponseType(StatusCodes.Status401Unauthorized)]
+        [ProducesResponseType(StatusCodes.Status404NotFound)]
+        [ProducesResponseType(StatusCodes.Status500InternalServerError)]
+        public async Task<IActionResult> MarkNotificationAsRead(Guid id)
         {
-            var notification = await _notificationService.GetUnreadNotificationsCountAsync(userId);
-            return Ok(notification);
+            try
+            {
+                var userId = User.GetUserId();
+                await _notificationService.MarkNotificationAsReadAsync(userId, id);
+                return Ok(new { message = "Az értesítés olvasottnak jelölve." });
+            }
+            catch (UnauthorizedAccessException)
+            {
+                return Unauthorized(new { message = "Érvénytelen vagy lejárt hitelesítés." });
+            }
+            catch (KeyNotFoundException ex)
+            {
+                return NotFound(new { message = ex.Message });
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError(ex, "Váratlan hiba történt az értesítés olvasottnak jelölésekor. NotificationId: {NotificationId}", id);
+                return StatusCode(StatusCodes.Status500InternalServerError, new { message = "Szerveroldali hiba történt." });
+            }
         }
 
-
-        [HttpPut("/notifications/{id}/read")]
-        public async Task<IActionResult> GetUnreadNotificationToRead(Guid userId, Guid notificationId)
+        // 4. PUT /api/notifications/read-all
+        [HttpPut("read-all")]
+        [ProducesResponseType(StatusCodes.Status200OK)]
+        [ProducesResponseType(StatusCodes.Status401Unauthorized)]
+        [ProducesResponseType(StatusCodes.Status404NotFound)]
+        [ProducesResponseType(StatusCodes.Status500InternalServerError)]
+        public async Task<IActionResult> MarkAllNotificationsAsRead()
         {
-            var notification = await _notificationService.MarkNotificationAsReadAsync(userId, notificationId);
-            return Ok(notification);
+            try
+            {
+                var userId = User.GetUserId();
+                await _notificationService.MarkAllNotificationsAsReadAsync(userId);
+                return Ok(new { message = "Minden értesítés olvasottnak jelölve." });
+            }
+            catch (UnauthorizedAccessException)
+            {
+                return Unauthorized(new { message = "Érvénytelen vagy lejárt hitelesítés." });
+            }
+            catch (KeyNotFoundException ex)
+            {
+                return NotFound(new { message = ex.Message });
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError(ex, "Váratlan hiba történt az összes értesítés olvasottnak jelölésekor.");
+                return StatusCode(StatusCodes.Status500InternalServerError, new { message = "Szerveroldali hiba történt." });
+            }
         }
-
-
-        [HttpPut("/notifications/read-all")]
-        public async Task<IActionResult> GetAllUnreadNotificationsToRead(Guid userId)
-        {
-            var notification = await _notificationService.MarkAllNotificationsAsReadAsync(userId);
-            return Ok(notification);
-        }
-
-
     }
-
 }

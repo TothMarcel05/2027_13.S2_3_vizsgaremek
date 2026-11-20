@@ -1,4 +1,5 @@
 ﻿using Microsoft.EntityFrameworkCore;
+using Microsoft.Extensions.Logging;
 using PROTOTYPE_backend.Data;
 using PROTOTYPE_backend.DTOs.Invitations;
 using PROTOTYPE_backend.Models;
@@ -9,37 +10,44 @@ namespace PROTOTYPE_backend.Services.Invitations
     public class InvitationService : IInvitationService
     {
         private readonly AppDbContext _context;
+        private readonly ILogger<InvitationService> _logger;
 
-        public InvitationService(AppDbContext context)
+        public InvitationService(AppDbContext context, ILogger<InvitationService> logger)
         {
             _context = context;
+            _logger = logger;
         }
 
         // 1. MEGHÍVÓ LÉTREHOZÁSA
         public async Task<InvitationResponseDto> CreateInvitationAsync(Guid currentUserId, CreateInvitationDto dto)
         {
-            // Megkeressük, hogy a meghívott emailhez tartozik-e már létező felhasználó
+            var normalizedEmail = dto.InvitedEmail.ToLower().Trim();
+
             var invitedUser = await _context.AppUsers
                 .AsNoTracking()
-                .FirstOrDefaultAsync(u => u.Email == dto.InvitedEmail.ToLower().Trim() && u.DeletedAt == null);
+                .FirstOrDefaultAsync(u => u.Email == normalizedEmail && u.DeletedAt == null);
 
             var invitation = new AppInvitation
             {
                 Id = Guid.NewGuid(),
                 Type = dto.Type,
                 TargetId = dto.TargetId,
-                InvitedEmail = dto.InvitedEmail.ToLower().Trim(),
+                InvitedEmail = normalizedEmail,
                 InvitedUserId = invitedUser?.Id,
                 RoleId = dto.RoleId,
                 InvitedBy = currentUserId,
                 Status = 1, // 1 = pending
-                Token = Convert.ToHexString(RandomNumberGenerator.GetBytes(32)), // Biztonságos egyedi token
-                ExpiresAt = DateTime.UtcNow.AddDays(7), // 7 napos lejárati idő
+                Token = Convert.ToHexString(RandomNumberGenerator.GetBytes(32)),
+                ExpiresAt = DateTime.UtcNow.AddDays(7),
                 CreatedAt = DateTime.UtcNow
             };
 
             _context.AppInvitations.Add(invitation);
             await _context.SaveChangesAsync();
+
+            _logger.LogInformation(
+                "Új meghívó létrehozva. InvitationId: {InvitationId}, Type: {InvitationType}, TargetId: {TargetId}, RoleId: {RoleId}, InvitedBy: {UserId}, Meghívott: {MaskedEmail}, LétezőFelhasználó: {IsExistingUser}",
+                invitation.Id, invitation.Type, invitation.TargetId, invitation.RoleId, currentUserId, MaskEmail(normalizedEmail), invitedUser != null);
 
             return MapToResponseDto(invitation);
         }
@@ -48,11 +56,14 @@ namespace PROTOTYPE_backend.Services.Invitations
         public async Task<IEnumerable<InvitationResponseDto>> GetMyInvitationsAsync(Guid currentUserId)
         {
             var user = await _context.AppUsers.FindAsync(currentUserId);
-            if (user == null) return Enumerable.Empty<InvitationResponseDto>();
+            if (user == null)
+            {
+                _logger.LogWarning("Meghívók lekérdezése sikertelen: a felhasználó nem található. UserId: {UserId}", currentUserId);
+                return Enumerable.Empty<InvitationResponseDto>();
+            }
 
             var now = DateTime.UtcNow;
 
-            // Frissítjük a lejárt meghívókat
             var expiredInvitations = await _context.AppInvitations
                 .Where(i => (i.InvitedUserId == currentUserId || i.InvitedEmail == user.Email) && i.Status == 1 && i.ExpiresAt < now)
                 .ToListAsync();
@@ -64,6 +75,10 @@ namespace PROTOTYPE_backend.Services.Invitations
                     inv.Status = 4; // 4 = expired
                 }
                 await _context.SaveChangesAsync();
+
+                _logger.LogDebug(
+                    "{ExpiredCount} lejárt meghívó státusza 'expired' (4) értékre állítva. UserId: {UserId}",
+                    expiredInvitations.Count, currentUserId);
             }
 
             return await _context.AppInvitations
@@ -92,18 +107,22 @@ namespace PROTOTYPE_backend.Services.Invitations
                 .Include(i => i.InvitedByNavigation)
                 .FirstOrDefaultAsync(i => i.Token == token);
 
-            if (invitation == null) return null;
+            if (invitation == null)
+            {
+                _logger.LogDebug("Meghívó előnézet lekérdezése sikertelen: érvénytelen token.");
+                return null;
+            }
 
             string targetName = "Ismeretlen";
 
             if (invitation.Type == 1) // Workspace
             {
-                var ws = await _context.Workspaces.FindAsync(invitation.TargetId);
+                var ws = await _context.Workspaces.AsNoTracking().FirstOrDefaultAsync(w => w.Id == invitation.TargetId);
                 if (ws != null) targetName = ws.Name;
             }
             else if (invitation.Type == 2) // Project
             {
-                var proj = await _context.Projects.FindAsync(invitation.TargetId);
+                var proj = await _context.Projects.AsNoTracking().FirstOrDefaultAsync(p => p.Id == invitation.TargetId);
                 if (proj != null) targetName = proj.Name;
             }
 
@@ -124,20 +143,32 @@ namespace PROTOTYPE_backend.Services.Invitations
         {
             var invitation = await _context.AppInvitations.FirstOrDefaultAsync(i => i.Token == token);
 
-            if (invitation == null || invitation.Status != 1 || invitation.ExpiresAt < DateTime.UtcNow)
+            if (invitation == null)
             {
+                _logger.LogWarning("Meghívó elfogadása sikertelen: nem létező token. UserId: {UserId}", currentUserId);
+                return false;
+            }
+
+            if (invitation.Status != 1 || invitation.ExpiresAt < DateTime.UtcNow)
+            {
+                _logger.LogWarning(
+                    "Meghívó elfogadása elutasítva: lejárt vagy már nem függőben lévő meghívó. InvitationId: {InvitationId}, Status: {Status}, ExpiresAt: {ExpiresAt}, UserId: {UserId}",
+                    invitation.Id, invitation.Status, invitation.ExpiresAt, currentUserId);
                 return false;
             }
 
             var user = await _context.AppUsers.FindAsync(currentUserId);
-            if (user == null) return false;
+            if (user == null)
+            {
+                _logger.LogWarning("Meghívó elfogadása sikertelen: a felhasználó nem található. InvitationId: {InvitationId}, UserId: {UserId}",
+                    invitation.Id, currentUserId);
+                return false;
+            }
 
-            // Státusz frissítése
             invitation.Status = 2; // 2 = accepted
             invitation.InvitedUserId = currentUserId;
             invitation.RespondedAt = DateTime.UtcNow;
 
-            // Hozzáadás a megfelelő tagsághoz
             if (invitation.Type == 1) // Workspace meghívó
             {
                 var exists = await _context.WorkspaceMembers
@@ -164,7 +195,6 @@ namespace PROTOTYPE_backend.Services.Invitations
 
                     if (!exists)
                     {
-                        // Megnézzük, tagja-e a felettes workspace-nek
                         var isWsMember = await _context.WorkspaceMembers
                             .AnyAsync(wm => wm.WorkspaceId == project.WorkspaceId && wm.UserId == currentUserId);
 
@@ -179,9 +209,20 @@ namespace PROTOTYPE_backend.Services.Invitations
                         });
                     }
                 }
+                else if (project == null)
+                {
+                    _logger.LogError(
+                        "Adatinkonzisztencia: projekt meghívó elfogadásakor a célprojekt már nem létezik! InvitationId: {InvitationId}, TargetProjectId: {TargetId}, UserId: {UserId}",
+                        invitation.Id, invitation.TargetId, currentUserId);
+                }
             }
 
             await _context.SaveChangesAsync();
+
+            _logger.LogInformation(
+                "Meghívó elfogadva, tagság rögzítve. InvitationId: {InvitationId}, Type: {InvitationType}, TargetId: {TargetId}, RoleId: {RoleId}, UserId: {UserId}",
+                invitation.Id, invitation.Type, invitation.TargetId, invitation.RoleId, currentUserId);
+
             return true;
         }
 
@@ -190,25 +231,61 @@ namespace PROTOTYPE_backend.Services.Invitations
         {
             var invitation = await _context.AppInvitations.FirstOrDefaultAsync(i => i.Token == token);
 
-            if (invitation == null || invitation.Status != 1) return false;
+            if (invitation == null || invitation.Status != 1)
+            {
+                _logger.LogWarning("Meghívó elutasítása sikertelen: érvénytelen vagy nem függőben lévő meghívó. InvitationId: {InvitationId}, UserId: {UserId}",
+                    invitation?.Id, currentUserId);
+                return false;
+            }
 
             invitation.Status = 3; // 3 = refused
             invitation.InvitedUserId = currentUserId;
             invitation.RespondedAt = DateTime.UtcNow;
 
             await _context.SaveChangesAsync();
+
+            _logger.LogInformation(
+                "Meghívó elutasítva a felhasználó által. InvitationId: {InvitationId}, TargetId: {TargetId}, UserId: {UserId}",
+                invitation.Id, invitation.TargetId, currentUserId);
+
             return true;
         }
 
-        // 7. MEGHÍVÓ TÖRLESE / VISSZAVONÁSA
+        // 7. MEGHÍVÓ TÖRLÉSE / VISSZAVONÁSA
         public async Task<bool> CancelInvitationAsync(Guid currentUserId, Guid invitationId)
         {
             var invitation = await _context.AppInvitations.FindAsync(invitationId);
-            if (invitation == null) return false;
+            if (invitation == null)
+            {
+                _logger.LogWarning("Meghívó visszavonása sikertelen: nem található. InvitationId: {InvitationId}, InitiatorUserId: {UserId}",
+                    invitationId, currentUserId);
+                return false;
+            }
+
+            var targetId = invitation.TargetId;
+            var type = invitation.Type;
 
             _context.AppInvitations.Remove(invitation);
             await _context.SaveChangesAsync();
+
+            _logger.LogInformation(
+                "Meghívó visszavonva (törölve). InvitationId: {InvitationId}, Type: {InvitationType}, TargetId: {TargetId}, InitiatorUserId: {UserId}",
+                invitationId, type, targetId, currentUserId);
+
             return true;
+        }
+
+        private static string MaskEmail(string email)
+        {
+            if (string.IsNullOrWhiteSpace(email) || !email.Contains('@'))
+                return "***";
+
+            var parts = email.Split('@');
+            var local = parts[0];
+            var domain = parts[1];
+
+            var visiblePrefix = local.Length <= 2 ? local[..1] : local[..2];
+            return $"{visiblePrefix}***@{domain}";
         }
 
         private static InvitationResponseDto MapToResponseDto(AppInvitation i)

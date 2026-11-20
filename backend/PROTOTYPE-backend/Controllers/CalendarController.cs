@@ -1,25 +1,34 @@
 ﻿using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.Extensions.Logging;
 using PROTOTYPE_backend.DTOs.Calendar;
 using PROTOTYPE_backend.Extensions;
 using PROTOTYPE_backend.Services.Calendar;
 
 namespace PROTOTYPE_backend.Controllers
 {
-    [Authorize] 
+    [Authorize]
     [ApiController]
     [Route("api/calendar")]
     public class CalendarController : ControllerBase
     {
         private readonly ICalendarService _calendarService;
+        private readonly ILogger<CalendarController> _logger;
 
-        public CalendarController(ICalendarService calendarService)
+        public CalendarController(ICalendarService calendarService, ILogger<CalendarController> logger)
         {
             _calendarService = calendarService;
+            _logger = logger;
         }
 
         // 1. LÉTREHOZÁS
         [HttpPost]
+        [ProducesResponseType(StatusCodes.Status201Created)]
+        [ProducesResponseType(StatusCodes.Status400BadRequest)]
+        [ProducesResponseType(StatusCodes.Status401Unauthorized)]
+        [ProducesResponseType(StatusCodes.Status403Forbidden)]
+        [ProducesResponseType(StatusCodes.Status500InternalServerError)]
         public async Task<IActionResult> CreateDate([FromBody] DateRequestDto dto)
         {
             try
@@ -27,17 +36,31 @@ namespace PROTOTYPE_backend.Controllers
                 var userId = User.GetUserId();
                 var createdDate = await _calendarService.CreateDateAsync(dto, userId);
 
-                // RESTful válasz: 201 Created + a lekérdező URL
                 return CreatedAtAction(nameof(GetDateById), new { id = createdDate.Id }, createdDate);
             }
             catch (ArgumentException ex)
             {
                 return BadRequest(new { message = ex.Message });
             }
+            catch (UnauthorizedAccessException ex)
+            {
+                // A CalendarService akkor dobja, ha a felhasználó nem tagja a megadott projektnek
+                return StatusCode(StatusCodes.Status403Forbidden, new { message = ex.Message });
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError(ex, "Váratlan hiba történt a naptáresemény létrehozásakor.");
+                return StatusCode(StatusCodes.Status500InternalServerError, new { message = "Szerveroldali hiba történt a naptáresemény létrehozásakor." });
+            }
         }
 
         // 2. MÓDOSÍTÁS
         [HttpPut("{id:guid}")]
+        [ProducesResponseType(StatusCodes.Status200OK)]
+        [ProducesResponseType(StatusCodes.Status400BadRequest)]
+        [ProducesResponseType(StatusCodes.Status401Unauthorized)]
+        [ProducesResponseType(StatusCodes.Status404NotFound)]
+        [ProducesResponseType(StatusCodes.Status500InternalServerError)]
         public async Task<IActionResult> UpdateDate(Guid id, [FromBody] DateUpdateDto dto)
         {
             try
@@ -55,44 +78,86 @@ namespace PROTOTYPE_backend.Controllers
             {
                 return BadRequest(new { message = ex.Message });
             }
+            catch (Exception ex)
+            {
+                _logger.LogError(ex, "Váratlan hiba történt a naptáresemény módosításakor. EventId: {EventId}", id);
+                return StatusCode(StatusCodes.Status500InternalServerError, new { message = "Szerveroldali hiba történt a naptáresemény módosításakor." });
+            }
         }
 
-        // 3. TÖRLEÉS
+        // 3. TÖRLÉS
         [HttpDelete("{id:guid}")]
+        [ProducesResponseType(StatusCodes.Status204NoContent)]
+        [ProducesResponseType(StatusCodes.Status401Unauthorized)]
+        [ProducesResponseType(StatusCodes.Status404NotFound)]
+        [ProducesResponseType(StatusCodes.Status500InternalServerError)]
         public async Task<IActionResult> DeleteDate(Guid id)
         {
-            var success = await _calendarService.DeleteDateAsync(id);
-
-            if (!success)
+            try
             {
-                return NotFound(new { message = "A törölni kívánt naptáresemény nem található." });
-            }
+                var success = await _calendarService.DeleteDateAsync(id);
 
-            return NoContent(); // 204 No Content sikeres törlés esetén
+                if (!success)
+                {
+                    return NotFound(new { message = "A törölni kívánt naptáresemény nem található." });
+                }
+
+                return NoContent();
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError(ex, "Váratlan hiba történt a naptáresemény törlésekor. EventId: {EventId}", id);
+                return StatusCode(StatusCodes.Status500InternalServerError, new { message = "Szerveroldali hiba történt a naptáresemény törlésekor." });
+            }
         }
 
         // 4. EGYEDI LEKÉRDEZÉS ID ALAPJÁN
         [HttpGet("{id:guid}")]
+        [ProducesResponseType(StatusCodes.Status200OK)]
+        [ProducesResponseType(StatusCodes.Status401Unauthorized)]
+        [ProducesResponseType(StatusCodes.Status404NotFound)]
+        [ProducesResponseType(StatusCodes.Status500InternalServerError)]
         public async Task<IActionResult> GetDateById(Guid id)
         {
-            var dateDto = await _calendarService.GetDateByIdAsync(id);
-
-            if (dateDto == null)
+            try
             {
-                return NotFound(new { message = "A naptáresemény nem található." });
-            }
+                var dateDto = await _calendarService.GetDateByIdAsync(id);
 
-            return Ok(dateDto);
+                if (dateDto == null)
+                {
+                    return NotFound(new { message = "A naptáresemény nem található." });
+                }
+
+                return Ok(dateDto);
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError(ex, "Váratlan hiba történt a naptáresemény lekérdezésekor. EventId: {EventId}", id);
+                return StatusCode(StatusCodes.Status500InternalServerError, new { message = "Szerveroldali hiba történt a naptáresemény lekérdezésekor." });
+            }
         }
 
         // 5. INTERVALLUM ALAPÚ LISTÁZÁS (Frontend naptár nézethez)
-        // Példa hívás: GET /api/calendar?start=2026-10-01T00:00:00Z&end=2026-10-31T23:59:59Z&projectId=guid
         [HttpGet]
+        [ProducesResponseType(StatusCodes.Status200OK)]
+        [ProducesResponseType(StatusCodes.Status400BadRequest)]
+        [ProducesResponseType(StatusCodes.Status401Unauthorized)]
+        [ProducesResponseType(StatusCodes.Status500InternalServerError)]
         public async Task<IActionResult> GetDatesByRange(
             [FromQuery] DateTime start,
             [FromQuery] DateTime end,
             [FromQuery] Guid? projectId = null)
         {
+            if (start == default || end == default)
+            {
+                return BadRequest(new { message = "A 'start' és 'end' dátumparaméterek megadása kötelező." });
+            }
+
+            if (end < start)
+            {
+                return BadRequest(new { message = "A záró dátum ('end') nem lehet korábbi a kezdő dátumnál ('start')." });
+            }
+
             try
             {
                 var userId = User.GetUserId();
@@ -102,6 +167,11 @@ namespace PROTOTYPE_backend.Controllers
             catch (ArgumentException ex)
             {
                 return BadRequest(new { message = ex.Message });
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError(ex, "Váratlan hiba történt a naptáresemények intervallum-lekérdezésekor.");
+                return StatusCode(StatusCodes.Status500InternalServerError, new { message = "Szerveroldali hiba történt a naptáresemények lekérdezésekor." });
             }
         }
     }

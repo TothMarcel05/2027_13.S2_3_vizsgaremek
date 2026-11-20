@@ -1,4 +1,5 @@
 ﻿using Microsoft.EntityFrameworkCore;
+using Microsoft.Extensions.Logging;
 using PROTOTYPE_backend.Data;
 using PROTOTYPE_backend.DTOs.Users;
 
@@ -7,10 +8,12 @@ namespace PROTOTYPE_backend.Services.Users
     public class UserService : IUserService
     {
         private readonly AppDbContext _context;
+        private readonly ILogger<UserService> _logger;
 
-        public UserService(AppDbContext context)
+        public UserService(AppDbContext context, ILogger<UserService> logger)
         {
             _context = context;
+            _logger = logger;
         }
 
         // 1. SAJÁT PROFIL LEKÉRDEZÉSE
@@ -20,7 +23,11 @@ namespace PROTOTYPE_backend.Services.Users
                 .AsNoTracking()
                 .FirstOrDefaultAsync(u => u.Id == userId && u.DeletedAt == null);
 
-            if (user == null) return null;
+            if (user == null)
+            {
+                _logger.LogWarning("Saját profil lekérdezése sikertelen: a felhasználó nem található vagy törölt. UserId: {UserId}", userId);
+                return null;
+            }
 
             return new UserResponseDto(
                 user.Id,
@@ -41,13 +48,19 @@ namespace PROTOTYPE_backend.Services.Users
             var user = await _context.AppUsers
                 .FirstOrDefaultAsync(u => u.Id == userId && u.DeletedAt == null);
 
-            if (user == null) return null;
+            if (user == null)
+            {
+                _logger.LogWarning("Profil módosítása sikertelen: a felhasználó nem található vagy törölt. UserId: {UserId}", userId);
+                return null;
+            }
 
             user.Name = dto.Name;
             user.AvatarUrl = dto.AvatarURL;
             user.UpdatedAt = DateTime.UtcNow;
 
             await _context.SaveChangesAsync();
+
+            _logger.LogInformation("Felhasználói profil módosítva. UserId: {UserId}", user.Id);
 
             return new UserModfiyResponseDto(
                 user.Id,
@@ -64,32 +77,49 @@ namespace PROTOTYPE_backend.Services.Users
             var user = await _context.AppUsers
                 .FirstOrDefaultAsync(u => u.Id == userId && u.DeletedAt == null);
 
-            if (user == null) return false;
+            if (user == null)
+            {
+                _logger.LogWarning("Jelszóváltoztatás sikertelen: a felhasználó nem található vagy törölt. UserId: {UserId}", userId);
+                return false;
+            }
 
             // Jelenlegi jelszó ellenőrzése
             bool isCurrentPasswordValid = BCrypt.Net.BCrypt.Verify(dto.CurrentPassword, user.PasswordHash);
-            if (!isCurrentPasswordValid) return false;
+            if (!isCurrentPasswordValid)
+            {
+                _logger.LogWarning("Jelszóváltoztatás elutasítva: hibás jelenlegi jelszó. UserId: {UserId}", userId);
+                return false;
+            }
 
             // Új jelszó hashelése és mentése
             user.PasswordHash = BCrypt.Net.BCrypt.HashPassword(dto.NewPassword);
             user.UpdatedAt = DateTime.UtcNow;
 
             await _context.SaveChangesAsync();
+
+            _logger.LogInformation("Felhasználó jelszava sikeresen módosítva. UserId: {UserId}", userId);
+
             return true;
         }
 
-        // 4. SOFT-DELETE (FIÓK TÖRLESE)
+        // 4. SOFT-DELETE (FIÓK TÖRLÉSE)
         public async Task<UserDeleteResponseDto?> DeleteUserAccountAsync(Guid userId)
         {
             var user = await _context.AppUsers
                 .FirstOrDefaultAsync(u => u.Id == userId && u.DeletedAt == null);
 
-            if (user == null) return null;
+            if (user == null)
+            {
+                _logger.LogWarning("Fióktörlés sikertelen: a felhasználó nem található vagy már törölve van. UserId: {UserId}", userId);
+                return null;
+            }
 
             var deletedTime = DateTime.UtcNow;
             user.DeletedAt = deletedTime;
 
             await _context.SaveChangesAsync();
+
+            _logger.LogWarning("Felhasználói fiók törölve (soft delete). UserId: {UserId}, DeletedAt: {DeletedAt}", user.Id, deletedTime);
 
             return new UserDeleteResponseDto(
                 user.Id,
@@ -100,7 +130,7 @@ namespace PROTOTYPE_backend.Services.Users
         // 5. CSAPATTAG EGYEDI NYILVÁNOS PROFILJA
         public async Task<UserPublicDto?> GetPublicProfileByIdAsync(Guid targetUserId)
         {
-            return await _context.AppUsers
+            var profile = await _context.AppUsers
                 .AsNoTracking()
                 .Where(u => u.Id == targetUserId && u.DeletedAt == null)
                 .Select(u => new UserPublicDto(
@@ -110,6 +140,13 @@ namespace PROTOTYPE_backend.Services.Users
                     u.AvatarUrl
                 ))
                 .FirstOrDefaultAsync();
+
+            if (profile == null)
+            {
+                _logger.LogDebug("Nyilvános profil lekérdezése: nem található felhasználó. TargetUserId: {TargetUserId}", targetUserId);
+            }
+
+            return profile;
         }
 
         // 6. CSAPATTAGOK KERESÉSE (PROJEKT Hozzárendeléshez / Név vagy Email alapján)

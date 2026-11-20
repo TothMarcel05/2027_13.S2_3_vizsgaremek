@@ -1,4 +1,5 @@
 ﻿using Microsoft.EntityFrameworkCore;
+using Microsoft.Extensions.Logging;
 using PROTOTYPE_backend.Data;
 using PROTOTYPE_backend.DTOs.Chat;
 using PROTOTYPE_backend.Models;
@@ -8,10 +9,12 @@ namespace PROTOTYPE_backend.Services.Chat
     public class ChatService : IChatService
     {
         private readonly AppDbContext _context;
+        private readonly ILogger<ChatService> _logger;
 
-        public ChatService(AppDbContext context)
+        public ChatService(AppDbContext context, ILogger<ChatService> logger)
         {
             _context = context;
+            _logger = logger;
         }
 
         // 1. DIVERZ SZOBÁK LÉTREHOZÁSA (direct, group, project_channel)
@@ -45,6 +48,8 @@ namespace PROTOTYPE_backend.Services.Chat
                 JoinedAt = DateTime.UtcNow
             });
 
+            int memberCount = 1;
+
             // Tagok hozzáadása (ha group/direct)
             if (dto.MemberUserIds != null)
             {
@@ -58,11 +63,16 @@ namespace PROTOTYPE_backend.Services.Chat
                             UserId = memberId,
                             JoinedAt = DateTime.UtcNow
                         });
+                        memberCount++;
                     }
                 }
             }
 
             await _context.SaveChangesAsync();
+
+            _logger.LogInformation(
+                "Új chat szoba létrehozva. RoomId: {RoomId}, WorkspaceId: {WorkspaceId}, ProjectId: {ProjectId}, Type: {RoomType}, CreatedBy: {UserId}, TagokSzáma: {MemberCount}",
+                room.Id, room.WorkspaceId, room.ProjectId, room.Type, userId, memberCount);
 
             return new ChatRoomDto(
                 room.Id,
@@ -124,6 +134,10 @@ namespace PROTOTYPE_backend.Services.Chat
 
             await _context.SaveChangesAsync();
 
+            _logger.LogInformation(
+                "Új 1:1 (direct) chat szoba létrehozva. RoomId: {RoomId}, WorkspaceId: {WorkspaceId}, InitiatorUserId: {UserId}, TargetUserId: {TargetUserId}",
+                newRoom.Id, workspaceId, userId, targetUserId);
+
             return new ChatRoomDto(
                 newRoom.Id,
                 newRoom.WorkspaceId,
@@ -175,7 +189,7 @@ namespace PROTOTYPE_backend.Services.Chat
         // 4. ÜZENET KÜLDÉSE (A Controller SendMessage akciójához)
         public async Task<ChatMessageDto> SendMessageAsync(Guid userId, Guid roomId, SendMessageDto dto)
         {
-            // Biztosítjuk, hogy a DTO-ban a szoba azonosítója meggyezzen az URL paraméterrel
+            // Biztosítjuk, hogy a DTO-ban a szoba azonosítója megegyezzen az URL paraméterrel
             var requestDto = dto with { RoomId = roomId };
 
             var messageDto = await SaveMessageAsync(userId, requestDto);
@@ -192,7 +206,11 @@ namespace PROTOTYPE_backend.Services.Chat
         public async Task<ChatMessageDto?> SaveMessageAsync(Guid userId, SendMessageDto dto)
         {
             var isMember = await IsUserMemberOfRoomAsync(userId, dto.RoomId);
-            if (!isMember) return null;
+            if (!isMember)
+            {
+                _logger.LogWarning("Üzenetmentés elutasítva: a felhasználó nem tagja a szobának. UserId: {UserId}, RoomId: {RoomId}", userId, dto.RoomId);
+                return null;
+            }
 
             var user = await _context.AppUsers.FindAsync(userId);
 
@@ -230,6 +248,10 @@ namespace PROTOTYPE_backend.Services.Chat
 
             await _context.SaveChangesAsync();
 
+            _logger.LogDebug(
+                "Chat üzenet elmentve. MessageId: {MessageId}, RoomId: {RoomId}, SenderId: {UserId}, MellékletekSzáma: {AttachmentCount}",
+                message.Id, dto.RoomId, userId, attachmentDtos.Count);
+
             return new ChatMessageDto(
                 message.Id,
                 message.RoomId,
@@ -247,7 +269,11 @@ namespace PROTOTYPE_backend.Services.Chat
         public async Task<IEnumerable<ChatMessageDto>> GetRoomMessagesAsync(Guid userId, Guid roomId, int page = 1, int limit = 50)
         {
             var isMember = await IsUserMemberOfRoomAsync(userId, roomId);
-            if (!isMember) return Enumerable.Empty<ChatMessageDto>();
+            if (!isMember)
+            {
+                _logger.LogWarning("Üzenethistória lekérdezése elutasítva: nem szobatag. UserId: {UserId}, RoomId: {RoomId}", userId, roomId);
+                return Enumerable.Empty<ChatMessageDto>();
+            }
 
             return await _context.ChatMessages
                 .AsNoTracking()
@@ -280,16 +306,22 @@ namespace PROTOTYPE_backend.Services.Chat
 
             if (message == null)
             {
+                _logger.LogWarning("Üzenet törlése sikertelen: az üzenet nem található. MessageId: {MessageId}, UserId: {UserId}", messageId, userId);
                 throw new KeyNotFoundException("Az üzenet nem található!");
             }
 
             if (message.SenderId != userId)
             {
+                _logger.LogWarning("Jogosulatlan üzenettörlési kísérlet! MessageId: {MessageId}, SenderId: {SenderId}, InitiatorUserId: {UserId}",
+                    messageId, message.SenderId, userId);
                 throw new UnauthorizedAccessException("Csak a saját üzenetedet törölheted!");
             }
 
+            var roomId = message.RoomId;
             _context.ChatMessages.Remove(message);
             await _context.SaveChangesAsync();
+
+            _logger.LogInformation("Chat üzenet törölve. MessageId: {MessageId}, RoomId: {RoomId}, UserId: {UserId}", messageId, roomId, userId);
         }
 
         // 8. TAGSÁG ELLENŐRZÉSE

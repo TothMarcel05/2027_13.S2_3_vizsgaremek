@@ -1,4 +1,5 @@
 ﻿using Microsoft.EntityFrameworkCore;
+using Microsoft.Extensions.Logging;
 using PROTOTYPE_backend.Data;
 using PROTOTYPE_backend.DTOs.Admin;
 using PROTOTYPE_backend.Models;
@@ -12,15 +13,18 @@ namespace PROTOTYPE_backend.Services.Admin;
 public class AdminService : IAdminService
 {
     private readonly AppDbContext _context;
+    private readonly ILogger<AdminService> _logger;
 
-    public AdminService(AppDbContext context)
+    public AdminService(AppDbContext context, ILogger<AdminService> logger)
     {
         _context = context;
+        _logger = logger;
     }
 
     public async Task<List<UserRoleResponseDto>> GetRolesAndPermissionsAsync()
     {
         return await _context.AppRoles
+            .AsNoTracking()
             .Select(r => new UserRoleResponseDto(
                 r.Id,
                 r.Name,
@@ -33,6 +37,7 @@ public class AdminService : IAdminService
     {
         if (await _context.AppRoles.AnyAsync(r => r.Name == dto.Name))
         {
+            _logger.LogWarning("Szerepkör létrehozása sikertelen: a név már foglalt. RoleName: {RoleName}", dto.Name);
             throw new InvalidOperationException("Ez a szerepkör név már foglalt.");
         }
 
@@ -40,7 +45,7 @@ public class AdminService : IAdminService
         {
             Id = Guid.NewGuid(),
             Name = dto.Name,
-            IsSystem = false, 
+            IsSystem = false,
             CreatedAt = DateTime.UtcNow,
             Permissions = new List<Permission>()
         };
@@ -51,16 +56,29 @@ public class AdminService : IAdminService
                 .Where(p => dto.Permissions.Contains(p.Code))
                 .ToListAsync();
 
+            if (permissions.Count != dto.Permissions.Count)
+            {
+                _logger.LogWarning(
+                    "Szerepkör létrehozásakor néhány megadott jogosultságkód nem létezik az adatbázisban. RoleName: {RoleName}, Kért: {RequestedCount}, Talált: {FoundCount}",
+                    dto.Name, dto.Permissions.Count, permissions.Count);
+            }
+
             newRole.Permissions = permissions;
         }
 
         _context.AppRoles.Add(newRole);
         await _context.SaveChangesAsync();
 
+        var assignedCodes = newRole.Permissions.Select(p => p.Code).ToList();
+
+        _logger.LogInformation(
+            "Új szerepkör létrehozva. RoleId: {RoleId}, RoleName: {RoleName}, Jogosultságok: {@Permissions}",
+            newRole.Id, newRole.Name, assignedCodes);
+
         return new UserRoleResponseDto(
             newRole.Id,
             newRole.Name,
-            newRole.Permissions.Select(p => p.Code).ToList()
+            assignedCodes
         );
     }
 
@@ -70,11 +88,22 @@ public class AdminService : IAdminService
             .Include(r => r.Permissions)
             .FirstOrDefaultAsync(r => r.Id == roleId);
 
-        if (role == null) return false;
+        if (role == null)
+        {
+            _logger.LogWarning("Szerepkör jogosultságainak frissítése sikertelen: a szerepkör nem található. RoleId: {RoleId}", roleId);
+            return false;
+        }
 
         var newPermissions = await _context.Permissions
             .Where(p => dto.Permissions.Contains(p.Code))
             .ToListAsync();
+
+        if (newPermissions.Count != dto.Permissions.Count)
+        {
+            _logger.LogWarning(
+                "Szerepkör frissítésekor érvénytelen jogosultságkódok is érkeztek. RoleId: {RoleId}, Kért: {RequestedCount}, Talált: {FoundCount}",
+                roleId, dto.Permissions.Count, newPermissions.Count);
+        }
 
         role.Permissions.Clear();
         foreach (var permission in newPermissions)
@@ -83,6 +112,10 @@ public class AdminService : IAdminService
         }
 
         await _context.SaveChangesAsync();
+
+        _logger.LogInformation(
+            "Szerepkör jogosultságai frissítve. RoleId: {RoleId}, RoleName: {RoleName}, Új jogosultságok: {@Permissions}",
+            role.Id, role.Name, newPermissions.Select(p => p.Code).ToList());
 
         return true;
     }
@@ -97,7 +130,7 @@ public class AdminService : IAdminService
             query = query.Where(u => u.Name.ToLower().Contains(searchLower) || u.Email.ToLower().Contains(searchLower));
         }
 
-        int pageSize = 20; 
+        int pageSize = 20;
 
         var users = await query
             .OrderByDescending(u => u.CreatedAt)
@@ -119,12 +152,22 @@ public class AdminService : IAdminService
     public async Task<bool> UpdateUserGlobalRoleAsync(Guid userId, UpdateUserGlobalRoleDto dto)
     {
         var user = await _context.AppUsers.FindAsync(userId);
-        if (user == null) return false;
+        if (user == null)
+        {
+            _logger.LogWarning("Globális szerepkör módosítása sikertelen: a felhasználó nem található. UserId: {UserId}", userId);
+            return false;
+        }
 
+        var oldRole = user.GlobalRole;
         user.GlobalRole = dto.NewGlobalRole;
         user.UpdatedAt = DateTime.UtcNow;
 
         await _context.SaveChangesAsync();
+
+        _logger.LogWarning(
+            "Felhasználó globális szerepköre megváltoztatva! UserId: {UserId}, Régi szerepkör: {OldRole}, Új szerepkör: {NewRole}",
+            userId, oldRole, dto.NewGlobalRole);
+
         return true;
     }
 
@@ -142,22 +185,39 @@ public class AdminService : IAdminService
     public async Task<bool> ToggleUserStatusAsync(Guid userId)
     {
         var user = await _context.AppUsers.FindAsync(userId);
-        if (user == null) return false;
+        if (user == null)
+        {
+            _logger.LogWarning("Felhasználói státusz váltása sikertelen: a felhasználó nem található. UserId: {UserId}", userId);
+            return false;
+        }
 
-        user.DeletedAt = user.DeletedAt == null ? DateTime.UtcNow : null;
+        bool isSuspending = user.DeletedAt == null;
+        user.DeletedAt = isSuspending ? DateTime.UtcNow : null;
         user.UpdatedAt = DateTime.UtcNow;
 
         await _context.SaveChangesAsync();
+
+        _logger.LogInformation(
+            "Felhasználói fiók státusza módosítva. UserId: {UserId}, Új állapot: {NewStatus}",
+            userId, isSuspending ? "Suspended" : "Active");
+
         return true;
     }
 
     public async Task<bool> RemoveUserAsync(Guid userId)
     {
         var user = await _context.AppUsers.FindAsync(userId);
-        if (user == null) return false;
+        if (user == null)
+        {
+            _logger.LogWarning("Felhasználó végleges törlése sikertelen: a felhasználó nem található. UserId: {UserId}", userId);
+            return false;
+        }
 
         _context.AppUsers.Remove(user);
         await _context.SaveChangesAsync();
+
+        _logger.LogWarning("Felhasználó véglegesen törölve az adatbázisból (Hard Delete). UserId: {UserId}", userId);
+
         return true;
     }
 }

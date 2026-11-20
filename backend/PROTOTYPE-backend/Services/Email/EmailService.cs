@@ -1,6 +1,8 @@
-﻿using MailKit;
+﻿using System.Diagnostics;
+using MailKit;
 using MailKit.Net.Smtp;
 using MailKit.Security;
+using Microsoft.Extensions.Logging;
 using MimeKit;
 
 namespace PROTOTYPE_backend.Services.Email
@@ -8,10 +10,12 @@ namespace PROTOTYPE_backend.Services.Email
     public class EmailService : IEmailService
     {
         private readonly IConfiguration _config;
+        private readonly ILogger<EmailService> _logger;
 
-        public EmailService(IConfiguration config)
+        public EmailService(IConfiguration config, ILogger<EmailService> logger)
         {
             _config = config;
+            _logger = logger;
         }
 
         public async Task SendPasswordResetEmailAsync(string toEmail, string resetLink)
@@ -43,6 +47,19 @@ namespace PROTOTYPE_backend.Services.Email
 
         private async Task SendEmailAsync(string toEmail, string subject, string htmlBody)
         {
+            var host = _config["Smtp:Host"];
+            var portStr = _config["Smtp:Port"];
+            var user = _config["Smtp:User"];
+            var pass = _config["Smtp:Pass"];
+
+            if (string.IsNullOrWhiteSpace(host) || !int.TryParse(portStr, out var port))
+            {
+                _logger.LogCritical("Hiányzó vagy érvénytelen SMTP konfiguráció (Smtp:Host vagy Smtp:Port)!");
+                throw new InvalidOperationException("Az SMTP szerver nincs megfelelően konfigurálva.");
+            }
+
+            var maskedEmail = MaskEmail(toEmail);
+
             var message = new MimeMessage();
             message.From.Add(new MailboxAddress("Noreply", "noreply@okligon.hu"));
             message.To.Add(new MailboxAddress("", toEmail));
@@ -54,11 +71,56 @@ namespace PROTOTYPE_backend.Services.Email
             };
             message.Body = builder.ToMessageBody();
 
+            var stopwatch = Stopwatch.StartNew();
             using var client = new SmtpClient();
-            await client.ConnectAsync(_config["Smtp:Host"], int.Parse(_config["Smtp:Port"]!), SecureSocketOptions.StartTls);
-            await client.AuthenticateAsync(_config["Smtp:User"], _config["Smtp:Pass"]);
-            await client.SendAsync(message);
-            await client.DisconnectAsync(true);
+
+            try
+            {
+                _logger.LogDebug("SMTP kapcsolat indítása. Host: {SmtpHost}, Port: {SmtpPort}, Tárgy: {Subject}, Címzett: {MaskedEmail}",
+                    host, port, subject, maskedEmail);
+
+                await client.ConnectAsync(host, port, SecureSocketOptions.StartTls);
+                await client.AuthenticateAsync(user, pass);
+                await client.SendAsync(message);
+                await client.DisconnectAsync(true);
+
+                stopwatch.Stop();
+                _logger.LogInformation(
+                    "E-mail sikeresen elküldve. Tárgy: {Subject}, Címzett: {MaskedEmail}, Időtartam: {ElapsedMs} ms",
+                    subject, maskedEmail, stopwatch.ElapsedMilliseconds);
+            }
+            catch (AuthenticationException authEx)
+            {
+                stopwatch.Stop();
+                _logger.LogCritical(
+                    authEx,
+                    "SMTP hitelesítési hiba! Ellenőrizd az Smtp:User és Smtp:Pass beállításokat. Host: {SmtpHost}, Tárgy: {Subject}",
+                    host, subject);
+                throw;
+            }
+            catch (Exception ex)
+            {
+                stopwatch.Stop();
+                _logger.LogError(
+                    ex,
+                    "E-mail küldése meghiúsult. Host: {SmtpHost}, Tárgy: {Subject}, Címzett: {MaskedEmail}, Időtartam: {ElapsedMs} ms",
+                    host, subject, maskedEmail, stopwatch.ElapsedMilliseconds);
+                throw;
+            }
+        }
+
+        // GDPR-barát maszkolás: pl. "janos.kovacs@pelda.hu" -> "ja***@pelda.hu"
+        private static string MaskEmail(string email)
+        {
+            if (string.IsNullOrWhiteSpace(email) || !email.Contains('@'))
+                return "***";
+
+            var parts = email.Split('@');
+            var local = parts[0];
+            var domain = parts[1];
+
+            var visiblePrefix = local.Length <= 2 ? local[..1] : local[..2];
+            return $"{visiblePrefix}***@{domain}";
         }
     }
 }

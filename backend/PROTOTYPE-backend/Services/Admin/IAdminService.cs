@@ -15,6 +15,5 @@ public interface IAdminService
     Task<bool> UpdateUserGlobalRoleAsync(Guid userId, UpdateUserGlobalRoleDto dto);
     Task<bool> ToggleUserStatusAsync(Guid userId); 
     Task<bool> RemoveUserAsync(Guid userId);
-
     Task<SystemOverviewStatsDto> GetSystemStatsAsync();
 }

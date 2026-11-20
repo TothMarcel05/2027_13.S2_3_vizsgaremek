@@ -1,9 +1,9 @@
-﻿
-// KM
+﻿// KM
 
 using BCrypt.Net;
 using Microsoft.AspNetCore.DataProtection;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.Extensions.Logging;
 using OtpNet;
 using PROTOTYPE_backend.Data;
 using PROTOTYPE_backend.DTOs.Auth;
@@ -25,6 +25,7 @@ namespace PROTOTYPE_backend.Services.Auth
         private readonly IDataProtector _protector;
         private readonly IConfiguration _config;
         private readonly IEmailService _emailService;
+        private readonly ILogger<AuthService> _logger;
 
         public AuthService(
             ITokenService tokenService,
@@ -32,8 +33,9 @@ namespace PROTOTYPE_backend.Services.Auth
             AppDbContext context,
             IDataProtectionProvider protector,
             IConfiguration config,
-            IEmailService emailService
-            ) 
+            IEmailService emailService,
+            ILogger<AuthService> logger
+            )
         {
             _tokenService = tokenService;
             _httpContextAccessor = httpContextAccessor;
@@ -41,10 +43,10 @@ namespace PROTOTYPE_backend.Services.Auth
             _protector = protector.CreateProtector("TwoFactorAuth");
             _config = config;
             _emailService = emailService;
-            
+            _logger = logger;
         }
 
-        private string GetClientIpAddress() 
+        private string GetClientIpAddress()
         {
             var httpContext = _httpContextAccessor.HttpContext;
 
@@ -57,7 +59,7 @@ namespace PROTOTYPE_backend.Services.Auth
             return httpContext.Connection.RemoteIpAddress?.ToString() ?? String.Empty;
         }
 
-        private string GetClientDeviceInfo() 
+        private string GetClientDeviceInfo()
         {
             var httpContext = _httpContextAccessor.HttpContext;
             if (httpContext == null) return "Unknown";
@@ -66,7 +68,7 @@ namespace PROTOTYPE_backend.Services.Auth
             return string.IsNullOrEmpty(userAgent) ? "Unknown Device" : userAgent;
         }
 
-        public async Task<UserDto> CreateUserAsync(RegisterDto dto) 
+        public async Task<UserDto> CreateUserAsync(RegisterDto dto)
         {
             var userExistsByEmail = await _context.AppUsers
                 .FirstOrDefaultAsync(u => u.Email == dto.Email);
@@ -76,11 +78,13 @@ namespace PROTOTYPE_backend.Services.Auth
 
             if (userExistsByEmail != null)
             {
+                _logger.LogWarning("Sikertelen regisztráció: az e-mail cím már foglalt. IP: {IpAddress}", GetClientIpAddress());
                 throw new Exception("Az email cím már foglalt!");
             }
 
-            if (userExistsByName != null) 
+            if (userExistsByName != null)
             {
+                _logger.LogWarning("Sikertelen regisztráció: a felhasználónév már foglalt. Username: {Username}, IP: {IpAddress}", dto.Username, GetClientIpAddress());
                 throw new Exception("A felhasználó név már foglalt!");
             }
 
@@ -95,34 +99,52 @@ namespace PROTOTYPE_backend.Services.Auth
             await _context.AppUsers.AddAsync(newUser);
             await _context.SaveChangesAsync();
 
+            _logger.LogInformation("Új felhasználó regisztrált. UserId: {UserId}, IP: {IpAddress}", newUser.Id, GetClientIpAddress());
+
             return new UserDto(newUser.Id, newUser.Name, newUser.Email, newUser.CreatedAt);
         }
 
         public async Task<LoginResultDto> LoginAsync(LoginDto loginDto)
         {
+            var ip = GetClientIpAddress();
             var user = await _context.AppUsers
                 .FirstOrDefaultAsync(u => u.Email == loginDto.Email && u.DeletedAt == null);
 
             if (user == null || !BCrypt.Net.BCrypt.EnhancedVerify(loginDto.Password, user.PasswordHash))
+            {
+                _logger.LogWarning("Sikertelen bejelentkezési kísérlet. UserId: {UserId}, IP: {IpAddress}", user?.Id, ip);
                 throw new UnauthorizedAccessException("Érvénytelen e-mail cím vagy jelszó!");
+            }
 
             if (user.Is2faEnabled)
             {
-                if (user.TwoFactorType == 2) await SendEmailCodeAsync(user);   // lásd lent
+                if (user.TwoFactorType == 2) await SendEmailCodeAsync(user);
+                _logger.LogInformation("Sikeres jelszó-ellenőrzés, 2FA lépés szükséges. UserId: {UserId}, TwoFactorType: {TwoFactorType}, IP: {IpAddress}",
+                    user.Id, user.TwoFactorType, ip);
                 return new LoginResultDto(true, user.TwoFactorType, _tokenService.GenerateTwoFactorToken(user), null);
             }
 
+            _logger.LogInformation("Sikeres bejelentkezés (2FA nélkül). UserId: {UserId}, IP: {IpAddress}", user.Id, ip);
             return new LoginResultDto(false, null, null, await IssueTokensAsync(user));
         }
 
         public async Task<AuthResponseDto> VerifyTwoFactorAsync(TwoFactorLoginDto dto)
         {
-            var userId = _tokenService.ValidateTwoFactorToken(dto.TwoFactorToken)
-                ?? throw new UnauthorizedAccessException("Lejárt vagy érvénytelen 2FA munkamenet!");
+            var ip = GetClientIpAddress();
+            var userId = _tokenService.ValidateTwoFactorToken(dto.TwoFactorToken);
+            if (userId == null)
+            {
+                _logger.LogWarning("Sikertelen 2FA ellenőrzés: érvénytelen vagy lejárt 2FA token. IP: {IpAddress}", ip);
+                throw new UnauthorizedAccessException("Lejárt vagy érvénytelen 2FA munkamenet!");
+            }
 
             var user = await _context.AppUsers
-                .FirstOrDefaultAsync(u => u.Id == userId && u.DeletedAt == null && u.Is2faEnabled)
-                ?? throw new UnauthorizedAccessException("Érvénytelen felhasználó!");
+                .FirstOrDefaultAsync(u => u.Id == userId && u.DeletedAt == null && u.Is2faEnabled);
+            if (user == null)
+            {
+                _logger.LogWarning("Sikertelen 2FA ellenőrzés: nem létező vagy inaktív felhasználó. UserId: {UserId}, IP: {IpAddress}", userId, ip);
+                throw new UnauthorizedAccessException("Érvénytelen felhasználó!");
+            }
 
             bool ok = user.TwoFactorType switch
             {
@@ -132,8 +154,13 @@ namespace PROTOTYPE_backend.Services.Auth
             };
 
             if (!ok && !await TryUseRecoveryCodeAsync(user, dto.Code))
+            {
+                _logger.LogWarning("Sikertelen 2FA kód ellenőrzés! UserId: {UserId}, TwoFactorType: {TwoFactorType}, IP: {IpAddress}",
+                    user.Id, user.TwoFactorType, ip);
                 throw new UnauthorizedAccessException("Érvénytelen kód!");
+            }
 
+            _logger.LogInformation("Sikeres 2FA hitelesítés. UserId: {UserId}, IP: {IpAddress}", user.Id, ip);
             return await IssueTokensAsync(user);
         }
 
@@ -148,7 +175,7 @@ namespace PROTOTYPE_backend.Services.Auth
             return totp.VerifyTotp(code.Trim(), out _, new VerificationWindow(previous: 1, future: 1));
         }
 
-        public async Task<AuthResponseDto> IssueTokensAsync(AppUser user) 
+        public async Task<AuthResponseDto> IssueTokensAsync(AppUser user)
         {
             string globalToken = _tokenService.GenerateGlobalToken(user);
             string refreshToken = _tokenService.GenerateRefreshToken();
@@ -170,6 +197,7 @@ namespace PROTOTYPE_backend.Services.Auth
                 userSession.ExpiresAt = now.AddDays(7);
                 userSession.IpAddress = clientIpAddress;
                 userSession.UpdatedAt = now;
+                _logger.LogDebug("Meglévő munkamenet frissítve. SessionId: {SessionId}, UserId: {UserId}", userSession.Id, user.Id);
             }
             else
             {
@@ -184,6 +212,7 @@ namespace PROTOTYPE_backend.Services.Auth
                     DeviceInfo = clientDeviceInfo,
                 };
                 await _context.UserSessions.AddAsync(userSession);
+                _logger.LogInformation("Új munkamenet létrehozva. UserId: {UserId}, IP: {IpAddress}", user.Id, clientIpAddress);
             }
 
             await _context.SaveChangesAsync();
@@ -215,6 +244,11 @@ namespace PROTOTYPE_backend.Services.Auth
                 userSession.IsRevoked = true;
                 userSession.UpdatedAt = DateTime.UtcNow;
                 await _context.SaveChangesAsync();
+                _logger.LogInformation("Felhasználó kijelentkezett, munkamenet visszavonva. UserId: {UserId}, SessionId: {SessionId}", userId, userSession.Id);
+            }
+            else
+            {
+                _logger.LogDebug("Kijelentkezés: nem található aktív munkamenet a megadott tokenhez. UserId: {UserId}", userId);
             }
         }
 
@@ -243,6 +277,10 @@ namespace PROTOTYPE_backend.Services.Auth
 
             user.TwoFactorRecoveryCodes = JsonSerializer.Serialize(hashes);   // egyszer használható
             await _context.SaveChangesAsync();
+
+            _logger.LogWarning("2FA helyreállító kód (recovery code) felhasználva! UserId: {UserId}, Maradék kódok száma: {RemainingCount}, IP: {IpAddress}",
+                user.Id, hashes.Count, GetClientIpAddress());
+
             return true;
         }
 
@@ -266,6 +304,7 @@ namespace PROTOTYPE_backend.Services.Auth
                 secret = Base32Encoding.ToString(KeyGeneration.GenerateRandomKey(20));
                 user.TwoFactorSecret = _protector.Protect(secret);
                 await _context.SaveChangesAsync();
+                _logger.LogInformation("Új TOTP 2FA titkos kulcs generálva a beállításhoz. UserId: {UserId}", userId);
             }
 
             const string issuer = "PROTOTYPE";
@@ -284,7 +323,10 @@ namespace PROTOTYPE_backend.Services.Auth
                 throw new InvalidOperationException("A 2FA már be van kapcsolva!");
 
             if (!VerifyTotp(user, code))
+            {
+                _logger.LogWarning("TOTP 2FA aktiválás sikertelen: érvénytelen visszaigazoló kód. UserId: {UserId}", userId);
                 throw new ArgumentException("Érvénytelen kód!");
+            }
 
             var (plain, hashes) = GenerateRecoveryCodes();
 
@@ -293,57 +335,53 @@ namespace PROTOTYPE_backend.Services.Auth
             user.TwoFactorRecoveryCodes = JsonSerializer.Serialize(hashes);
             await _context.SaveChangesAsync();
 
-            return plain; 
+            _logger.LogInformation("TOTP 2FA sikeresen aktiválva. UserId: {UserId}", userId);
+
+            return plain;
         }
 
         public async Task<DisabledTwoFactorResultDto> DisableTwoFactorAsync(Guid userId, string password)
         {
-            // 1. Felhasználó lekérése
             var user = await _context.AppUsers
                 .FirstOrDefaultAsync(u => u.Id == userId);
 
             if (user == null)
                 throw new KeyNotFoundException("A felhasználó nem található!");
 
-            // 2. Jelszó ellenőrzése (Hasher segítségével)
             if (string.IsNullOrWhiteSpace(password) || !BCrypt.Net.BCrypt.EnhancedVerify(password, user.PasswordHash))
             {
+                _logger.LogWarning("2FA kikapcsolás elutasítva: hibás jelszó. UserId: {UserId}, IP: {IpAddress}", userId, GetClientIpAddress());
                 throw new UnauthorizedAccessException("Hibás jelszó!");
             }
 
-            // 3. Ellenőrzés: be van-e egyáltalán kapcsolva?
             if (!user.Is2faEnabled)
                 throw new InvalidOperationException("A 2FA nincs bekapcsolva ezen a fiókon!");
 
-            // 4. 2FA beállítások alaphelyzetbe állítása az app_user táblában
             user.Is2faEnabled = false;
             user.TwoFactorType = 0; // 0 = None (enum_lookup alapján)
             user.TwoFactorSecret = null;
             user.TwoFactorRecoveryCodes = null;
 
-            // 5. Az összes meglévő 2FA kód törlése a felhasználóhoz (ha van)
             await _context.User2faCodes
                 .Where(c => c.UserId == userId)
                 .ExecuteDeleteAsync();
 
-            // 6. Változások mentése (a user frissítéséhez)
             await _context.SaveChangesAsync();
+
+            _logger.LogWarning("2FA kikapcsolva a fiókon! UserId: {UserId}, IP: {IpAddress}", userId, GetClientIpAddress());
 
             return new DisabledTwoFactorResultDto(DateTime.UtcNow, user.Is2faEnabled);
         }
 
         private async Task SendEmailCodeAsync(AppUser user)
         {
-            // 1. Korábbi aktív kódok érvénytelenítése
             await _context.User2faCodes
                 .Where(c => c.UserId == user.Id && !c.IsUsed)
                 .ExecuteUpdateAsync(s => s.SetProperty(x => x.IsUsed, true));
 
-            // 2. 6 számjegyű kód generálása és hashelése
             var code = RandomNumberGenerator.GetInt32(100000, 1000000).ToString();
             var codeHash = HashToken(code);
 
-            // 3. Mentés az adatbázisba (5 perces lejárattal)
             var entry = new User2faCode
             {
                 Id = Guid.NewGuid(),
@@ -359,8 +397,8 @@ namespace PROTOTYPE_backend.Services.Auth
             _context.User2faCodes.Add(entry);
             await _context.SaveChangesAsync();
 
-            // 4. Kód kiküldése e-mailben
             await _emailService.SendTwoFactorCodeEmailAsync(user.Email, code);
+            _logger.LogInformation("E-mailes 2FA kód generálva és kiküldve. UserId: {UserId}", user.Id);
         }
 
         private async Task<bool> VerifyEmailCodeAsync(AppUser user, string code)
@@ -371,20 +409,31 @@ namespace PROTOTYPE_backend.Services.Auth
                 .OrderByDescending(c => c.CreatedAt)
                 .FirstOrDefaultAsync();
 
-            if (activeCode == null) return false;
+            if (activeCode == null)
+            {
+                _logger.LogWarning("E-mailes 2FA kód ellenőrzés sikertelen: nincs aktív vagy nem lejárt kód. UserId: {UserId}", user.Id);
+                return false;
+            }
 
             if (activeCode.CodeHash != HashToken(code.Trim()))
             {
                 activeCode.FailedAttempts++;
                 if (activeCode.FailedAttempts >= activeCode.MaxAttempts)
                 {
-                    activeCode.IsUsed = true; // Túl sok hibás próbálkozás -> érvénytelenítjük
+                    activeCode.IsUsed = true;
+                    _logger.LogWarning("E-mailes 2FA kód zárolva a maximális hibás próbálkozások ({MaxAttempts}) elérése miatt! UserId: {UserId}, IP: {IpAddress}",
+                        activeCode.MaxAttempts, user.Id, GetClientIpAddress());
                 }
+                else
+                {
+                    _logger.LogWarning("Hibás e-mailes 2FA kód ({Attempts}/{MaxAttempts}). UserId: {UserId}, IP: {IpAddress}",
+                        activeCode.FailedAttempts, activeCode.MaxAttempts, user.Id, GetClientIpAddress());
+                }
+
                 await _context.SaveChangesAsync();
                 return false;
             }
 
-            // Sikeres ellenőrzés
             activeCode.IsUsed = true;
             await _context.SaveChangesAsync();
             return true;
@@ -399,16 +448,22 @@ namespace PROTOTYPE_backend.Services.Auth
                 throw new InvalidOperationException("A 2FA már be van kapcsolva!");
 
             if (!BCrypt.Net.BCrypt.EnhancedVerify(password, user.PasswordHash))
+            {
+                _logger.LogWarning("E-mailes 2FA aktiválás elutasítva: hibás jelszó. UserId: {UserId}", userId);
                 throw new UnauthorizedAccessException("Hibás jelszó!");
+            }
 
             var (plain, hashes) = GenerateRecoveryCodes();
 
             user.Is2faEnabled = true;
-            user.TwoFactorType = 2; // 2 = Email (enum_lookup alapján)[cite: 3]
+            user.TwoFactorType = 2; // 2 = Email (enum_lookup alapján)
             user.TwoFactorSecret = null;
             user.TwoFactorRecoveryCodes = JsonSerializer.Serialize(hashes);
 
             await _context.SaveChangesAsync();
+
+            _logger.LogInformation("E-mailes 2FA sikeresen aktiválva. UserId: {UserId}", userId);
+
             return plain;
         }
 
@@ -421,12 +476,18 @@ namespace PROTOTYPE_backend.Services.Auth
                 throw new InvalidOperationException("A 2FA nincs bekapcsolva!");
 
             if (!BCrypt.Net.BCrypt.EnhancedVerify(password, user.PasswordHash))
+            {
+                _logger.LogWarning("Recovery kód újragenerálás elutasítva: hibás jelszó. UserId: {UserId}", userId);
                 throw new UnauthorizedAccessException("Hibás jelszó!");
+            }
 
             var (plain, hashes) = GenerateRecoveryCodes();
             user.TwoFactorRecoveryCodes = JsonSerializer.Serialize(hashes);
 
             await _context.SaveChangesAsync();
+
+            _logger.LogInformation("2FA helyreállító kódok újragenerálva. UserId: {UserId}", userId);
+
             return plain;
         }
 
@@ -439,17 +500,18 @@ namespace PROTOTYPE_backend.Services.Auth
                 .FirstOrDefaultAsync(u => u.Id == userId && u.DeletedAt == null && u.Is2faEnabled && u.TwoFactorType == 2)
                 ?? throw new InvalidOperationException("Ehhez a fiókhoz nem kérhető e-mailes 2FA kód!");
 
-            // Opcionális: 30 mp várakozás kikényszerítése az utolsó kiküldés óta
             var recentCode = await _context.User2faCodes
                 .Where(c => c.UserId == user.Id && c.CreatedAt > DateTime.UtcNow.AddSeconds(-30))
                 .AnyAsync();
 
             if (recentCode)
+            {
+                _logger.LogWarning("E-mailes 2FA kód újraküldés elutasítva (rate limit). UserId: {UserId}, IP: {IpAddress}", user.Id, GetClientIpAddress());
                 throw new InvalidOperationException("Kérjük, várj 30 másodpercet az újraküldés előtt!");
+            }
 
             await SendEmailCodeAsync(user);
         }
-
 
         public async Task<AuthResponseDto> RefreshAsync(string refreshToken)
         {
@@ -461,13 +523,18 @@ namespace PROTOTYPE_backend.Services.Auth
                 .FirstOrDefaultAsync(s => s.RefreshTokenHash == hash && !s.IsRevoked && s.ExpiresAt > now);
 
             if (session == null || session.User.DeletedAt != null)
+            {
+                _logger.LogWarning("Sikertelen token frissítés: érvénytelen vagy visszavont munkamenet. IP: {IpAddress}", GetClientIpAddress());
                 throw new Exception("Érvénytelen munkamenet!");
+            }
 
             var newRefresh = _tokenService.GenerateRefreshToken();
             session.RefreshTokenHash = HashToken(newRefresh);
             session.ExpiresAt = now.AddDays(7);
             session.UpdatedAt = now;
             await _context.SaveChangesAsync();
+
+            _logger.LogDebug("Refresh token rotálva. UserId: {UserId}, SessionId: {SessionId}", session.UserId, session.Id);
 
             var user = session.User;
             return new AuthResponseDto(
@@ -476,10 +543,10 @@ namespace PROTOTYPE_backend.Services.Auth
                 new UserDto(user.Id, user.Name, user.Email, user.CreatedAt));
         }
 
-        public async Task<PermissionResultDtos> GetPermissionsByCatAsync(string query) 
+        public async Task<PermissionResultDtos> GetPermissionsByCatAsync(string query)
         {
-            if(!sbyte.TryParse(query, out sbyte scopeId)) throw new Exception("Nem található a kategória!");
-            
+            if (!sbyte.TryParse(query, out sbyte scopeId)) throw new Exception("Nem található a kategória!");
+
             var permissions = await _context.Permissions
                 .AsNoTracking()
                 .Where(p => p.Scope == scopeId)
@@ -493,19 +560,21 @@ namespace PROTOTYPE_backend.Services.Auth
             return result;
         }
 
-        public async Task<RolesResultDto> GetRolesAsync(string query) 
+        public async Task<RolesResultDto> GetRolesAsync(string query)
         {
             if (query == null) throw new Exception("URL tartalma nem megfelelő!");
 
             var roles = await _context.AppRoles
+                .AsNoTracking()
                 .ToListAsync();
 
             return new RolesResultDto(roles.Select(r => r.Name).ToList());
         }
 
-        public async Task<SpecificRoleResultDto> GetSpecificRoleAsync(Guid roleId) 
+        public async Task<SpecificRoleResultDto> GetSpecificRoleAsync(Guid roleId)
         {
             var role = await _context.AppRoles
+                .AsNoTracking()
                 .FirstOrDefaultAsync(r => r.Id == roleId);
 
             if (role == null) throw new Exception("A megadott role nem található!");
@@ -520,7 +589,7 @@ namespace PROTOTYPE_backend.Services.Auth
                 );
         }
 
-        public async Task<CreateRoleResultDto> CreateRoleAsync(CreateRoleDto dto) 
+        public async Task<CreateRoleResultDto> CreateRoleAsync(CreateRoleDto dto)
         {
             var role = await _context.AppRoles
                 .FirstOrDefaultAsync(r => r.Id == dto.Id);
@@ -539,10 +608,12 @@ namespace PROTOTYPE_backend.Services.Auth
             _context.AppRoles.Add(newRole);
             await _context.SaveChangesAsync();
 
+            _logger.LogInformation("Új szerepkör létrehozva az AuthService-ben. RoleId: {RoleId}, RoleName: {RoleName}", newRole.Id, newRole.Name);
+
             return new CreateRoleResultDto(newRole.Id, newRole.CreatedAt);
         }
 
-        public async Task<ModifyRoleResultDto> ModifyRoleAsync(Guid Id, ModifyRoleDto dto) 
+        public async Task<ModifyRoleResultDto> ModifyRoleAsync(Guid Id, ModifyRoleDto dto)
         {
             var role = await _context.AppRoles
                 .FirstOrDefaultAsync(r => r.Id == Id);
@@ -554,14 +625,19 @@ namespace PROTOTYPE_backend.Services.Auth
                 role.Name = dto.Name;
                 role.Description = dto.Description;
             }
-            else throw new Exception("Az adott role nem módosítható!");
-            
+            else
+            {
+                _logger.LogWarning("Beépített rendszerszerepkör módosítási kísérlet elutasítva. RoleId: {RoleId}", Id);
+                throw new Exception("Az adott role nem módosítható!");
+            }
+
             await _context.SaveChangesAsync();
+            _logger.LogInformation("Szerepkör módosítva. RoleId: {RoleId}, Új név: {RoleName}", role.Id, role.Name);
 
             return new ModifyRoleResultDto(role.Id, role.Name, role.Description);
         }
 
-        public async Task<bool> RemoveRoleAsync(Guid roleId) 
+        public async Task<bool> RemoveRoleAsync(Guid roleId)
         {
             var role = await _context.AppRoles
                 .FirstOrDefaultAsync(r => r.Id == roleId);
@@ -571,10 +647,12 @@ namespace PROTOTYPE_backend.Services.Auth
             _context.AppRoles.Remove(role);
             await _context.SaveChangesAsync();
 
+            _logger.LogWarning("Szerepkör törölve. RoleId: {RoleId}, RoleName: {RoleName}", roleId, role.Name);
+
             return true;
         }
 
-        public async Task<AddPermToRoleResultDto> AddPermissionToRoleAsync(Guid roleId, AddPermToRoletDto dto) 
+        public async Task<AddPermToRoleResultDto> AddPermissionToRoleAsync(Guid roleId, AddPermToRoletDto dto)
         {
             var role = await _context.AppRoles
                 .Include(p => p.Permissions)
@@ -586,7 +664,7 @@ namespace PROTOTYPE_backend.Services.Auth
                 .Where(p => dto.codes.Contains(p.Code))
                 .ToListAsync();
 
-            foreach (var permission in permissions) 
+            foreach (var permission in permissions)
             {
                 if (role.Permissions.Any(rp => rp.Id == permission.Id)) continue;
                 role.Permissions.Add(permission);
@@ -594,10 +672,13 @@ namespace PROTOTYPE_backend.Services.Auth
 
             await _context.SaveChangesAsync();
 
-            return new AddPermToRoleResultDto(permissions.Select(p=>p.Code.ToString()).ToList());
+            _logger.LogInformation("Jogosultságok hozzáadva szerepkörhöz. RoleId: {RoleId}, Hozzáadott kódok: {@Permissions}",
+                roleId, permissions.Select(p => p.Code).ToList());
+
+            return new AddPermToRoleResultDto(permissions.Select(p => p.Code.ToString()).ToList());
         }
 
-        public async Task<bool> CloseSessionAsync(Guid id) 
+        public async Task<bool> CloseSessionAsync(Guid id)
         {
             var session = await _context.UserSessions
                 .FirstOrDefaultAsync(us => us.Id == id);
@@ -609,22 +690,28 @@ namespace PROTOTYPE_backend.Services.Auth
 
             await _context.SaveChangesAsync();
 
+            _logger.LogInformation("Munkamenet lezárva. SessionId: {SessionId}, UserId: {UserId}", id, session.UserId);
+
             return true;
         }
+
         public async Task<bool> CloseSessionsAsync()
         {
-            await _context.UserSessions
-                .Where(s => !s.IsRevoked) // Opcionális: csak azokat frissítjük, amik még nincsenek visszavonva
+            var affected = await _context.UserSessions
+                .Where(s => !s.IsRevoked)
                 .ExecuteUpdateAsync(s => s
                     .SetProperty(x => x.IsRevoked, true)
                     .SetProperty(x => x.UpdatedAt, DateTime.UtcNow));
 
+            _logger.LogWarning("Minden aktív munkamenet globálisan visszavonva! Lezárt munkamenetek száma: {Count}", affected);
+
             return true;
         }
 
-        public async Task<List<UserSessionsResponseDto>> GetSessionsAsync(int page, int limit) 
+        public async Task<List<UserSessionsResponseDto>> GetSessionsAsync(int page, int limit)
         {
             return await _context.UserSessions
+                .AsNoTracking()
                 .Skip((page - 1) * limit)
                 .Take(limit)
                 .Select(us => new UserSessionsResponseDto(us.Id, us.UserId, us.DeviceId, us.DeviceInfo, us.IpAddress, us.IsRevoked, us.ExpiresAt, us.UpdatedAt, us.CreatedAt))
@@ -633,17 +720,18 @@ namespace PROTOTYPE_backend.Services.Auth
 
         public async Task RequestPasswordResetAsync(string email)
         {
-            // 1. User megkeresése email alapján
+            var ip = GetClientIpAddress();
             var user = await _context.AppUsers
                 .FirstOrDefaultAsync(u => u.Email == email);
 
-            // Biztonsági okokból nem dobunk hibát, ha nincs ilyen email
-            if (user == null) return;
+            if (user == null)
+            {
+                _logger.LogDebug("Jelszó-visszaállítási kérelem nem létező e-mail címre. IP: {IpAddress}", ip);
+                return;
+            }
 
-            // 2. Nyers token generálása (Kryptografiailag biztonságos)
             string rawToken = Convert.ToBase64String(RandomNumberGenerator.GetBytes(32));
 
-            // 3. Token lehashelése az adatbázisban való tároláshoz (SHA-256)
             string tokenHash;
             using (var sha256 = SHA256.Create())
             {
@@ -652,23 +740,21 @@ namespace PROTOTYPE_backend.Services.Auth
                 tokenHash = Convert.ToBase64String(hashBytes);
             }
 
-            // 4. Régi, még fel nem használt tokenek inaktiválása/törlése a felhasználóhoz
             var existingTokens = await _context.PasswordResetTokens
                 .Where(prt => prt.UserId == user.Id && !prt.IsUsed)
                 .ToListAsync();
 
             foreach (var token in existingTokens)
             {
-                token.IsUsed = true; // A régi tokeneket érvénytelenítjük
+                token.IsUsed = true;
             }
 
-            // 5. Új token mentése az adatbázisba (IsUsed = false!)
             var prt = new PasswordResetToken
             {
                 Id = Guid.NewGuid(),
                 UserId = user.Id,
-                TokenHash = tokenHash, // 👈 Az adatbázisba a HASH kerül
-                IsUsed = false,        // 👈 Aktív marad, amíg fel nem használja!
+                TokenHash = tokenHash,
+                IsUsed = false,
                 CreatedAt = DateTime.UtcNow,
                 ExpiresAt = DateTime.UtcNow.AddMinutes(10)
             };
@@ -676,20 +762,25 @@ namespace PROTOTYPE_backend.Services.Auth
             _context.PasswordResetTokens.Add(prt);
             await _context.SaveChangesAsync();
 
-            // 6. Link generálása (a NYERS token kerül a linkbe!)
             var baseUrl = _config["FrontendUrl"];
             var resetLink = $"{baseUrl}/reset-password?token={Uri.EscapeDataString(rawToken)}&email={Uri.EscapeDataString(email)}";
 
-            // 7. E-mail küldése
             await _emailService.SendPasswordResetEmailAsync(user.Email, resetLink);
+
+            _logger.LogInformation("Jelszó-visszaállító e-mail kiküldve. UserId: {UserId}, IP: {IpAddress}", user.Id, ip);
         }
 
-        public async Task<bool> ResetPasswordAsync(string email, string token, ResetPwdDto dto) 
+        public async Task<bool> ResetPasswordAsync(string email, string token, ResetPwdDto dto)
         {
+            var ip = GetClientIpAddress();
             var user = await _context.AppUsers
                 .FirstOrDefaultAsync(u => u.Email == email);
 
-            if (user == null) return false;
+            if (user == null)
+            {
+                _logger.LogWarning("Jelszó-visszaállítás sikertelen: nem létező felhasználó. IP: {IpAddress}", ip);
+                return false;
+            }
 
             string hashedToken;
             using (var sha256 = SHA256.Create())
@@ -702,13 +793,19 @@ namespace PROTOTYPE_backend.Services.Auth
             var validToken = await _context.PasswordResetTokens
                 .FirstOrDefaultAsync(t => t.UserId == user.Id && t.TokenHash == hashedToken && !t.IsUsed && t.ExpiresAt > DateTime.UtcNow);
 
-            if (validToken == null) return false;
+            if (validToken == null)
+            {
+                _logger.LogWarning("Jelszó-visszaállítás sikertelen: érvénytelen vagy lejárt reset token. UserId: {UserId}, IP: {IpAddress}", user.Id, ip);
+                return false;
+            }
 
             user.UpdatedAt = DateTime.UtcNow;
             user.PasswordHash = BCrypt.Net.BCrypt.EnhancedHashPassword(dto.newPwd, 13);
             validToken.IsUsed = true;
 
             await _context.SaveChangesAsync();
+
+            _logger.LogInformation("Felhasználó jelszava sikeresen megváltoztatva (reset). UserId: {UserId}, IP: {IpAddress}", user.Id, ip);
 
             return true;
         }
