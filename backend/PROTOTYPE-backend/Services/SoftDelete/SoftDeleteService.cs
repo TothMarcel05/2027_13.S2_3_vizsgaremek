@@ -59,6 +59,20 @@ namespace PROTOTYPE_backend.Services.SoftDelete
 
                 user.DeletedAt = DateTime.UtcNow;
             }
+            else if (dto.EntityName == "Workspace")
+            {
+                if (!Guid.TryParse(dto.EntityId, out var wsId)) return false;
+                var ws = await _context.Workspaces.FindAsync(wsId);
+                if (ws == null || ws.DeletedAt != null) return false;
+                ws.DeletedAt = DateTime.UtcNow;
+            }
+            else if (dto.EntityName == "Project")
+            {
+                if (!Guid.TryParse(dto.EntityId, out var projId)) return false;
+                var proj = await _context.Projects.FindAsync(projId);
+                if (proj == null || proj.DeletedAt != null) return false;
+                proj.DeletedAt = DateTime.UtcNow;
+            }
             else
             {
                 _logger.LogWarning("Soft delete elutasítva: nem támogatott entitástípus. EntityName: {EntityName}, UserId: {UserId}", dto.EntityName, dto.UserId);
@@ -124,6 +138,22 @@ namespace PROTOTYPE_backend.Services.SoftDelete
 
                 user.DeletedAt = null;
             }
+
+            else if (dto.EntityName == "Workspace")
+            {
+                if (!Guid.TryParse(dto.EntityId, out var wsId)) return false;
+                var ws = await _context.Workspaces.FindAsync(wsId);
+                if (ws == null || ws.DeletedAt == null || ws.DeletedAt.Value.AddDays(RetentionDays) < DateTime.UtcNow) return false;
+                ws.DeletedAt = null;
+            }
+            else if (dto.EntityName == "Project")
+            {
+                if (!Guid.TryParse(dto.EntityId, out var projId)) return false;
+                var proj = await _context.Projects.FindAsync(projId);
+                if (proj == null || proj.DeletedAt == null || proj.DeletedAt.Value.AddDays(RetentionDays) < DateTime.UtcNow) return false;
+                proj.DeletedAt = null;
+            }
+
             else
             {
                 _logger.LogWarning("Visszaállítás elutasítva: nem támogatott entitástípus. EntityName: {EntityName}", dto.EntityName);
@@ -170,6 +200,17 @@ namespace PROTOTYPE_backend.Services.SoftDelete
             }
 
             _context.StorageNodes.RemoveRange(expiredNodes);
+
+            var expiredProjects = await _context.Projects
+                .Where(p => p.DeletedAt != null && p.DeletedAt <= cutoffDate)
+                .ToListAsync();
+            _context.Projects.RemoveRange(expiredProjects);
+
+            var expiredWorkspaces = await _context.Workspaces
+                .Where(w => w.DeletedAt != null && w.DeletedAt <= cutoffDate)
+                .ToListAsync();
+            _context.Workspaces.RemoveRange(expiredWorkspaces);
+
             var deletedCount = await _context.SaveChangesAsync();
 
             _logger.LogInformation(
@@ -199,6 +240,28 @@ namespace PROTOTYPE_backend.Services.SoftDelete
                     expiresAt,
                     expiresAt > DateTime.UtcNow
                 ));
+            }
+
+            var deletedProjects = await _context.Projects
+                .AsNoTracking()
+                .Where(p => p.DeletedAt != null && p.OwnerId == userId)
+                .ToListAsync();
+
+            foreach (var proj in deletedProjects)
+            {
+                var expiresAt = proj.DeletedAt!.Value.AddDays(RetentionDays);
+                result.Add(new DeletedItemDto("Project", proj.Id.ToString(), proj.DeletedAt.Value, expiresAt, expiresAt > DateTime.UtcNow));
+            }
+
+            var deletedWorkspaces = await _context.Workspaces
+                .AsNoTracking()
+                .Where(w => w.DeletedAt != null && w.OwnerId == userId)
+                .ToListAsync();
+
+            foreach (var ws in deletedWorkspaces)
+            {
+                var expiresAt = ws.DeletedAt!.Value.AddDays(RetentionDays);
+                result.Add(new DeletedItemDto("Workspace", ws.Id.ToString(), ws.DeletedAt.Value, expiresAt, expiresAt > DateTime.UtcNow));
             }
 
             return result;

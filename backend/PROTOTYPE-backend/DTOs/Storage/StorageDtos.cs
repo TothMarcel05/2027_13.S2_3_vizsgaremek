@@ -43,7 +43,8 @@ namespace PROTOTYPE_backend.DTOs.Storage
 
     public record GetNodesRequestDto(
     [Required] Guid WorkspaceId,
-    [Required] Guid? NodeId
+    [Required] Guid? NodeId,
+    [Required] string Name
     );
     #endregion
 

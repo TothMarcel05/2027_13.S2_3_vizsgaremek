@@ -25,7 +25,7 @@ namespace PROTOTYPE_backend.Services.Invitations
 
             var invitedUser = await _context.AppUsers
                 .AsNoTracking()
-                .FirstOrDefaultAsync(u => u.Email == normalizedEmail && u.DeletedAt == null);
+                .FirstOrDefaultAsync(u => u.Email == normalizedEmail && u.DeletedAt == null && u.IsActive == true);
 
             var invitation = new AppInvitation
             {
@@ -117,12 +117,12 @@ namespace PROTOTYPE_backend.Services.Invitations
 
             if (invitation.Type == 1) // Workspace
             {
-                var ws = await _context.Workspaces.AsNoTracking().FirstOrDefaultAsync(w => w.Id == invitation.TargetId);
+                var ws = await _context.Workspaces.AsNoTracking().FirstOrDefaultAsync(w => w.Id == invitation.TargetId && w.DeletedAt == null);
                 if (ws != null) targetName = ws.Name;
             }
             else if (invitation.Type == 2) // Project
             {
-                var proj = await _context.Projects.AsNoTracking().FirstOrDefaultAsync(p => p.Id == invitation.TargetId);
+                var proj = await _context.Projects.AsNoTracking().FirstOrDefaultAsync(p => p.Id == invitation.TargetId && p.DeletedAt == null);
                 if (proj != null) targetName = proj.Name;
             }
 
@@ -171,6 +171,9 @@ namespace PROTOTYPE_backend.Services.Invitations
 
             if (invitation.Type == 1) // Workspace meghívó
             {
+                var workspaceExists = await _context.Workspaces.AnyAsync(w => w.Id == invitation.TargetId && w.DeletedAt == null);
+                if (!workspaceExists) return false;
+
                 var exists = await _context.WorkspaceMembers
                     .AnyAsync(wm => wm.WorkspaceId == invitation.TargetId && wm.UserId == currentUserId);
 
@@ -187,7 +190,15 @@ namespace PROTOTYPE_backend.Services.Invitations
             }
             else if (invitation.Type == 2) // Project meghívó
             {
-                var project = await _context.Projects.FindAsync(invitation.TargetId);
+                var project = await _context.Projects.FirstOrDefaultAsync(p => p.Id == invitation.TargetId && p.DeletedAt == null);
+                if (project == null)
+                {
+                    _logger.LogError(
+                        "Adatinkonzisztencia: projekt meghívó elfogadásakor a célprojekt nem létezik vagy törölt! InvitationId: {InvitationId}, TargetProjectId: {TargetId}, UserId: {UserId}",
+                        invitation.Id, invitation.TargetId, currentUserId);
+                    return false;
+                }
+
                 if (project != null && invitation.RoleId.HasValue)
                 {
                     var exists = await _context.ProjectMembers

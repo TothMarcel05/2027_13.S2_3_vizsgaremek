@@ -289,8 +289,13 @@ namespace PROTOTYPE_backend.Services.Storage
                 throw new ArgumentException("A megadott csomópont nem található vagy törölt.");
             }
 
+            if (!string.IsNullOrWhiteSpace(dto.Name))
+            {
+                node.Name = dto.Name.Trim();
+            }
+
             await _context.SaveChangesAsync();
-            _logger.LogInformation("Storage node adatai módosítva. NodeId: {NodeId}", node.Id);
+            _logger.LogInformation("Storage node adatai módosítva. NodeId: {NodeId}, ÚjNév: {Name}", node.Id, node.Name);
 
             return new NodeDataChangeResponseDto(
                 node.Id,
