@@ -20,6 +20,7 @@ using Scalar.AspNetCore;
 using System.Text;
 using System.Threading.RateLimiting;
 using Microsoft.OpenApi.Models;
+using PROTOTYPE_backend.Services.Notification;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -72,6 +73,7 @@ builder.Services.AddScoped<ITokenService, TokenService>();
 builder.Services.AddScoped<IUserService, UserService>();
 builder.Services.AddScoped<IAuthorizationHandler, PermissionHandler>();
 builder.Services.AddScoped<IEmailService, EmailService>();
+builder.Services.AddScoped<INotificationService, NotificationService>();
 
 
 var jwtSection = builder.Configuration.GetSection("JwtSettings");

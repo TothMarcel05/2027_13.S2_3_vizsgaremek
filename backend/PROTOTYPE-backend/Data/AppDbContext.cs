@@ -3,7 +3,6 @@ using System.Collections.Generic;
 using Microsoft.EntityFrameworkCore;
 using PROTOTYPE_backend.Models;
 
-
 namespace PROTOTYPE_backend.Data;
 
 public partial class AppDbContext : DbContext
@@ -82,6 +81,8 @@ public partial class AppDbContext : DbContext
             entity.HasIndex(e => e.RoleId, "fk_inv_role");
 
             entity.HasIndex(e => new { e.InvitedEmail, e.Status }, "idx_inv_email_status");
+
+            entity.HasIndex(e => new { e.Type, e.TargetId, e.Status }, "idx_inv_target");
 
             entity.HasIndex(e => new { e.InvitedUserId, e.Status }, "idx_inv_user_status");
 
@@ -231,6 +232,11 @@ public partial class AppDbContext : DbContext
             entity.Property(e => e.Is2faEnabled)
                 .HasComment("Be van-e kapcsolva a kétfaktoros hitelesítés")
                 .HasColumnName("is_2fa_enabled");
+            entity.Property(e => e.IsActive)
+                .IsRequired()
+                .HasDefaultValueSql("'1'")
+                .HasComment("Fiók állapota: TRUE = aktív, FALSE = felfüggesztett")
+                .HasColumnName("is_active");
             entity.Property(e => e.Name)
                 .HasMaxLength(255)
                 .HasComment("Megjelenített név")
@@ -270,6 +276,8 @@ public partial class AppDbContext : DbContext
 
             entity.HasIndex(e => new { e.ProjectId, e.StartTime }, "idx_ce_project_start");
 
+            entity.HasIndex(e => new { e.WorkspaceId, e.StartTime }, "idx_ce_workspace_start");
+
             entity.Property(e => e.Id)
                 .HasComment("Esemény azonosító (UUID)")
                 .HasColumnName("id");
@@ -292,7 +300,7 @@ public partial class AppDbContext : DbContext
                 .HasComment("Helyszín")
                 .HasColumnName("location");
             entity.Property(e => e.ProjectId)
-                .HasComment("Projekt")
+                .HasComment("Projekt (projektszintű eseményekhez)")
                 .HasColumnName("project_id");
             entity.Property(e => e.StartTime)
                 .HasComment("Kezdés")
@@ -302,6 +310,9 @@ public partial class AppDbContext : DbContext
                 .HasMaxLength(255)
                 .HasComment("Esemény címe")
                 .HasColumnName("title");
+            entity.Property(e => e.WorkspaceId)
+                .HasComment("Workspace (munkaterületi szintű eseményekhez)")
+                .HasColumnName("workspace_id");
 
             entity.HasOne(d => d.CreatedByNavigation).WithMany(p => p.CalendarEvents)
                 .HasForeignKey(d => d.CreatedBy)
@@ -312,6 +323,11 @@ public partial class AppDbContext : DbContext
                 .HasForeignKey(d => d.ProjectId)
                 .OnDelete(DeleteBehavior.Cascade)
                 .HasConstraintName("fk_ce_project");
+
+            entity.HasOne(d => d.Workspace).WithMany(p => p.CalendarEvents)
+                .HasForeignKey(d => d.WorkspaceId)
+                .OnDelete(DeleteBehavior.Cascade)
+                .HasConstraintName("fk_ce_workspace");
         });
 
         modelBuilder.Entity<ChatMessage>(entity =>
@@ -334,6 +350,10 @@ public partial class AppDbContext : DbContext
                 .HasComment("Küldés ideje")
                 .HasColumnType("timestamp")
                 .HasColumnName("created_at");
+            entity.Property(e => e.DeletedAt)
+                .HasComment("Soft delete: a törlés ideje, NULL = aktív üzenet")
+                .HasColumnType("timestamp")
+                .HasColumnName("deleted_at");
             entity.Property(e => e.MessageText)
                 .HasComment("Üzenet szövege")
                 .HasColumnType("text")
@@ -543,7 +563,7 @@ public partial class AppDbContext : DbContext
 
             entity.HasIndex(e => e.ExpiresAt, "idx_blacklist_expires");
 
-            entity.HasIndex(e => e.Jti, "idx_blacklist_jti").IsUnique();
+            entity.HasIndex(e => e.Jti, "jti").IsUnique();
 
             entity.Property(e => e.Id)
                 .HasComment("Bejegyzés azonosító (UUID)")
@@ -661,6 +681,10 @@ public partial class AppDbContext : DbContext
             entity.Property(e => e.Deadline)
                 .HasComment("Határidő")
                 .HasColumnName("deadline");
+            entity.Property(e => e.DeletedAt)
+                .HasComment("Soft delete: a törlés ideje, NULL = aktív projekt")
+                .HasColumnType("timestamp")
+                .HasColumnName("deleted_at");
             entity.Property(e => e.Description)
                 .HasComment("Projekt leírása")
                 .HasColumnType("text")
@@ -762,6 +786,10 @@ public partial class AppDbContext : DbContext
                 .HasComment("Létrehozás ideje")
                 .HasColumnType("timestamp")
                 .HasColumnName("created_at");
+            entity.Property(e => e.DeletedAt)
+                .HasComment("Soft delete: a törlés ideje, NULL = aktív komment")
+                .HasColumnType("timestamp")
+                .HasColumnName("deleted_at");
             entity.Property(e => e.TaskId)
                 .HasComment("Task")
                 .HasColumnName("task_id");
@@ -784,7 +812,7 @@ public partial class AppDbContext : DbContext
 
             entity.ToTable("project_label", tb => tb.HasComment("Projekt címkék"));
 
-            entity.HasIndex(e => e.ProjectId, "fk_label_project");
+            entity.HasIndex(e => new { e.ProjectId, e.Name }, "uq_project_label_name").IsUnique();
 
             entity.Property(e => e.Id)
                 .HasComment("Címke azonosító (UUID)")
@@ -897,6 +925,10 @@ public partial class AppDbContext : DbContext
             entity.Property(e => e.CreatedBy)
                 .HasComment("Létrehozó felhasználó")
                 .HasColumnName("created_by");
+            entity.Property(e => e.DeletedAt)
+                .HasComment("Soft delete: a törlés ideje, NULL = aktív task")
+                .HasColumnType("timestamp")
+                .HasColumnName("deleted_at");
             entity.Property(e => e.Description)
                 .HasComment("Task leírása")
                 .HasColumnType("text")
@@ -998,8 +1030,7 @@ public partial class AppDbContext : DbContext
                 .HasComment("Létrehozó felhasználó")
                 .HasColumnName("created_by");
             entity.Property(e => e.DeletedAt)
-                .HasDefaultValueSql("CURRENT_TIMESTAMP")
-                .HasComment("Törlés ideje")
+                .HasComment("Soft delete: a törlés ideje, NULL = aktív elem")
                 .HasColumnType("timestamp")
                 .HasColumnName("deleted_at");
             entity.Property(e => e.MimeType)
@@ -1098,7 +1129,7 @@ public partial class AppDbContext : DbContext
 
             entity.HasIndex(e => e.Label, "idx_snl_label");
 
-            entity.HasIndex(e => e.NodeId, "idx_snl_node");
+            entity.HasIndex(e => new { e.NodeId, e.Label }, "uq_snl_node_label").IsUnique();
 
             entity.Property(e => e.Id)
                 .HasComment("Címke azonosító (UUID)")
@@ -1170,7 +1201,7 @@ public partial class AppDbContext : DbContext
 
             entity.ToTable("user_notification", tb => tb.HasComment("Felhasználói értesítések"));
 
-            entity.HasIndex(e => e.UserId, "fk_notif_user");
+            entity.HasIndex(e => new { e.UserId, e.IsRead }, "idx_notif_user_read");
 
             entity.Property(e => e.Id)
                 .HasComment("Értesítés azonosító (UUID)")
@@ -1187,6 +1218,13 @@ public partial class AppDbContext : DbContext
             entity.Property(e => e.IsRead)
                 .HasComment("Elolvasta-e")
                 .HasColumnName("is_read");
+            entity.Property(e => e.ReferenceId)
+                .HasComment("Kapcsolódó entitás azonosítója")
+                .HasColumnName("reference_id");
+            entity.Property(e => e.Type)
+                .HasMaxLength(50)
+                .HasComment("Értesítés típusa (pl. task_assigned, invitation, comment)")
+                .HasColumnName("type");
             entity.Property(e => e.UserId)
                 .HasComment("Címzett felhasználó")
                 .HasColumnName("user_id");
@@ -1204,9 +1242,9 @@ public partial class AppDbContext : DbContext
 
             entity.HasIndex(e => e.ReplacedBySessionId, "fk_session_replaced");
 
-            entity.HasIndex(e => e.RefreshTokenHash, "idx_session_refresh").IsUnique();
-
             entity.HasIndex(e => e.UserId, "idx_session_user");
+
+            entity.HasIndex(e => e.RefreshTokenHash, "refresh_token_hash").IsUnique();
 
             entity.Property(e => e.Id)
                 .HasComment("Munkamenet azonosító (UUID)")
@@ -1278,6 +1316,10 @@ public partial class AppDbContext : DbContext
                 .HasComment("Létrehozás ideje")
                 .HasColumnType("timestamp")
                 .HasColumnName("created_at");
+            entity.Property(e => e.DeletedAt)
+                .HasComment("Soft delete: a törlés ideje, NULL = aktív workspace")
+                .HasColumnType("timestamp")
+                .HasColumnName("deleted_at");
             entity.Property(e => e.Description)
                 .HasComment("Workspace leírása")
                 .HasColumnType("text")

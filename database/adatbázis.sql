@@ -83,7 +83,8 @@ CREATE TABLE app_user (
     created_at                  TIMESTAMP    NOT NULL DEFAULT CURRENT_TIMESTAMP COMMENT 'Létrehozás ideje',
     updated_at                  TIMESTAMP    DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP COMMENT 'Utolsó módosítás ideje',
     global_role                 TINYINT      NOT NULL DEFAULT 1 COMMENT '1 = User, 2 = SystemAdmin',
-    deleted_at                  TIMESTAMP    NULL COMMENT 'Soft delete: a törlés ideje, NULL = aktív felhasználó',
+    is_active                   BOOLEAN      NOT NULL DEFAULT TRUE COMMENT 'Fiók állapota: TRUE = aktív, FALSE = felfüggesztett',
+    deleted_at                  TIMESTAMP    NULL DEFAULT NULL COMMENT 'Soft delete: a törlés ideje, NULL = aktív felhasználó',
 
     -- 2FA kiegészítések
     is_2fa_enabled              BOOLEAN      NOT NULL DEFAULT FALSE COMMENT 'Be van-e kapcsolva a kétfaktoros hitelesítés',
@@ -110,6 +111,7 @@ CREATE TABLE workspace (
     owner_id            CHAR(36)        NOT NULL COMMENT 'Tulajdonos felhasználó',
     storage_quota_bytes BIGINT UNSIGNED NOT NULL DEFAULT 26843545600 COMMENT 'Tárhelykvóta bájtban (alapértelmezett: 25 GB)',
     created_at          TIMESTAMP       DEFAULT CURRENT_TIMESTAMP COMMENT 'Létrehozás ideje',
+    deleted_at          TIMESTAMP       NULL DEFAULT NULL COMMENT 'Soft delete: a törlés ideje, NULL = aktív workspace',
 
     CONSTRAINT fk_workspace_owner
         FOREIGN KEY (owner_id) REFERENCES app_user(id)
@@ -186,6 +188,7 @@ CREATE TABLE project (
     owner_id        CHAR(36)     NULL COMMENT 'Projekt felelőse',
     created_at      TIMESTAMP    DEFAULT CURRENT_TIMESTAMP COMMENT 'Létrehozás ideje',
     updated_at      TIMESTAMP    DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP COMMENT 'Utolsó módosítás ideje',
+    deleted_at      TIMESTAMP    NULL DEFAULT NULL COMMENT 'Soft delete: a törlés ideje, NULL = aktív projekt',
 
     CONSTRAINT fk_project_workspace
         FOREIGN KEY (workspace_id) REFERENCES workspace(id)
@@ -245,6 +248,7 @@ CREATE TABLE app_invitation (
 
 CREATE INDEX idx_inv_email_status ON app_invitation(invited_email, status);
 CREATE INDEX idx_inv_user_status ON app_invitation(invited_user_id, status);
+CREATE INDEX idx_inv_target ON app_invitation(type, target_id, status);
 
 -- ============================================================
 -- 4. PROJECT TASK & SUB-MODULES
@@ -262,6 +266,7 @@ CREATE TABLE project_task (
     due_date            DATE COMMENT 'Határidő',
     created_at          TIMESTAMP    DEFAULT CURRENT_TIMESTAMP COMMENT 'Létrehozás ideje',
     updated_at          TIMESTAMP    DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP COMMENT 'Utolsó módosítás ideje',
+    deleted_at          TIMESTAMP    NULL DEFAULT NULL COMMENT 'Soft delete: a törlés ideje, NULL = aktív task',
 
     CONSTRAINT fk_task_project FOREIGN KEY (project_id) REFERENCES project(id) ON DELETE CASCADE,
     CONSTRAINT fk_task_assignee_role FOREIGN KEY (assignee_role_id) REFERENCES app_role(id) ON DELETE SET NULL,
@@ -279,6 +284,7 @@ CREATE TABLE project_comment (
     user_id         CHAR(36)     NOT NULL COMMENT 'Szerző',
     content         TEXT         NOT NULL COMMENT 'Szöveg',
     created_at      TIMESTAMP    DEFAULT CURRENT_TIMESTAMP COMMENT 'Létrehozás ideje',
+    deleted_at      TIMESTAMP    NULL DEFAULT NULL COMMENT 'Soft delete: a törlés ideje, NULL = aktív komment',
 
     CONSTRAINT fk_comment_task FOREIGN KEY (task_id) REFERENCES project_task(id) ON DELETE CASCADE,
     CONSTRAINT fk_comment_user FOREIGN KEY (user_id) REFERENCES app_user(id) ON DELETE CASCADE
@@ -290,6 +296,7 @@ CREATE TABLE project_label (
     name            VARCHAR(100) NOT NULL COMMENT 'Címke neve',
     color           VARCHAR(7)   NOT NULL DEFAULT '#888888' COMMENT 'Szín hex kódja',
 
+    CONSTRAINT uq_project_label_name UNIQUE (project_id, name),
     CONSTRAINT fk_label_project FOREIGN KEY (project_id) REFERENCES project(id) ON DELETE CASCADE
 ) ENGINE=InnoDB COMMENT='Projekt címkék';
 
@@ -318,12 +325,16 @@ CREATE TABLE project_activity_log (
 CREATE TABLE user_notification (
     id              CHAR(36)     PRIMARY KEY DEFAULT (UUID()) COMMENT 'Értesítés azonosító (UUID)',
     user_id         CHAR(36)     NOT NULL COMMENT 'Címzett felhasználó',
+    type            VARCHAR(50)  NULL COMMENT 'Értesítés típusa (pl. task_assigned, invitation, comment)',
+    reference_id    CHAR(36)     NULL COMMENT 'Kapcsolódó entitás azonosítója',
     content         VARCHAR(500) NOT NULL COMMENT 'Szöveg',
     is_read         BOOLEAN      NOT NULL DEFAULT FALSE COMMENT 'Elolvasta-e',
     created_at      TIMESTAMP    DEFAULT CURRENT_TIMESTAMP COMMENT 'Létrehozás ideje',
 
     CONSTRAINT fk_notif_user FOREIGN KEY (user_id) REFERENCES app_user(id) ON DELETE CASCADE
 ) ENGINE=InnoDB COMMENT='Felhasználói értesítések';
+
+CREATE INDEX idx_notif_user_read ON user_notification(user_id, is_read);
 
 -- ============================================================
 -- 5. STORAGE & DRIVE MODULE
@@ -341,7 +352,7 @@ CREATE TABLE storage_node (
     created_by      CHAR(36)     NULL COMMENT 'Létrehozó felhasználó',
     updated_by      CHAR(36)     NULL COMMENT 'Utolsó módosító',
     created_at      TIMESTAMP    DEFAULT CURRENT_TIMESTAMP COMMENT 'Létrehozás ideje',
-    deleted_at      TIMESTAMP    DEFAULT CURRENT_TIMESTAMP COMMENT 'Törlés ideje',
+    deleted_at      TIMESTAMP    NULL DEFAULT NULL COMMENT 'Soft delete: a törlés ideje, NULL = aktív elem',
     updated_at      TIMESTAMP    DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP COMMENT 'Utolsó módosítás ideje',
 
     CONSTRAINT fk_sn_workspace FOREIGN KEY (workspace_id) REFERENCES workspace(id) ON DELETE CASCADE,
@@ -371,10 +382,10 @@ CREATE TABLE storage_node_label (
     label           VARCHAR(100) NOT NULL COMMENT 'Címke felirata',
     created_at      TIMESTAMP    DEFAULT CURRENT_TIMESTAMP COMMENT 'Létrehozás ideje',
 
+    CONSTRAINT uq_snl_node_label UNIQUE (node_id, label),
     CONSTRAINT fk_snl_node FOREIGN KEY (node_id) REFERENCES storage_node(id) ON DELETE CASCADE
 ) ENGINE=InnoDB COMMENT='Fájlok és mappák egyedi címkéi';
 
-CREATE INDEX idx_snl_node ON storage_node_label(node_id);
 CREATE INDEX idx_snl_label ON storage_node_label(label);
 
 -- ============================================================
@@ -413,6 +424,7 @@ CREATE TABLE chat_message (
     parent_id        CHAR(36)     NULL COMMENT 'Szülő üzenet',
     message_text     TEXT         NOT NULL COMMENT 'Üzenet szövege',
     created_at       TIMESTAMP    DEFAULT CURRENT_TIMESTAMP COMMENT 'Küldés ideje',
+    deleted_at       TIMESTAMP    NULL DEFAULT NULL COMMENT 'Soft delete: a törlés ideje, NULL = aktív üzenet',
 
     CONSTRAINT fk_cm_room FOREIGN KEY (room_id) REFERENCES chat_room(id) ON DELETE CASCADE,
     CONSTRAINT fk_cm_sender FOREIGN KEY (sender_id) REFERENCES app_user(id) ON DELETE SET NULL,
@@ -437,7 +449,8 @@ CREATE TABLE chat_message_attachment (
 -- ============================================================
 CREATE TABLE calendar_event (
     id              CHAR(36)     PRIMARY KEY DEFAULT (UUID()) COMMENT 'Esemény azonosító (UUID)',
-    project_id      CHAR(36)     NULL COMMENT 'Projekt',
+    workspace_id    CHAR(36)     NULL COMMENT 'Workspace (munkaterületi szintű eseményekhez)',
+    project_id      CHAR(36)     NULL COMMENT 'Projekt (projektszintű eseményekhez)',
     title           VARCHAR(255) NOT NULL COMMENT 'Esemény címe',
     description     TEXT COMMENT 'Leírás',
     location        VARCHAR(255) NULL COMMENT 'Helyszín',
@@ -446,10 +459,12 @@ CREATE TABLE calendar_event (
     is_all_day      BOOLEAN      NOT NULL DEFAULT FALSE COMMENT 'Egész napos-e',
     created_by      CHAR(36)     NULL COMMENT 'Létrehozó',
 
+    CONSTRAINT fk_ce_workspace FOREIGN KEY (workspace_id) REFERENCES workspace(id) ON DELETE CASCADE,
     CONSTRAINT fk_ce_project FOREIGN KEY (project_id) REFERENCES project(id) ON DELETE CASCADE,
     CONSTRAINT fk_ce_creator FOREIGN KEY (created_by) REFERENCES app_user(id) ON DELETE SET NULL
 ) ENGINE=InnoDB COMMENT='Naptár események';
 
+CREATE INDEX idx_ce_workspace_start ON calendar_event(workspace_id, start_time);
 CREATE INDEX idx_ce_project_start ON calendar_event(project_id, start_time);
 CREATE INDEX idx_ce_dates ON calendar_event(start_time, end_time);
 
@@ -474,7 +489,6 @@ CREATE TABLE user_session (
 ) ENGINE=InnoDB COMMENT='Felhasználói munkamenetek';
 
 CREATE INDEX idx_session_user ON user_session(user_id);
-CREATE INDEX idx_session_refresh ON user_session(refresh_token_hash);
 
 CREATE TABLE user_2fa_code (
     id              CHAR(36)     PRIMARY KEY DEFAULT (UUID()) COMMENT 'Kód azonosító (UUID)',
@@ -501,7 +515,6 @@ CREATE TABLE jwt_blacklisted_token (
     CONSTRAINT fk_blacklist_user FOREIGN KEY (user_id) REFERENCES app_user(id) ON DELETE CASCADE
 ) ENGINE=InnoDB COMMENT='Visszavont JWT tokenek feketelistája';
 
-CREATE INDEX idx_blacklist_jti ON jwt_blacklisted_token(jti);
 CREATE INDEX idx_blacklist_expires ON jwt_blacklisted_token(expires_at);
 
 CREATE TABLE data_protection_keys (

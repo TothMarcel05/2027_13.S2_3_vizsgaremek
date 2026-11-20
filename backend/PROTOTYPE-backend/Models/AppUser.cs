@@ -49,6 +49,11 @@ public partial class AppUser
     public sbyte GlobalRole { get; set; }
 
     /// <summary>
+    /// Fiók állapota: TRUE = aktív, FALSE = felfüggesztett
+    /// </summary>
+    public bool? IsActive { get; set; }
+
+    /// <summary>
     /// Soft delete: a törlés ideje, NULL = aktív felhasználó
     /// </summary>
     public DateTime? DeletedAt { get; set; }

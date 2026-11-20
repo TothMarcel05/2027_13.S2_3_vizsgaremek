@@ -116,6 +116,12 @@ namespace PROTOTYPE_backend.Services.Auth
                 throw new UnauthorizedAccessException("Érvénytelen e-mail cím vagy jelszó!");
             }
 
+            if (user.IsActive == false)
+            {
+                _logger.LogWarning("Felfüggesztett fiók bejelentkezési kísérlete. UserId: {UserId}, IP: {IpAddress}", user.Id, ip);
+                throw new UnauthorizedAccessException("A felhasználói fiók fel van függesztve!");
+            }
+
             if (user.Is2faEnabled)
             {
                 if (user.TwoFactorType == 2) await SendEmailCodeAsync(user);
@@ -139,7 +145,7 @@ namespace PROTOTYPE_backend.Services.Auth
             }
 
             var user = await _context.AppUsers
-                .FirstOrDefaultAsync(u => u.Id == userId && u.DeletedAt == null && u.Is2faEnabled);
+                .FirstOrDefaultAsync(u => u.Id == userId && u.DeletedAt == null && u.IsActive == true && u.Is2faEnabled);
             if (user == null)
             {
                 _logger.LogWarning("Sikertelen 2FA ellenőrzés: nem létező vagy inaktív felhasználó. UserId: {UserId}, IP: {IpAddress}", userId, ip);
@@ -286,8 +292,9 @@ namespace PROTOTYPE_backend.Services.Auth
 
         public async Task<TwoFactorSetupDto> BeginTwoFactorSetupAsync(Guid userId)
         {
-            var user = await _context.AppUsers.FirstOrDefaultAsync(u => u.Id == userId && u.DeletedAt == null)
-                ?? throw new UnauthorizedAccessException("Érvénytelen felhasználó!");
+            var user = await _context.AppUsers
+                .FirstOrDefaultAsync(u => u.Id == userId && u.DeletedAt == null && u.IsActive == true)
+                    ?? throw new UnauthorizedAccessException("Érvénytelen vagy felfüggesztett felhasználó!");
 
             if (user.Is2faEnabled)
                 throw new InvalidOperationException("A 2FA már be van kapcsolva!");
@@ -316,8 +323,9 @@ namespace PROTOTYPE_backend.Services.Auth
 
         public async Task<List<string>> EnableTwoFactorAsync(Guid userId, string code)
         {
-            var user = await _context.AppUsers.FirstOrDefaultAsync(u => u.Id == userId && u.DeletedAt == null)
-                ?? throw new UnauthorizedAccessException("Érvénytelen felhasználó!");
+            var user = await _context.AppUsers
+                .FirstOrDefaultAsync(u => u.Id == userId && u.DeletedAt == null && u.IsActive == true)
+                    ?? throw new UnauthorizedAccessException("Érvénytelen vagy felfüggesztett felhasználó!");
 
             if (user.Is2faEnabled)
                 throw new InvalidOperationException("A 2FA már be van kapcsolva!");
@@ -441,8 +449,9 @@ namespace PROTOTYPE_backend.Services.Auth
 
         public async Task<List<string>> EnableEmailTwoFactorAsync(Guid userId, string password)
         {
-            var user = await _context.AppUsers.FirstOrDefaultAsync(u => u.Id == userId && u.DeletedAt == null)
-                ?? throw new UnauthorizedAccessException("Érvénytelen felhasználó!");
+            var user = await _context.AppUsers
+                .FirstOrDefaultAsync(u => u.Id == userId && u.DeletedAt == null && u.IsActive == true)
+                    ?? throw new UnauthorizedAccessException("Érvénytelen vagy felfüggesztett felhasználó!");
 
             if (user.Is2faEnabled)
                 throw new InvalidOperationException("A 2FA már be van kapcsolva!");
@@ -469,8 +478,9 @@ namespace PROTOTYPE_backend.Services.Auth
 
         public async Task<List<string>> RegenerateRecoveryCodesAsync(Guid userId, string password)
         {
-            var user = await _context.AppUsers.FirstOrDefaultAsync(u => u.Id == userId && u.DeletedAt == null)
-                ?? throw new UnauthorizedAccessException("Érvénytelen felhasználó!");
+            var user = await _context.AppUsers
+                .FirstOrDefaultAsync(u => u.Id == userId && u.DeletedAt == null && u.IsActive == true)
+                    ?? throw new UnauthorizedAccessException("Érvénytelen vagy felfüggesztett felhasználó!");
 
             if (!user.Is2faEnabled)
                 throw new InvalidOperationException("A 2FA nincs bekapcsolva!");
@@ -497,8 +507,8 @@ namespace PROTOTYPE_backend.Services.Auth
                 ?? throw new UnauthorizedAccessException("Lejárt vagy érvénytelen 2FA munkamenet!");
 
             var user = await _context.AppUsers
-                .FirstOrDefaultAsync(u => u.Id == userId && u.DeletedAt == null && u.Is2faEnabled && u.TwoFactorType == 2)
-                ?? throw new InvalidOperationException("Ehhez a fiókhoz nem kérhető e-mailes 2FA kód!");
+                .FirstOrDefaultAsync(u => u.Id == userId && u.DeletedAt == null && u.IsActive == true && u.Is2faEnabled && u.TwoFactorType == 2)
+                    ?? throw new InvalidOperationException("Ehhez a fiókhoz nem kérhető e-mailes 2FA kód!");
 
             var recentCode = await _context.User2faCodes
                 .Where(c => c.UserId == user.Id && c.CreatedAt > DateTime.UtcNow.AddSeconds(-30))
@@ -522,9 +532,9 @@ namespace PROTOTYPE_backend.Services.Auth
                 .Include(s => s.User)
                 .FirstOrDefaultAsync(s => s.RefreshTokenHash == hash && !s.IsRevoked && s.ExpiresAt > now);
 
-            if (session == null || session.User.DeletedAt != null)
+            if (session == null || session.User.DeletedAt != null || session.User.IsActive == false)
             {
-                _logger.LogWarning("Sikertelen token frissítés: érvénytelen vagy visszavont munkamenet. IP: {IpAddress}", GetClientIpAddress());
+                _logger.LogWarning("Sikertelen token frissítés: érvénytelen, felfüggesztett vagy visszavont munkamenet. IP: {IpAddress}", GetClientIpAddress());
                 throw new Exception("Érvénytelen munkamenet!");
             }
 
@@ -594,7 +604,7 @@ namespace PROTOTYPE_backend.Services.Auth
             var role = await _context.AppRoles
                 .FirstOrDefaultAsync(r => r.Id == dto.Id);
 
-            if (role == null) throw new Exception("A megadott role már szerepel!");
+            if (role != null) throw new Exception("A megadott role már szerepel!");
 
             var newRole = new AppRole
             {

@@ -24,17 +24,17 @@ namespace PROTOTYPE_backend.Services.Projects
 
         public async Task<List<ProjectResponseDto>> GetWorkspaceByIdAsync(Guid workspaceId)
         {
-            var workspace = await _context.Projects.AnyAsync(w => w.WorkspaceId == workspaceId);
-            if (!workspace)
+            var workspaceExists = await _context.Workspaces.AnyAsync(w => w.Id == workspaceId && w.DeletedAt == null);
+            if (!workspaceExists)
             {
-                _logger.LogWarning("Projektek lekérdezése sikertelen: nem létező vagy üres munkaterület. WorkspaceId: {WorkspaceId}", workspaceId);
+                _logger.LogWarning("Projektek lekérdezése sikertelen: nem létező munkaterület. WorkspaceId: {WorkspaceId}", workspaceId);
                 throw new Exception("Nem létezik a munkaterület!");
             }
 
             return await _context.Projects
                 .AsNoTracking()
-                .Where(w => w.WorkspaceId == workspaceId)
-                .Select(w => new ProjectResponseDto(w.Id, w.Name, w.WorkspaceId))
+                .Where(p => p.WorkspaceId == workspaceId && p.DeletedAt == null)
+                .Select(p => new ProjectResponseDto(p.Id, p.Name, p.WorkspaceId))
                 .ToListAsync();
         }
 
@@ -42,7 +42,7 @@ namespace PROTOTYPE_backend.Services.Projects
         {
             var project = await _context.Projects
                 .AsNoTracking()
-                .Where(p => p.Id == projectId)
+                .Where(p => p.Id == projectId && p.DeletedAt == null)
                 .Select(p => new ProjectDataDto(
                     p.Name,
                     p.Description,
@@ -200,18 +200,18 @@ namespace PROTOTYPE_backend.Services.Projects
 
         public async Task<bool> DeleteProjectAsync(Guid projectId)
         {
-            var project = await _context.Projects.FindAsync(projectId);
+            var project = await _context.Projects.FirstOrDefaultAsync(p => p.Id == projectId && p.DeletedAt == null);
             if (project == null)
             {
                 _logger.LogWarning("Projekt törlése sikertelen: a projekt nem található. ProjectId: {ProjectId}", projectId);
                 return false;
             }
 
-            var workspaceId = project.WorkspaceId;
-            _context.Projects.Remove(project);
+            project.DeletedAt = DateTime.UtcNow;
+            project.UpdatedAt = DateTime.UtcNow;
             await _context.SaveChangesAsync();
 
-            _logger.LogWarning("Projekt véglegesen törölve. ProjectId: {ProjectId}, WorkspaceId: {WorkspaceId}", projectId, workspaceId);
+            _logger.LogWarning("Projekt lomtárba helyezve (soft delete). ProjectId: {ProjectId}, WorkspaceId: {WorkspaceId}", projectId, project.WorkspaceId);
 
             return true;
         }

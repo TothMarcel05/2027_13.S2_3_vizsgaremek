@@ -69,7 +69,7 @@ public partial class StorageNode
     public DateTime? CreatedAt { get; set; }
 
     /// <summary>
-    /// Törlés ideje
+    /// Soft delete: a törlés ideje, NULL = aktív elem
     /// </summary>
     public DateTime? DeletedAt { get; set; }
 

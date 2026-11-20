@@ -35,7 +35,7 @@ namespace PROTOTYPE_backend.Services.Workspaces
 
             return await _context.Workspaces
                 .AsNoTracking()
-                .Where(w => w.OwnerId == userId || w.WorkspaceMembers.Any(m => m.UserId == userId))
+                .Where(w => w.DeletedAt == null && (w.OwnerId == userId || w.WorkspaceMembers.Any(m => m.UserId == userId)))
                 .Skip((page - 1) * limit)
                 .Take(limit)
                 .Select(w => new WorkspaceResponseDto(w.Id, w.Name, w.OwnerId))
@@ -45,7 +45,7 @@ namespace PROTOTYPE_backend.Services.Workspaces
         public async Task<WorkspaceDataResponseDto> CreateWorkspaceAsync(Guid userId, CreateWorkspaceDto dto)
         {
             var existingWorkspace = await _context.Workspaces
-                .FirstOrDefaultAsync(w => w.Name == dto.workspaceName && w.OwnerId == userId);
+                .FirstOrDefaultAsync(w => w.Name == dto.workspaceName && w.OwnerId == userId && w.DeletedAt == null);
 
             if (existingWorkspace != null)
             {
@@ -54,16 +54,32 @@ namespace PROTOTYPE_backend.Services.Workspaces
                 throw new Exception("Már létezik ilyen nevű munkaterület ehhez a felhasználóhoz!");
             }
 
+            var now = DateTime.UtcNow;
             var workspace = new Workspace
             {
+                Id = Guid.NewGuid(),
                 Name = dto.workspaceName,
                 OwnerId = userId,
-                CreatedAt = DateTime.UtcNow,
+                CreatedAt = now,
                 Description = dto.description,
-                StorageQuotaBytes = 0
+                StorageQuotaBytes = 1073741824 // pl. 1 GB alapértelmezett kvóta
             };
 
             _context.Workspaces.Add(workspace);
+
+            // Tulajdonos hozzáadása a WorkspaceMembers táblához Owner szerepkörrel
+            var ownerRole = await _context.AppRoles.AsNoTracking().FirstOrDefaultAsync(r => r.Name == "Owner");
+            if (ownerRole != null)
+            {
+                _context.WorkspaceMembers.Add(new WorkspaceMember
+                {
+                    WorkspaceId = workspace.Id,
+                    UserId = userId,
+                    RoleId = ownerRole.Id,
+                    JoinedAt = now
+                });
+            }
+
             await _context.SaveChangesAsync();
 
             var user = await _context.AppUsers.AsNoTracking().FirstOrDefaultAsync(u => u.Id == userId);
@@ -79,7 +95,7 @@ namespace PROTOTYPE_backend.Services.Workspaces
         {
             var data = await _context.Workspaces
                 .AsNoTracking()
-                .Where(w => w.Id == workspaceId)
+                .Where(w => w.Id == workspaceId && w.DeletedAt == null)
                 .Select(w => new WorkspaceDataResponseDto(w.Id, w.Name, w.OwnerId, w.Owner.Name, w.StorageQuotaBytes))
                 .FirstOrDefaultAsync();
 
@@ -95,7 +111,7 @@ namespace PROTOTYPE_backend.Services.Workspaces
         {
             var query = _context.Projects
                 .AsNoTracking()
-                .Where(p => p.WorkspaceId == workspaceId);
+                .Where(p => p.WorkspaceId == workspaceId && p.DeletedAt == null);
 
             if (status.HasValue) query = query.Where(p => p.Status == status.Value);
 
@@ -145,7 +161,10 @@ namespace PROTOTYPE_backend.Services.Workspaces
 
         public async Task<string> SwitchWorkspaceAsync(Guid userId, Guid workspaceId)
         {
-            var user = await _context.AppUsers.FirstOrDefaultAsync(u => u.Id == userId && u.DeletedAt == null);
+            var user = await _context.AppUsers.FirstOrDefaultAsync(u => u.Id == userId && u.DeletedAt == null && u.IsActive == true);
+            var workspaceExists = await _context.Workspaces.AnyAsync(w => w.Id == workspaceId && w.DeletedAt == null);
+            if (!workspaceExists) throw new KeyNotFoundException("A munkaterület nem található!");
+
             if (user == null)
             {
                 _logger.LogWarning("Munkaterület-váltás sikertelen: érvénytelen vagy törölt felhasználó. UserId: {UserId}, WorkspaceId: {WorkspaceId}",
@@ -207,34 +226,38 @@ namespace PROTOTYPE_backend.Services.Workspaces
 
         public async Task<bool> DeleteWorkspaceAsync(Guid workspaceId)
         {
-            var workspace = await _context.Workspaces.FindAsync(workspaceId);
+            var workspace = await _context.Workspaces.FirstOrDefaultAsync(w => w.Id == workspaceId && w.DeletedAt == null);
             if (workspace == null)
             {
                 _logger.LogWarning("Munkaterület törlése sikertelen: a munkaterület nem található. WorkspaceId: {WorkspaceId}", workspaceId);
                 return false;
             }
 
-            var ownerId = workspace.OwnerId;
-            _context.Workspaces.Remove(workspace);
+            workspace.DeletedAt = DateTime.UtcNow;
             await _context.SaveChangesAsync();
 
-            _logger.LogWarning("Munkaterület véglegesen törölve! WorkspaceId: {WorkspaceId}, OwnerId: {OwnerId}", workspaceId, ownerId);
+            _logger.LogWarning("Munkaterület lomtárba helyezve (soft delete)! WorkspaceId: {WorkspaceId}, OwnerId: {OwnerId}", workspaceId, workspace.OwnerId);
 
             return true;
         }
 
         public async Task<WorkspaceStorageUsageResponseDto?> GetWorkspaceStorageAsync(Guid workspaceId)
         {
-            var workspace = await _context.Workspaces.AsNoTracking().FirstOrDefaultAsync(w => w.Id == workspaceId);
+            var workspace = await _context.Workspaces
+                .AsNoTracking()
+                .FirstOrDefaultAsync(w => w.Id == workspaceId && w.DeletedAt == null);
+
             if (workspace == null)
             {
                 _logger.LogDebug("Tárhely-használat lekérdezése: nem található munkaterület. WorkspaceId: {WorkspaceId}", workspaceId);
                 return null;
             }
 
-            ulong calculatedUsedStorage = 0;
+            var usedBytes = await _context.StorageNodes
+                .Where(n => n.WorkspaceId == workspaceId && n.DeletedAt == null && n.Type == 2)
+                .SumAsync(n => (long)(n.SizeBytes ?? 0));
 
-            return new WorkspaceStorageUsageResponseDto(workspace.Id, workspace.Name, calculatedUsedStorage);
+            return new WorkspaceStorageUsageResponseDto(workspace.Id, workspace.Name, (ulong)usedBytes);
         }
 
         public async Task<WorkspaceDataChangeResponseDto?> UpdateWorkspaceAsync(Guid workspaceId, WorkspaceDataChangeDto dto)
@@ -338,7 +361,7 @@ namespace PROTOTYPE_backend.Services.Workspaces
         {
             // 1. Aktív felhasználó ellenőrzése
             var user = await _context.AppUsers
-                .FirstOrDefaultAsync(u => u.Id == dto.assigneeId && u.DeletedAt == null);
+    .FirstOrDefaultAsync(u => u.Id == dto.assigneeId && u.DeletedAt == null && u.IsActive == true);
 
             if (user == null)
             {

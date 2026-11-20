@@ -38,6 +38,13 @@ public partial class Workspace
     /// </summary>
     public DateTime? CreatedAt { get; set; }
 
+    /// <summary>
+    /// Soft delete: a törlés ideje, NULL = aktív workspace
+    /// </summary>
+    public DateTime? DeletedAt { get; set; }
+
+    public virtual ICollection<CalendarEvent> CalendarEvents { get; set; } = new List<CalendarEvent>();
+
     public virtual ICollection<ChatRoom> ChatRooms { get; set; } = new List<ChatRoom>();
 
     public virtual AppUser Owner { get; set; } = null!;

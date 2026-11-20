@@ -53,6 +53,11 @@ public partial class Project
     /// </summary>
     public DateTime? UpdatedAt { get; set; }
 
+    /// <summary>
+    /// Soft delete: a törlés ideje, NULL = aktív projekt
+    /// </summary>
+    public DateTime? DeletedAt { get; set; }
+
     public virtual ICollection<CalendarEvent> CalendarEvents { get; set; } = new List<CalendarEvent>();
 
     public virtual ICollection<ChatRoom> ChatRooms { get; set; } = new List<ChatRoom>();

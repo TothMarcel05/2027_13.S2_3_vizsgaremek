@@ -33,6 +33,11 @@ public partial class ProjectComment
     /// </summary>
     public DateTime? CreatedAt { get; set; }
 
+    /// <summary>
+    /// Soft delete: a törlés ideje, NULL = aktív komment
+    /// </summary>
+    public DateTime? DeletedAt { get; set; }
+
     public virtual ProjectTask Task { get; set; } = null!;
 
     public virtual AppUser User { get; set; } = null!;

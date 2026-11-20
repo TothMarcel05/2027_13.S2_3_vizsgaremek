@@ -38,6 +38,11 @@ public partial class ChatMessage
     /// </summary>
     public DateTime? CreatedAt { get; set; }
 
+    /// <summary>
+    /// Soft delete: a törlés ideje, NULL = aktív üzenet
+    /// </summary>
+    public DateTime? DeletedAt { get; set; }
+
     public virtual ICollection<ChatMessageAttachment> ChatMessageAttachments { get; set; } = new List<ChatMessageAttachment>();
 
     public virtual ICollection<ChatMessage> InverseParent { get; set; } = new List<ChatMessage>();

@@ -19,6 +19,16 @@ public partial class UserNotification
     public Guid UserId { get; set; }
 
     /// <summary>
+    /// Értesítés típusa (pl. task_assigned, invitation, comment)
+    /// </summary>
+    public string? Type { get; set; }
+
+    /// <summary>
+    /// Kapcsolódó entitás azonosítója
+    /// </summary>
+    public Guid? ReferenceId { get; set; }
+
+    /// <summary>
     /// Szöveg
     /// </summary>
     public string Content { get; set; } = null!;

@@ -68,6 +68,11 @@ public partial class ProjectTask
     /// </summary>
     public DateTime? UpdatedAt { get; set; }
 
+    /// <summary>
+    /// Soft delete: a törlés ideje, NULL = aktív task
+    /// </summary>
+    public DateTime? DeletedAt { get; set; }
+
     public virtual AppRole? AssigneeRole { get; set; }
 
     public virtual AppUser? AssigneeUser { get; set; }

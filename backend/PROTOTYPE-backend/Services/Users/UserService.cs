@@ -20,8 +20,7 @@ namespace PROTOTYPE_backend.Services.Users
         public async Task<UserResponseDto?> GetUserProfileAsync(Guid userId)
         {
             var user = await _context.AppUsers
-                .AsNoTracking()
-                .FirstOrDefaultAsync(u => u.Id == userId && u.DeletedAt == null);
+                .FirstOrDefaultAsync(u => u.Id == userId && u.DeletedAt == null && u.IsActive == true);
 
             if (user == null)
             {
@@ -46,7 +45,7 @@ namespace PROTOTYPE_backend.Services.Users
         public async Task<UserModfiyResponseDto?> UpdateUserProfileAsync(Guid userId, UserModifyRequestDto dto)
         {
             var user = await _context.AppUsers
-                .FirstOrDefaultAsync(u => u.Id == userId && u.DeletedAt == null);
+                .FirstOrDefaultAsync(u => u.Id == userId && u.DeletedAt == null && u.IsActive == true);
 
             if (user == null)
             {
@@ -75,24 +74,22 @@ namespace PROTOTYPE_backend.Services.Users
         public async Task<bool> ChangePasswordAsync(Guid userId, ChangePasswordRequestDto dto)
         {
             var user = await _context.AppUsers
-                .FirstOrDefaultAsync(u => u.Id == userId && u.DeletedAt == null);
+                .FirstOrDefaultAsync(u => u.Id == userId && u.DeletedAt == null && u.IsActive == true);
 
             if (user == null)
             {
-                _logger.LogWarning("Jelszóváltoztatás sikertelen: a felhasználó nem található vagy törölt. UserId: {UserId}", userId);
+                _logger.LogWarning("Jelszóváltoztatás sikertelen: a felhasználó nem található, törölt vagy felfüggesztett. UserId: {UserId}", userId);
                 return false;
             }
 
-            // Jelenlegi jelszó ellenőrzése
-            bool isCurrentPasswordValid = BCrypt.Net.BCrypt.Verify(dto.CurrentPassword, user.PasswordHash);
+            bool isCurrentPasswordValid = BCrypt.Net.BCrypt.EnhancedVerify(dto.CurrentPassword, user.PasswordHash);
             if (!isCurrentPasswordValid)
             {
                 _logger.LogWarning("Jelszóváltoztatás elutasítva: hibás jelenlegi jelszó. UserId: {UserId}", userId);
                 return false;
             }
 
-            // Új jelszó hashelése és mentése
-            user.PasswordHash = BCrypt.Net.BCrypt.HashPassword(dto.NewPassword);
+            user.PasswordHash = BCrypt.Net.BCrypt.EnhancedHashPassword(dto.NewPassword, 13);
             user.UpdatedAt = DateTime.UtcNow;
 
             await _context.SaveChangesAsync();
@@ -106,7 +103,7 @@ namespace PROTOTYPE_backend.Services.Users
         public async Task<UserDeleteResponseDto?> DeleteUserAccountAsync(Guid userId)
         {
             var user = await _context.AppUsers
-                .FirstOrDefaultAsync(u => u.Id == userId && u.DeletedAt == null);
+                .FirstOrDefaultAsync(u => u.Id == userId && u.DeletedAt == null && u.IsActive == true);
 
             if (user == null)
             {
@@ -132,7 +129,7 @@ namespace PROTOTYPE_backend.Services.Users
         {
             var profile = await _context.AppUsers
                 .AsNoTracking()
-                .Where(u => u.Id == targetUserId && u.DeletedAt == null)
+                .Where(u => u.Id == targetUserId && u.DeletedAt == null && u.IsActive == true)
                 .Select(u => new UserPublicDto(
                     u.Id,
                     u.Name,
@@ -156,8 +153,9 @@ namespace PROTOTYPE_backend.Services.Users
 
             return await _context.AppUsers
                 .AsNoTracking()
-                .Where(u => u.DeletedAt == null &&
-                           (u.Name.ToLower().Contains(query) || u.Email.ToLower().Contains(query)))
+                .Where(u => u.DeletedAt == null 
+                    && u.IsActive == true 
+                    && (u.Name.ToLower().Contains(query) || u.Email.ToLower().Contains(query)))
                 .Take(20) // Teljesítmény védelmében maximum 20 találat
                 .Select(u => new UserPublicDto(
                     u.Id,

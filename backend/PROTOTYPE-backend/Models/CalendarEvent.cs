@@ -14,7 +14,12 @@ public partial class CalendarEvent
     public Guid Id { get; set; }
 
     /// <summary>
-    /// Projekt
+    /// Workspace (munkaterületi szintű eseményekhez)
+    /// </summary>
+    public Guid? WorkspaceId { get; set; }
+
+    /// <summary>
+    /// Projekt (projektszintű eseményekhez)
     /// </summary>
     public Guid? ProjectId { get; set; }
 
@@ -56,4 +61,6 @@ public partial class CalendarEvent
     public virtual AppUser? CreatedByNavigation { get; set; }
 
     public virtual Project? Project { get; set; }
+
+    public virtual Workspace? Workspace { get; set; }
 }

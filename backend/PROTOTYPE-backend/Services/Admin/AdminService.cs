@@ -175,9 +175,9 @@ public class AdminService : IAdminService
     {
         return new SystemOverviewStatsDto(
             await _context.AppUsers.CountAsync(),
-            await _context.AppUsers.CountAsync(u => u.DeletedAt == null),
-            await _context.Workspaces.CountAsync(),
-            await _context.Projects.CountAsync(),
+            await _context.AppUsers.CountAsync(u => u.DeletedAt == null && u.IsActive == true),
+            await _context.Workspaces.CountAsync(w => w.DeletedAt == null),
+            await _context.Projects.CountAsync(p => p.DeletedAt == null),
             await _context.ProjectTasks.CountAsync()
         );
     }
@@ -185,21 +185,20 @@ public class AdminService : IAdminService
     public async Task<bool> ToggleUserStatusAsync(Guid userId)
     {
         var user = await _context.AppUsers.FindAsync(userId);
-        if (user == null)
+        if (user == null || user.DeletedAt != null)
         {
-            _logger.LogWarning("Felhasználói státusz váltása sikertelen: a felhasználó nem található. UserId: {UserId}", userId);
+            _logger.LogWarning("Felhasználói státusz váltása sikertelen: a felhasználó nem található vagy törölt. UserId: {UserId}", userId);
             return false;
         }
 
-        bool isSuspending = user.DeletedAt == null;
-        user.DeletedAt = isSuspending ? DateTime.UtcNow : null;
+        user.IsActive = !user.IsActive;
         user.UpdatedAt = DateTime.UtcNow;
 
         await _context.SaveChangesAsync();
 
         _logger.LogInformation(
             "Felhasználói fiók státusza módosítva. UserId: {UserId}, Új állapot: {NewStatus}",
-            userId, isSuspending ? "Suspended" : "Active");
+            userId, user.IsActive == true ? "Active" : "Suspended");
 
         return true;
     }
