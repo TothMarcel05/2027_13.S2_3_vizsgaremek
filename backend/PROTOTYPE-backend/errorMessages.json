@@ -1,0 +1,49 @@
+{
+  "ErrorCatalog": {
+    "StatusCodes": {
+      "401": {
+        "Code": "NINCS_HITELESITVE",
+        "Message": "Érvénytelen vagy hiányzó JWT token."
+      },
+      "403": {
+        "Code": "NINCS_JOGOSULTSAG",
+        "Message": "Nincs jogosultságod a művelet végrehajtásához."
+      },
+      "404": {
+        "Code": "NINCS_VEGPONT",
+        "Message": "Nincs ilyen végpont: {method} {path}"
+      },
+      "405": {
+        "Code": "NEM_ENGEDELYEZETT_METODUS",
+        "Message": "A(z) {method} metódus nem támogatott ezen az útvonalon: {path}"
+      },
+      "Default": {
+        "Code": "HTTP_HIBA",
+        "Message": "Hiba történt a kérés során (Státuszkód: {statusCode})."
+      }
+    },
+    "Exceptions": {
+      "UnauthorizedAccessException": {
+        "StatusCode": 403,
+        "Code": "NINCS_JOGOSULTSAG"
+      },
+      "KeyNotFoundException": {
+        "StatusCode": 404,
+        "Code": "NEM_TALALHATO"
+      },
+      "ArgumentException": {
+        "StatusCode": 400,
+        "Code": "ERVENYTELEN_KERESES"
+      },
+      "InvalidOperationException": {
+        "StatusCode": 400,
+        "Code": "ERVENYTELEN_KERESES"
+      },
+      "Default": {
+        "StatusCode": 500,
+        "Code": "SZERVER_HIBA",
+        "Message": "Váratlan belső szerverhiba történt."
+      }
+    }
+  }
+}
