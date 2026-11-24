@@ -24,7 +24,7 @@ namespace PROTOTYPE_backend.Controllers
             _logger = logger;
         }
 
-        // 1. MUNKATERÜLET PROJEKTJEINEK LISTÁZÁSA
+        // 1. MUNKATERÜLET PROJEKTJEINEK LISTÁZÁSA ([Authorize])
         [HttpGet("{workspaceId:guid}/projects")]
         [ProducesResponseType(StatusCodes.Status200OK)]
         [ProducesResponseType(StatusCodes.Status401Unauthorized)]
@@ -52,7 +52,7 @@ namespace PROTOTYPE_backend.Controllers
             }
         }
 
-        // 2. EGYEDI PROJEKT ADATAINAK LEKÉRDEZÉSE
+        // 2. EGYEDI PROJEKT ADATAINAK LEKÉRDEZÉSE ([Authorize])
         [HttpGet("{projectId:guid}")]
         [ProducesResponseType(StatusCodes.Status200OK)]
         [ProducesResponseType(StatusCodes.Status401Unauthorized)]
@@ -78,7 +78,7 @@ namespace PROTOTYPE_backend.Controllers
             }
         }
 
-        // 3. PROJEKT FELADATAINAK LISTÁZÁSA
+        // 3. PROJEKT FELADATAINAK LISTÁZÁSA ([Authorize])
         [HttpGet("{projectId:guid}/tasks")]
         [ProducesResponseType(StatusCodes.Status200OK)]
         [ProducesResponseType(StatusCodes.Status401Unauthorized)]
@@ -100,7 +100,7 @@ namespace PROTOTYPE_backend.Controllers
             }
         }
 
-        // 4. EGYEDI FELADAT LEKÉRDEZÉSE
+        // 4. EGYEDI FELADAT LEKÉRDEZÉSE ([Authorize])
         [HttpGet("tasks/{taskId:guid}")]
         [ProducesResponseType(StatusCodes.Status200OK)]
         [ProducesResponseType(StatusCodes.Status401Unauthorized)]
@@ -127,9 +127,11 @@ namespace PROTOTYPE_backend.Controllers
 
         // 5. ÚJ FELADAT LÉTREHOZÁSA
         [HttpPost("{projectId:guid}/task")]
+        [Authorize(Policy = "task.create")]
         [ProducesResponseType(StatusCodes.Status201Created)]
         [ProducesResponseType(StatusCodes.Status400BadRequest)]
         [ProducesResponseType(StatusCodes.Status401Unauthorized)]
+        [ProducesResponseType(StatusCodes.Status403Forbidden)]
         [ProducesResponseType(StatusCodes.Status500InternalServerError)]
         public async Task<IActionResult> CreateTask(Guid projectId, [FromBody] CreateTaskRequestDto dto)
         {
@@ -156,8 +158,10 @@ namespace PROTOTYPE_backend.Controllers
 
         // 6. FELADAT STÁTUSZÁNAK MÓDOSÍTÁSA
         [HttpPut("task/{taskId:guid}/status")]
+        [Authorize(Policy = "task.edit")]
         [ProducesResponseType(StatusCodes.Status200OK)]
         [ProducesResponseType(StatusCodes.Status401Unauthorized)]
+        [ProducesResponseType(StatusCodes.Status403Forbidden)]
         [ProducesResponseType(StatusCodes.Status404NotFound)]
         [ProducesResponseType(StatusCodes.Status500InternalServerError)]
         public async Task<IActionResult> UpdateTaskStatus(Guid taskId, [FromBody] ProjectDtos dto)
@@ -181,9 +185,11 @@ namespace PROTOTYPE_backend.Controllers
 
         // 7. PROJEKT ADATAINAK MÓDOSÍTÁSA
         [HttpPut("{projectId:guid}")]
+        [Authorize(Policy = "project.edit")]
         [ProducesResponseType(StatusCodes.Status200OK)]
         [ProducesResponseType(StatusCodes.Status400BadRequest)]
         [ProducesResponseType(StatusCodes.Status401Unauthorized)]
+        [ProducesResponseType(StatusCodes.Status403Forbidden)]
         [ProducesResponseType(StatusCodes.Status404NotFound)]
         [ProducesResponseType(StatusCodes.Status500InternalServerError)]
         public async Task<IActionResult> UpdateProject(Guid projectId, [FromBody] UpdateProjectDto dto)
@@ -210,11 +216,13 @@ namespace PROTOTYPE_backend.Controllers
             }
         }
 
-        // 8. FELADAT MÓDOSÍTÁSA (kezdő "/" eltávolítva -> api/projects/tasks/{taskId})
+        // 8. FELADAT MÓDOSÍTÁSA
         [HttpPut("tasks/{taskId:guid}")]
+        [Authorize(Policy = "task.edit")]
         [ProducesResponseType(StatusCodes.Status200OK)]
         [ProducesResponseType(StatusCodes.Status400BadRequest)]
         [ProducesResponseType(StatusCodes.Status401Unauthorized)]
+        [ProducesResponseType(StatusCodes.Status403Forbidden)]
         [ProducesResponseType(StatusCodes.Status404NotFound)]
         [ProducesResponseType(StatusCodes.Status500InternalServerError)]
         public async Task<IActionResult> UpdateTask(Guid taskId, [FromBody] UpdateTaskDto dto)
@@ -243,8 +251,10 @@ namespace PROTOTYPE_backend.Controllers
 
         // 9. PROJEKT TÖRLÉSE
         [HttpDelete("{projectId:guid}")]
+        [Authorize(Policy = "project.delete")]
         [ProducesResponseType(StatusCodes.Status204NoContent)]
         [ProducesResponseType(StatusCodes.Status401Unauthorized)]
+        [ProducesResponseType(StatusCodes.Status403Forbidden)]
         [ProducesResponseType(StatusCodes.Status404NotFound)]
         [ProducesResponseType(StatusCodes.Status500InternalServerError)]
         public async Task<IActionResult> DeleteProject(Guid projectId)
@@ -266,10 +276,12 @@ namespace PROTOTYPE_backend.Controllers
             }
         }
 
-        // 10. FELADAT TÖRLÉSE (kezdő "/" eltávolítva -> api/projects/tasks/{taskId})
+        // 10. FELADAT TÖRLÉSE
         [HttpDelete("tasks/{taskId:guid}")]
+        [Authorize(Policy = "task.delete")]
         [ProducesResponseType(StatusCodes.Status204NoContent)]
         [ProducesResponseType(StatusCodes.Status401Unauthorized)]
+        [ProducesResponseType(StatusCodes.Status403Forbidden)]
         [ProducesResponseType(StatusCodes.Status404NotFound)]
         [ProducesResponseType(StatusCodes.Status500InternalServerError)]
         public async Task<IActionResult> DeleteTask(Guid taskId)
