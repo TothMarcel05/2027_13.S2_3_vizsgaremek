@@ -8,6 +8,7 @@ using Microsoft.IdentityModel.Tokens;
 using Microsoft.OpenApi.Models;
 using PROTOTYPE_backend.Authorization;
 using PROTOTYPE_backend.Data;
+using PROTOTYPE_backend.Middleware;
 using PROTOTYPE_backend.Services.Admin;
 using PROTOTYPE_backend.Services.Auth;
 using PROTOTYPE_backend.Services.Calendar;
@@ -25,6 +26,9 @@ using System.Threading.RateLimiting;
 var builder = WebApplication.CreateBuilder(args);
 
 builder.Configuration.AddJsonFile("errorMessages.json", optional: false, reloadOnChange: true);
+
+builder.Services.AddExceptionHandler<GlobalExceptionHandler>();
+builder.Services.AddProblemDetails();
 
 builder.Services.AddControllers();
 
@@ -123,6 +127,41 @@ builder.Services.AddAuthorization();
 
 
 var app = builder.Build();
+
+app.UseExceptionHandler();
+
+app.UseStatusCodePages(async context =>
+{
+    var response = context.HttpContext.Response;
+    var request = context.HttpContext.Request;
+
+    if (response.HasStarted) return;
+
+    var statusKey = response.StatusCode.ToString();
+    var section = app.Configuration.GetSection($"ErrorCatalog:StatusCodes:{statusKey}");
+
+    if (!section.Exists())
+    {
+        section = app.Configuration.GetSection("ErrorCatalog:StatusCodes:Default");
+    }
+
+    var errorCode = section["Code"] ?? "HTTP_HIBA";
+    var rawMessage = section["Message"] ?? "Hiba történt a kérés során.";
+
+    var formattedMessage = rawMessage
+        .Replace("{method}", request.Method)
+        .Replace("{path}", request.Path)
+        .Replace("{statusCode}", statusKey);
+
+    await response.WriteAsJsonAsync(new
+    {
+        error = new
+        {
+            message = formattedMessage,
+            code = errorCode
+        }
+    });
+});
 
 if (app.Environment.IsDevelopment())
 {
