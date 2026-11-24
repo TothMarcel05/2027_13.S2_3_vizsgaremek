@@ -1,7 +1,6 @@
 ﻿using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.Extensions.Logging;
 using PROTOTYPE_backend.DTOs.Auth;
 using PROTOTYPE_backend.DTOs.Workspace;
 using PROTOTYPE_backend.Extensions;
@@ -18,80 +17,43 @@ namespace PROTOTYPE_backend.Controllers
     public class WorkspaceController : ControllerBase
     {
         private readonly IWorkspaceService _workspaceService;
-        private readonly ILogger<WorkspaceController> _logger;
 
-        public WorkspaceController(IWorkspaceService workspaceService, ILogger<WorkspaceController> logger)
+        public WorkspaceController(IWorkspaceService workspaceService)
         {
             _workspaceService = workspaceService;
-            _logger = logger;
         }
 
-        // 1. SAJÁT MUNKATERÜLETEK LISTÁZÁSA (IDOR-védelemmel és lapozással)
+        // 1. SAJÁT MUNKATERÜLETEK LISTÁZÁSA
         [HttpGet("my")]
         [ProducesResponseType(StatusCodes.Status200OK)]
         [ProducesResponseType(StatusCodes.Status400BadRequest)]
         [ProducesResponseType(StatusCodes.Status401Unauthorized)]
-        [ProducesResponseType(StatusCodes.Status404NotFound)]
-        [ProducesResponseType(StatusCodes.Status500InternalServerError)]
         public async Task<IActionResult> GetMyWorkspaces([FromQuery] int page = 1, [FromQuery] int limit = 20)
         {
             if (page < 1 || limit < 1 || limit > 100)
-            {
-                return BadRequest(new { message = "Érvénytelen lapozási paraméterek (page >= 1, 1 <= limit <= 100)." });
-            }
+                throw new ArgumentException("Érvénytelen lapozási paraméterek (page >= 1, 1 <= limit <= 100).");
 
-            try
-            {
-                var userId = User.GetUserId();
-                var workspaces = await _workspaceService.GetUserWorkspacesAsync(userId, page, limit);
-                return Ok(workspaces);
-            }
-            catch (UnauthorizedAccessException)
-            {
-                return Unauthorized(new { message = "Érvénytelen vagy lejárt hitelesítés." });
-            }
-            catch (Exception ex) when (ex.Message.Contains("Nem létezik"))
-            {
-                return NotFound(new { message = ex.Message });
-            }
-            catch (Exception ex)
-            {
-                _logger.LogError(ex, "Váratlan hiba történt a felhasználó munkaterületeinek lekérdezésekor.");
-                return StatusCode(StatusCodes.Status500InternalServerError, new { message = "Szerveroldali hiba történt a munkaterületek lekérdezésekor." });
-            }
+            var userId = User.GetUserId();
+            var workspaces = await _workspaceService.GetUserWorkspacesAsync(userId, page, limit);
+            return Ok(workspaces);
         }
 
         // 2. EGYEDI MUNKATERÜLET ADATAI
         [HttpGet("{workspaceId:guid}")]
         [ProducesResponseType(StatusCodes.Status200OK)]
-        [ProducesResponseType(StatusCodes.Status401Unauthorized)]
         [ProducesResponseType(StatusCodes.Status404NotFound)]
-        [ProducesResponseType(StatusCodes.Status500InternalServerError)]
         public async Task<IActionResult> GetWorkspaceData(Guid workspaceId)
         {
-            try
-            {
-                var workspace = await _workspaceService.GetWorkspaceDataAsync(workspaceId);
-                if (workspace == null)
-                {
-                    return NotFound(new { message = "A megadott munkaterület nem található." });
-                }
+            var workspace = await _workspaceService.GetWorkspaceDataAsync(workspaceId)
+                ?? throw new KeyNotFoundException("A megadott munkaterület nem található.");
 
-                return Ok(workspace);
-            }
-            catch (Exception ex)
-            {
-                _logger.LogError(ex, "Váratlan hiba történt a munkaterület adatainak lekérdezésekor. WorkspaceId: {WorkspaceId}", workspaceId);
-                return StatusCode(StatusCodes.Status500InternalServerError, new { message = "Szerveroldali hiba történt a munkaterület lekérdezésekor." });
-            }
+            return Ok(workspace);
         }
 
         // 3. MUNKATERÜLET TAGJAINAK LISTÁZÁSA
         [HttpGet("{workspaceId:guid}/members")]
         [ProducesResponseType(StatusCodes.Status200OK)]
         [ProducesResponseType(StatusCodes.Status400BadRequest)]
-        [ProducesResponseType(StatusCodes.Status401Unauthorized)]
-        [ProducesResponseType(StatusCodes.Status500InternalServerError)]
         public async Task<IActionResult> GetWorkspaceMembers(
             Guid workspaceId,
             [FromQuery] int page = 1,
@@ -99,53 +61,28 @@ namespace PROTOTYPE_backend.Controllers
             [FromQuery] Guid? role = null)
         {
             if (page < 1 || limit < 1 || limit > 100)
-            {
-                return BadRequest(new { message = "Érvénytelen lapozási paraméterek (page >= 1, 1 <= limit <= 100)." });
-            }
+                throw new ArgumentException("Érvénytelen lapozási paraméterek (page >= 1, 1 <= limit <= 100).");
 
-            try
-            {
-                var members = await _workspaceService.GetWorkspaceMembersAsync(workspaceId, page, limit, role);
-                return Ok(members);
-            }
-            catch (Exception ex)
-            {
-                _logger.LogError(ex, "Váratlan hiba történt a munkaterület tagjainak lekérdezésekor. WorkspaceId: {WorkspaceId}", workspaceId);
-                return StatusCode(StatusCodes.Status500InternalServerError, new { message = "Szerveroldali hiba történt a tagok lekérdezésekor." });
-            }
+            var members = await _workspaceService.GetWorkspaceMembersAsync(workspaceId, page, limit, role);
+            return Ok(members);
         }
 
         // 4. MUNKATERÜLET TÁRHELY-HASZNÁLATA
         [HttpGet("{workspaceId:guid}/storage")]
         [ProducesResponseType(StatusCodes.Status200OK)]
-        [ProducesResponseType(StatusCodes.Status401Unauthorized)]
         [ProducesResponseType(StatusCodes.Status404NotFound)]
-        [ProducesResponseType(StatusCodes.Status500InternalServerError)]
         public async Task<IActionResult> GetWorkspaceStorage(Guid workspaceId)
         {
-            try
-            {
-                var storage = await _workspaceService.GetWorkspaceStorageAsync(workspaceId);
-                if (storage == null)
-                {
-                    return NotFound(new { message = "A megadott munkaterület nem található." });
-                }
+            var storage = await _workspaceService.GetWorkspaceStorageAsync(workspaceId)
+                ?? throw new KeyNotFoundException("A megadott munkaterület nem található.");
 
-                return Ok(storage);
-            }
-            catch (Exception ex)
-            {
-                _logger.LogError(ex, "Váratlan hiba történt a tárhely-használat lekérdezésekor. WorkspaceId: {WorkspaceId}", workspaceId);
-                return StatusCode(StatusCodes.Status500InternalServerError, new { message = "Szerveroldali hiba történt a tárhely adatok lekérdezésekor." });
-            }
+            return Ok(storage);
         }
 
         // 5. MUNKATERÜLET PROJEKTJEINEK LISTÁZÁSA
         [HttpGet("{workspaceId:guid}/projects")]
         [ProducesResponseType(StatusCodes.Status200OK)]
         [ProducesResponseType(StatusCodes.Status400BadRequest)]
-        [ProducesResponseType(StatusCodes.Status401Unauthorized)]
-        [ProducesResponseType(StatusCodes.Status500InternalServerError)]
         public async Task<IActionResult> GetWorkspaceProjects(
             Guid workspaceId,
             [FromQuery] int page = 1,
@@ -153,332 +90,153 @@ namespace PROTOTYPE_backend.Controllers
             [FromQuery] sbyte? status = null)
         {
             if (page < 1 || limit < 1 || limit > 100)
-            {
-                return BadRequest(new { message = "Érvénytelen lapozási paraméterek (page >= 1, 1 <= limit <= 100)." });
-            }
+                throw new ArgumentException("Érvénytelen lapozási paraméterek (page >= 1, 1 <= limit <= 100).");
 
-            try
-            {
-                var projects = await _workspaceService.GetWorkspaceProjectsAsync(workspaceId, page, limit, status);
-                return Ok(projects);
-            }
-            catch (Exception ex)
-            {
-                _logger.LogError(ex, "Váratlan hiba történt a projektek lekérdezésekor. WorkspaceId: {WorkspaceId}", workspaceId);
-                return StatusCode(StatusCodes.Status500InternalServerError, new { message = "Szerveroldali hiba történt a projektek lekérdezésekor." });
-            }
+            var projects = await _workspaceService.GetWorkspaceProjectsAsync(workspaceId, page, limit, status);
+            return Ok(projects);
         }
 
         // 6. ÚJ MUNKATERÜLET LÉTREHOZÁSA
         [HttpPost]
         [ProducesResponseType(StatusCodes.Status201Created)]
         [ProducesResponseType(StatusCodes.Status400BadRequest)]
-        [ProducesResponseType(StatusCodes.Status401Unauthorized)]
         [ProducesResponseType(StatusCodes.Status409Conflict)]
-        [ProducesResponseType(StatusCodes.Status500InternalServerError)]
         public async Task<IActionResult> CreateWorkspace([FromBody] CreateWorkspaceDto dto)
         {
             if (string.IsNullOrWhiteSpace(dto.workspaceName))
-            {
-                return BadRequest(new { message = "A munkaterület neve nem lehet üres." });
-            }
+                throw new ArgumentException("A munkaterület neve nem lehet üres.");
 
-            try
-            {
-                var userId = User.GetUserId();
-                var workspace = await _workspaceService.CreateWorkspaceAsync(userId, dto);
-                return CreatedAtAction(nameof(GetWorkspaceData), new { workspaceId = workspace.workspaceId }, workspace);
-            }
-            catch (UnauthorizedAccessException)
-            {
-                return Unauthorized(new { message = "Érvénytelen vagy lejárt hitelesítés." });
-            }
-            catch (Exception ex) when (ex.Message.Contains("Már létezik"))
-            {
-                return Conflict(new { message = ex.Message });
-            }
-            catch (Exception ex)
-            {
-                _logger.LogError(ex, "Váratlan hiba történt új munkaterület létrehozásakor.");
-                return StatusCode(StatusCodes.Status500InternalServerError, new { message = "Szerveroldali hiba történt a munkaterület létrehozásakor." });
-            }
+            var userId = User.GetUserId();
+            // Ha a Service-ben már létezik a név, dobjon ott: throw new InvalidOperationException("Már létezik ilyen nevű munkaterület.");
+            var workspace = await _workspaceService.CreateWorkspaceAsync(userId, dto);
+            return CreatedAtAction(nameof(GetWorkspaceData), new { workspaceId = workspace.workspaceId }, workspace);
         }
 
         // 7. ÚJ PROJEKT LÉTREHOZÁSA A MUNKATERÜLETEN BELÜL
         [HttpPost("{workspaceId:guid}/project")]
         [ProducesResponseType(StatusCodes.Status201Created)]
         [ProducesResponseType(StatusCodes.Status400BadRequest)]
-        [ProducesResponseType(StatusCodes.Status401Unauthorized)]
-        [ProducesResponseType(StatusCodes.Status500InternalServerError)]
         public async Task<IActionResult> CreateProject(Guid workspaceId, [FromBody] CreateProjectDto dto)
         {
             if (string.IsNullOrWhiteSpace(dto.name))
-            {
-                return BadRequest(new { message = "A projekt neve nem lehet üres." });
-            }
+                throw new ArgumentException("A projekt neve nem lehet üres.");
 
-            try
-            {
-                var project = await _workspaceService.CreateProjectAsync(workspaceId, dto);
-                return StatusCode(StatusCodes.Status201Created, project);
-            }
-            catch (Exception ex)
-            {
-                _logger.LogError(ex, "Váratlan hiba történt új projekt létrehozásakor. WorkspaceId: {WorkspaceId}", workspaceId);
-                return StatusCode(StatusCodes.Status500InternalServerError, new { message = "Szerveroldali hiba történt a projekt létrehozásakor." });
-            }
+            var project = await _workspaceService.CreateProjectAsync(workspaceId, dto);
+            return StatusCode(StatusCodes.Status201Created, project);
         }
 
-        // 8. MUNKATERÜLET-VÁLTÁS (WORKSPACE JWT TOKEN KIÁLLÍTÁSA)
+        // 8. MUNKATERÜLET-VÁLTÁS
         [HttpPost("{workspaceId:guid}/switch")]
         [ProducesResponseType(StatusCodes.Status200OK)]
-        [ProducesResponseType(StatusCodes.Status401Unauthorized)]
         [ProducesResponseType(StatusCodes.Status403Forbidden)]
-        [ProducesResponseType(StatusCodes.Status500InternalServerError)]
         public async Task<ActionResult<WorkspaceTokenDto>> SwitchWorkspace(Guid workspaceId)
         {
-            try
-            {
-                var userId = User.GetUserId();
-                var token = await _workspaceService.SwitchWorkspaceAsync(userId, workspaceId);
-                return Ok(new WorkspaceTokenDto(token));
-            }
-            catch (UnauthorizedAccessException ex) when (ex.Message.Contains("hozzáférésed"))
-            {
-                return StatusCode(StatusCodes.Status403Forbidden, new { message = ex.Message });
-            }
-            catch (UnauthorizedAccessException ex)
-            {
-                return Unauthorized(new { message = ex.Message });
-            }
-            catch (Exception ex)
-            {
-                _logger.LogError(ex, "Váratlan hiba történt a munkaterület-váltás során. WorkspaceId: {WorkspaceId}", workspaceId);
-                return StatusCode(StatusCodes.Status500InternalServerError, new { message = "Szerveroldali hiba történt a munkaterület-váltáskor." });
-            }
+            var userId = User.GetUserId();
+            // A Service által dobott UnauthorizedAccessException-t a GlobalExceptionHandler automatikusan 403-ra alakítja
+            var token = await _workspaceService.SwitchWorkspaceAsync(userId, workspaceId);
+            return Ok(new WorkspaceTokenDto(token));
         }
 
         // 9. MUNKATERÜLET TÖRLÉSE
         [HttpDelete("{workspaceId:guid}")]
         [ProducesResponseType(StatusCodes.Status204NoContent)]
-        [ProducesResponseType(StatusCodes.Status401Unauthorized)]
         [ProducesResponseType(StatusCodes.Status404NotFound)]
-        [ProducesResponseType(StatusCodes.Status500InternalServerError)]
         public async Task<IActionResult> DeleteWorkspace(Guid workspaceId)
         {
-            try
-            {
-                var result = await _workspaceService.DeleteWorkspaceAsync(workspaceId);
-                if (!result)
-                {
-                    return NotFound(new { message = "A megadott munkaterület nem található." });
-                }
+            var result = await _workspaceService.DeleteWorkspaceAsync(workspaceId);
+            if (!result)
+                throw new KeyNotFoundException("A megadott munkaterület nem található.");
 
-                return NoContent();
-            }
-            catch (Exception ex)
-            {
-                _logger.LogError(ex, "Váratlan hiba történt a munkaterület törlésekor. WorkspaceId: {WorkspaceId}", workspaceId);
-                return StatusCode(StatusCodes.Status500InternalServerError, new { message = "Szerveroldali hiba történt a munkaterület törlésekor." });
-            }
+            return NoContent();
         }
 
         // 10. MUNKATERÜLET ADATAINAK MÓDOSÍTÁSA
         [HttpPut("{workspaceId:guid}")]
         [ProducesResponseType(StatusCodes.Status200OK)]
         [ProducesResponseType(StatusCodes.Status400BadRequest)]
-        [ProducesResponseType(StatusCodes.Status401Unauthorized)]
         [ProducesResponseType(StatusCodes.Status404NotFound)]
-        [ProducesResponseType(StatusCodes.Status500InternalServerError)]
         public async Task<IActionResult> UpdateWorkspace(Guid workspaceId, [FromBody] WorkspaceDataChangeDto dto)
         {
             if (string.IsNullOrWhiteSpace(dto.workspaceName))
-            {
-                return BadRequest(new { message = "A munkaterület neve nem lehet üres." });
-            }
+                throw new ArgumentException("A munkaterület neve nem lehet üres.");
 
-            try
-            {
-                var result = await _workspaceService.UpdateWorkspaceAsync(workspaceId, dto);
-                if (result == null)
-                {
-                    return NotFound(new { message = "A megadott munkaterület nem található." });
-                }
+            var result = await _workspaceService.UpdateWorkspaceAsync(workspaceId, dto)
+                ?? throw new KeyNotFoundException("A megadott munkaterület nem található.");
 
-                return Ok(result);
-            }
-            catch (Exception ex)
-            {
-                _logger.LogError(ex, "Váratlan hiba történt a munkaterület módosításakor. WorkspaceId: {WorkspaceId}", workspaceId);
-                return StatusCode(StatusCodes.Status500InternalServerError, new { message = "Szerveroldali hiba történt a munkaterület frissítésekor." });
-            }
+            return Ok(result);
         }
 
         // 11. TULAJDONOSVÁLTÁS
         [HttpPut("{workspaceId:guid}/owner")]
         [ProducesResponseType(StatusCodes.Status200OK)]
         [ProducesResponseType(StatusCodes.Status400BadRequest)]
-        [ProducesResponseType(StatusCodes.Status401Unauthorized)]
         [ProducesResponseType(StatusCodes.Status404NotFound)]
-        [ProducesResponseType(StatusCodes.Status500InternalServerError)]
         public async Task<IActionResult> ChangeWorkspaceOwner(Guid workspaceId, [FromBody] WorkspaceOwnerChangeDto dto)
         {
             if (dto.newOwnerId == Guid.Empty)
-            {
-                return BadRequest(new { message = "Az új tulajdonos azonosítójának megadása kötelező." });
-            }
+                throw new ArgumentException("Az új tulajdonos azonosítójának megadása kötelező.");
 
-            try
-            {
-                var result = await _workspaceService.ChangeWorkspaceOwnerAsync(workspaceId, dto);
-                if (result == null)
-                {
-                    return NotFound(new { message = "A megadott munkaterület nem található." });
-                }
+            var result = await _workspaceService.ChangeWorkspaceOwnerAsync(workspaceId, dto)
+                ?? throw new KeyNotFoundException("A megadott munkaterület nem található.");
 
-                return Ok(result);
-            }
-            catch (Exception ex) when (ex.Message.Contains("nem található"))
-            {
-                return NotFound(new { message = ex.Message });
-            }
-            catch (Exception ex)
-            {
-                _logger.LogError(ex, "Váratlan hiba történt a tulajdonosváltás során. WorkspaceId: {WorkspaceId}", workspaceId);
-                return StatusCode(StatusCodes.Status500InternalServerError, new { message = "Szerveroldali hiba történt a tulajdonosváltáskor." });
-            }
+            return Ok(result);
         }
 
         // 12. TAG SZEREPKÖRÉNEK MÓDOSÍTÁSA
         [HttpPut("{workspaceId:guid}/members/{userId:guid}")]
         [ProducesResponseType(StatusCodes.Status200OK)]
-        [ProducesResponseType(StatusCodes.Status401Unauthorized)]
         [ProducesResponseType(StatusCodes.Status404NotFound)]
-        [ProducesResponseType(StatusCodes.Status500InternalServerError)]
         public async Task<IActionResult> UpdateMemberRole(Guid workspaceId, Guid userId, [FromBody] WorkspaceMemberRoleChangeDto dto)
         {
-            try
-            {
-                var result = await _workspaceService.UpdateMemberRoleAsync(workspaceId, userId, dto);
-                if (result == null)
-                {
-                    return NotFound(new { message = "A tag vagy munkaterület nem található." });
-                }
+            var result = await _workspaceService.UpdateMemberRoleAsync(workspaceId, userId, dto)
+                ?? throw new KeyNotFoundException("A tag vagy munkaterület nem található.");
 
-                return Ok(result);
-            }
-            catch (Exception ex)
-            {
-                _logger.LogError(ex, "Váratlan hiba történt a tag szerepkörének módosításakor. WorkspaceId: {WorkspaceId}, UserId: {UserId}",
-                    workspaceId, userId);
-                return StatusCode(StatusCodes.Status500InternalServerError, new { message = "Szerveroldali hiba történt a szerepkör módosításakor." });
-            }
+            return Ok(result);
         }
 
         // 13. TAG ELTÁVOLÍTÁSA A MUNKATERÜLETRŐL
         [HttpDelete("{workspaceId:guid}/members/{userId:guid}")]
         [ProducesResponseType(StatusCodes.Status204NoContent)]
-        [ProducesResponseType(StatusCodes.Status401Unauthorized)]
         [ProducesResponseType(StatusCodes.Status404NotFound)]
-        [ProducesResponseType(StatusCodes.Status500InternalServerError)]
         public async Task<IActionResult> RemoveMember(Guid workspaceId, Guid userId)
         {
-            try
-            {
-                var result = await _workspaceService.RemoveMemberAsync(workspaceId, userId);
-                if (!result)
-                {
-                    return NotFound(new { message = "A tag vagy munkaterület nem található." });
-                }
+            var result = await _workspaceService.RemoveMemberAsync(workspaceId, userId);
+            if (!result)
+                throw new KeyNotFoundException("A tag vagy munkaterület nem található.");
 
-                return NoContent();
-            }
-            catch (Exception ex)
-            {
-                _logger.LogError(ex, "Váratlan hiba történt a tag eltávolításakor. WorkspaceId: {WorkspaceId}, UserId: {UserId}",
-                    workspaceId, userId);
-                return StatusCode(StatusCodes.Status500InternalServerError, new { message = "Szerveroldali hiba történt a tag eltávolításakor." });
-            }
+            return NoContent();
         }
 
-        // 14. HIÁNYZÓ VÉGPONT: FELADAT LEFOGLALÁSA
+        // 14. FELADAT LEFOGLALÁSA
         [HttpPost("tasks/reserve")]
         [ProducesResponseType(StatusCodes.Status200OK)]
-        [ProducesResponseType(StatusCodes.Status401Unauthorized)]
         [ProducesResponseType(StatusCodes.Status403Forbidden)]
         [ProducesResponseType(StatusCodes.Status404NotFound)]
         [ProducesResponseType(StatusCodes.Status409Conflict)]
-        [ProducesResponseType(StatusCodes.Status500InternalServerError)]
         public async Task<IActionResult> ReserveTask([FromBody] ReserveTaskDto dto)
         {
-            try
-            {
-                var currentUserId = User.GetUserId();
-                var secureDto = dto with { assigneeId = currentUserId };
+            var currentUserId = User.GetUserId();
+            var secureDto = dto with { assigneeId = currentUserId };
 
-                var result = await _workspaceService.ReserveTaskAsync(secureDto);
-                return Ok(result);
-            }
-            catch (KeyNotFoundException ex)
-            {
-                return NotFound(new { message = ex.Message });
-            }
-            catch (InvalidOperationException ex)
-            {
-                // A feladat már hozzá van rendelve valakihez
-                return Conflict(new { message = ex.Message });
-            }
-            catch (UnauthorizedAccessException ex)
-            {
-                // Hiányzó projekttagság vagy szerepkör
-                return StatusCode(StatusCodes.Status403Forbidden, new { message = ex.Message });
-            }
-            catch (Exception ex)
-            {
-                _logger.LogError(ex, "Váratlan hiba történt a feladat lefoglalása során. TaskId: {TaskId}, ProjectId: {ProjectId}",
-                    dto.id, dto.projectId);
-                return StatusCode(StatusCodes.Status500InternalServerError, new { message = "Szerveroldali hiba történt a feladat lefoglalásakor." });
-            }
+            // A Service által dobott KeyNotFoundException (404), InvalidOperationException (409) 
+            // és UnauthorizedAccessException (403) automatikusan a megfelelő JSON választ adja!
+            var result = await _workspaceService.ReserveTaskAsync(secureDto);
+            return Ok(result);
         }
 
-        // 15. HIÁNYZÓ VÉGPONT: FELADAT LEFOGLALÁSÁNAK LEMONDÁSA
+        // 15. FELADAT LEFOGLALÁSÁNAK LEMONDÁSA
         [HttpPost("tasks/unreserve")]
         [ProducesResponseType(StatusCodes.Status200OK)]
-        [ProducesResponseType(StatusCodes.Status401Unauthorized)]
         [ProducesResponseType(StatusCodes.Status403Forbidden)]
         [ProducesResponseType(StatusCodes.Status404NotFound)]
         [ProducesResponseType(StatusCodes.Status409Conflict)]
-        [ProducesResponseType(StatusCodes.Status500InternalServerError)]
         public async Task<IActionResult> UnReserveTask([FromBody] ReserveTaskDto dto)
         {
-            try
-            {
-                var currentUserId = User.GetUserId();
-                var secureDto = dto with { assigneeId = currentUserId };
+            var currentUserId = User.GetUserId();
+            var secureDto = dto with { assigneeId = currentUserId };
 
-                await _workspaceService.UnReserveTaskAsync(secureDto);
-                return Ok(new { message = "A feladat lefoglalása sikeresen lemondva." });
-            }
-            catch (KeyNotFoundException ex)
-            {
-                return NotFound(new { message = ex.Message });
-            }
-            catch (InvalidOperationException ex)
-            {
-                // A feladat még nincs lefoglalva
-                return Conflict(new { message = ex.Message });
-            }
-            catch (UnauthorizedAccessException ex)
-            {
-                // Más által lefoglalt feladat vagy hiányzó szerepkör
-                return StatusCode(StatusCodes.Status403Forbidden, new { message = ex.Message });
-            }
-            catch (Exception ex)
-            {
-                _logger.LogError(ex, "Váratlan hiba történt a feladat lefoglalásának lemondásakor. TaskId: {TaskId}, ProjectId: {ProjectId}",
-                    dto.id, dto.projectId);
-                return StatusCode(StatusCodes.Status500InternalServerError, new { message = "Szerveroldali hiba történt a feladat lemondásakor." });
-            }
+            await _workspaceService.UnReserveTaskAsync(secureDto);
+            return Ok(new { message = "A feladat lefoglalása sikeresen lemondva." });
         }
     }
 }
