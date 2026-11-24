@@ -26,7 +26,7 @@ namespace PROTOTYPE_backend.Controllers
             _logger = logger;
         }
 
-        // 1. SAJÁT MUNKATERÜLETEK LISTÁZÁSA (IDOR-védelemmel és lapozással)
+        // 1. SAJÁT MUNKATERÜLETEK LISTÁZÁSA ([Authorize])
         [HttpGet("my")]
         [ProducesResponseType(StatusCodes.Status200OK)]
         [ProducesResponseType(StatusCodes.Status400BadRequest)]
@@ -61,7 +61,7 @@ namespace PROTOTYPE_backend.Controllers
             }
         }
 
-        // 2. EGYEDI MUNKATERÜLET ADATAI
+        // 2. EGYEDI MUNKATERÜLET ADATAI ([Authorize])
         [HttpGet("{workspaceId:guid}")]
         [ProducesResponseType(StatusCodes.Status200OK)]
         [ProducesResponseType(StatusCodes.Status401Unauthorized)]
@@ -86,7 +86,7 @@ namespace PROTOTYPE_backend.Controllers
             }
         }
 
-        // 3. MUNKATERÜLET TAGJAINAK LISTÁZÁSA
+        // 3. MUNKATERÜLET TAGJAINAK LISTÁZÁSA ([Authorize])
         [HttpGet("{workspaceId:guid}/members")]
         [ProducesResponseType(StatusCodes.Status200OK)]
         [ProducesResponseType(StatusCodes.Status400BadRequest)]
@@ -115,7 +115,7 @@ namespace PROTOTYPE_backend.Controllers
             }
         }
 
-        // 4. MUNKATERÜLET TÁRHELY-HASZNÁLATA
+        // 4. MUNKATERÜLET TÁRHELY-HASZNÁLATA ([Authorize])
         [HttpGet("{workspaceId:guid}/storage")]
         [ProducesResponseType(StatusCodes.Status200OK)]
         [ProducesResponseType(StatusCodes.Status401Unauthorized)]
@@ -140,7 +140,7 @@ namespace PROTOTYPE_backend.Controllers
             }
         }
 
-        // 5. MUNKATERÜLET PROJEKTJEINEK LISTÁZÁSA
+        // 5. MUNKATERÜLET PROJEKTJEINEK LISTÁZÁSA ([Authorize])
         [HttpGet("{workspaceId:guid}/projects")]
         [ProducesResponseType(StatusCodes.Status200OK)]
         [ProducesResponseType(StatusCodes.Status400BadRequest)]
@@ -169,7 +169,7 @@ namespace PROTOTYPE_backend.Controllers
             }
         }
 
-        // 6. ÚJ MUNKATERÜLET LÉTREHOZÁSA
+        // 6. ÚJ MUNKATERÜLET LÉTREHOZÁSA ([Authorize])
         [HttpPost]
         [ProducesResponseType(StatusCodes.Status201Created)]
         [ProducesResponseType(StatusCodes.Status400BadRequest)]
@@ -206,9 +206,11 @@ namespace PROTOTYPE_backend.Controllers
 
         // 7. ÚJ PROJEKT LÉTREHOZÁSA A MUNKATERÜLETEN BELÜL
         [HttpPost("{workspaceId:guid}/project")]
+        [Authorize(Policy = "project.create")]
         [ProducesResponseType(StatusCodes.Status201Created)]
         [ProducesResponseType(StatusCodes.Status400BadRequest)]
         [ProducesResponseType(StatusCodes.Status401Unauthorized)]
+        [ProducesResponseType(StatusCodes.Status403Forbidden)]
         [ProducesResponseType(StatusCodes.Status500InternalServerError)]
         public async Task<IActionResult> CreateProject(Guid workspaceId, [FromBody] CreateProjectDto dto)
         {
@@ -229,7 +231,7 @@ namespace PROTOTYPE_backend.Controllers
             }
         }
 
-        // 8. MUNKATERÜLET-VÁLTÁS (WORKSPACE JWT TOKEN KIÁLLÍTÁSA)
+        // 8. MUNKATERÜLET-VÁLTÁS ([Authorize])
         [HttpPost("{workspaceId:guid}/switch")]
         [ProducesResponseType(StatusCodes.Status200OK)]
         [ProducesResponseType(StatusCodes.Status401Unauthorized)]
@@ -260,8 +262,10 @@ namespace PROTOTYPE_backend.Controllers
 
         // 9. MUNKATERÜLET TÖRLÉSE
         [HttpDelete("{workspaceId:guid}")]
+        [Authorize(Policy = "workspace.manage")]
         [ProducesResponseType(StatusCodes.Status204NoContent)]
         [ProducesResponseType(StatusCodes.Status401Unauthorized)]
+        [ProducesResponseType(StatusCodes.Status403Forbidden)]
         [ProducesResponseType(StatusCodes.Status404NotFound)]
         [ProducesResponseType(StatusCodes.Status500InternalServerError)]
         public async Task<IActionResult> DeleteWorkspace(Guid workspaceId)
@@ -285,9 +289,11 @@ namespace PROTOTYPE_backend.Controllers
 
         // 10. MUNKATERÜLET ADATAINAK MÓDOSÍTÁSA
         [HttpPut("{workspaceId:guid}")]
+        [Authorize(Policy = "workspace.manage")]
         [ProducesResponseType(StatusCodes.Status200OK)]
         [ProducesResponseType(StatusCodes.Status400BadRequest)]
         [ProducesResponseType(StatusCodes.Status401Unauthorized)]
+        [ProducesResponseType(StatusCodes.Status403Forbidden)]
         [ProducesResponseType(StatusCodes.Status404NotFound)]
         [ProducesResponseType(StatusCodes.Status500InternalServerError)]
         public async Task<IActionResult> UpdateWorkspace(Guid workspaceId, [FromBody] WorkspaceDataChangeDto dto)
@@ -316,9 +322,11 @@ namespace PROTOTYPE_backend.Controllers
 
         // 11. TULAJDONOSVÁLTÁS
         [HttpPut("{workspaceId:guid}/owner")]
+        [Authorize(Policy = "workspace.ownership.transfer")]
         [ProducesResponseType(StatusCodes.Status200OK)]
         [ProducesResponseType(StatusCodes.Status400BadRequest)]
         [ProducesResponseType(StatusCodes.Status401Unauthorized)]
+        [ProducesResponseType(StatusCodes.Status403Forbidden)]
         [ProducesResponseType(StatusCodes.Status404NotFound)]
         [ProducesResponseType(StatusCodes.Status500InternalServerError)]
         public async Task<IActionResult> ChangeWorkspaceOwner(Guid workspaceId, [FromBody] WorkspaceOwnerChangeDto dto)
@@ -351,8 +359,10 @@ namespace PROTOTYPE_backend.Controllers
 
         // 12. TAG SZEREPKÖRÉNEK MÓDOSÍTÁSA
         [HttpPut("{workspaceId:guid}/members/{userId:guid}")]
+        [Authorize(Policy = "workspace.members.manage")]
         [ProducesResponseType(StatusCodes.Status200OK)]
         [ProducesResponseType(StatusCodes.Status401Unauthorized)]
+        [ProducesResponseType(StatusCodes.Status403Forbidden)]
         [ProducesResponseType(StatusCodes.Status404NotFound)]
         [ProducesResponseType(StatusCodes.Status500InternalServerError)]
         public async Task<IActionResult> UpdateMemberRole(Guid workspaceId, Guid userId, [FromBody] WorkspaceMemberRoleChangeDto dto)
@@ -377,8 +387,10 @@ namespace PROTOTYPE_backend.Controllers
 
         // 13. TAG ELTÁVOLÍTÁSA A MUNKATERÜLETRŐL
         [HttpDelete("{workspaceId:guid}/members/{userId:guid}")]
+        [Authorize(Policy = "workspace.members.manage")]
         [ProducesResponseType(StatusCodes.Status204NoContent)]
         [ProducesResponseType(StatusCodes.Status401Unauthorized)]
+        [ProducesResponseType(StatusCodes.Status403Forbidden)]
         [ProducesResponseType(StatusCodes.Status404NotFound)]
         [ProducesResponseType(StatusCodes.Status500InternalServerError)]
         public async Task<IActionResult> RemoveMember(Guid workspaceId, Guid userId)
@@ -401,8 +413,9 @@ namespace PROTOTYPE_backend.Controllers
             }
         }
 
-        // 14. HIÁNYZÓ VÉGPONT: FELADAT LEFOGLALÁSA
+        // 14. FELADAT LEFOGLALÁSA
         [HttpPost("tasks/reserve")]
+        [Authorize(Policy = "task.reserve")]
         [ProducesResponseType(StatusCodes.Status200OK)]
         [ProducesResponseType(StatusCodes.Status401Unauthorized)]
         [ProducesResponseType(StatusCodes.Status403Forbidden)]
@@ -441,8 +454,9 @@ namespace PROTOTYPE_backend.Controllers
             }
         }
 
-        // 15. HIÁNYZÓ VÉGPONT: FELADAT LEFOGLALÁSÁNAK LEMONDÁSA
+        // 15. FELADAT LEFOGLALÁSÁNAK LEMONDÁSA
         [HttpPost("tasks/unreserve")]
+        [Authorize(Policy = "task.reserve")]
         [ProducesResponseType(StatusCodes.Status200OK)]
         [ProducesResponseType(StatusCodes.Status401Unauthorized)]
         [ProducesResponseType(StatusCodes.Status403Forbidden)]

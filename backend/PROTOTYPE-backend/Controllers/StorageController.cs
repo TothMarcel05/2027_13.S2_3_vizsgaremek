@@ -31,9 +31,11 @@ namespace PROTOTYPE_backend.Controllers
 
         // 1. MUNKATERÜLET FÁJLJAINAK ÉS MAPPÁINAK LISTÁZÁSA
         [HttpGet("nodes")]
+        [Authorize(Policy = "storage.read")]
         [ProducesResponseType(StatusCodes.Status200OK)]
         [ProducesResponseType(StatusCodes.Status400BadRequest)]
         [ProducesResponseType(StatusCodes.Status401Unauthorized)]
+        [ProducesResponseType(StatusCodes.Status403Forbidden)]
         [ProducesResponseType(StatusCodes.Status500InternalServerError)]
         public async Task<IActionResult> GetNodes([FromQuery] Guid workspaceId, [FromQuery] string? tagFilter)
         {
@@ -56,8 +58,10 @@ namespace PROTOTYPE_backend.Controllers
 
         // 2. FÁJL LETÖLTÉSE
         [HttpGet("nodes/{id:guid}/download")]
+        [Authorize(Policy = "storage.read")]
         [ProducesResponseType(StatusCodes.Status200OK)]
         [ProducesResponseType(StatusCodes.Status401Unauthorized)]
+        [ProducesResponseType(StatusCodes.Status403Forbidden)]
         [ProducesResponseType(StatusCodes.Status404NotFound)]
         [ProducesResponseType(StatusCodes.Status500InternalServerError)]
         public async Task<IActionResult> DownloadFile(Guid id)
@@ -83,10 +87,12 @@ namespace PROTOTYPE_backend.Controllers
 
         // 3. FÁJL FELTÖLTÉSE
         [HttpPost("upload")]
+        [Authorize(Policy = "storage.write")]
         [Consumes("multipart/form-data")]
         [ProducesResponseType(StatusCodes.Status201Created)]
         [ProducesResponseType(StatusCodes.Status400BadRequest)]
         [ProducesResponseType(StatusCodes.Status401Unauthorized)]
+        [ProducesResponseType(StatusCodes.Status403Forbidden)]
         [ProducesResponseType(StatusCodes.Status404NotFound)]
         [ProducesResponseType(StatusCodes.Status500InternalServerError)]
         public async Task<IActionResult> UploadFile([FromForm] UploadFileDto dto)
@@ -131,9 +137,11 @@ namespace PROTOTYPE_backend.Controllers
 
         // 4. MAPPA LÉTREHOZÁSA
         [HttpPost("folders")]
+        [Authorize(Policy = "storage.write")]
         [ProducesResponseType(StatusCodes.Status201Created)]
         [ProducesResponseType(StatusCodes.Status400BadRequest)]
         [ProducesResponseType(StatusCodes.Status401Unauthorized)]
+        [ProducesResponseType(StatusCodes.Status403Forbidden)]
         [ProducesResponseType(StatusCodes.Status500InternalServerError)]
         public async Task<IActionResult> CreateFolder([FromBody] CreateFolderDto dto)
         {
@@ -168,9 +176,11 @@ namespace PROTOTYPE_backend.Controllers
 
         // 5. CSOMÓPONT ADATAINAK MÓDOSÍTÁSA
         [HttpPut("nodes/change-data")]
+        [Authorize(Policy = "storage.write")]
         [ProducesResponseType(StatusCodes.Status200OK)]
         [ProducesResponseType(StatusCodes.Status400BadRequest)]
         [ProducesResponseType(StatusCodes.Status401Unauthorized)]
+        [ProducesResponseType(StatusCodes.Status403Forbidden)]
         [ProducesResponseType(StatusCodes.Status404NotFound)]
         [ProducesResponseType(StatusCodes.Status500InternalServerError)]
         public async Task<IActionResult> ChangeNodeData([FromBody] GetNodesRequestDto dto)
@@ -198,8 +208,10 @@ namespace PROTOTYPE_backend.Controllers
 
         // 6. TÁRHELY ELEM LOMTÁRBA HELYEZÉSE
         [HttpDelete("nodes/{id:guid}")]
+        [Authorize(Policy = "storage.delete")]
         [ProducesResponseType(StatusCodes.Status204NoContent)]
         [ProducesResponseType(StatusCodes.Status401Unauthorized)]
+        [ProducesResponseType(StatusCodes.Status403Forbidden)]
         [ProducesResponseType(StatusCodes.Status404NotFound)]
         [ProducesResponseType(StatusCodes.Status500InternalServerError)]
         public async Task<IActionResult> SoftDeleteNode(Guid id)
@@ -229,8 +241,10 @@ namespace PROTOTYPE_backend.Controllers
 
         // 7. MEGOSZTÁS SZEREPKÖRREL
         [HttpPost("nodes/{id:guid}/share/{roleId:guid}")]
+        [Authorize(Policy = "storage.share")]
         [ProducesResponseType(StatusCodes.Status200OK)]
         [ProducesResponseType(StatusCodes.Status401Unauthorized)]
+        [ProducesResponseType(StatusCodes.Status403Forbidden)]
         [ProducesResponseType(StatusCodes.Status404NotFound)]
         [ProducesResponseType(StatusCodes.Status500InternalServerError)]
         public async Task<IActionResult> ShareWithRole(Guid id, Guid roleId)
@@ -255,8 +269,10 @@ namespace PROTOTYPE_backend.Controllers
 
         // 8. TÁRHELY ELEM VISSZAÁLLÍTÁSA
         [HttpPost("nodes/{id:guid}/restore")]
+        [Authorize(Policy = "trash.manage")]
         [ProducesResponseType(StatusCodes.Status200OK)]
         [ProducesResponseType(StatusCodes.Status401Unauthorized)]
+        [ProducesResponseType(StatusCodes.Status403Forbidden)]
         [ProducesResponseType(StatusCodes.Status404NotFound)]
         [ProducesResponseType(StatusCodes.Status500InternalServerError)]
         public async Task<IActionResult> RestoreNode(Guid id)
@@ -281,9 +297,11 @@ namespace PROTOTYPE_backend.Controllers
 
         // 9. ÁLTALÁNOS SOFT DELETE (LOMTÁRBA HELYEZÉS)
         [HttpPost("delete")]
+        [Authorize(Policy = "trash.manage")]
         [ProducesResponseType(StatusCodes.Status200OK)]
         [ProducesResponseType(StatusCodes.Status400BadRequest)]
         [ProducesResponseType(StatusCodes.Status401Unauthorized)]
+        [ProducesResponseType(StatusCodes.Status403Forbidden)]
         [ProducesResponseType(StatusCodes.Status500InternalServerError)]
         public async Task<IActionResult> SoftDelete([FromBody] SoftDeleteRequestDto dto)
         {
@@ -319,9 +337,11 @@ namespace PROTOTYPE_backend.Controllers
 
         // 10. ÁLTALÁNOS VISSZAÁLLÍTÁS A LOMTÁRBÓL
         [HttpPost("restore")]
+        [Authorize(Policy = "trash.manage")]
         [ProducesResponseType(StatusCodes.Status200OK)]
         [ProducesResponseType(StatusCodes.Status400BadRequest)]
         [ProducesResponseType(StatusCodes.Status401Unauthorized)]
+        [ProducesResponseType(StatusCodes.Status403Forbidden)]
         [ProducesResponseType(StatusCodes.Status500InternalServerError)]
         public async Task<IActionResult> Restore([FromBody] RestoreRequestDto dto)
         {
@@ -348,10 +368,12 @@ namespace PROTOTYPE_backend.Controllers
             }
         }
 
-        // 11. SAJÁT LOMTÁR LEKÉRDEZÉSE (IDOR-védelemmel)
+        // 11. LOMTÁR LEKÉRDEZÉSE
         [HttpGet("trash")]
+        [Authorize(Policy = "trash.manage")]
         [ProducesResponseType(StatusCodes.Status200OK)]
         [ProducesResponseType(StatusCodes.Status401Unauthorized)]
+        [ProducesResponseType(StatusCodes.Status403Forbidden)]
         [ProducesResponseType(StatusCodes.Status500InternalServerError)]
         public async Task<IActionResult> GetMyTrash()
         {
@@ -373,8 +395,8 @@ namespace PROTOTYPE_backend.Controllers
         }
 
         // 12. LEJÁRT REKORDOK VÉGLEGES TÖRLÉSE
-        [Authorize(Roles = "SystemAdmin")]
         [HttpDelete("purge-expired")]
+        [Authorize(Policy = "system.trash.purge")]
         [ProducesResponseType(StatusCodes.Status200OK)]
         [ProducesResponseType(StatusCodes.Status401Unauthorized)]
         [ProducesResponseType(StatusCodes.Status403Forbidden)]

@@ -22,7 +22,7 @@ namespace PROTOTYPE_backend.Controllers
             _logger = logger;
         }
 
-        // 1. SAJÁT MEGHÍVÓK LEKÉRÉSE
+        // 1. SAJÁT MEGHÍVÓK LEKÉRÉSE ([Authorize])
         [HttpGet("my")]
         [ProducesResponseType(StatusCodes.Status200OK)]
         [ProducesResponseType(StatusCodes.Status401Unauthorized)]
@@ -48,9 +48,11 @@ namespace PROTOTYPE_backend.Controllers
 
         // 2. CÉL (WORKSPACE / PROJECT) FÜGGŐBEN LÉVŐ MEGHÍVÓI
         [HttpGet("target/{targetId:guid}")]
+        [Authorize(Policy = "invitation.manage")]
         [ProducesResponseType(StatusCodes.Status200OK)]
         [ProducesResponseType(StatusCodes.Status400BadRequest)]
         [ProducesResponseType(StatusCodes.Status401Unauthorized)]
+        [ProducesResponseType(StatusCodes.Status403Forbidden)]
         [ProducesResponseType(StatusCodes.Status500InternalServerError)]
         public async Task<IActionResult> GetPendingByTarget(Guid targetId, [FromQuery] sbyte type)
         {
@@ -78,9 +80,11 @@ namespace PROTOTYPE_backend.Controllers
 
         // 3. MEGHÍVÓ LÉTREHOZÁSA
         [HttpPost]
+        [Authorize(Policy = "invitation.manage")]
         [ProducesResponseType(StatusCodes.Status201Created)]
         [ProducesResponseType(StatusCodes.Status400BadRequest)]
         [ProducesResponseType(StatusCodes.Status401Unauthorized)]
+        [ProducesResponseType(StatusCodes.Status403Forbidden)]
         [ProducesResponseType(StatusCodes.Status500InternalServerError)]
         public async Task<IActionResult> CreateInvitation([FromBody] CreateInvitationDto dto)
         {
@@ -146,7 +150,7 @@ namespace PROTOTYPE_backend.Controllers
             }
         }
 
-        // 5. MEGHÍVÓ ELFOGADÁSA
+        // 5. MEGHÍVÓ ELFOGADÁSA ([Authorize])
         [HttpPost("accept/{token}")]
         [ProducesResponseType(StatusCodes.Status200OK)]
         [ProducesResponseType(StatusCodes.Status400BadRequest)]
@@ -181,7 +185,7 @@ namespace PROTOTYPE_backend.Controllers
             }
         }
 
-        // 6. MEGHÍVÓ ELUTASÍTÁSA
+        // 6. MEGHÍVÓ ELUTASÍTÁSA ([Authorize])
         [HttpPost("refuse/{token}")]
         [ProducesResponseType(StatusCodes.Status200OK)]
         [ProducesResponseType(StatusCodes.Status400BadRequest)]
@@ -218,8 +222,10 @@ namespace PROTOTYPE_backend.Controllers
 
         // 7. MEGHÍVÓ VISSZAVONÁSA / TÖRLÉSE
         [HttpDelete("{id:guid}")]
+        [Authorize(Policy = "invitation.manage")]
         [ProducesResponseType(StatusCodes.Status204NoContent)]
         [ProducesResponseType(StatusCodes.Status401Unauthorized)]
+        [ProducesResponseType(StatusCodes.Status403Forbidden)]
         [ProducesResponseType(StatusCodes.Status404NotFound)]
         [ProducesResponseType(StatusCodes.Status500InternalServerError)]
         public async Task<IActionResult> CancelInvitation(Guid id)

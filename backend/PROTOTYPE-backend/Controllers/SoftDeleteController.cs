@@ -26,9 +26,11 @@ namespace PROTOTYPE_backend.Controllers
 
         // 1. ELEM LOMTÁRBA HELYEZÉSE (SOFT DELETE)
         [HttpPost("delete")]
+        [Authorize(Policy = "trash.manage")]
         [ProducesResponseType(StatusCodes.Status200OK)]
         [ProducesResponseType(StatusCodes.Status400BadRequest)]
         [ProducesResponseType(StatusCodes.Status401Unauthorized)]
+        [ProducesResponseType(StatusCodes.Status403Forbidden)]
         [ProducesResponseType(StatusCodes.Status500InternalServerError)]
         public async Task<IActionResult> SoftDelete([FromBody] SoftDeleteRequestDto dto)
         {
@@ -39,7 +41,6 @@ namespace PROTOTYPE_backend.Controllers
 
             try
             {
-                // A hitelesített felhasználó azonosítóját használjuk a hamisítás (spoofing) elkerülésére
                 var currentUserId = User.GetUserId();
                 var secureDto = dto with { UserId = currentUserId };
 
@@ -65,9 +66,11 @@ namespace PROTOTYPE_backend.Controllers
 
         // 2. ELEM VISSZAÁLLÍTÁSA A LOMTÁRBÓL
         [HttpPost("restore")]
+        [Authorize(Policy = "trash.manage")]
         [ProducesResponseType(StatusCodes.Status200OK)]
         [ProducesResponseType(StatusCodes.Status400BadRequest)]
         [ProducesResponseType(StatusCodes.Status401Unauthorized)]
+        [ProducesResponseType(StatusCodes.Status403Forbidden)]
         [ProducesResponseType(StatusCodes.Status500InternalServerError)]
         public async Task<IActionResult> Restore([FromBody] RestoreRequestDto dto)
         {
@@ -98,10 +101,12 @@ namespace PROTOTYPE_backend.Controllers
             }
         }
 
-        // 3. SAJÁT LOMTÁR TARTALMÁNAK LEKÉRDEZÉSE (IDOR-védelemmel)
+        // 3. LOMTÁR TARTALMÁNAK LEKÉRDEZÉSE
         [HttpGet("trash")]
+        [Authorize(Policy = "trash.manage")]
         [ProducesResponseType(StatusCodes.Status200OK)]
         [ProducesResponseType(StatusCodes.Status401Unauthorized)]
+        [ProducesResponseType(StatusCodes.Status403Forbidden)]
         [ProducesResponseType(StatusCodes.Status500InternalServerError)]
         public async Task<IActionResult> GetMyTrash()
         {
@@ -123,8 +128,8 @@ namespace PROTOTYPE_backend.Controllers
         }
 
         // 4. LEJÁRT ELEMEK VÉGLEGES TÖRLÉSE (ADMIN / KARBANTARTÁS)
-        [Authorize(Roles = "SystemAdmin")]
         [HttpDelete("purge-expired")]
+        [Authorize(Policy = "system.trash.purge")]
         [ProducesResponseType(StatusCodes.Status200OK)]
         [ProducesResponseType(StatusCodes.Status401Unauthorized)]
         [ProducesResponseType(StatusCodes.Status403Forbidden)]
