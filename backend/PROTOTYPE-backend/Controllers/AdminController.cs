@@ -11,7 +11,7 @@ namespace PROTOTYPE_backend.Controllers;
 
 [ApiController]
 [Route("api")]
-// [Authorize(Roles = "SystemAdmin")]
+[Authorize] // Alapértelmezetten minden végpont hitelesített tokent igényel
 public class AdminController : ControllerBase
 {
     private readonly IAdminService _adminService;
@@ -24,7 +24,9 @@ public class AdminController : ControllerBase
     }
 
     [HttpGet("roles")]
+    [Authorize(Policy = "workspace.roles.manage")] // SystemAdmin ÉS Workspace Owner/Admin is elérheti
     [ProducesResponseType(StatusCodes.Status200OK)]
+    [ProducesResponseType(StatusCodes.Status403Forbidden)]
     [ProducesResponseType(StatusCodes.Status500InternalServerError)]
     public async Task<IActionResult> GetRolesAndPermissions()
     {
@@ -41,8 +43,10 @@ public class AdminController : ControllerBase
     }
 
     [HttpPost("roles")]
+    [Authorize(Policy = "system.roles.manage")] // Ha Workspace Adminnak is engeded, írd át "workspace.roles.manage"-re
     [ProducesResponseType(StatusCodes.Status201Created)]
     [ProducesResponseType(StatusCodes.Status400BadRequest)]
+    [ProducesResponseType(StatusCodes.Status403Forbidden)]
     [ProducesResponseType(StatusCodes.Status409Conflict)]
     [ProducesResponseType(StatusCodes.Status500InternalServerError)]
     public async Task<IActionResult> CreateRole([FromBody] AdminCreateRoleDto dto)
@@ -59,7 +63,6 @@ public class AdminController : ControllerBase
         }
         catch (InvalidOperationException ex)
         {
-            // Az AdminService ezt dobja, ha a szerepkör név már foglalt
             return Conflict(new { message = ex.Message });
         }
         catch (Exception ex)
@@ -70,8 +73,10 @@ public class AdminController : ControllerBase
     }
 
     [HttpPut("roles/{id:guid}/permissions")]
+    [Authorize(Policy = "system.roles.manage")] // Ha Workspace Adminnak is engeded, írd át "workspace.roles.manage"-re
     [ProducesResponseType(StatusCodes.Status200OK)]
     [ProducesResponseType(StatusCodes.Status400BadRequest)]
+    [ProducesResponseType(StatusCodes.Status403Forbidden)]
     [ProducesResponseType(StatusCodes.Status404NotFound)]
     [ProducesResponseType(StatusCodes.Status500InternalServerError)]
     public async Task<IActionResult> UpdateRolePermissions(Guid id, [FromBody] UpdateRolePermissionsDto dto)
@@ -99,8 +104,10 @@ public class AdminController : ControllerBase
     }
 
     [HttpGet("admin/users")]
+    [Authorize(Policy = "system.users.manage")]
     [ProducesResponseType(StatusCodes.Status200OK)]
     [ProducesResponseType(StatusCodes.Status400BadRequest)]
+    [ProducesResponseType(StatusCodes.Status403Forbidden)]
     [ProducesResponseType(StatusCodes.Status500InternalServerError)]
     public async Task<IActionResult> GetAllUsers([FromQuery] int page = 1, [FromQuery] string? search = null)
     {
@@ -122,7 +129,9 @@ public class AdminController : ControllerBase
     }
 
     [HttpGet("admin/stats")]
+    [Authorize(Policy = "system.stats.read")]
     [ProducesResponseType(StatusCodes.Status200OK)]
+    [ProducesResponseType(StatusCodes.Status403Forbidden)]
     [ProducesResponseType(StatusCodes.Status500InternalServerError)]
     public async Task<IActionResult> GetSystemStats()
     {
@@ -139,7 +148,9 @@ public class AdminController : ControllerBase
     }
 
     [HttpPut("admin/users/{id:guid}/role")]
+    [Authorize(Policy = "system.users.manage")]
     [ProducesResponseType(StatusCodes.Status200OK)]
+    [ProducesResponseType(StatusCodes.Status403Forbidden)]
     [ProducesResponseType(StatusCodes.Status404NotFound)]
     [ProducesResponseType(StatusCodes.Status500InternalServerError)]
     public async Task<IActionResult> UpdateUserGlobalRole(Guid id, [FromBody] UpdateUserGlobalRoleDto dto)
@@ -161,9 +172,10 @@ public class AdminController : ControllerBase
         }
     }
 
-    // HIÁNYZÓ VÉGPONT: Felhasználói státusz váltása (felfüggesztés / újraaktiválás)
     [HttpPatch("admin/users/{id:guid}/status")]
+    [Authorize(Policy = "system.users.manage")]
     [ProducesResponseType(StatusCodes.Status200OK)]
+    [ProducesResponseType(StatusCodes.Status403Forbidden)]
     [ProducesResponseType(StatusCodes.Status404NotFound)]
     [ProducesResponseType(StatusCodes.Status500InternalServerError)]
     public async Task<IActionResult> ToggleUserStatus(Guid id)
@@ -186,7 +198,9 @@ public class AdminController : ControllerBase
     }
 
     [HttpDelete("admin/users/{id:guid}")]
+    [Authorize(Policy = "system.users.manage")]
     [ProducesResponseType(StatusCodes.Status200OK)]
+    [ProducesResponseType(StatusCodes.Status403Forbidden)]
     [ProducesResponseType(StatusCodes.Status404NotFound)]
     [ProducesResponseType(StatusCodes.Status500InternalServerError)]
     public async Task<IActionResult> RemoveUser(Guid id)

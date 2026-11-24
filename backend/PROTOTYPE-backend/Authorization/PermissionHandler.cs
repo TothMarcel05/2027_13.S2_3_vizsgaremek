@@ -48,14 +48,23 @@ public class PermissionHandler : AuthorizationHandler<PermissionRequirement>
 
             if (rolesAndPermissions != null)
             {
-                // HA van kontextus (pl. workspace/project ID az URL-ben):
-                if (!string.IsNullOrEmpty(currentContextId) && rolesAndPermissions.TryGetValue(currentContextId, out var contextPermissions))
+                // 1. Elsődleges kontextus (pl. projectId vagy route workspaceId) ellenőrzése
+                if (!string.IsNullOrEmpty(currentContextId) &&
+                    rolesAndPermissions.TryGetValue(currentContextId, out var contextPermissions) &&
+                    contextPermissions.Contains(requirement.Permission))
                 {
-                    // Csak az ADOTT kontextushoz tartozó jogosultságokat ellenőrizzük!
-                    if (contextPermissions.Contains(requirement.Permission))
-                    {
-                        context.Succeed(requirement);
-                    }
+                    context.Succeed(requirement);
+                    return Task.CompletedTask;
+                }
+
+                // 2. Fallback: aktív munkaterület jogosultságainak ellenőrzése (pl. Workspace Owner/Admin projekt-műveleteknél)
+                var activeWorkspaceId = context.User.FindFirstValue("active_workspace_id");
+                if (!string.IsNullOrEmpty(activeWorkspaceId) &&
+                    activeWorkspaceId != currentContextId &&
+                    rolesAndPermissions.TryGetValue(activeWorkspaceId, out var wsPermissions) &&
+                    wsPermissions.Contains(requirement.Permission))
+                {
+                    context.Succeed(requirement);
                 }
             }
         }
