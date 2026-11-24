@@ -22,7 +22,7 @@ namespace PROTOTYPE_backend.Controllers
             _logger = logger;
         }
 
-        // 1. GET /api/chat/rooms?workspaceId=guid -> Adott workspace szobái
+        // 1. GET /api/chat/rooms?workspaceId=guid -> Adott workspace szobái ([Authorize])
         [HttpGet("rooms")]
         [ProducesResponseType(StatusCodes.Status200OK)]
         [ProducesResponseType(StatusCodes.Status400BadRequest)]
@@ -50,9 +50,11 @@ namespace PROTOTYPE_backend.Controllers
 
         // 2. POST /api/chat/rooms -> Új szoba (direct, group, project_channel)
         [HttpPost("rooms")]
+        [Authorize(Policy = "chat.room.create")]
         [ProducesResponseType(StatusCodes.Status201Created)]
         [ProducesResponseType(StatusCodes.Status400BadRequest)]
         [ProducesResponseType(StatusCodes.Status401Unauthorized)]
+        [ProducesResponseType(StatusCodes.Status403Forbidden)]
         [ProducesResponseType(StatusCodes.Status500InternalServerError)]
         public async Task<IActionResult> CreateRoom([FromBody] CreateChatRoomDto dto)
         {
@@ -78,7 +80,7 @@ namespace PROTOTYPE_backend.Controllers
             }
         }
 
-        // 3. HIÁNYZÓ VÉGPONT: POST /api/chat/rooms/direct -> 1:1 privát szoba lekérése vagy létrehozása
+        // 3. POST /api/chat/rooms/direct -> 1:1 privát szoba lekérése vagy létrehozása ([Authorize])
         [HttpPost("rooms/direct")]
         [ProducesResponseType(StatusCodes.Status200OK)]
         [ProducesResponseType(StatusCodes.Status400BadRequest)]
@@ -110,7 +112,7 @@ namespace PROTOTYPE_backend.Controllers
             }
         }
 
-        // 4. GET /api/chat/rooms/{roomId:guid}/messages -> Üzenethistória
+        // 4. GET /api/chat/rooms/{roomId:guid}/messages -> Üzenethistória ([Authorize])
         [HttpGet("rooms/{roomId:guid}/messages")]
         [ProducesResponseType(StatusCodes.Status200OK)]
         [ProducesResponseType(StatusCodes.Status400BadRequest)]
@@ -128,7 +130,6 @@ namespace PROTOTYPE_backend.Controllers
             {
                 var userId = User.GetUserId();
 
-                // Külön ellenőrizzük a tagságot, hogy 403 Forbidden választ adhassunk az üres lista helyett
                 if (!await _chatService.IsUserMemberOfRoomAsync(userId, roomId))
                 {
                     return StatusCode(StatusCodes.Status403Forbidden, new { message = "Nem vagy tagja ennek a csevegőszobának." });
@@ -144,7 +145,7 @@ namespace PROTOTYPE_backend.Controllers
             }
         }
 
-        // 5. POST /api/chat/rooms/{roomId:guid}/messages -> Üzenet küldése a csevegőszobába
+        // 5. POST /api/chat/rooms/{roomId:guid}/messages -> Üzenet küldése a csevegőszobába ([Authorize])
         [HttpPost("rooms/{roomId:guid}/messages")]
         [ProducesResponseType(StatusCodes.Status201Created)]
         [ProducesResponseType(StatusCodes.Status400BadRequest)]
@@ -166,7 +167,6 @@ namespace PROTOTYPE_backend.Controllers
             }
             catch (UnauthorizedAccessException ex)
             {
-                // A ChatService akkor dobja, ha a felhasználó nem tagja a szobának
                 return StatusCode(StatusCodes.Status403Forbidden, new { message = ex.Message });
             }
             catch (Exception ex)
@@ -176,7 +176,7 @@ namespace PROTOTYPE_backend.Controllers
             }
         }
 
-        // 6. DELETE /api/chat/messages/{messageId:guid} -> Saját üzenet törlése
+        // 6. DELETE /api/chat/messages/{messageId:guid} -> Saját üzenet törlése ([Authorize])
         [HttpDelete("messages/{messageId:guid}")]
         [ProducesResponseType(StatusCodes.Status204NoContent)]
         [ProducesResponseType(StatusCodes.Status401Unauthorized)]
@@ -197,7 +197,6 @@ namespace PROTOTYPE_backend.Controllers
             }
             catch (UnauthorizedAccessException ex)
             {
-                // A ChatService akkor dobja, ha nem a saját üzenetét próbálja törölni
                 return StatusCode(StatusCodes.Status403Forbidden, new { message = ex.Message });
             }
             catch (Exception ex)

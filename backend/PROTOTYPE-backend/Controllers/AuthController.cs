@@ -71,7 +71,7 @@ namespace PROTOTYPE_backend.Controllers
             }
         }
 
-        // 3. 2FA BEÁLLÍTÁS KEZDÉSE (TOTP)
+        // 3. 2FA BEÁLLÍTÁS KEZDÉSE (TOTP) - Saját fiók ([Authorize])
         [HttpPost("2fa/setup")]
         [ProducesResponseType(StatusCodes.Status200OK)]
         [ProducesResponseType(StatusCodes.Status400BadRequest)]
@@ -100,7 +100,7 @@ namespace PROTOTYPE_backend.Controllers
             }
         }
 
-        // 4. 2FA ENGEDÉLYEZÉSE / VERIFIKÁCIÓJA SETUP UTÁN (TOTP)
+        // 4. 2FA ENGEDÉLYEZÉSE / VERIFIKÁCIÓJA SETUP UTÁN (TOTP) - Saját fiók ([Authorize])
         [HttpPost("2fa/enable")]
         [ProducesResponseType(StatusCodes.Status200OK)]
         [ProducesResponseType(StatusCodes.Status400BadRequest)]
@@ -153,7 +153,7 @@ namespace PROTOTYPE_backend.Controllers
             }
         }
 
-        // HIÁNYZÓ VÉGPONT: E-mailes 2FA kód újraküldése (30 mp rate limit-tel)
+        // E-mailes 2FA kód újraküldése
         [AllowAnonymous]
         [HttpPost("2fa/resend-email")]
         [ProducesResponseType(StatusCodes.Status200OK)]
@@ -187,7 +187,7 @@ namespace PROTOTYPE_backend.Controllers
             }
         }
 
-        // 6. 2FA KIKAPCSOLÁSA (await javítva!)
+        // 6. 2FA KIKAPCSOLÁSA - Saját fiók ([Authorize])
         [HttpDelete("2fa/disable")]
         [ProducesResponseType(StatusCodes.Status200OK)]
         [ProducesResponseType(StatusCodes.Status400BadRequest)]
@@ -221,7 +221,7 @@ namespace PROTOTYPE_backend.Controllers
             }
         }
 
-        // 7. E-MAILES 2FA ENGEDÉLYEZÉSE
+        // 7. E-MAILES 2FA ENGEDÉLYEZÉSE - Saját fiók ([Authorize])
         [HttpPost("me/2fa/enable-email")]
         [ProducesResponseType(StatusCodes.Status200OK)]
         [ProducesResponseType(StatusCodes.Status400BadRequest)]
@@ -250,7 +250,7 @@ namespace PROTOTYPE_backend.Controllers
             }
         }
 
-        // 8. HELYREÁLLÍTÓ KÓDOK ÚJRAGENERÁLÁSA
+        // 8. HELYREÁLLÍTÓ KÓDOK ÚJRAGENERÁLÁSA - Saját fiók ([Authorize])
         [HttpPost("me/2fa/recovery-codes")]
         [ProducesResponseType(StatusCodes.Status200OK)]
         [ProducesResponseType(StatusCodes.Status400BadRequest)]
@@ -303,7 +303,7 @@ namespace PROTOTYPE_backend.Controllers
             }
         }
 
-        // 10. KIJELENTKEZÉS
+        // 10. KIJELENTKEZÉS - Saját munkamenet ([Authorize])
         [HttpPost("logout")]
         [ProducesResponseType(StatusCodes.Status204NoContent)]
         [ProducesResponseType(StatusCodes.Status401Unauthorized)]
@@ -327,11 +327,13 @@ namespace PROTOTYPE_backend.Controllers
             }
         }
 
-        // 11. JOGOSULTSÁGOK KATEGÓRIA SZERINT (visszatérési érték javítva!)
+        // 11. JOGOSULTSÁGOK KATEGÓRIA SZERINT
         [HttpGet("permissions")]
+        [Authorize(Policy = "workspace.roles.manage")]
         [ProducesResponseType(StatusCodes.Status200OK)]
         [ProducesResponseType(StatusCodes.Status400BadRequest)]
         [ProducesResponseType(StatusCodes.Status401Unauthorized)]
+        [ProducesResponseType(StatusCodes.Status403Forbidden)]
         public async Task<IActionResult> GetPermissions([FromQuery] string query)
         {
             try
@@ -349,11 +351,13 @@ namespace PROTOTYPE_backend.Controllers
             }
         }
 
-        // 12. SZEREPKÖRÖK LISTÁZÁSA (visszatérési érték javítva!)
+        // 12. SZEREPKÖRÖK LISTÁZÁSA
         [HttpGet("roles")]
+        [Authorize(Policy = "workspace.roles.manage")]
         [ProducesResponseType(StatusCodes.Status200OK)]
         [ProducesResponseType(StatusCodes.Status400BadRequest)]
         [ProducesResponseType(StatusCodes.Status401Unauthorized)]
+        [ProducesResponseType(StatusCodes.Status403Forbidden)]
         public async Task<IActionResult> GetRoles([FromQuery] string query = "")
         {
             try
@@ -371,10 +375,12 @@ namespace PROTOTYPE_backend.Controllers
             }
         }
 
-        // 13. EGYEDI SZEREPKÖR LEKÉRDEZÉSE (visszatérési érték javítva!)
+        // 13. EGYEDI SZEREPKÖR LEKÉRDEZÉSE
         [HttpGet("roles/{id:guid}")]
+        [Authorize(Policy = "workspace.roles.manage")]
         [ProducesResponseType(StatusCodes.Status200OK)]
         [ProducesResponseType(StatusCodes.Status401Unauthorized)]
+        [ProducesResponseType(StatusCodes.Status403Forbidden)]
         [ProducesResponseType(StatusCodes.Status404NotFound)]
         public async Task<IActionResult> GetSpecificRole(Guid id)
         {
@@ -395,9 +401,11 @@ namespace PROTOTYPE_backend.Controllers
 
         // 14. SZEREPKÖR LÉTREHOZÁSA
         [HttpPost("roles")]
+        [Authorize(Policy = "system.roles.manage")]
         [ProducesResponseType(StatusCodes.Status201Created)]
         [ProducesResponseType(StatusCodes.Status400BadRequest)]
         [ProducesResponseType(StatusCodes.Status401Unauthorized)]
+        [ProducesResponseType(StatusCodes.Status403Forbidden)]
         public async Task<IActionResult> CreateRole([FromBody] CreateRoleDto dto)
         {
             try
@@ -417,9 +425,11 @@ namespace PROTOTYPE_backend.Controllers
 
         // 15. SZEREPKÖR MÓDOSÍTÁSA
         [HttpPatch("roles/{id:guid}/modify")]
+        [Authorize(Policy = "system.roles.manage")]
         [ProducesResponseType(StatusCodes.Status200OK)]
         [ProducesResponseType(StatusCodes.Status400BadRequest)]
         [ProducesResponseType(StatusCodes.Status401Unauthorized)]
+        [ProducesResponseType(StatusCodes.Status403Forbidden)]
         [ProducesResponseType(StatusCodes.Status404NotFound)]
         public async Task<IActionResult> ModifyRole(Guid id, [FromBody] ModifyRoleDto dto)
         {
@@ -444,8 +454,10 @@ namespace PROTOTYPE_backend.Controllers
 
         // 16. SZEREPKÖR TÖRLÉSE
         [HttpDelete("roles/{id:guid}/remove")]
+        [Authorize(Policy = "system.roles.manage")]
         [ProducesResponseType(StatusCodes.Status204NoContent)]
         [ProducesResponseType(StatusCodes.Status401Unauthorized)]
+        [ProducesResponseType(StatusCodes.Status403Forbidden)]
         [ProducesResponseType(StatusCodes.Status404NotFound)]
         public async Task<IActionResult> RemoveRole(Guid id)
         {
@@ -466,8 +478,10 @@ namespace PROTOTYPE_backend.Controllers
 
         // 17. JOGOSULTSÁG HOZZÁRENDELÉSE SZEREPKÖRHÖZ
         [HttpPost("roles/{id:guid}/permission")]
+        [Authorize(Policy = "system.roles.manage")]
         [ProducesResponseType(StatusCodes.Status200OK)]
         [ProducesResponseType(StatusCodes.Status401Unauthorized)]
+        [ProducesResponseType(StatusCodes.Status403Forbidden)]
         [ProducesResponseType(StatusCodes.Status404NotFound)]
         public async Task<IActionResult> AddPermToRole(Guid id, [FromBody] AddPermToRoletDto dto)
         {
@@ -486,10 +500,12 @@ namespace PROTOTYPE_backend.Controllers
             }
         }
 
-        // 18. EGYEDI MUNKAMENET LEZÁRÁSA (dupla "auth/" útvonal javítva!)
+        // 18. EGYEDI MUNKAMENET LEZÁRÁSA
         [HttpDelete("sessions/{id:guid}")]
+        [Authorize(Policy = "system.users.manage")]
         [ProducesResponseType(StatusCodes.Status204NoContent)]
         [ProducesResponseType(StatusCodes.Status401Unauthorized)]
+        [ProducesResponseType(StatusCodes.Status403Forbidden)]
         [ProducesResponseType(StatusCodes.Status404NotFound)]
         public async Task<IActionResult> CloseSession(Guid id)
         {
@@ -508,10 +524,12 @@ namespace PROTOTYPE_backend.Controllers
             }
         }
 
-        // 19. ÖSSZES MUNKAMENET LEZÁRÁSA (dupla "auth/" útvonal javítva!)
+        // 19. ÖSSZES MUNKAMENET LEZÁRÁSA
         [HttpDelete("sessions")]
+        [Authorize(Policy = "system.users.manage")]
         [ProducesResponseType(StatusCodes.Status204NoContent)]
         [ProducesResponseType(StatusCodes.Status401Unauthorized)]
+        [ProducesResponseType(StatusCodes.Status403Forbidden)]
         [ProducesResponseType(StatusCodes.Status500InternalServerError)]
         public async Task<IActionResult> CloseSessions()
         {
@@ -531,11 +549,13 @@ namespace PROTOTYPE_backend.Controllers
             }
         }
 
-        // 20. MUNKAMENETEK LISTÁZÁSA (lapozás validálva!)
+        // 20. MUNKAMENETEK LISTÁZÁSA
         [HttpGet("sessions")]
+        [Authorize(Policy = "system.users.manage")]
         [ProducesResponseType(StatusCodes.Status200OK)]
         [ProducesResponseType(StatusCodes.Status400BadRequest)]
         [ProducesResponseType(StatusCodes.Status401Unauthorized)]
+        [ProducesResponseType(StatusCodes.Status403Forbidden)]
         public async Task<IActionResult> GetUserSessions([FromQuery] int page = 1, [FromQuery] int limit = 20)
         {
             if (page < 1 || limit < 1 || limit > 100)
@@ -559,7 +579,7 @@ namespace PROTOTYPE_backend.Controllers
             }
         }
 
-        // 21. JELSZÓ-VISSZAÁLLÍTÁS KÉRÉSE ([AllowAnonymous] hozzáadva!)
+        // 21. JELSZÓ-VISSZAÁLLÍTÁS KÉRÉSE
         [AllowAnonymous]
         [HttpPost("password-reset")]
         [ProducesResponseType(StatusCodes.Status200OK)]
@@ -584,7 +604,7 @@ namespace PROTOTYPE_backend.Controllers
             }
         }
 
-        // 22. JELSZÓ-VISSZAÁLLÍTÁS VÉGREHAJTÁSA ([AllowAnonymous] és bool ellenőrzés hozzáadva!)
+        // 22. JELSZÓ-VISSZAÁLLÍTÁS VÉGREHAJTÁSA
         [AllowAnonymous]
         [HttpPut("password-reset")]
         [ProducesResponseType(StatusCodes.Status200OK)]

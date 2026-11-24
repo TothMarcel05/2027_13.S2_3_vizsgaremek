@@ -44,7 +44,6 @@ namespace PROTOTYPE_backend.Controllers
             }
             catch (UnauthorizedAccessException ex)
             {
-                // A CalendarService akkor dobja, ha a felhasználó nem tagja a megadott projektnek
                 return StatusCode(StatusCodes.Status403Forbidden, new { message = ex.Message });
             }
             catch (Exception ex)
@@ -59,13 +58,15 @@ namespace PROTOTYPE_backend.Controllers
         [ProducesResponseType(StatusCodes.Status200OK)]
         [ProducesResponseType(StatusCodes.Status400BadRequest)]
         [ProducesResponseType(StatusCodes.Status401Unauthorized)]
+        [ProducesResponseType(StatusCodes.Status403Forbidden)]
         [ProducesResponseType(StatusCodes.Status404NotFound)]
         [ProducesResponseType(StatusCodes.Status500InternalServerError)]
         public async Task<IActionResult> UpdateDate(Guid id, [FromBody] DateUpdateDto dto)
         {
             try
             {
-                var updatedDate = await _calendarService.UpdateDateAsync(id, dto);
+                var userId = User.GetUserId();
+                var updatedDate = await _calendarService.UpdateDateAsync(id, dto, userId);
 
                 if (updatedDate == null)
                 {
@@ -78,6 +79,10 @@ namespace PROTOTYPE_backend.Controllers
             {
                 return BadRequest(new { message = ex.Message });
             }
+            catch (UnauthorizedAccessException ex)
+            {
+                return StatusCode(StatusCodes.Status403Forbidden, new { message = ex.Message });
+            }
             catch (Exception ex)
             {
                 _logger.LogError(ex, "Váratlan hiba történt a naptáresemény módosításakor. EventId: {EventId}", id);
@@ -89,13 +94,15 @@ namespace PROTOTYPE_backend.Controllers
         [HttpDelete("{id:guid}")]
         [ProducesResponseType(StatusCodes.Status204NoContent)]
         [ProducesResponseType(StatusCodes.Status401Unauthorized)]
+        [ProducesResponseType(StatusCodes.Status403Forbidden)]
         [ProducesResponseType(StatusCodes.Status404NotFound)]
         [ProducesResponseType(StatusCodes.Status500InternalServerError)]
         public async Task<IActionResult> DeleteDate(Guid id)
         {
             try
             {
-                var success = await _calendarService.DeleteDateAsync(id);
+                var userId = User.GetUserId();
+                var success = await _calendarService.DeleteDateAsync(id, userId);
 
                 if (!success)
                 {
@@ -103,6 +110,10 @@ namespace PROTOTYPE_backend.Controllers
                 }
 
                 return NoContent();
+            }
+            catch (UnauthorizedAccessException ex)
+            {
+                return StatusCode(StatusCodes.Status403Forbidden, new { message = ex.Message });
             }
             catch (Exception ex)
             {
@@ -115,13 +126,15 @@ namespace PROTOTYPE_backend.Controllers
         [HttpGet("{id:guid}")]
         [ProducesResponseType(StatusCodes.Status200OK)]
         [ProducesResponseType(StatusCodes.Status401Unauthorized)]
+        [ProducesResponseType(StatusCodes.Status403Forbidden)]
         [ProducesResponseType(StatusCodes.Status404NotFound)]
         [ProducesResponseType(StatusCodes.Status500InternalServerError)]
         public async Task<IActionResult> GetDateById(Guid id)
         {
             try
             {
-                var dateDto = await _calendarService.GetDateByIdAsync(id);
+                var userId = User.GetUserId();
+                var dateDto = await _calendarService.GetDateByIdAsync(id, userId);
 
                 if (dateDto == null)
                 {
@@ -129,6 +142,10 @@ namespace PROTOTYPE_backend.Controllers
                 }
 
                 return Ok(dateDto);
+            }
+            catch (UnauthorizedAccessException ex)
+            {
+                return StatusCode(StatusCodes.Status403Forbidden, new { message = ex.Message });
             }
             catch (Exception ex)
             {
@@ -142,6 +159,7 @@ namespace PROTOTYPE_backend.Controllers
         [ProducesResponseType(StatusCodes.Status200OK)]
         [ProducesResponseType(StatusCodes.Status400BadRequest)]
         [ProducesResponseType(StatusCodes.Status401Unauthorized)]
+        [ProducesResponseType(StatusCodes.Status403Forbidden)]
         [ProducesResponseType(StatusCodes.Status500InternalServerError)]
         public async Task<IActionResult> GetDatesByRange(
             [FromQuery] DateTime start,
@@ -167,6 +185,10 @@ namespace PROTOTYPE_backend.Controllers
             catch (ArgumentException ex)
             {
                 return BadRequest(new { message = ex.Message });
+            }
+            catch (UnauthorizedAccessException ex)
+            {
+                return StatusCode(StatusCodes.Status403Forbidden, new { message = ex.Message });
             }
             catch (Exception ex)
             {
