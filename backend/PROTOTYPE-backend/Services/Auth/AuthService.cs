@@ -606,6 +606,9 @@ namespace PROTOTYPE_backend.Services.Auth
 
             if (role != null) throw new InvalidOperationException("A megadott role már szerepel!");
 
+            var nameTaken = await _context.AppRoles.AnyAsync(r => r.Name == dto.Name);
+            if (nameTaken) throw new InvalidOperationException("A megadott nevű role már szerepel!");
+
             var newRole = new AppRole
             {
                 Id = Guid.NewGuid(),

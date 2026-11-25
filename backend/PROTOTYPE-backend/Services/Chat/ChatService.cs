@@ -275,7 +275,7 @@ namespace PROTOTYPE_backend.Services.Chat
                 return Enumerable.Empty<ChatMessageDto>();
             }
 
-            return await _context.ChatMessages
+            var pageItems = await _context.ChatMessages
                 .AsNoTracking()
                 .Where(m => m.RoomId == roomId)
                 .OrderByDescending(m => m.CreatedAt)
@@ -294,8 +294,10 @@ namespace PROTOTYPE_backend.Services.Chat
                         a.Id, a.FileUrl, a.FileName, a.StorageNodeId
                     )).ToList()
                 ))
-                .OrderBy(m => m.CreatedAt)
                 .ToListAsync();
+
+            // Sorted in memory: EF cannot translate OrderBy on a constructor-projected DTO.
+            return pageItems.OrderBy(m => m.CreatedAt).ToList();
         }
 
         // 7. SAJÁT ÜZENET TÖRLÉSE (DELETE /chat/messages/{id})
