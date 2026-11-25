@@ -31,20 +31,9 @@ namespace PROTOTYPE_backend.Controllers
         [ProducesResponseType(StatusCodes.Status500InternalServerError)]
         public async Task<IActionResult> Register([FromBody] RegisterDto dto)
         {
-            try
-            {
-                var result = await _authService.CreateUserAsync(dto);
-                return StatusCode(StatusCodes.Status201Created, result);
-            }
-            catch (Exception ex) when (ex.Message.Contains("foglalt"))
-            {
-                return Conflict(new { message = ex.Message });
-            }
-            catch (Exception ex)
-            {
-                _logger.LogError(ex, "Váratlan hiba történt a regisztráció során.");
-                return StatusCode(StatusCodes.Status500InternalServerError, new { message = "Szerveroldali hiba történt a regisztráció során." });
-            }
+            var result = await _authService.CreateUserAsync(dto);
+            return StatusCode(StatusCodes.Status201Created, result);
+            
         }
 
         // 2. BEJELENTKEZÉS
@@ -62,12 +51,7 @@ namespace PROTOTYPE_backend.Controllers
             }
             catch (UnauthorizedAccessException ex)
             {
-                return Unauthorized(new { message = ex.Message });
-            }
-            catch (Exception ex)
-            {
-                _logger.LogError(ex, "Váratlan hiba történt a bejelentkezés során.");
-                return StatusCode(StatusCodes.Status500InternalServerError, new { message = "Szerveroldali hiba történt a bejelentkezés során." });
+                return Unauthorized(new { error = new { message = ex.Message, code = "NINCS_HITELESITVE" } });
             }
         }
 
@@ -87,16 +71,7 @@ namespace PROTOTYPE_backend.Controllers
             }
             catch (UnauthorizedAccessException ex)
             {
-                return Unauthorized(new { message = ex.Message });
-            }
-            catch (InvalidOperationException ex)
-            {
-                return BadRequest(new { message = ex.Message });
-            }
-            catch (Exception ex)
-            {
-                _logger.LogError(ex, "Váratlan hiba történt a 2FA beállítás indításakor.");
-                return StatusCode(StatusCodes.Status500InternalServerError, new { message = "Szerveroldali hiba történt." });
+                return Unauthorized(new { error = new { message = ex.Message, code = "NINCS_HITELESITVE" } });
             }
         }
 
@@ -116,16 +91,7 @@ namespace PROTOTYPE_backend.Controllers
             }
             catch (UnauthorizedAccessException ex)
             {
-                return Unauthorized(new { message = ex.Message });
-            }
-            catch (Exception ex) when (ex is ArgumentException || ex is InvalidOperationException)
-            {
-                return BadRequest(new { message = ex.Message });
-            }
-            catch (Exception ex)
-            {
-                _logger.LogError(ex, "Váratlan hiba történt a TOTP 2FA aktiválásakor.");
-                return StatusCode(StatusCodes.Status500InternalServerError, new { message = "Szerveroldali hiba történt." });
+                return Unauthorized(new { error = new { message = ex.Message, code = "NINCS_HITELESITVE" } });
             }
         }
 
@@ -144,12 +110,7 @@ namespace PROTOTYPE_backend.Controllers
             }
             catch (UnauthorizedAccessException ex)
             {
-                return Unauthorized(new { message = ex.Message });
-            }
-            catch (Exception ex)
-            {
-                _logger.LogError(ex, "Váratlan hiba történt a 2FA kód ellenőrzésekor.");
-                return StatusCode(StatusCodes.Status500InternalServerError, new { message = "Szerveroldali hiba történt." });
+                return Unauthorized(new { error = new { message = ex.Message, code = "NINCS_HITELESITVE" } });
             }
         }
 
@@ -170,20 +131,11 @@ namespace PROTOTYPE_backend.Controllers
             }
             catch (UnauthorizedAccessException ex)
             {
-                return Unauthorized(new { message = ex.Message });
+                return Unauthorized(new { error = new { message = ex.Message, code = "NINCS_HITELESITVE" } });
             }
             catch (InvalidOperationException ex) when (ex.Message.Contains("30 másodperc"))
             {
-                return StatusCode(StatusCodes.Status429TooManyRequests, new { message = ex.Message });
-            }
-            catch (InvalidOperationException ex)
-            {
-                return BadRequest(new { message = ex.Message });
-            }
-            catch (Exception ex)
-            {
-                _logger.LogError(ex, "Váratlan hiba történt az e-mailes 2FA kód újraküldésekor.");
-                return StatusCode(StatusCodes.Status500InternalServerError, new { message = "Szerveroldali hiba történt." });
+                return StatusCode(StatusCodes.Status429TooManyRequests, new { error = new { message = ex.Message, code = "TUL_SOK_KERES" } });
             }
         }
 
@@ -204,20 +156,7 @@ namespace PROTOTYPE_backend.Controllers
             }
             catch (UnauthorizedAccessException ex)
             {
-                return Unauthorized(new { message = ex.Message });
-            }
-            catch (KeyNotFoundException ex)
-            {
-                return NotFound(new { message = ex.Message });
-            }
-            catch (InvalidOperationException ex)
-            {
-                return BadRequest(new { message = ex.Message });
-            }
-            catch (Exception ex)
-            {
-                _logger.LogError(ex, "Váratlan hiba történt a 2FA kikapcsolásakor.");
-                return StatusCode(StatusCodes.Status500InternalServerError, new { message = "Szerveroldali hiba történt." });
+                return Unauthorized(new { error = new { message = ex.Message, code = "NINCS_HITELESITVE" } });
             }
         }
 
@@ -237,16 +176,7 @@ namespace PROTOTYPE_backend.Controllers
             }
             catch (UnauthorizedAccessException ex)
             {
-                return Unauthorized(new { message = ex.Message });
-            }
-            catch (InvalidOperationException ex)
-            {
-                return BadRequest(new { message = ex.Message });
-            }
-            catch (Exception ex)
-            {
-                _logger.LogError(ex, "Váratlan hiba történt az e-mailes 2FA aktiválásakor.");
-                return StatusCode(StatusCodes.Status500InternalServerError, new { message = "Szerveroldali hiba történt." });
+                return Unauthorized(new { error = new { message = ex.Message, code = "NINCS_HITELESITVE" } });
             }
         }
 
@@ -266,16 +196,7 @@ namespace PROTOTYPE_backend.Controllers
             }
             catch (UnauthorizedAccessException ex)
             {
-                return Unauthorized(new { message = ex.Message });
-            }
-            catch (InvalidOperationException ex)
-            {
-                return BadRequest(new { message = ex.Message });
-            }
-            catch (Exception ex)
-            {
-                _logger.LogError(ex, "Váratlan hiba történt a helyreállító kódok újragenerálásakor.");
-                return StatusCode(StatusCodes.Status500InternalServerError, new { message = "Szerveroldali hiba történt." });
+                return Unauthorized(new { error = new { message = ex.Message, code = "NINCS_HITELESITVE" } });
             }
         }
 
@@ -289,7 +210,7 @@ namespace PROTOTYPE_backend.Controllers
         {
             if (string.IsNullOrWhiteSpace(dto.RefreshToken))
             {
-                return BadRequest(new { message = "A refresh token megadása kötelező." });
+                return BadRequest(new { error = new { message = "A refresh token megadása kötelező.", code = "ERVENYTELEN_KERES" } });
             }
 
             try
@@ -297,9 +218,9 @@ namespace PROTOTYPE_backend.Controllers
                 var result = await _authService.RefreshAsync(dto.RefreshToken);
                 return Ok(result);
             }
-            catch (Exception ex)
+            catch (UnauthorizedAccessException ex)
             {
-                return Unauthorized(new { message = ex.Message });
+                return Unauthorized(new { error = new { message = ex.Message, code = "NINCS_HITELESITVE" } });
             }
         }
 
@@ -310,21 +231,10 @@ namespace PROTOTYPE_backend.Controllers
         [ProducesResponseType(StatusCodes.Status500InternalServerError)]
         public async Task<IActionResult> Logout([FromBody] RefreshTokenRequestDto dto)
         {
-            try
-            {
-                var userId = User.GetUserId();
-                await _authService.LogoutAsync(userId, dto.RefreshToken);
-                return NoContent();
-            }
-            catch (UnauthorizedAccessException)
-            {
-                return Unauthorized();
-            }
-            catch (Exception ex)
-            {
-                _logger.LogError(ex, "Váratlan hiba történt a kijelentkezés során.");
-                return StatusCode(StatusCodes.Status500InternalServerError, new { message = "Szerveroldali hiba történt." });
-            }
+            var userId = User.GetUserId();
+            await _authService.LogoutAsync(userId, dto.RefreshToken);
+            return NoContent();
+            
         }
 
         // 11. JOGOSULTSÁGOK KATEGÓRIA SZERINT
@@ -336,19 +246,9 @@ namespace PROTOTYPE_backend.Controllers
         [ProducesResponseType(StatusCodes.Status403Forbidden)]
         public async Task<IActionResult> GetPermissions([FromQuery] string query)
         {
-            try
-            {
-                var result = await _authService.GetPermissionsByCatAsync(query);
-                return Ok(result);
-            }
-            catch (UnauthorizedAccessException)
-            {
-                return Unauthorized();
-            }
-            catch (Exception ex)
-            {
-                return BadRequest(new { message = ex.Message });
-            }
+            var result = await _authService.GetPermissionsByCatAsync(query);
+            return Ok(result);
+            
         }
 
         // 12. SZEREPKÖRÖK LISTÁZÁSA
@@ -360,19 +260,9 @@ namespace PROTOTYPE_backend.Controllers
         [ProducesResponseType(StatusCodes.Status403Forbidden)]
         public async Task<IActionResult> GetRoles([FromQuery] string query = "")
         {
-            try
-            {
-                var result = await _authService.GetRolesAsync(query);
-                return Ok(result);
-            }
-            catch (UnauthorizedAccessException)
-            {
-                return Unauthorized();
-            }
-            catch (Exception ex)
-            {
-                return BadRequest(new { message = ex.Message });
-            }
+            var result = await _authService.GetRolesAsync(query);
+            return Ok(result);
+            
         }
 
         // 13. EGYEDI SZEREPKÖR LEKÉRDEZÉSE
@@ -384,19 +274,9 @@ namespace PROTOTYPE_backend.Controllers
         [ProducesResponseType(StatusCodes.Status404NotFound)]
         public async Task<IActionResult> GetSpecificRole(Guid id)
         {
-            try
-            {
-                var result = await _authService.GetSpecificRoleAsync(id);
-                return Ok(result);
-            }
-            catch (UnauthorizedAccessException)
-            {
-                return Unauthorized();
-            }
-            catch (Exception ex)
-            {
-                return NotFound(new { message = ex.Message });
-            }
+            var result = await _authService.GetSpecificRoleAsync(id);
+            return Ok(result);
+            
         }
 
         // 14. SZEREPKÖR LÉTREHOZÁSA
@@ -408,19 +288,9 @@ namespace PROTOTYPE_backend.Controllers
         [ProducesResponseType(StatusCodes.Status403Forbidden)]
         public async Task<IActionResult> CreateRole([FromBody] CreateRoleDto dto)
         {
-            try
-            {
-                var result = await _authService.CreateRoleAsync(dto);
-                return CreatedAtAction(nameof(GetSpecificRole), new { id = result.Id }, result);
-            }
-            catch (UnauthorizedAccessException)
-            {
-                return Unauthorized();
-            }
-            catch (Exception ex)
-            {
-                return BadRequest(new { message = ex.Message });
-            }
+            var result = await _authService.CreateRoleAsync(dto);
+            return CreatedAtAction(nameof(GetSpecificRole), new { id = result.Id }, result);
+            
         }
 
         // 15. SZEREPKÖR MÓDOSÍTÁSA
@@ -433,23 +303,9 @@ namespace PROTOTYPE_backend.Controllers
         [ProducesResponseType(StatusCodes.Status404NotFound)]
         public async Task<IActionResult> ModifyRole(Guid id, [FromBody] ModifyRoleDto dto)
         {
-            try
-            {
-                var result = await _authService.ModifyRoleAsync(id, dto);
-                return Ok(result);
-            }
-            catch (UnauthorizedAccessException)
-            {
-                return Unauthorized();
-            }
-            catch (Exception ex) when (ex.Message.Contains("nem található"))
-            {
-                return NotFound(new { message = ex.Message });
-            }
-            catch (Exception ex)
-            {
-                return BadRequest(new { message = ex.Message });
-            }
+            var result = await _authService.ModifyRoleAsync(id, dto);
+            return Ok(result);
+            
         }
 
         // 16. SZEREPKÖR TÖRLÉSE
@@ -461,19 +317,9 @@ namespace PROTOTYPE_backend.Controllers
         [ProducesResponseType(StatusCodes.Status404NotFound)]
         public async Task<IActionResult> RemoveRole(Guid id)
         {
-            try
-            {
-                await _authService.RemoveRoleAsync(id);
-                return NoContent();
-            }
-            catch (UnauthorizedAccessException)
-            {
-                return Unauthorized();
-            }
-            catch (Exception ex)
-            {
-                return NotFound(new { message = ex.Message });
-            }
+            await _authService.RemoveRoleAsync(id);
+            return NoContent();
+            
         }
 
         // 17. JOGOSULTSÁG HOZZÁRENDELÉSE SZEREPKÖRHÖZ
@@ -485,19 +331,9 @@ namespace PROTOTYPE_backend.Controllers
         [ProducesResponseType(StatusCodes.Status404NotFound)]
         public async Task<IActionResult> AddPermToRole(Guid id, [FromBody] AddPermToRoletDto dto)
         {
-            try
-            {
-                var result = await _authService.AddPermissionToRoleAsync(id, dto);
-                return Ok(result);
-            }
-            catch (UnauthorizedAccessException)
-            {
-                return Unauthorized();
-            }
-            catch (Exception ex)
-            {
-                return NotFound(new { message = ex.Message });
-            }
+            var result = await _authService.AddPermissionToRoleAsync(id, dto);
+            return Ok(result);
+            
         }
 
         // 18. EGYEDI MUNKAMENET LEZÁRÁSA
@@ -509,19 +345,9 @@ namespace PROTOTYPE_backend.Controllers
         [ProducesResponseType(StatusCodes.Status404NotFound)]
         public async Task<IActionResult> CloseSession(Guid id)
         {
-            try
-            {
-                await _authService.CloseSessionAsync(id);
-                return NoContent();
-            }
-            catch (UnauthorizedAccessException)
-            {
-                return Unauthorized();
-            }
-            catch (Exception ex)
-            {
-                return NotFound(new { message = ex.Message });
-            }
+            await _authService.CloseSessionAsync(id);
+            return NoContent();
+            
         }
 
         // 19. ÖSSZES MUNKAMENET LEZÁRÁSA
@@ -533,20 +359,9 @@ namespace PROTOTYPE_backend.Controllers
         [ProducesResponseType(StatusCodes.Status500InternalServerError)]
         public async Task<IActionResult> CloseSessions()
         {
-            try
-            {
-                await _authService.CloseSessionsAsync();
-                return NoContent();
-            }
-            catch (UnauthorizedAccessException)
-            {
-                return Unauthorized();
-            }
-            catch (Exception ex)
-            {
-                _logger.LogError(ex, "Váratlan hiba történt az összes munkamenet visszavonásakor.");
-                return StatusCode(StatusCodes.Status500InternalServerError, new { message = "Szerveroldali hiba történt." });
-            }
+            await _authService.CloseSessionsAsync();
+            return NoContent();
+            
         }
 
         // 20. MUNKAMENETEK LISTÁZÁSA
@@ -560,23 +375,12 @@ namespace PROTOTYPE_backend.Controllers
         {
             if (page < 1 || limit < 1 || limit > 100)
             {
-                return BadRequest(new { message = "Érvénytelen lapozási paraméterek (page >= 1, 1 <= limit <= 100)." });
+                return BadRequest(new { error = new { message = "Érvénytelen lapozási paraméterek (page >= 1, 1 <= limit <= 100).", code = "ERVENYTELEN_KERES" } });
             }
 
-            try
-            {
-                var result = await _authService.GetSessionsAsync(page, limit);
-                return Ok(result);
-            }
-            catch (UnauthorizedAccessException)
-            {
-                return Unauthorized();
-            }
-            catch (Exception ex)
-            {
-                _logger.LogError(ex, "Váratlan hiba történt a munkamenetek lekérdezésekor.");
-                return StatusCode(StatusCodes.Status500InternalServerError, new { message = "Szerveroldali hiba történt." });
-            }
+            var result = await _authService.GetSessionsAsync(page, limit);
+            return Ok(result);
+            
         }
 
         // 21. JELSZÓ-VISSZAÁLLÍTÁS KÉRÉSE
@@ -589,19 +393,12 @@ namespace PROTOTYPE_backend.Controllers
         {
             if (string.IsNullOrWhiteSpace(email))
             {
-                return BadRequest(new { message = "Az e-mail cím megadása kötelező." });
+                return BadRequest(new { error = new { message = "Az e-mail cím megadása kötelező.", code = "ERVENYTELEN_KERES" } });
             }
 
-            try
-            {
-                await _authService.RequestPasswordResetAsync(email);
-                return Ok(new { message = "Ha az e-mail cím szerepel a rendszerben, elküldtük a visszaállító hivatkozást." });
-            }
-            catch (Exception ex)
-            {
-                _logger.LogError(ex, "Váratlan hiba történt a jelszó-visszaállítási kérelem feldolgozásakor.");
-                return StatusCode(StatusCodes.Status500InternalServerError, new { message = "Szerveroldali hiba történt." });
-            }
+            await _authService.RequestPasswordResetAsync(email);
+            return Ok(new { message = "Ha az e-mail cím szerepel a rendszerben, elküldtük a visszaállító hivatkozást." });
+            
         }
 
         // 22. JELSZÓ-VISSZAÁLLÍTÁS VÉGREHAJTÁSA
@@ -614,24 +411,17 @@ namespace PROTOTYPE_backend.Controllers
         {
             if (string.IsNullOrWhiteSpace(email) || string.IsNullOrWhiteSpace(token))
             {
-                return BadRequest(new { message = "Az e-mail cím és a token megadása kötelező." });
+                return BadRequest(new { error = new { message = "Az e-mail cím és a token megadása kötelező.", code = "ERVENYTELEN_KERES" } });
             }
 
-            try
+            var success = await _authService.ResetPasswordAsync(email, token, dto);
+            if (!success)
             {
-                var success = await _authService.ResetPasswordAsync(email, token, dto);
-                if (!success)
-                {
-                    return BadRequest(new { message = "A visszaállító hivatkozás érvénytelen vagy lejárt." });
-                }
+                return BadRequest(new { error = new { message = "A visszaállító hivatkozás érvénytelen vagy lejárt.", code = "ERVENYTELEN_KERES" } });
+            }
 
-                return Ok(new { message = "A jelszó sikeresen megváltoztatva." });
-            }
-            catch (Exception ex)
-            {
-                _logger.LogError(ex, "Váratlan hiba történt a jelszó visszaállítása során.");
-                return StatusCode(StatusCodes.Status500InternalServerError, new { message = "Szerveroldali hiba történt." });
-            }
+            return Ok(new { message = "A jelszó sikeresen megváltoztatva." });
+            
         }
     }
 }

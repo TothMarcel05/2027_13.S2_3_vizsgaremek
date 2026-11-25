@@ -36,32 +36,20 @@ namespace PROTOTYPE_backend.Controllers
         {
             if (string.IsNullOrWhiteSpace(dto.EntityName) || string.IsNullOrWhiteSpace(dto.EntityId))
             {
-                return BadRequest(new { message = "Az 'EntityName' és az 'EntityId' megadása kötelező." });
+                return BadRequest(new { error = new { message = "Az 'EntityName' és az 'EntityId' megadása kötelező.", code = "ERVENYTELEN_KERES" } });
             }
 
-            try
-            {
-                var currentUserId = User.GetUserId();
-                var secureDto = dto with { UserId = currentUserId };
+            var currentUserId = User.GetUserId();
+            var secureDto = dto with { UserId = currentUserId };
 
-                var success = await _softDeleteService.SoftDeleteAsync(secureDto);
-                if (!success)
-                {
-                    return BadRequest(new { message = "A törlés nem hajtható végre, érvénytelen azonosító vagy az elem nem található." });
-                }
+            var success = await _softDeleteService.SoftDeleteAsync(secureDto);
+            if (!success)
+            {
+                return BadRequest(new { error = new { message = "A törlés nem hajtható végre, érvénytelen azonosító vagy az elem nem található.", code = "ERVENYTELEN_KERES" } });
+            }
 
-                return Ok(new { message = "Az elem sikeresen lomtárba került." });
-            }
-            catch (UnauthorizedAccessException)
-            {
-                return Unauthorized(new { message = "Érvénytelen vagy lejárt hitelesítés." });
-            }
-            catch (Exception ex)
-            {
-                _logger.LogError(ex, "Váratlan hiba történt a SoftDelete végrehajtása közben. EntityName: {EntityName}, EntityId: {EntityId}",
-                    dto.EntityName, dto.EntityId);
-                return StatusCode(StatusCodes.Status500InternalServerError, new { message = "Szerveroldali hiba történt a törlés során." });
-            }
+            return Ok(new { message = "Az elem sikeresen lomtárba került." });
+            
         }
 
         // 2. ELEM VISSZAÁLLÍTÁSA A LOMTÁRBÓL
@@ -76,29 +64,17 @@ namespace PROTOTYPE_backend.Controllers
         {
             if (string.IsNullOrWhiteSpace(dto.EntityName) || string.IsNullOrWhiteSpace(dto.EntityId))
             {
-                return BadRequest(new { message = "Az 'EntityName' és az 'EntityId' megadása kötelező." });
+                return BadRequest(new { error = new { message = "Az 'EntityName' és az 'EntityId' megadása kötelező.", code = "ERVENYTELEN_KERES" } });
             }
 
-            try
+            var success = await _softDeleteService.RestoreAsync(dto);
+            if (!success)
             {
-                var success = await _softDeleteService.RestoreAsync(dto);
-                if (!success)
-                {
-                    return BadRequest(new { message = "A visszaállítás nem lehetséges (a 30 napos megőrzési idő lejárt vagy az elem nem található)." });
-                }
+                return BadRequest(new { error = new { message = "A visszaállítás nem lehetséges (a 30 napos megőrzési idő lejárt vagy az elem nem található).", code = "ERVENYTELEN_KERES" } });
+            }
 
-                return Ok(new { message = "Az elem sikeresen visszaállításra került." });
-            }
-            catch (UnauthorizedAccessException)
-            {
-                return Unauthorized(new { message = "Érvénytelen vagy lejárt hitelesítés." });
-            }
-            catch (Exception ex)
-            {
-                _logger.LogError(ex, "Váratlan hiba történt a visszaállítás közben. EntityName: {EntityName}, EntityId: {EntityId}",
-                    dto.EntityName, dto.EntityId);
-                return StatusCode(StatusCodes.Status500InternalServerError, new { message = "Szerveroldali hiba történt a visszaállítás során." });
-            }
+            return Ok(new { message = "Az elem sikeresen visszaállításra került." });
+            
         }
 
         // 3. LOMTÁR TARTALMÁNAK LEKÉRDEZÉSE
@@ -110,21 +86,10 @@ namespace PROTOTYPE_backend.Controllers
         [ProducesResponseType(StatusCodes.Status500InternalServerError)]
         public async Task<IActionResult> GetMyTrash()
         {
-            try
-            {
-                var userId = User.GetUserId();
-                var deletedItems = await _softDeleteService.GetDeletedItemsAsync(userId);
-                return Ok(deletedItems);
-            }
-            catch (UnauthorizedAccessException)
-            {
-                return Unauthorized(new { message = "Érvénytelen vagy lejárt hitelesítés." });
-            }
-            catch (Exception ex)
-            {
-                _logger.LogError(ex, "Váratlan hiba történt a lomtár lekérdezésekor.");
-                return StatusCode(StatusCodes.Status500InternalServerError, new { message = "Szerveroldali hiba történt a lomtár lekérdezésekor." });
-            }
+            var userId = User.GetUserId();
+            var deletedItems = await _softDeleteService.GetDeletedItemsAsync(userId);
+            return Ok(deletedItems);
+            
         }
 
         // 4. LEJÁRT ELEMEK VÉGLEGES TÖRLÉSE (ADMIN / KARBANTARTÁS)
@@ -136,20 +101,13 @@ namespace PROTOTYPE_backend.Controllers
         [ProducesResponseType(StatusCodes.Status500InternalServerError)]
         public async Task<IActionResult> PurgeExpired()
         {
-            try
+            var count = await _softDeleteService.HardDeleteExpiredItemsAsync();
+            return Ok(new
             {
-                var count = await _softDeleteService.HardDeleteExpiredItemsAsync();
-                return Ok(new
-                {
-                    deletedCount = count,
-                    message = $"{count} db lejárt rekord véglegesen törölve lett."
-                });
-            }
-            catch (Exception ex)
-            {
-                _logger.LogError(ex, "Váratlan hiba történt a lejárt elemek végleges törlésekor (purge-expired).");
-                return StatusCode(StatusCodes.Status500InternalServerError, new { message = "Szerveroldali hiba történt a végleges törlés során." });
-            }
+                deletedCount = count,
+                message = $"{count} db lejárt rekord véglegesen törölve lett."
+            });
+            
         }
     }
 }

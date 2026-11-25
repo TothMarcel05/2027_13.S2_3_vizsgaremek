@@ -30,27 +30,16 @@ namespace PROTOTYPE_backend.Controllers
         [ProducesResponseType(StatusCodes.Status500InternalServerError)]
         public async Task<IActionResult> GetCurrentUserProfile()
         {
-            try
-            {
-                var userId = User.GetUserId();
-                var profile = await _userService.GetUserProfileAsync(userId);
+            var userId = User.GetUserId();
+            var profile = await _userService.GetUserProfileAsync(userId);
 
-                if (profile == null)
-                {
-                    return NotFound(new { message = "A felhasználó nem található." });
-                }
+            if (profile == null)
+            {
+                return NotFound(new { error = new { message = "A felhasználó nem található.", code = "NEM_TALALHATO" } });
+            }
 
-                return Ok(profile);
-            }
-            catch (UnauthorizedAccessException)
-            {
-                return Unauthorized(new { message = "Érvénytelen vagy lejárt hitelesítés." });
-            }
-            catch (Exception ex)
-            {
-                _logger.LogError(ex, "Váratlan hiba történt a saját profil lekérdezésekor.");
-                return StatusCode(StatusCodes.Status500InternalServerError, new { message = "Szerveroldali hiba történt a profil lekérdezésekor." });
-            }
+            return Ok(profile);
+            
         }
 
         // 2. PUT /api/users/me -> Saját adatok frissítése
@@ -64,30 +53,19 @@ namespace PROTOTYPE_backend.Controllers
         {
             if (string.IsNullOrWhiteSpace(dto.Name))
             {
-                return BadRequest(new { message = "A felhasználó neve nem lehet üres." });
+                return BadRequest(new { error = new { message = "A felhasználó neve nem lehet üres.", code = "ERVENYTELEN_KERES" } });
             }
 
-            try
-            {
-                var userId = User.GetUserId();
-                var updatedProfile = await _userService.UpdateUserProfileAsync(userId, dto);
+            var userId = User.GetUserId();
+            var updatedProfile = await _userService.UpdateUserProfileAsync(userId, dto);
 
-                if (updatedProfile == null)
-                {
-                    return NotFound(new { message = "A felhasználó nem található." });
-                }
+            if (updatedProfile == null)
+            {
+                return NotFound(new { error = new { message = "A felhasználó nem található.", code = "NEM_TALALHATO" } });
+            }
 
-                return Ok(updatedProfile);
-            }
-            catch (UnauthorizedAccessException)
-            {
-                return Unauthorized(new { message = "Érvénytelen vagy lejárt hitelesítés." });
-            }
-            catch (Exception ex)
-            {
-                _logger.LogError(ex, "Váratlan hiba történt a saját profil módosításakor.");
-                return StatusCode(StatusCodes.Status500InternalServerError, new { message = "Szerveroldali hiba történt a profil frissítésekor." });
-            }
+            return Ok(updatedProfile);
+            
         }
 
         // 3. POST /api/users/me/change-password -> Jelszó módosítása
@@ -100,40 +78,29 @@ namespace PROTOTYPE_backend.Controllers
         {
             if (string.IsNullOrWhiteSpace(dto.CurrentPassword) || string.IsNullOrWhiteSpace(dto.NewPassword))
             {
-                return BadRequest(new { message = "A jelenlegi és az új jelszó megadása kötelező." });
+                return BadRequest(new { error = new { message = "A jelenlegi és az új jelszó megadása kötelező.", code = "ERVENYTELEN_KERES" } });
             }
 
             if (dto.NewPassword.Length < 8)
             {
-                return BadRequest(new { message = "Az új jelszónak legalább 8 karakter hosszúnak kell lennie." });
+                return BadRequest(new { error = new { message = "Az új jelszónak legalább 8 karakter hosszúnak kell lennie.", code = "ERVENYTELEN_KERES" } });
             }
 
             if (dto.CurrentPassword == dto.NewPassword)
             {
-                return BadRequest(new { message = "Az új jelszó nem egyezhet meg a jelenlegi jelszóval." });
+                return BadRequest(new { error = new { message = "Az új jelszó nem egyezhet meg a jelenlegi jelszóval.", code = "ERVENYTELEN_KERES" } });
             }
 
-            try
-            {
-                var userId = User.GetUserId();
-                var success = await _userService.ChangePasswordAsync(userId, dto);
+            var userId = User.GetUserId();
+            var success = await _userService.ChangePasswordAsync(userId, dto);
 
-                if (!success)
-                {
-                    return BadRequest(new { message = "A jelenlegi jelszó hibás vagy a felhasználó nem található." });
-                }
+            if (!success)
+            {
+                return BadRequest(new { error = new { message = "A jelenlegi jelszó hibás vagy a felhasználó nem található.", code = "ERVENYTELEN_KERES" } });
+            }
 
-                return NoContent();
-            }
-            catch (UnauthorizedAccessException)
-            {
-                return Unauthorized(new { message = "Érvénytelen vagy lejárt hitelesítés." });
-            }
-            catch (Exception ex)
-            {
-                _logger.LogError(ex, "Váratlan hiba történt a jelszó módosítása során.");
-                return StatusCode(StatusCodes.Status500InternalServerError, new { message = "Szerveroldali hiba történt a jelszó módosításakor." });
-            }
+            return NoContent();
+            
         }
 
         // 4. DELETE /api/users/me -> Saját fiók törlése (Soft delete)
@@ -144,27 +111,16 @@ namespace PROTOTYPE_backend.Controllers
         [ProducesResponseType(StatusCodes.Status500InternalServerError)]
         public async Task<IActionResult> DeleteCurrentUserAccount()
         {
-            try
-            {
-                var userId = User.GetUserId();
-                var result = await _userService.DeleteUserAccountAsync(userId);
+            var userId = User.GetUserId();
+            var result = await _userService.DeleteUserAccountAsync(userId);
 
-                if (result == null)
-                {
-                    return NotFound(new { message = "A felhasználó nem található." });
-                }
+            if (result == null)
+            {
+                return NotFound(new { error = new { message = "A felhasználó nem található.", code = "NEM_TALALHATO" } });
+            }
 
-                return Ok(result);
-            }
-            catch (UnauthorizedAccessException)
-            {
-                return Unauthorized(new { message = "Érvénytelen vagy lejárt hitelesítés." });
-            }
-            catch (Exception ex)
-            {
-                _logger.LogError(ex, "Váratlan hiba történt a felhasználói fiók törlésekor.");
-                return StatusCode(StatusCodes.Status500InternalServerError, new { message = "Szerveroldali hiba történt a fiók törlésekor." });
-            }
+            return Ok(result);
+            
         }
 
         // 5. GET /api/users/{id} -> Egy adott csapattag publikus profilja
@@ -178,25 +134,18 @@ namespace PROTOTYPE_backend.Controllers
         {
             if (id == Guid.Empty)
             {
-                return BadRequest(new { message = "Érvénytelen felhasználói azonosító." });
+                return BadRequest(new { error = new { message = "Érvénytelen felhasználói azonosító.", code = "ERVENYTELEN_KERES" } });
             }
 
-            try
+            var publicProfile = await _userService.GetPublicProfileByIdAsync(id);
+
+            if (publicProfile == null)
             {
-                var publicProfile = await _userService.GetPublicProfileByIdAsync(id);
-
-                if (publicProfile == null)
-                {
-                    return NotFound(new { message = "A felhasználó nem található." });
-                }
-
-                return Ok(publicProfile);
+                return NotFound(new { error = new { message = "A felhasználó nem található.", code = "NEM_TALALHATO" } });
             }
-            catch (Exception ex)
-            {
-                _logger.LogError(ex, "Váratlan hiba történt a nyilvános profil lekérdezésekor. TargetUserId: {TargetUserId}", id);
-                return StatusCode(StatusCodes.Status500InternalServerError, new { message = "Szerveroldali hiba történt a profil lekérdezésekor." });
-            }
+
+            return Ok(publicProfile);
+            
         }
 
         // 6. GET /api/users/search?q=kovacs -> Csapattagok keresése
@@ -209,20 +158,12 @@ namespace PROTOTYPE_backend.Controllers
         {
             if (string.IsNullOrWhiteSpace(q) || q.Trim().Length < 2)
             {
-                return BadRequest(new { message = "A keresési kifejezésnek legalább 2 karakterből kell állnia." });
+                return BadRequest(new { error = new { message = "A keresési kifejezésnek legalább 2 karakterből kell állnia.", code = "ERVENYTELEN_KERES" } });
             }
 
-            try
-            {
-                var users = await _userService.SearchUsersAsync(q);
-                return Ok(users);
-            }
-            catch (Exception ex)
-            {
-                // A keresőkifejezést (q) PII-védelmi okokból nem írjuk a logba
-                _logger.LogError(ex, "Váratlan hiba történt a felhasználók keresése során.");
-                return StatusCode(StatusCodes.Status500InternalServerError, new { message = "Szerveroldali hiba történt a keresés során." });
-            }
+            var users = await _userService.SearchUsersAsync(q);
+            return Ok(users);
+            
         }
     }
 }

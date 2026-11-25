@@ -41,19 +41,12 @@ namespace PROTOTYPE_backend.Controllers
         {
             if (workspaceId == Guid.Empty)
             {
-                return BadRequest(new { message = "A 'workspaceId' megadása kötelező." });
+                return BadRequest(new { error = new { message = "A 'workspaceId' megadása kötelező.", code = "ERVENYTELEN_KERES" } });
             }
 
-            try
-            {
-                var nodes = await _storageService.GetNodesByWorkspaceAsync(workspaceId, tagFilter);
-                return Ok(nodes);
-            }
-            catch (Exception ex)
-            {
-                _logger.LogError(ex, "Váratlan hiba történt a tárhely elemek lekérdezésekor. WorkspaceId: {WorkspaceId}", workspaceId);
-                return StatusCode(StatusCodes.Status500InternalServerError, new { message = "Szerveroldali hiba történt a tárhely elemek lekérdezésekor." });
-            }
+            var nodes = await _storageService.GetNodesByWorkspaceAsync(workspaceId, tagFilter);
+            return Ok(nodes);
+            
         }
 
         // 2. FÁJL LETÖLTÉSE
@@ -66,23 +59,16 @@ namespace PROTOTYPE_backend.Controllers
         [ProducesResponseType(StatusCodes.Status500InternalServerError)]
         public async Task<IActionResult> DownloadFile(Guid id)
         {
-            try
-            {
-                var fileData = await _storageService.GetFileStreamAsync(id);
+            var fileData = await _storageService.GetFileStreamAsync(id);
 
-                if (fileData == null)
-                {
-                    return NotFound(new { message = "A fájl nem található vagy törölve lett." });
-                }
-
-                var (fileStream, contentType, fileName) = fileData.Value;
-                return File(fileStream, contentType, fileName);
-            }
-            catch (Exception ex)
+            if (fileData == null)
             {
-                _logger.LogError(ex, "Váratlan hiba történt a fájl letöltésekor. NodeId: {NodeId}", id);
-                return StatusCode(StatusCodes.Status500InternalServerError, new { message = "Szerveroldali hiba történt a fájl letöltésekor." });
+                return NotFound(new { error = new { message = "A fájl nem található vagy törölve lett.", code = "NEM_TALALHATO" } });
             }
+
+            var (fileStream, contentType, fileName) = fileData.Value;
+            return File(fileStream, contentType, fileName);
+            
         }
 
         // 3. FÁJL FELTÖLTÉSE
@@ -99,40 +85,20 @@ namespace PROTOTYPE_backend.Controllers
         {
             if (dto.File == null || dto.File.Length == 0)
             {
-                return BadRequest(new { message = "A feltöltendő fájl nem lehet üres." });
+                return BadRequest(new { error = new { message = "A feltöltendő fájl nem lehet üres.", code = "ERVENYTELEN_KERES" } });
             }
 
             if (dto.WorkspaceId == Guid.Empty)
             {
-                return BadRequest(new { message = "A 'WorkspaceId' megadása kötelező." });
+                return BadRequest(new { error = new { message = "A 'WorkspaceId' megadása kötelező.", code = "ERVENYTELEN_KERES" } });
             }
 
-            try
-            {
-                var userId = User.GetUserId();
-                var updatedDto = dto with { UserId = userId };
+            var userId = User.GetUserId();
+            var updatedDto = dto with { UserId = userId };
 
-                var result = await _storageService.UploadFileAsync(updatedDto);
-                return CreatedAtAction(nameof(DownloadFile), new { id = result.Id }, result);
-            }
-            catch (UnauthorizedAccessException)
-            {
-                return Unauthorized(new { message = "Érvénytelen vagy lejárt hitelesítés." });
-            }
-            catch (ArgumentException ex)
-            {
-                return NotFound(new { message = ex.Message });
-            }
-            catch (InvalidOperationException ex)
-            {
-                // Kvótatúllépés esetén
-                return BadRequest(new { message = ex.Message });
-            }
-            catch (Exception ex)
-            {
-                _logger.LogError(ex, "Váratlan hiba történt a fájlfeltöltés során. WorkspaceId: {WorkspaceId}", dto.WorkspaceId);
-                return StatusCode(StatusCodes.Status500InternalServerError, new { message = "Szerveroldali hiba történt a fájl feltöltésekor." });
-            }
+            var result = await _storageService.UploadFileAsync(updatedDto);
+            return CreatedAtAction(nameof(DownloadFile), new { id = result.Id }, result);
+            
         }
 
         // 4. MAPPA LÉTREHOZÁSA
@@ -147,31 +113,20 @@ namespace PROTOTYPE_backend.Controllers
         {
             if (dto.WorkspaceId == Guid.Empty || string.IsNullOrWhiteSpace(dto.FolderName))
             {
-                return BadRequest(new { message = "A munkaterület azonosítója és a mappa neve kötelező." });
+                return BadRequest(new { error = new { message = "A munkaterület azonosítója és a mappa neve kötelező.", code = "ERVENYTELEN_KERES" } });
             }
 
-            try
-            {
-                var userId = User.GetUserId();
-                var folder = await _storageService.CreateFolderAsync(
-                    dto.WorkspaceId,
-                    dto.ProjectId,
-                    dto.ParentId,
-                    dto.FolderName,
-                    userId
-                );
+            var userId = User.GetUserId();
+            var folder = await _storageService.CreateFolderAsync(
+                dto.WorkspaceId,
+                dto.ProjectId,
+                dto.ParentId,
+                dto.FolderName,
+                userId
+            );
 
-                return StatusCode(StatusCodes.Status201Created, folder);
-            }
-            catch (UnauthorizedAccessException)
-            {
-                return Unauthorized(new { message = "Érvénytelen vagy lejárt hitelesítés." });
-            }
-            catch (Exception ex)
-            {
-                _logger.LogError(ex, "Váratlan hiba történt új mappa létrehozásakor. WorkspaceId: {WorkspaceId}", dto.WorkspaceId);
-                return StatusCode(StatusCodes.Status500InternalServerError, new { message = "Szerveroldali hiba történt a mappa létrehozásakor." });
-            }
+            return StatusCode(StatusCodes.Status201Created, folder);
+            
         }
 
         // 5. CSOMÓPONT ADATAINAK MÓDOSÍTÁSA
@@ -187,23 +142,12 @@ namespace PROTOTYPE_backend.Controllers
         {
             if (dto.NodeId == Guid.Empty)
             {
-                return BadRequest(new { message = "A 'NodeId' megadása kötelező." });
+                return BadRequest(new { error = new { message = "A 'NodeId' megadása kötelező.", code = "ERVENYTELEN_KERES" } });
             }
 
-            try
-            {
-                var result = await _storageService.ChangeNodeData(dto);
-                return Ok(result);
-            }
-            catch (ArgumentException ex)
-            {
-                return NotFound(new { message = ex.Message });
-            }
-            catch (Exception ex)
-            {
-                _logger.LogError(ex, "Váratlan hiba történt a tárhely elem módosításakor. NodeId: {NodeId}", dto.NodeId);
-                return StatusCode(StatusCodes.Status500InternalServerError, new { message = "Szerveroldali hiba történt a módosítás során." });
-            }
+            var result = await _storageService.ChangeNodeData(dto);
+            return Ok(result);
+            
         }
 
         // 6. TÁRHELY ELEM LOMTÁRBA HELYEZÉSE
@@ -216,27 +160,16 @@ namespace PROTOTYPE_backend.Controllers
         [ProducesResponseType(StatusCodes.Status500InternalServerError)]
         public async Task<IActionResult> SoftDeleteNode(Guid id)
         {
-            try
-            {
-                var userId = User.GetUserId();
-                var success = await _storageService.SoftDeleteNodeAsync(id, userId);
+            var userId = User.GetUserId();
+            var success = await _storageService.SoftDeleteNodeAsync(id, userId);
 
-                if (!success)
-                {
-                    return NotFound(new { message = "A fájl vagy mappa nem található, vagy már törölve lett." });
-                }
+            if (!success)
+            {
+                return NotFound(new { error = new { message = "A fájl vagy mappa nem található, vagy már törölve lett.", code = "NEM_TALALHATO" } });
+            }
 
-                return NoContent();
-            }
-            catch (UnauthorizedAccessException)
-            {
-                return Unauthorized(new { message = "Érvénytelen vagy lejárt hitelesítés." });
-            }
-            catch (Exception ex)
-            {
-                _logger.LogError(ex, "Váratlan hiba történt a tárhely elem törlésekor. NodeId: {NodeId}", id);
-                return StatusCode(StatusCodes.Status500InternalServerError, new { message = "Szerveroldali hiba történt a törlés során." });
-            }
+            return NoContent();
+            
         }
 
         // 7. MEGOSZTÁS SZEREPKÖRREL
@@ -249,22 +182,15 @@ namespace PROTOTYPE_backend.Controllers
         [ProducesResponseType(StatusCodes.Status500InternalServerError)]
         public async Task<IActionResult> ShareWithRole(Guid id, Guid roleId)
         {
-            try
-            {
-                var success = await _storageService.ShareNodeWithRoleAsync(id, roleId);
+            var success = await _storageService.ShareNodeWithRoleAsync(id, roleId);
 
-                if (!success)
-                {
-                    return NotFound(new { message = "A fájl/mappa vagy a szerepkör nem található." });
-                }
-
-                return Ok(new { message = "A hozzáférés sikeresen megadva." });
-            }
-            catch (Exception ex)
+            if (!success)
             {
-                _logger.LogError(ex, "Váratlan hiba történt a jogosultság-megosztás során. NodeId: {NodeId}, RoleId: {RoleId}", id, roleId);
-                return StatusCode(StatusCodes.Status500InternalServerError, new { message = "Szerveroldali hiba történt a megosztás során." });
+                return NotFound(new { error = new { message = "A fájl/mappa vagy a szerepkör nem található.", code = "NEM_TALALHATO" } });
             }
+
+            return Ok(new { message = "A hozzáférés sikeresen megadva." });
+            
         }
 
         // 8. TÁRHELY ELEM VISSZAÁLLÍTÁSA
@@ -277,22 +203,15 @@ namespace PROTOTYPE_backend.Controllers
         [ProducesResponseType(StatusCodes.Status500InternalServerError)]
         public async Task<IActionResult> RestoreNode(Guid id)
         {
-            try
-            {
-                var success = await _storageService.RestoreNodeAsync(id);
+            var success = await _storageService.RestoreNodeAsync(id);
 
-                if (!success)
-                {
-                    return NotFound(new { message = "A fájl vagy mappa nem található, vagy nincs törölt állapotban." });
-                }
-
-                return Ok(new { message = "Sikeresen helyreállítva." });
-            }
-            catch (Exception ex)
+            if (!success)
             {
-                _logger.LogError(ex, "Váratlan hiba történt a tárhely elem visszaállításakor. NodeId: {NodeId}", id);
-                return StatusCode(StatusCodes.Status500InternalServerError, new { message = "Szerveroldali hiba történt a visszaállítás során." });
+                return NotFound(new { error = new { message = "A fájl vagy mappa nem található, vagy nincs törölt állapotban.", code = "NEM_TALALHATO" } });
             }
+
+            return Ok(new { message = "Sikeresen helyreállítva." });
+            
         }
 
         // 9. ÁLTALÁNOS SOFT DELETE (LOMTÁRBA HELYEZÉS)
@@ -307,32 +226,20 @@ namespace PROTOTYPE_backend.Controllers
         {
             if (string.IsNullOrWhiteSpace(dto.EntityName) || string.IsNullOrWhiteSpace(dto.EntityId))
             {
-                return BadRequest(new { message = "Az 'EntityName' és az 'EntityId' megadása kötelező." });
+                return BadRequest(new { error = new { message = "Az 'EntityName' és az 'EntityId' megadása kötelező.", code = "ERVENYTELEN_KERES" } });
             }
 
-            try
-            {
-                var currentUserId = User.GetUserId();
-                var secureDto = dto with { UserId = currentUserId };
+            var currentUserId = User.GetUserId();
+            var secureDto = dto with { UserId = currentUserId };
 
-                var success = await _softDeleteService.SoftDeleteAsync(secureDto);
-                if (!success)
-                {
-                    return BadRequest(new { message = "A törlés nem hajtható végre vagy az elem nem található." });
-                }
+            var success = await _softDeleteService.SoftDeleteAsync(secureDto);
+            if (!success)
+            {
+                return BadRequest(new { error = new { message = "A törlés nem hajtható végre vagy az elem nem található.", code = "ERVENYTELEN_KERES" } });
+            }
 
-                return Ok(new { message = "Az elem sikeresen Soft-Delete állapotba került." });
-            }
-            catch (UnauthorizedAccessException)
-            {
-                return Unauthorized(new { message = "Érvénytelen vagy lejárt hitelesítés." });
-            }
-            catch (Exception ex)
-            {
-                _logger.LogError(ex, "Váratlan hiba történt a SoftDelete művelet során. EntityName: {EntityName}, EntityId: {EntityId}",
-                    dto.EntityName, dto.EntityId);
-                return StatusCode(StatusCodes.Status500InternalServerError, new { message = "Szerveroldali hiba történt a törlés során." });
-            }
+            return Ok(new { message = "Az elem sikeresen Soft-Delete állapotba került." });
+            
         }
 
         // 10. ÁLTALÁNOS VISSZAÁLLÍTÁS A LOMTÁRBÓL
@@ -347,25 +254,17 @@ namespace PROTOTYPE_backend.Controllers
         {
             if (string.IsNullOrWhiteSpace(dto.EntityName) || string.IsNullOrWhiteSpace(dto.EntityId))
             {
-                return BadRequest(new { message = "Az 'EntityName' és az 'EntityId' megadása kötelező." });
+                return BadRequest(new { error = new { message = "Az 'EntityName' és az 'EntityId' megadása kötelező.", code = "ERVENYTELEN_KERES" } });
             }
 
-            try
+            var success = await _softDeleteService.RestoreAsync(dto);
+            if (!success)
             {
-                var success = await _softDeleteService.RestoreAsync(dto);
-                if (!success)
-                {
-                    return BadRequest(new { message = "A visszaállítás nem lehetséges (a megőrzési idő lejárt vagy az elem nem található)." });
-                }
+                return BadRequest(new { error = new { message = "A visszaállítás nem lehetséges (a megőrzési idő lejárt vagy az elem nem található).", code = "ERVENYTELEN_KERES" } });
+            }
 
-                return Ok(new { message = "Az elem sikeresen visszaállításra került." });
-            }
-            catch (Exception ex)
-            {
-                _logger.LogError(ex, "Váratlan hiba történt a visszaállítás során. EntityName: {EntityName}, EntityId: {EntityId}",
-                    dto.EntityName, dto.EntityId);
-                return StatusCode(StatusCodes.Status500InternalServerError, new { message = "Szerveroldali hiba történt a visszaállítás során." });
-            }
+            return Ok(new { message = "Az elem sikeresen visszaállításra került." });
+            
         }
 
         // 11. LOMTÁR LEKÉRDEZÉSE
@@ -377,21 +276,10 @@ namespace PROTOTYPE_backend.Controllers
         [ProducesResponseType(StatusCodes.Status500InternalServerError)]
         public async Task<IActionResult> GetMyTrash()
         {
-            try
-            {
-                var userId = User.GetUserId();
-                var deletedItems = await _softDeleteService.GetDeletedItemsAsync(userId);
-                return Ok(deletedItems);
-            }
-            catch (UnauthorizedAccessException)
-            {
-                return Unauthorized(new { message = "Érvénytelen vagy lejárt hitelesítés." });
-            }
-            catch (Exception ex)
-            {
-                _logger.LogError(ex, "Váratlan hiba történt a lomtár lekérdezésekor.");
-                return StatusCode(StatusCodes.Status500InternalServerError, new { message = "Szerveroldali hiba történt a lomtár lekérdezésekor." });
-            }
+            var userId = User.GetUserId();
+            var deletedItems = await _softDeleteService.GetDeletedItemsAsync(userId);
+            return Ok(deletedItems);
+            
         }
 
         // 12. LEJÁRT REKORDOK VÉGLEGES TÖRLÉSE
@@ -403,20 +291,13 @@ namespace PROTOTYPE_backend.Controllers
         [ProducesResponseType(StatusCodes.Status500InternalServerError)]
         public async Task<IActionResult> PurgeExpired()
         {
-            try
+            var count = await _softDeleteService.HardDeleteExpiredItemsAsync();
+            return Ok(new
             {
-                var count = await _softDeleteService.HardDeleteExpiredItemsAsync();
-                return Ok(new
-                {
-                    deletedCount = count,
-                    message = $"{count} db lejárt rekord véglegesen törölve lett."
-                });
-            }
-            catch (Exception ex)
-            {
-                _logger.LogError(ex, "Váratlan hiba történt a lejárt rekordok végleges törlésekor.");
-                return StatusCode(StatusCodes.Status500InternalServerError, new { message = "Szerveroldali hiba történt a végleges törlés során." });
-            }
+                deletedCount = count,
+                message = $"{count} db lejárt rekord véglegesen törölve lett."
+            });
+            
         }
     }
 }

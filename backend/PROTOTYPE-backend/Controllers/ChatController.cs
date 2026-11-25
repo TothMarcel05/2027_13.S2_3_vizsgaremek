@@ -32,20 +32,13 @@ namespace PROTOTYPE_backend.Controllers
         {
             if (workspaceId == Guid.Empty)
             {
-                return BadRequest(new { message = "A 'workspaceId' megadása kötelező." });
+                return BadRequest(new { error = new { message = "A 'workspaceId' megadása kötelező.", code = "ERVENYTELEN_KERES" } });
             }
 
-            try
-            {
-                var userId = User.GetUserId();
-                var rooms = await _chatService.GetUserRoomsByWorkspaceAsync(userId, workspaceId);
-                return Ok(rooms);
-            }
-            catch (Exception ex)
-            {
-                _logger.LogError(ex, "Váratlan hiba történt a csevegőszobák lekérdezésekor. WorkspaceId: {WorkspaceId}", workspaceId);
-                return StatusCode(StatusCodes.Status500InternalServerError, new { message = "Szerveroldali hiba történt a szobák lekérdezésekor." });
-            }
+            var userId = User.GetUserId();
+            var rooms = await _chatService.GetUserRoomsByWorkspaceAsync(userId, workspaceId);
+            return Ok(rooms);
+            
         }
 
         // 2. POST /api/chat/rooms -> Új szoba (direct, group, project_channel)
@@ -60,24 +53,13 @@ namespace PROTOTYPE_backend.Controllers
         {
             if (dto.WorkspaceId == Guid.Empty)
             {
-                return BadRequest(new { message = "A 'WorkspaceId' megadása kötelező." });
+                return BadRequest(new { error = new { message = "A 'WorkspaceId' megadása kötelező.", code = "ERVENYTELEN_KERES" } });
             }
 
-            try
-            {
-                var userId = User.GetUserId();
-                var room = await _chatService.CreateRoomAsync(userId, dto);
-                return StatusCode(StatusCodes.Status201Created, room);
-            }
-            catch (ArgumentException ex)
-            {
-                return BadRequest(new { message = ex.Message });
-            }
-            catch (Exception ex)
-            {
-                _logger.LogError(ex, "Váratlan hiba történt új csevegőszoba létrehozásakor. WorkspaceId: {WorkspaceId}", dto.WorkspaceId);
-                return StatusCode(StatusCodes.Status500InternalServerError, new { message = "Szerveroldali hiba történt a szoba létrehozásakor." });
-            }
+            var userId = User.GetUserId();
+            var room = await _chatService.CreateRoomAsync(userId, dto);
+            return StatusCode(StatusCodes.Status201Created, room);
+            
         }
 
         // 3. POST /api/chat/rooms/direct -> 1:1 privát szoba lekérése vagy létrehozása ([Authorize])
@@ -90,26 +72,18 @@ namespace PROTOTYPE_backend.Controllers
         {
             if (workspaceId == Guid.Empty || targetUserId == Guid.Empty)
             {
-                return BadRequest(new { message = "A 'workspaceId' és a 'targetUserId' megadása kötelező." });
+                return BadRequest(new { error = new { message = "A 'workspaceId' és a 'targetUserId' megadása kötelező.", code = "ERVENYTELEN_KERES" } });
             }
 
-            try
+            var userId = User.GetUserId();
+            if (userId == targetUserId)
             {
-                var userId = User.GetUserId();
-                if (userId == targetUserId)
-                {
-                    return BadRequest(new { message = "Önmagaddal nem indíthatsz privát beszélgetést." });
-                }
+                return BadRequest(new { error = new { message = "Önmagaddal nem indíthatsz privát beszélgetést.", code = "ERVENYTELEN_KERES" } });
+            }
 
-                var room = await _chatService.GetOrCreateDirectRoomAsync(userId, workspaceId, targetUserId);
-                return Ok(room);
-            }
-            catch (Exception ex)
-            {
-                _logger.LogError(ex, "Váratlan hiba történt a 1:1 csevegőszoba megnyitásakor. WorkspaceId: {WorkspaceId}, TargetUserId: {TargetUserId}",
-                    workspaceId, targetUserId);
-                return StatusCode(StatusCodes.Status500InternalServerError, new { message = "Szerveroldali hiba történt a privát szoba megnyitásakor." });
-            }
+            var room = await _chatService.GetOrCreateDirectRoomAsync(userId, workspaceId, targetUserId);
+            return Ok(room);
+            
         }
 
         // 4. GET /api/chat/rooms/{roomId:guid}/messages -> Üzenethistória ([Authorize])
@@ -123,26 +97,19 @@ namespace PROTOTYPE_backend.Controllers
         {
             if (page < 1 || limit < 1 || limit > 100)
             {
-                return BadRequest(new { message = "Érvénytelen lapozási paraméterek (page >= 1, 1 <= limit <= 100)." });
+                return BadRequest(new { error = new { message = "Érvénytelen lapozási paraméterek (page >= 1, 1 <= limit <= 100).", code = "ERVENYTELEN_KERES" } });
             }
 
-            try
+            var userId = User.GetUserId();
+
+            if (!await _chatService.IsUserMemberOfRoomAsync(userId, roomId))
             {
-                var userId = User.GetUserId();
-
-                if (!await _chatService.IsUserMemberOfRoomAsync(userId, roomId))
-                {
-                    return StatusCode(StatusCodes.Status403Forbidden, new { message = "Nem vagy tagja ennek a csevegőszobának." });
-                }
-
-                var messages = await _chatService.GetRoomMessagesAsync(userId, roomId, page, limit);
-                return Ok(messages);
+                return StatusCode(StatusCodes.Status403Forbidden, new { error = new { message = "Nem vagy tagja ennek a csevegőszobának.", code = "NINCS_JOGOSULTSAG" } });
             }
-            catch (Exception ex)
-            {
-                _logger.LogError(ex, "Váratlan hiba történt az üzenethistória lekérdezésekor. RoomId: {RoomId}", roomId);
-                return StatusCode(StatusCodes.Status500InternalServerError, new { message = "Szerveroldali hiba történt az üzenetek lekérdezésekor." });
-            }
+
+            var messages = await _chatService.GetRoomMessagesAsync(userId, roomId, page, limit);
+            return Ok(messages);
+            
         }
 
         // 5. POST /api/chat/rooms/{roomId:guid}/messages -> Üzenet küldése a csevegőszobába ([Authorize])
@@ -156,24 +123,13 @@ namespace PROTOTYPE_backend.Controllers
         {
             if (string.IsNullOrWhiteSpace(dto.MessageText) && (dto.Attachments == null || dto.Attachments.Count == 0))
             {
-                return BadRequest(new { message = "Az üzenet szövege és a mellékletek listája egyszerre nem lehet üres." });
+                return BadRequest(new { error = new { message = "Az üzenet szövege és a mellékletek listája egyszerre nem lehet üres.", code = "ERVENYTELEN_KERES" } });
             }
 
-            try
-            {
-                var userId = User.GetUserId();
-                var message = await _chatService.SendMessageAsync(userId, roomId, dto);
-                return StatusCode(StatusCodes.Status201Created, message);
-            }
-            catch (UnauthorizedAccessException ex)
-            {
-                return StatusCode(StatusCodes.Status403Forbidden, new { message = ex.Message });
-            }
-            catch (Exception ex)
-            {
-                _logger.LogError(ex, "Váratlan hiba történt az üzenet küldésekor. RoomId: {RoomId}", roomId);
-                return StatusCode(StatusCodes.Status500InternalServerError, new { message = "Szerveroldali hiba történt az üzenet küldésekor." });
-            }
+            var userId = User.GetUserId();
+            var message = await _chatService.SendMessageAsync(userId, roomId, dto);
+            return StatusCode(StatusCodes.Status201Created, message);
+            
         }
 
         // 6. DELETE /api/chat/messages/{messageId:guid} -> Saját üzenet törlése ([Authorize])
@@ -185,25 +141,10 @@ namespace PROTOTYPE_backend.Controllers
         [ProducesResponseType(StatusCodes.Status500InternalServerError)]
         public async Task<IActionResult> DeleteMessage(Guid messageId)
         {
-            try
-            {
-                var userId = User.GetUserId();
-                await _chatService.DeleteMessageAsync(userId, messageId);
-                return NoContent();
-            }
-            catch (KeyNotFoundException ex)
-            {
-                return NotFound(new { message = ex.Message });
-            }
-            catch (UnauthorizedAccessException ex)
-            {
-                return StatusCode(StatusCodes.Status403Forbidden, new { message = ex.Message });
-            }
-            catch (Exception ex)
-            {
-                _logger.LogError(ex, "Váratlan hiba történt az üzenet törlésekor. MessageId: {MessageId}", messageId);
-                return StatusCode(StatusCodes.Status500InternalServerError, new { message = "Szerveroldali hiba történt az üzenet törlésekor." });
-            }
+            var userId = User.GetUserId();
+            await _chatService.DeleteMessageAsync(userId, messageId);
+            return NoContent();
+            
         }
     }
 }

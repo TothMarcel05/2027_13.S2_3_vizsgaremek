@@ -30,7 +30,7 @@ namespace PROTOTYPE_backend.Services.Workspaces
             if (!userExists)
             {
                 _logger.LogWarning("Munkaterületek lekérdezése sikertelen: nem létező felhasználó. UserId: {UserId}", userId);
-                throw new Exception("Nem létezik a felhasználó!");
+                throw new KeyNotFoundException("Nem létezik a felhasználó!");
             }
 
             return await _context.Workspaces
@@ -51,7 +51,7 @@ namespace PROTOTYPE_backend.Services.Workspaces
             {
                 _logger.LogWarning("Munkaterület létrehozása elutasítva: duplikált név a felhasználónál. UserId: {UserId}, WorkspaceName: {WorkspaceName}",
                     userId, dto.workspaceName);
-                throw new Exception("Már létezik ilyen nevű munkaterület ehhez a felhasználóhoz!");
+                throw new InvalidOperationException("Már létezik ilyen nevű munkaterület ehhez a felhasználóhoz!");
             }
 
             var now = DateTime.UtcNow;
@@ -292,7 +292,7 @@ namespace PROTOTYPE_backend.Services.Workspaces
             {
                 _logger.LogWarning("Tulajdonosváltás sikertelen: az új tulajdonos nem található. WorkspaceId: {WorkspaceId}, NewOwnerId: {NewOwnerId}",
                     workspaceId, dto.newOwnerId);
-                throw new Exception("A megadott új tulajdonos nem található!");
+                throw new KeyNotFoundException("A megadott új tulajdonos nem található!");
             }
 
             var oldOwnerId = workspace.OwnerId;

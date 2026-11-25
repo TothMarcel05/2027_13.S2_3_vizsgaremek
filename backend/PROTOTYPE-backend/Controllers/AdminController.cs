@@ -30,16 +30,9 @@ public class AdminController : ControllerBase
     [ProducesResponseType(StatusCodes.Status500InternalServerError)]
     public async Task<IActionResult> GetRolesAndPermissions()
     {
-        try
-        {
-            var roles = await _adminService.GetRolesAndPermissionsAsync();
-            return Ok(roles);
-        }
-        catch (Exception ex)
-        {
-            _logger.LogError(ex, "Váratlan hiba történt a szerepkörök és jogosultságok lekérdezése közben.");
-            return StatusCode(StatusCodes.Status500InternalServerError, new { message = "Szerveroldali hiba történt a szerepkörök lekérdezésekor." });
-        }
+        var roles = await _adminService.GetRolesAndPermissionsAsync();
+        return Ok(roles);
+        
     }
 
     [HttpPost("roles")]
@@ -53,23 +46,12 @@ public class AdminController : ControllerBase
     {
         if (string.IsNullOrWhiteSpace(dto.Name))
         {
-            return BadRequest(new { message = "A szerepkör neve nem lehet üres." });
+            return BadRequest(new { error = new { message = "A szerepkör neve nem lehet üres.", code = "ERVENYTELEN_KERES" } });
         }
 
-        try
-        {
-            var role = await _adminService.CreateRoleAsync(dto);
-            return CreatedAtAction(nameof(GetRolesAndPermissions), new { id = role.RoleId }, role);
-        }
-        catch (InvalidOperationException ex)
-        {
-            return Conflict(new { message = ex.Message });
-        }
-        catch (Exception ex)
-        {
-            _logger.LogError(ex, "Váratlan hiba történt új szerepkör létrehozásakor. RoleName: {RoleName}", dto.Name);
-            return StatusCode(StatusCodes.Status500InternalServerError, new { message = "Szerveroldali hiba történt a szerepkör létrehozásakor." });
-        }
+        var role = await _adminService.CreateRoleAsync(dto);
+        return CreatedAtAction(nameof(GetRolesAndPermissions), new { id = role.RoleId }, role);
+        
     }
 
     [HttpPut("roles/{id:guid}/permissions")]
@@ -83,24 +65,17 @@ public class AdminController : ControllerBase
     {
         if (dto.Permissions == null)
         {
-            return BadRequest(new { message = "A jogosultságok listája nem lehet null." });
+            return BadRequest(new { error = new { message = "A jogosultságok listája nem lehet null.", code = "ERVENYTELEN_KERES" } });
         }
 
-        try
+        var success = await _adminService.UpdateRolePermissionsAsync(id, dto);
+        if (!success)
         {
-            var success = await _adminService.UpdateRolePermissionsAsync(id, dto);
-            if (!success)
-            {
-                return NotFound(new { message = "A szerepkör nem található." });
-            }
+            return NotFound(new { error = new { message = "A szerepkör nem található.", code = "NEM_TALALHATO" } });
+        }
 
-            return Ok(new { message = "Jogosultságok frissítve." });
-        }
-        catch (Exception ex)
-        {
-            _logger.LogError(ex, "Váratlan hiba történt a szerepkör jogosultságainak frissítésekor. RoleId: {RoleId}", id);
-            return StatusCode(StatusCodes.Status500InternalServerError, new { message = "Szerveroldali hiba történt a jogosultságok frissítésekor." });
-        }
+        return Ok(new { message = "Jogosultságok frissítve." });
+        
     }
 
     [HttpGet("admin/users")]
@@ -113,19 +88,12 @@ public class AdminController : ControllerBase
     {
         if (page < 1)
         {
-            return BadRequest(new { message = "Az oldalszám (page) legalább 1 kell legyen." });
+            return BadRequest(new { error = new { message = "Az oldalszám (page) legalább 1 kell legyen.", code = "ERVENYTELEN_KERES" } });
         }
 
-        try
-        {
-            var users = await _adminService.GetAllUsersAsync(page, search);
-            return Ok(users);
-        }
-        catch (Exception ex)
-        {
-            _logger.LogError(ex, "Váratlan hiba történt a felhasználók listázásakor. Page: {Page}", page);
-            return StatusCode(StatusCodes.Status500InternalServerError, new { message = "Szerveroldali hiba történt a felhasználók lekérdezésekor." });
-        }
+        var users = await _adminService.GetAllUsersAsync(page, search);
+        return Ok(users);
+        
     }
 
     [HttpGet("admin/stats")]
@@ -135,16 +103,9 @@ public class AdminController : ControllerBase
     [ProducesResponseType(StatusCodes.Status500InternalServerError)]
     public async Task<IActionResult> GetSystemStats()
     {
-        try
-        {
-            var stats = await _adminService.GetSystemStatsAsync();
-            return Ok(stats);
-        }
-        catch (Exception ex)
-        {
-            _logger.LogError(ex, "Váratlan hiba történt a rendszerstatisztikák lekérdezésekor.");
-            return StatusCode(StatusCodes.Status500InternalServerError, new { message = "Szerveroldali hiba történt a statisztikák lekérdezésekor." });
-        }
+        var stats = await _adminService.GetSystemStatsAsync();
+        return Ok(stats);
+        
     }
 
     [HttpPut("admin/users/{id:guid}/role")]
@@ -155,21 +116,14 @@ public class AdminController : ControllerBase
     [ProducesResponseType(StatusCodes.Status500InternalServerError)]
     public async Task<IActionResult> UpdateUserGlobalRole(Guid id, [FromBody] UpdateUserGlobalRoleDto dto)
     {
-        try
+        var success = await _adminService.UpdateUserGlobalRoleAsync(id, dto);
+        if (!success)
         {
-            var success = await _adminService.UpdateUserGlobalRoleAsync(id, dto);
-            if (!success)
-            {
-                return NotFound(new { message = "A megadott felhasználó nem található." });
-            }
+            return NotFound(new { error = new { message = "A megadott felhasználó nem található.", code = "NEM_TALALHATO" } });
+        }
 
-            return Ok(new { message = "A felhasználó szerepköre sikeresen frissítve." });
-        }
-        catch (Exception ex)
-        {
-            _logger.LogError(ex, "Váratlan hiba történt a felhasználó globális szerepkörének módosításakor. UserId: {UserId}", id);
-            return StatusCode(StatusCodes.Status500InternalServerError, new { message = "Szerveroldali hiba történt a szerepkör módosításakor." });
-        }
+        return Ok(new { message = "A felhasználó szerepköre sikeresen frissítve." });
+        
     }
 
     [HttpPatch("admin/users/{id:guid}/status")]
@@ -180,21 +134,14 @@ public class AdminController : ControllerBase
     [ProducesResponseType(StatusCodes.Status500InternalServerError)]
     public async Task<IActionResult> ToggleUserStatus(Guid id)
     {
-        try
+        var success = await _adminService.ToggleUserStatusAsync(id);
+        if (!success)
         {
-            var success = await _adminService.ToggleUserStatusAsync(id);
-            if (!success)
-            {
-                return NotFound(new { message = "A megadott felhasználó nem található." });
-            }
+            return NotFound(new { error = new { message = "A megadott felhasználó nem található.", code = "NEM_TALALHATO" } });
+        }
 
-            return Ok(new { message = "A felhasználó státusza sikeresen módosítva." });
-        }
-        catch (Exception ex)
-        {
-            _logger.LogError(ex, "Váratlan hiba történt a felhasználó státuszának váltásakor. UserId: {UserId}", id);
-            return StatusCode(StatusCodes.Status500InternalServerError, new { message = "Szerveroldali hiba történt a felhasználói státusz módosításakor." });
-        }
+        return Ok(new { message = "A felhasználó státusza sikeresen módosítva." });
+        
     }
 
     [HttpDelete("admin/users/{id:guid}")]
@@ -205,20 +152,13 @@ public class AdminController : ControllerBase
     [ProducesResponseType(StatusCodes.Status500InternalServerError)]
     public async Task<IActionResult> RemoveUser(Guid id)
     {
-        try
+        var success = await _adminService.RemoveUserAsync(id);
+        if (!success)
         {
-            var success = await _adminService.RemoveUserAsync(id);
-            if (!success)
-            {
-                return NotFound(new { message = "A megadott felhasználó nem található." });
-            }
+            return NotFound(new { error = new { message = "A megadott felhasználó nem található.", code = "NEM_TALALHATO" } });
+        }
 
-            return Ok(new { message = "A felhasználó sikeresen eltávolítva." });
-        }
-        catch (Exception ex)
-        {
-            _logger.LogError(ex, "Váratlan hiba történt a felhasználó végleges törlésekor. UserId: {UserId}", id);
-            return StatusCode(StatusCodes.Status500InternalServerError, new { message = "Szerveroldali hiba történt a felhasználó eltávolításakor." });
-        }
+        return Ok(new { message = "A felhasználó sikeresen eltávolítva." });
+        
     }
 }

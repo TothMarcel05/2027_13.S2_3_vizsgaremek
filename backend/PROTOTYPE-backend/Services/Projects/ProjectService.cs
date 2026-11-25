@@ -11,7 +11,7 @@ using System.Threading.Tasks;
 
 namespace PROTOTYPE_backend.Services.Projects
 {
-    public class ProjectService
+    public class ProjectService : IProjectService
     {
         private readonly AppDbContext _context;
         private readonly ILogger<ProjectService> _logger;
@@ -28,7 +28,7 @@ namespace PROTOTYPE_backend.Services.Projects
             if (!workspaceExists)
             {
                 _logger.LogWarning("Projektek lekérdezése sikertelen: nem létező munkaterület. WorkspaceId: {WorkspaceId}", workspaceId);
-                throw new Exception("Nem létezik a munkaterület!");
+                throw new KeyNotFoundException("Nem létezik a munkaterület!");
             }
 
             return await _context.Projects

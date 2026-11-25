@@ -29,21 +29,10 @@ namespace PROTOTYPE_backend.Controllers
         [ProducesResponseType(StatusCodes.Status500InternalServerError)]
         public async Task<IActionResult> GetMyInvitations()
         {
-            try
-            {
-                var userId = User.GetUserId();
-                var result = await _invitationService.GetMyInvitationsAsync(userId);
-                return Ok(result);
-            }
-            catch (UnauthorizedAccessException)
-            {
-                return Unauthorized(new { message = "Érvénytelen vagy lejárt hitelesítés." });
-            }
-            catch (Exception ex)
-            {
-                _logger.LogError(ex, "Váratlan hiba történt a saját meghívók lekérdezésekor.");
-                return StatusCode(StatusCodes.Status500InternalServerError, new { message = "Szerveroldali hiba történt a meghívók lekérdezésekor." });
-            }
+            var userId = User.GetUserId();
+            var result = await _invitationService.GetMyInvitationsAsync(userId);
+            return Ok(result);
+            
         }
 
         // 2. CÉL (WORKSPACE / PROJECT) FÜGGŐBEN LÉVŐ MEGHÍVÓI
@@ -58,24 +47,17 @@ namespace PROTOTYPE_backend.Controllers
         {
             if (targetId == Guid.Empty)
             {
-                return BadRequest(new { message = "A 'targetId' megadása kötelező." });
+                return BadRequest(new { error = new { message = "A 'targetId' megadása kötelező.", code = "ERVENYTELEN_KERES" } });
             }
 
             if (type != 1 && type != 2)
             {
-                return BadRequest(new { message = "Érvénytelen meghívó típus (1 = Workspace, 2 = Project)." });
+                return BadRequest(new { error = new { message = "Érvénytelen meghívó típus (1 = Workspace, 2 = Project).", code = "ERVENYTELEN_KERES" } });
             }
 
-            try
-            {
-                var result = await _invitationService.GetPendingInvitationsByTargetAsync(targetId, type);
-                return Ok(result);
-            }
-            catch (Exception ex)
-            {
-                _logger.LogError(ex, "Váratlan hiba történt a függőben lévő meghívók lekérdezésekor. TargetId: {TargetId}, Type: {Type}", targetId, type);
-                return StatusCode(StatusCodes.Status500InternalServerError, new { message = "Szerveroldali hiba történt a meghívók lekérdezésekor." });
-            }
+            var result = await _invitationService.GetPendingInvitationsByTargetAsync(targetId, type);
+            return Ok(result);
+            
         }
 
         // 3. MEGHÍVÓ LÉTREHOZÁSA
@@ -90,33 +72,18 @@ namespace PROTOTYPE_backend.Controllers
         {
             if (dto.TargetId == Guid.Empty || string.IsNullOrWhiteSpace(dto.InvitedEmail))
             {
-                return BadRequest(new { message = "A cél azonosító (TargetId) és a meghívott e-mail címe kötelező." });
+                return BadRequest(new { error = new { message = "A cél azonosító (TargetId) és a meghívott e-mail címe kötelező.", code = "ERVENYTELEN_KERES" } });
             }
 
             if (dto.Type != 1 && dto.Type != 2)
             {
-                return BadRequest(new { message = "Érvénytelen meghívó típus (1 = Workspace, 2 = Project)." });
+                return BadRequest(new { error = new { message = "Érvénytelen meghívó típus (1 = Workspace, 2 = Project).", code = "ERVENYTELEN_KERES" } });
             }
 
-            try
-            {
-                var userId = User.GetUserId();
-                var result = await _invitationService.CreateInvitationAsync(userId, dto);
-                return CreatedAtAction(nameof(GetByToken), new { token = result.Token }, result);
-            }
-            catch (UnauthorizedAccessException)
-            {
-                return Unauthorized(new { message = "Érvénytelen vagy lejárt hitelesítés." });
-            }
-            catch (ArgumentException ex)
-            {
-                return BadRequest(new { message = ex.Message });
-            }
-            catch (Exception ex)
-            {
-                _logger.LogError(ex, "Váratlan hiba történt a meghívó létrehozásakor. TargetId: {TargetId}", dto.TargetId);
-                return StatusCode(StatusCodes.Status500InternalServerError, new { message = "Szerveroldali hiba történt a meghívó létrehozásakor." });
-            }
+            var userId = User.GetUserId();
+            var result = await _invitationService.CreateInvitationAsync(userId, dto);
+            return CreatedAtAction(nameof(GetByToken), new { token = result.Token }, result);
+            
         }
 
         // 4. MEGHÍVÓ ELŐNÉZETE TOKEN ALAPJÁN (PUBLIKUS)
@@ -130,24 +97,17 @@ namespace PROTOTYPE_backend.Controllers
         {
             if (string.IsNullOrWhiteSpace(token))
             {
-                return BadRequest(new { message = "A meghívó token megadása kötelező." });
+                return BadRequest(new { error = new { message = "A meghívó token megadása kötelező.", code = "ERVENYTELEN_KERES" } });
             }
 
-            try
+            var result = await _invitationService.GetInvitationByTokenAsync(token);
+            if (result == null)
             {
-                var result = await _invitationService.GetInvitationByTokenAsync(token);
-                if (result == null)
-                {
-                    return NotFound(new { message = "A meghívó nem található." });
-                }
+                return NotFound(new { error = new { message = "A meghívó nem található.", code = "NEM_TALALHATO" } });
+            }
 
-                return Ok(result);
-            }
-            catch (Exception ex)
-            {
-                _logger.LogError(ex, "Váratlan hiba történt a meghívó előnézetének lekérdezésekor.");
-                return StatusCode(StatusCodes.Status500InternalServerError, new { message = "Szerveroldali hiba történt a meghívó lekérdezésekor." });
-            }
+            return Ok(result);
+            
         }
 
         // 5. MEGHÍVÓ ELFOGADÁSA ([Authorize])
@@ -160,29 +120,18 @@ namespace PROTOTYPE_backend.Controllers
         {
             if (string.IsNullOrWhiteSpace(token))
             {
-                return BadRequest(new { message = "A meghívó token megadása kötelező." });
+                return BadRequest(new { error = new { message = "A meghívó token megadása kötelező.", code = "ERVENYTELEN_KERES" } });
             }
 
-            try
+            var userId = User.GetUserId();
+            var success = await _invitationService.AcceptInvitationAsync(userId, token);
+            if (!success)
             {
-                var userId = User.GetUserId();
-                var success = await _invitationService.AcceptInvitationAsync(userId, token);
-                if (!success)
-                {
-                    return BadRequest(new { message = "A meghívó érvénytelen, lejárt vagy már felhasználták." });
-                }
+                return BadRequest(new { error = new { message = "A meghívó érvénytelen, lejárt vagy már felhasználták.", code = "ERVENYTELEN_KERES" } });
+            }
 
-                return Ok(new { message = "Sikeresen csatlakoztál!" });
-            }
-            catch (UnauthorizedAccessException)
-            {
-                return Unauthorized(new { message = "Érvénytelen vagy lejárt hitelesítés." });
-            }
-            catch (Exception ex)
-            {
-                _logger.LogError(ex, "Váratlan hiba történt a meghívó elfogadásakor.");
-                return StatusCode(StatusCodes.Status500InternalServerError, new { message = "Szerveroldali hiba történt a meghívó elfogadásakor." });
-            }
+            return Ok(new { message = "Sikeresen csatlakoztál!" });
+            
         }
 
         // 6. MEGHÍVÓ ELUTASÍTÁSA ([Authorize])
@@ -195,29 +144,18 @@ namespace PROTOTYPE_backend.Controllers
         {
             if (string.IsNullOrWhiteSpace(token))
             {
-                return BadRequest(new { message = "A meghívó token megadása kötelező." });
+                return BadRequest(new { error = new { message = "A meghívó token megadása kötelező.", code = "ERVENYTELEN_KERES" } });
             }
 
-            try
+            var userId = User.GetUserId();
+            var success = await _invitationService.RefuseInvitationAsync(userId, token);
+            if (!success)
             {
-                var userId = User.GetUserId();
-                var success = await _invitationService.RefuseInvitationAsync(userId, token);
-                if (!success)
-                {
-                    return BadRequest(new { message = "A meghívó érvénytelen vagy már feldolgozták." });
-                }
+                return BadRequest(new { error = new { message = "A meghívó érvénytelen vagy már feldolgozták.", code = "ERVENYTELEN_KERES" } });
+            }
 
-                return Ok(new { message = "Meghívó elutasítva." });
-            }
-            catch (UnauthorizedAccessException)
-            {
-                return Unauthorized(new { message = "Érvénytelen vagy lejárt hitelesítés." });
-            }
-            catch (Exception ex)
-            {
-                _logger.LogError(ex, "Váratlan hiba történt a meghívó elutasításakor.");
-                return StatusCode(StatusCodes.Status500InternalServerError, new { message = "Szerveroldali hiba történt a meghívó elutasításakor." });
-            }
+            return Ok(new { message = "Meghívó elutasítva." });
+            
         }
 
         // 7. MEGHÍVÓ VISSZAVONÁSA / TÖRLÉSE
@@ -230,26 +168,15 @@ namespace PROTOTYPE_backend.Controllers
         [ProducesResponseType(StatusCodes.Status500InternalServerError)]
         public async Task<IActionResult> CancelInvitation(Guid id)
         {
-            try
+            var userId = User.GetUserId();
+            var success = await _invitationService.CancelInvitationAsync(userId, id);
+            if (!success)
             {
-                var userId = User.GetUserId();
-                var success = await _invitationService.CancelInvitationAsync(userId, id);
-                if (!success)
-                {
-                    return NotFound(new { message = "A meghívó nem található." });
-                }
+                return NotFound(new { error = new { message = "A meghívó nem található.", code = "NEM_TALALHATO" } });
+            }
 
-                return NoContent();
-            }
-            catch (UnauthorizedAccessException)
-            {
-                return Unauthorized(new { message = "Érvénytelen vagy lejárt hitelesítés." });
-            }
-            catch (Exception ex)
-            {
-                _logger.LogError(ex, "Váratlan hiba történt a meghívó visszavonásakor. InvitationId: {InvitationId}", id);
-                return StatusCode(StatusCodes.Status500InternalServerError, new { message = "Szerveroldali hiba történt a meghívó visszavonásakor." });
-            }
+            return NoContent();
+            
         }
     }
 }

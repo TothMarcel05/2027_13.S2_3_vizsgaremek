@@ -79,13 +79,13 @@ namespace PROTOTYPE_backend.Services.Auth
             if (userExistsByEmail != null)
             {
                 _logger.LogWarning("Sikertelen regisztráció: az e-mail cím már foglalt. IP: {IpAddress}", GetClientIpAddress());
-                throw new Exception("Az email cím már foglalt!");
+                throw new InvalidOperationException("Az email cím már foglalt!");
             }
 
             if (userExistsByName != null)
             {
                 _logger.LogWarning("Sikertelen regisztráció: a felhasználónév már foglalt. Username: {Username}, IP: {IpAddress}", dto.Username, GetClientIpAddress());
-                throw new Exception("A felhasználó név már foglalt!");
+                throw new InvalidOperationException("A felhasználó név már foglalt!");
             }
 
             var newUser = new AppUser()
@@ -535,7 +535,7 @@ namespace PROTOTYPE_backend.Services.Auth
             if (session == null || session.User.DeletedAt != null || session.User.IsActive == false)
             {
                 _logger.LogWarning("Sikertelen token frissítés: érvénytelen, felfüggesztett vagy visszavont munkamenet. IP: {IpAddress}", GetClientIpAddress());
-                throw new Exception("Érvénytelen munkamenet!");
+                throw new UnauthorizedAccessException("Érvénytelen munkamenet!");
             }
 
             var newRefresh = _tokenService.GenerateRefreshToken();
@@ -555,7 +555,7 @@ namespace PROTOTYPE_backend.Services.Auth
 
         public async Task<PermissionResultDtos> GetPermissionsByCatAsync(string query)
         {
-            if (!sbyte.TryParse(query, out sbyte scopeId)) throw new Exception("Nem található a kategória!");
+            if (!sbyte.TryParse(query, out sbyte scopeId)) throw new ArgumentException("Nem található a kategória!");
 
             var permissions = await _context.Permissions
                 .AsNoTracking()
@@ -572,7 +572,7 @@ namespace PROTOTYPE_backend.Services.Auth
 
         public async Task<RolesResultDto> GetRolesAsync(string query)
         {
-            if (query == null) throw new Exception("URL tartalma nem megfelelő!");
+            if (query == null) throw new ArgumentException("URL tartalma nem megfelelő!");
 
             var roles = await _context.AppRoles
                 .AsNoTracking()
@@ -587,7 +587,7 @@ namespace PROTOTYPE_backend.Services.Auth
                 .AsNoTracking()
                 .FirstOrDefaultAsync(r => r.Id == roleId);
 
-            if (role == null) throw new Exception("A megadott role nem található!");
+            if (role == null) throw new KeyNotFoundException("A megadott role nem található!");
 
             return new SpecificRoleResultDto
                 (
@@ -604,7 +604,7 @@ namespace PROTOTYPE_backend.Services.Auth
             var role = await _context.AppRoles
                 .FirstOrDefaultAsync(r => r.Id == dto.Id);
 
-            if (role != null) throw new Exception("A megadott role már szerepel!");
+            if (role != null) throw new InvalidOperationException("A megadott role már szerepel!");
 
             var newRole = new AppRole
             {
@@ -628,7 +628,7 @@ namespace PROTOTYPE_backend.Services.Auth
             var role = await _context.AppRoles
                 .FirstOrDefaultAsync(r => r.Id == Id);
 
-            if (role == null) throw new Exception("A megadott role nem található!");
+            if (role == null) throw new KeyNotFoundException("A megadott role nem található!");
 
             if (role.IsSystem == false)
             {
@@ -638,7 +638,7 @@ namespace PROTOTYPE_backend.Services.Auth
             else
             {
                 _logger.LogWarning("Beépített rendszerszerepkör módosítási kísérlet elutasítva. RoleId: {RoleId}", Id);
-                throw new Exception("Az adott role nem módosítható!");
+                throw new ArgumentException("Az adott role nem módosítható!");
             }
 
             await _context.SaveChangesAsync();
@@ -652,7 +652,7 @@ namespace PROTOTYPE_backend.Services.Auth
             var role = await _context.AppRoles
                 .FirstOrDefaultAsync(r => r.Id == roleId);
 
-            if (role == null) throw new Exception("A megadott role nem található!");
+            if (role == null) throw new KeyNotFoundException("A megadott role nem található!");
 
             _context.AppRoles.Remove(role);
             await _context.SaveChangesAsync();
@@ -668,7 +668,7 @@ namespace PROTOTYPE_backend.Services.Auth
                 .Include(p => p.Permissions)
                 .FirstOrDefaultAsync(r => r.Id == roleId);
 
-            if (role == null) throw new Exception("Az adott role nem található!");
+            if (role == null) throw new KeyNotFoundException("Az adott role nem található!");
 
             var permissions = await _context.Permissions
                 .Where(p => dto.codes.Contains(p.Code))
@@ -693,7 +693,7 @@ namespace PROTOTYPE_backend.Services.Auth
             var session = await _context.UserSessions
                 .FirstOrDefaultAsync(us => us.Id == id);
 
-            if (session == null) throw new Exception("Nem található a munkamenet!");
+            if (session == null) throw new KeyNotFoundException("Nem található a munkamenet!");
 
             session.IsRevoked = true;
             session.UpdatedAt = DateTime.UtcNow;

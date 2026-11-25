@@ -30,7 +30,7 @@ namespace PROTOTYPE_backend.Services.Storage
                 _logger.LogWarning(
                     "Fájlfeltöltés elutasítva: a munkaterület nem található. WorkspaceId: {WorkspaceId}, UserId: {UserId}",
                     dto.WorkspaceId, dto.UserId);
-                throw new ArgumentException("A megadott munkaterület nem található.");
+                throw new KeyNotFoundException("A megadott munkaterület nem található.");
             }
 
             var currentUsedBytes = await _context.StorageNodes
@@ -286,7 +286,7 @@ namespace PROTOTYPE_backend.Services.Storage
             if (node == null || node.DeletedAt != null)
             {
                 _logger.LogWarning("Node adatmódosítás sikertelen: nem található vagy törölt. NodeId: {NodeId}", dto.NodeId);
-                throw new ArgumentException("A megadott csomópont nem található vagy törölt.");
+                throw new KeyNotFoundException("A megadott csomópont nem található vagy törölt.");
             }
 
             if (!string.IsNullOrWhiteSpace(dto.Name))

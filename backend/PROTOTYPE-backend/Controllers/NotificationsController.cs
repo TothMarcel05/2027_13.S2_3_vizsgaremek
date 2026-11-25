@@ -37,28 +37,13 @@ namespace PROTOTYPE_backend.Controllers
         {
             if (page < 1 || limit < 1 || limit > 100)
             {
-                return BadRequest(new { message = "Érvénytelen lapozási paraméterek (page >= 1, 1 <= limit <= 100)." });
+                return BadRequest(new { error = new { message = "Érvénytelen lapozási paraméterek (page >= 1, 1 <= limit <= 100).", code = "ERVENYTELEN_KERES" } });
             }
 
-            try
-            {
-                var userId = User.GetUserId();
-                var notifications = await _notificationService.GetNotificationsAsync(userId, page, limit, unreadOnly);
-                return Ok(notifications);
-            }
-            catch (UnauthorizedAccessException)
-            {
-                return Unauthorized(new { message = "Érvénytelen vagy lejárt hitelesítés." });
-            }
-            catch (KeyNotFoundException ex)
-            {
-                return NotFound(new { message = ex.Message });
-            }
-            catch (Exception ex)
-            {
-                _logger.LogError(ex, "Váratlan hiba történt az értesítések lekérdezésekor.");
-                return StatusCode(StatusCodes.Status500InternalServerError, new { message = "Szerveroldali hiba történt az értesítések lekérdezésekor." });
-            }
+            var userId = User.GetUserId();
+            var notifications = await _notificationService.GetNotificationsAsync(userId, page, limit, unreadOnly);
+            return Ok(notifications);
+            
         }
 
         // 2. GET /api/notifications/unread-count
@@ -69,25 +54,10 @@ namespace PROTOTYPE_backend.Controllers
         [ProducesResponseType(StatusCodes.Status500InternalServerError)]
         public async Task<IActionResult> GetUnreadNotificationsCount()
         {
-            try
-            {
-                var userId = User.GetUserId();
-                var unreadCount = await _notificationService.GetUnreadNotificationsCountAsync(userId);
-                return Ok(new { count = unreadCount });
-            }
-            catch (UnauthorizedAccessException)
-            {
-                return Unauthorized(new { message = "Érvénytelen vagy lejárt hitelesítés." });
-            }
-            catch (KeyNotFoundException ex)
-            {
-                return NotFound(new { message = ex.Message });
-            }
-            catch (Exception ex)
-            {
-                _logger.LogError(ex, "Váratlan hiba történt az olvasatlan értesítések számának lekérdezésekor.");
-                return StatusCode(StatusCodes.Status500InternalServerError, new { message = "Szerveroldali hiba történt." });
-            }
+            var userId = User.GetUserId();
+            var unreadCount = await _notificationService.GetUnreadNotificationsCountAsync(userId);
+            return Ok(new { count = unreadCount });
+            
         }
 
         // 3. PUT /api/notifications/{id}/read
@@ -98,25 +68,10 @@ namespace PROTOTYPE_backend.Controllers
         [ProducesResponseType(StatusCodes.Status500InternalServerError)]
         public async Task<IActionResult> MarkNotificationAsRead(Guid id)
         {
-            try
-            {
-                var userId = User.GetUserId();
-                await _notificationService.MarkNotificationAsReadAsync(userId, id);
-                return Ok(new { message = "Az értesítés olvasottnak jelölve." });
-            }
-            catch (UnauthorizedAccessException)
-            {
-                return Unauthorized(new { message = "Érvénytelen vagy lejárt hitelesítés." });
-            }
-            catch (KeyNotFoundException ex)
-            {
-                return NotFound(new { message = ex.Message });
-            }
-            catch (Exception ex)
-            {
-                _logger.LogError(ex, "Váratlan hiba történt az értesítés olvasottnak jelölésekor. NotificationId: {NotificationId}", id);
-                return StatusCode(StatusCodes.Status500InternalServerError, new { message = "Szerveroldali hiba történt." });
-            }
+            var userId = User.GetUserId();
+            await _notificationService.MarkNotificationAsReadAsync(userId, id);
+            return Ok(new { message = "Az értesítés olvasottnak jelölve." });
+            
         }
 
         // 4. PUT /api/notifications/read-all
@@ -127,25 +82,10 @@ namespace PROTOTYPE_backend.Controllers
         [ProducesResponseType(StatusCodes.Status500InternalServerError)]
         public async Task<IActionResult> MarkAllNotificationsAsRead()
         {
-            try
-            {
-                var userId = User.GetUserId();
-                await _notificationService.MarkAllNotificationsAsReadAsync(userId);
-                return Ok(new { message = "Minden értesítés olvasottnak jelölve." });
-            }
-            catch (UnauthorizedAccessException)
-            {
-                return Unauthorized(new { message = "Érvénytelen vagy lejárt hitelesítés." });
-            }
-            catch (KeyNotFoundException ex)
-            {
-                return NotFound(new { message = ex.Message });
-            }
-            catch (Exception ex)
-            {
-                _logger.LogError(ex, "Váratlan hiba történt az összes értesítés olvasottnak jelölésekor.");
-                return StatusCode(StatusCodes.Status500InternalServerError, new { message = "Szerveroldali hiba történt." });
-            }
+            var userId = User.GetUserId();
+            await _notificationService.MarkAllNotificationsAsReadAsync(userId);
+            return Ok(new { message = "Minden értesítés olvasottnak jelölve." });
+            
         }
     }
 }

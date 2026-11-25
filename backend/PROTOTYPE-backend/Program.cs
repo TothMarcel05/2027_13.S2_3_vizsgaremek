@@ -8,12 +8,16 @@ using Microsoft.IdentityModel.Tokens;
 using Microsoft.OpenApi.Models;
 using PROTOTYPE_backend.Authorization;
 using PROTOTYPE_backend.Data;
+using PROTOTYPE_backend.Hubs;
 using PROTOTYPE_backend.Middleware;
 using PROTOTYPE_backend.Services.Admin;
 using PROTOTYPE_backend.Services.Auth;
 using PROTOTYPE_backend.Services.Calendar;
+using PROTOTYPE_backend.Services.Chat;
 using PROTOTYPE_backend.Services.Email;
+using PROTOTYPE_backend.Services.Invitations;
 using PROTOTYPE_backend.Services.Notification;
+using PROTOTYPE_backend.Services.Projects;
 using PROTOTYPE_backend.Services.SoftDelete;
 using PROTOTYPE_backend.Services.Storage;
 using PROTOTYPE_backend.Services.Token;
@@ -83,6 +87,20 @@ builder.Services.AddScoped<IUserService, UserService>();
 builder.Services.AddScoped<IAuthorizationHandler, PermissionHandler>();
 builder.Services.AddScoped<IEmailService, EmailService>();
 builder.Services.AddScoped<INotificationService, NotificationService>();
+builder.Services.AddScoped<IProjectService, ProjectService>();
+builder.Services.AddScoped<IChatService, ChatService>();
+builder.Services.AddScoped<IInvitationService, InvitationService>();
+
+builder.Services.AddSignalR();
+
+builder.Services.AddCors(options =>
+{
+    options.AddDefaultPolicy(policy =>
+        policy.WithOrigins("http://localhost:5173", "http://localhost:4200", "http://localhost:3000")
+              .AllowAnyHeader()
+              .AllowAnyMethod()
+              .AllowCredentials());
+});
 
 
 var jwtSection = builder.Configuration.GetSection("JwtSettings");
@@ -106,6 +124,21 @@ builder.Services
             ValidateLifetime = true,
             ClockSkew = TimeSpan.FromSeconds(30)
         };
+
+        // SignalR (WebSocket) nem tud Authorization headert küldeni -> access_token query paraméter
+        options.Events = new JwtBearerEvents
+        {
+            OnMessageReceived = context =>
+            {
+                var accessToken = context.Request.Query["access_token"];
+                if (!string.IsNullOrEmpty(accessToken) &&
+                    context.HttpContext.Request.Path.StartsWithSegments("/hubs"))
+                {
+                    context.Token = accessToken;
+                }
+                return Task.CompletedTask;
+            }
+        };
     });
 
 builder.Services.AddRateLimiter(options =>
@@ -127,6 +160,12 @@ builder.Services.AddAuthorization();
 
 
 var app = builder.Build();
+
+if (app.Environment.IsDevelopment())
+{
+    using var scope = app.Services.CreateScope();
+    await DatabaseInitializer.InitializeAsync(scope.ServiceProvider, app.Environment);
+}
 
 app.UseExceptionHandler();
 
@@ -176,10 +215,13 @@ if (app.Environment.IsDevelopment())
 
 app.UseRouting();
 
+app.UseCors();
+
 app.UseRateLimiter();
 app.UseAuthentication();
 app.UseAuthorization();
 
 app.MapControllers();
+app.MapHub<ChatHub>("/hubs/chat");
 
 app.Run();

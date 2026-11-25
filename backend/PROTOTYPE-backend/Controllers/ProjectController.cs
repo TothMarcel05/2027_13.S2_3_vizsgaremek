@@ -36,20 +36,9 @@ namespace PROTOTYPE_backend.Controllers
             [FromQuery] int limit = 20,
             [FromQuery] sbyte? status = null)
         {
-            try
-            {
-                var projects = await _projectService.GetWorkspaceByIdAsync(workspaceId);
-                return Ok(projects);
-            }
-            catch (Exception ex) when (ex.Message.Contains("Nem létezik"))
-            {
-                return NotFound(new { message = ex.Message });
-            }
-            catch (Exception ex)
-            {
-                _logger.LogError(ex, "Váratlan hiba történt a munkaterület projektjeinek lekérdezésekor. WorkspaceId: {WorkspaceId}", workspaceId);
-                return StatusCode(StatusCodes.Status500InternalServerError, new { message = "Szerveroldali hiba történt a projektek lekérdezésekor." });
-            }
+            var projects = await _projectService.GetWorkspaceByIdAsync(workspaceId);
+            return Ok(projects);
+            
         }
 
         // 2. EGYEDI PROJEKT ADATAINAK LEKÉRDEZÉSE ([Authorize])
@@ -60,22 +49,15 @@ namespace PROTOTYPE_backend.Controllers
         [ProducesResponseType(StatusCodes.Status500InternalServerError)]
         public async Task<IActionResult> GetProjectData(Guid projectId)
         {
-            try
-            {
-                var project = await _projectService.GetProjectByIdAsync(projectId);
+            var project = await _projectService.GetProjectByIdAsync(projectId);
 
-                if (project == null)
-                {
-                    return NotFound(new { message = "A megadott projekt nem található." });
-                }
-
-                return Ok(project);
-            }
-            catch (Exception ex)
+            if (project == null)
             {
-                _logger.LogError(ex, "Váratlan hiba történt a projekt lekérdezésekor. ProjectId: {ProjectId}", projectId);
-                return StatusCode(StatusCodes.Status500InternalServerError, new { message = "Szerveroldali hiba történt a projekt lekérdezésekor." });
+                return NotFound(new { error = new { message = "A megadott projekt nem található.", code = "NEM_TALALHATO" } });
             }
+
+            return Ok(project);
+            
         }
 
         // 3. PROJEKT FELADATAINAK LISTÁZÁSA ([Authorize])
@@ -88,16 +70,9 @@ namespace PROTOTYPE_backend.Controllers
             [FromQuery] sbyte? status = null,
             [FromQuery] byte? priority = null)
         {
-            try
-            {
-                var tasks = await _projectService.GetProjectTasksAsync(projectId, status, priority);
-                return Ok(tasks);
-            }
-            catch (Exception ex)
-            {
-                _logger.LogError(ex, "Váratlan hiba történt a projekt feladatainak lekérdezésekor. ProjectId: {ProjectId}", projectId);
-                return StatusCode(StatusCodes.Status500InternalServerError, new { message = "Szerveroldali hiba történt a feladatok lekérdezésekor." });
-            }
+            var tasks = await _projectService.GetProjectTasksAsync(projectId, status, priority);
+            return Ok(tasks);
+            
         }
 
         // 4. EGYEDI FELADAT LEKÉRDEZÉSE ([Authorize])
@@ -108,21 +83,14 @@ namespace PROTOTYPE_backend.Controllers
         [ProducesResponseType(StatusCodes.Status500InternalServerError)]
         public async Task<IActionResult> GetProjectTask(Guid taskId)
         {
-            try
+            var task = await _projectService.GetProjectTaskAsync(taskId);
+            if (task == null)
             {
-                var task = await _projectService.GetProjectTaskAsync(taskId);
-                if (task == null)
-                {
-                    return NotFound(new { message = "A megadott feladat nem található." });
-                }
+                return NotFound(new { error = new { message = "A megadott feladat nem található.", code = "NEM_TALALHATO" } });
+            }
 
-                return Ok(task);
-            }
-            catch (Exception ex)
-            {
-                _logger.LogError(ex, "Váratlan hiba történt a feladat lekérdezésekor. TaskId: {TaskId}", taskId);
-                return StatusCode(StatusCodes.Status500InternalServerError, new { message = "Szerveroldali hiba történt a feladat lekérdezésekor." });
-            }
+            return Ok(task);
+            
         }
 
         // 5. ÚJ FELADAT LÉTREHOZÁSA
@@ -137,23 +105,12 @@ namespace PROTOTYPE_backend.Controllers
         {
             if (string.IsNullOrWhiteSpace(dto.Title))
             {
-                return BadRequest(new { message = "A feladat címe nem lehet üres." });
+                return BadRequest(new { error = new { message = "A feladat címe nem lehet üres.", code = "ERVENYTELEN_KERES" } });
             }
 
-            try
-            {
-                var task = await _projectService.CreateTaskAsync(projectId, dto.Title, dto.Description, dto.Priority, dto.DueDate, dto.AssigneeId);
-                return CreatedAtAction(nameof(GetProjectTask), new { taskId = task.Id }, task);
-            }
-            catch (ArgumentException ex)
-            {
-                return BadRequest(new { message = ex.Message });
-            }
-            catch (Exception ex)
-            {
-                _logger.LogError(ex, "Váratlan hiba történt új feladat létrehozásakor. ProjectId: {ProjectId}", projectId);
-                return StatusCode(StatusCodes.Status500InternalServerError, new { message = "Szerveroldali hiba történt a feladat létrehozásakor." });
-            }
+            var task = await _projectService.CreateTaskAsync(projectId, dto.Title, dto.Description, dto.Priority, dto.DueDate, dto.AssigneeId);
+            return CreatedAtAction(nameof(GetProjectTask), new { taskId = task.Id }, task);
+            
         }
 
         // 6. FELADAT STÁTUSZÁNAK MÓDOSÍTÁSA
@@ -166,21 +123,14 @@ namespace PROTOTYPE_backend.Controllers
         [ProducesResponseType(StatusCodes.Status500InternalServerError)]
         public async Task<IActionResult> UpdateTaskStatus(Guid taskId, [FromBody] ProjectDtos dto)
         {
-            try
+            var success = await _projectService.UpdateTaskStatusAsync(taskId, dto.NewStatus);
+            if (!success)
             {
-                var success = await _projectService.UpdateTaskStatusAsync(taskId, dto.NewStatus);
-                if (!success)
-                {
-                    return NotFound(new { message = "A megadott feladat nem található." });
-                }
+                return NotFound(new { error = new { message = "A megadott feladat nem található.", code = "NEM_TALALHATO" } });
+            }
 
-                return Ok(new { message = "A feladat státusza sikeresen frissítve." });
-            }
-            catch (Exception ex)
-            {
-                _logger.LogError(ex, "Váratlan hiba történt a feladat státuszának módosításakor. TaskId: {TaskId}", taskId);
-                return StatusCode(StatusCodes.Status500InternalServerError, new { message = "Szerveroldali hiba történt a státusz módosításakor." });
-            }
+            return Ok(new { message = "A feladat státusza sikeresen frissítve." });
+            
         }
 
         // 7. PROJEKT ADATAINAK MÓDOSÍTÁSA
@@ -196,24 +146,17 @@ namespace PROTOTYPE_backend.Controllers
         {
             if (string.IsNullOrWhiteSpace(dto.Name))
             {
-                return BadRequest(new { message = "A projekt neve nem lehet üres." });
+                return BadRequest(new { error = new { message = "A projekt neve nem lehet üres.", code = "ERVENYTELEN_KERES" } });
             }
 
-            try
+            var updatedProject = await _projectService.UpdateProjectAsync(projectId, dto);
+            if (updatedProject == null)
             {
-                var updatedProject = await _projectService.UpdateProjectAsync(projectId, dto);
-                if (updatedProject == null)
-                {
-                    return NotFound(new { message = "A megadott projekt nem található." });
-                }
+                return NotFound(new { error = new { message = "A megadott projekt nem található.", code = "NEM_TALALHATO" } });
+            }
 
-                return Ok(updatedProject);
-            }
-            catch (Exception ex)
-            {
-                _logger.LogError(ex, "Váratlan hiba történt a projekt módosításakor. ProjectId: {ProjectId}", projectId);
-                return StatusCode(StatusCodes.Status500InternalServerError, new { message = "Szerveroldali hiba történt a projekt módosításakor." });
-            }
+            return Ok(updatedProject);
+            
         }
 
         // 8. FELADAT MÓDOSÍTÁSA
@@ -229,24 +172,17 @@ namespace PROTOTYPE_backend.Controllers
         {
             if (string.IsNullOrWhiteSpace(dto.Title))
             {
-                return BadRequest(new { message = "A feladat címe nem lehet üres." });
+                return BadRequest(new { error = new { message = "A feladat címe nem lehet üres.", code = "ERVENYTELEN_KERES" } });
             }
 
-            try
+            var updatedTask = await _projectService.UpdateTaskAsync(taskId, dto);
+            if (updatedTask == null)
             {
-                var updatedTask = await _projectService.UpdateTaskAsync(taskId, dto);
-                if (updatedTask == null)
-                {
-                    return NotFound(new { message = "A megadott feladat nem található." });
-                }
+                return NotFound(new { error = new { message = "A megadott feladat nem található.", code = "NEM_TALALHATO" } });
+            }
 
-                return Ok(updatedTask);
-            }
-            catch (Exception ex)
-            {
-                _logger.LogError(ex, "Váratlan hiba történt a feladat módosításakor. TaskId: {TaskId}", taskId);
-                return StatusCode(StatusCodes.Status500InternalServerError, new { message = "Szerveroldali hiba történt a feladat módosításakor." });
-            }
+            return Ok(updatedTask);
+            
         }
 
         // 9. PROJEKT TÖRLÉSE
@@ -259,21 +195,14 @@ namespace PROTOTYPE_backend.Controllers
         [ProducesResponseType(StatusCodes.Status500InternalServerError)]
         public async Task<IActionResult> DeleteProject(Guid projectId)
         {
-            try
+            var success = await _projectService.DeleteProjectAsync(projectId);
+            if (!success)
             {
-                var success = await _projectService.DeleteProjectAsync(projectId);
-                if (!success)
-                {
-                    return NotFound(new { message = "A megadott projekt nem található." });
-                }
+                return NotFound(new { error = new { message = "A megadott projekt nem található.", code = "NEM_TALALHATO" } });
+            }
 
-                return NoContent();
-            }
-            catch (Exception ex)
-            {
-                _logger.LogError(ex, "Váratlan hiba történt a projekt törlésekor. ProjectId: {ProjectId}", projectId);
-                return StatusCode(StatusCodes.Status500InternalServerError, new { message = "Szerveroldali hiba történt a projekt törlésekor." });
-            }
+            return NoContent();
+            
         }
 
         // 10. FELADAT TÖRLÉSE
@@ -286,21 +215,14 @@ namespace PROTOTYPE_backend.Controllers
         [ProducesResponseType(StatusCodes.Status500InternalServerError)]
         public async Task<IActionResult> DeleteTask(Guid taskId)
         {
-            try
+            var success = await _projectService.DeleteTaskAsync(taskId);
+            if (!success)
             {
-                var success = await _projectService.DeleteTaskAsync(taskId);
-                if (!success)
-                {
-                    return NotFound(new { message = "A megadott feladat nem található." });
-                }
+                return NotFound(new { error = new { message = "A megadott feladat nem található.", code = "NEM_TALALHATO" } });
+            }
 
-                return NoContent();
-            }
-            catch (Exception ex)
-            {
-                _logger.LogError(ex, "Váratlan hiba történt a feladat törlésekor. TaskId: {TaskId}", taskId);
-                return StatusCode(StatusCodes.Status500InternalServerError, new { message = "Szerveroldali hiba történt a feladat törlésekor." });
-            }
+            return NoContent();
+            
         }
     }
 }
