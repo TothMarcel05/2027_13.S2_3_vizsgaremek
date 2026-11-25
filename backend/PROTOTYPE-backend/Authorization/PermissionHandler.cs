@@ -1,20 +1,23 @@
-﻿using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
+using Microsoft.EntityFrameworkCore;
 using PROTOTYPE_backend.Authorization;
+using PROTOTYPE_backend.Data;
 using System.Security.Claims;
 using System.Text.Json;
 
 public class PermissionHandler : AuthorizationHandler<PermissionRequirement>
 {
     private readonly IHttpContextAccessor _httpContextAccessor;
+    private readonly AppDbContext _db;
 
-    // Injektáljuk az HttpContextAccessor-t a kérés adatainak eléréséhez
-    public PermissionHandler(IHttpContextAccessor httpContextAccessor)
+    public PermissionHandler(IHttpContextAccessor httpContextAccessor, AppDbContext db)
     {
         _httpContextAccessor = httpContextAccessor;
+        _db = db;
     }
 
-    protected override Task HandleRequirementAsync(
+    protected override async Task HandleRequirementAsync(
         AuthorizationHandlerContext context,
         PermissionRequirement requirement)
     {
@@ -23,56 +26,75 @@ public class PermissionHandler : AuthorizationHandler<PermissionRequirement>
         if (globalRoleClaim == "2" || globalRoleClaim == "SystemAdmin")
         {
             context.Succeed(requirement);
-            return Task.CompletedTask;
+            return;
         }
 
         // 2. JWT Claim kinyerése
         var permissionsJson = context.User.FindFirstValue("all_roles_permissions");
         if (string.IsNullOrEmpty(permissionsJson))
         {
-            return Task.CompletedTask;
+            return;
         }
 
         try
         {
-            var httpContext = _httpContextAccessor.HttpContext;
-
-            // Kinyerjük a workspaceId-t vagy projectId-t az Route Data-ból vagy Query/Header-ből
-            string? currentContextId = httpContext?.GetRouteValue("projectId")?.ToString()
-                         ?? httpContext?.GetRouteValue("workspaceId")?.ToString()
-                         ?? httpContext?.Request.Headers["X-Project-Id"].FirstOrDefault()
-                         ?? httpContext?.Request.Headers["X-Workspace-Id"].FirstOrDefault()
-                         ?? context.User.FindFirstValue("active_workspace_id");
-
             var rolesAndPermissions = JsonSerializer.Deserialize<Dictionary<string, List<string>>>(permissionsJson);
+            if (rolesAndPermissions == null) return;
 
-            if (rolesAndPermissions != null)
+            var httpContext = _httpContextAccessor.HttpContext;
+            var activeWorkspaceId = context.User.FindFirstValue("active_workspace_id");
+
+            // Az erőforrás kontextusának meghatározása: projekt (route/fejléc) vagy feladat (route) vagy munkaterület
+            string? projectKey = httpContext?.GetRouteValue("projectId")?.ToString()
+                                 ?? httpContext?.Request.Headers["X-Project-Id"].FirstOrDefault();
+            string? resourceWorkspaceId = httpContext?.GetRouteValue("workspaceId")?.ToString()
+                                          ?? httpContext?.Request.Headers["X-Workspace-Id"].FirstOrDefault();
+
+            if (resourceWorkspaceId == null && Guid.TryParse(projectKey, out var projectGuid))
             {
-                // 1. Elsődleges kontextus (pl. projectId vagy route workspaceId) ellenőrzése
-                if (!string.IsNullOrEmpty(currentContextId) &&
-                    rolesAndPermissions.TryGetValue(currentContextId, out var contextPermissions) &&
-                    contextPermissions.Contains(requirement.Permission))
-                {
-                    context.Succeed(requirement);
-                    return Task.CompletedTask;
-                }
+                resourceWorkspaceId = (await _db.Projects.AsNoTracking()
+                    .Where(p => p.Id == projectGuid)
+                    .Select(p => (Guid?)p.WorkspaceId)
+                    .FirstOrDefaultAsync())?.ToString();
+            }
 
-                // 2. Fallback: aktív munkaterület jogosultságainak ellenőrzése (pl. Workspace Owner/Admin projekt-műveleteknél)
-                var activeWorkspaceId = context.User.FindFirstValue("active_workspace_id");
-                if (!string.IsNullOrEmpty(activeWorkspaceId) &&
-                    activeWorkspaceId != currentContextId &&
-                    rolesAndPermissions.TryGetValue(activeWorkspaceId, out var wsPermissions) &&
-                    wsPermissions.Contains(requirement.Permission))
+            if (resourceWorkspaceId == null && projectKey == null
+                && Guid.TryParse(httpContext?.GetRouteValue("taskId")?.ToString(), out var taskGuid))
+            {
+                var task = await _db.ProjectTasks.AsNoTracking()
+                    .Where(t => t.Id == taskGuid)
+                    .Select(t => new { t.ProjectId, WorkspaceId = (Guid?)t.Project.WorkspaceId })
+                    .FirstOrDefaultAsync();
+                if (task != null)
                 {
-                    context.Succeed(requirement);
+                    projectKey = task.ProjectId.ToString();
+                    resourceWorkspaceId = task.WorkspaceId?.ToString();
                 }
+            }
+
+            // Projekt-szintű jogosultság (a token csak az aktív munkaterület projektjeit tartalmazza)
+            if (!string.IsNullOrEmpty(projectKey)
+                && rolesAndPermissions.TryGetValue(projectKey, out var projectPermissions)
+                && projectPermissions.Contains(requirement.Permission))
+            {
+                context.Succeed(requirement);
+                return;
+            }
+
+            // Munkaterület-szintű jogosultság: csak arra a munkaterületre érvényes, amelyhez az erőforrás tartozik.
+            // Ha az erőforrás munkaterülete nem azonosítható (pl. nem létező id), az aktív munkaterületre esünk vissza,
+            // így a végpont a megfelelő 404-et adja.
+            var effectiveWorkspaceId = resourceWorkspaceId ?? activeWorkspaceId;
+            if (!string.IsNullOrEmpty(effectiveWorkspaceId)
+                && rolesAndPermissions.TryGetValue(effectiveWorkspaceId, out var wsPermissions)
+                && wsPermissions.Contains(requirement.Permission))
+            {
+                context.Succeed(requirement);
             }
         }
         catch
         {
             // Hibás JSON esetén elutasítjuk
         }
-
-        return Task.CompletedTask;
     }
 }

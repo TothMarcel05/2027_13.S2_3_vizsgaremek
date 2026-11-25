@@ -42,6 +42,9 @@ namespace PROTOTYPE_backend.Controllers
             var currentUserId = User.GetUserId();
             var secureDto = dto with { UserId = currentUserId };
 
+            if (dto.EntityName == "AppUser" && !User.IsSystemAdmin())
+                throw new UnauthorizedAccessException("Felhasználói fiókot csak rendszeradminisztrátor helyezhet lomtárba.");
+
             var success = await _softDeleteService.SoftDeleteAsync(secureDto);
             if (!success)
             {
@@ -66,6 +69,9 @@ namespace PROTOTYPE_backend.Controllers
             {
                 return BadRequest(new { error = new { message = "Az 'EntityName' és az 'EntityId' megadása kötelező.", code = "ERVENYTELEN_KERES" } });
             }
+
+            if (dto.EntityName == "AppUser" && !User.IsSystemAdmin())
+                throw new UnauthorizedAccessException("Felhasználói fiókot csak rendszeradminisztrátor állíthat vissza.");
 
             var success = await _softDeleteService.RestoreAsync(dto);
             if (!success)

@@ -34,7 +34,28 @@ builder.Configuration.AddJsonFile("errorMessages.json", optional: false, reloadO
 builder.Services.AddExceptionHandler<GlobalExceptionHandler>();
 builder.Services.AddProblemDetails();
 
-builder.Services.AddControllers();
+builder.Services.AddControllers()
+    .ConfigureApiBehaviorOptions(options =>
+    {
+        // Modellvalidációs hibák egységes { "error": { "message", "code" } } formátumban
+        options.InvalidModelStateResponseFactory = context =>
+        {
+            var messages = context.ModelState.Values
+                .SelectMany(v => v.Errors)
+                .Select(e => string.IsNullOrWhiteSpace(e.ErrorMessage) ? "Érvénytelen kérés." : e.ErrorMessage)
+                .Distinct()
+                .ToList();
+
+            return new Microsoft.AspNetCore.Mvc.BadRequestObjectResult(new
+            {
+                error = new
+                {
+                    message = messages.Count > 0 ? string.Join(" ", messages) : "A küldött adatok formátuma hibás.",
+                    code = "ERVENYTELEN_KERES"
+                }
+            });
+        };
+    });
 
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen(c =>
@@ -225,3 +246,6 @@ app.MapControllers();
 app.MapHub<ChatHub>("/hubs/chat");
 
 app.Run();
+
+// A WebApplicationFactory<Program> (integrációs tesztek) eléréséhez szükséges.
+public partial class Program { }

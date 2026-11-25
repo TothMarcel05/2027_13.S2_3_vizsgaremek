@@ -192,7 +192,7 @@ namespace PROTOTYPE_backend.Services.Storage
             _logger.LogDebug("Fájl folyam megnyitva letöltéshez. NodeId: {NodeId}, Méret: {SizeBytes} bájt", nodeId, node.SizeBytes);
 
             var memoryStream = new FileStream(node.StoragePath, FileMode.Open, FileAccess.Read, FileShare.Read);
-            var contentType = node.MimeType ?? "application/octet-stream";
+            var contentType = string.IsNullOrWhiteSpace(node.MimeType) ? "application/octet-stream" : node.MimeType;
 
             return (memoryStream, contentType, node.Name);
         }
