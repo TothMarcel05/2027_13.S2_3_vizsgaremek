@@ -144,8 +144,6 @@ vite.config.ts.timestamp-*
 .vite/
 
 # CSharp
-.appsettings.json
-appsettings.json
 appsettings.Development.json
 .appsettings.Development.json
 
