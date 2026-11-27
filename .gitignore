@@ -146,6 +146,8 @@ vite.config.ts.timestamp-*
 # CSharp
 .appsettings.json
 appsettings.json
+appsettings.Development.json
+.appsettings.Development.json
 
 # Visual Studio / C# specifikus ignorálások
 *.user
@@ -163,6 +165,3 @@ bin/
 
 .tmp
 .Backup.tmp
-
-# Beállítások
-appsettings.Development.json
