@@ -6,7 +6,7 @@ import { chatApi } from '../../api/services'
 import type { Attachment, Channel, ChannelKind, Message } from '../../api/types'
 import { useAction, useMe, usePeople, useWorkspace } from '../../lib/data'
 import { cn, fmtBytes, fmtDate, fmtTime, sameDay, saveBlob, timeAgo } from '../../lib/utils'
-import { useEdition } from '../../editions'
+import { MOTION } from '../../lib/motion'
 import { Avatar, AvatarStack, Button, EmptyState, ErrorState, Skeleton } from '../../components/ui/core'
 import { useToast } from '../../components/ui/overlay'
 
@@ -47,7 +47,6 @@ function Thread({ channel, onBack }: { channel: Channel; onBack: () => void }) {
   const client = useQueryClient()
   const people = usePeople()
   const me = useMe()
-  const edition = useEdition()
   const [text, setText] = useState('')
   const [pending, setPending] = useState<Attachment[]>([])
   const [typing, setTyping] = useState<string | null>(null)
@@ -109,7 +108,7 @@ function Thread({ channel, onBack }: { channel: Channel; onBack: () => void }) {
             return (
               <div key={m.id}>
                 {newDay && <div className="day-sep"><span>{sameDay(new Date(m.createdAt), new Date()) ? 'Today' : fmtDate(m.createdAt, { weekday: 'long', day: 'numeric', month: 'short' })}</span></div>}
-                <motion.div className={cn('msg', mine && 'msg-mine', grouped ? 'mt-1' : 'mt-4')} initial={{ opacity: 0, y: 10 }} animate={{ opacity: 1, y: 0 }} transition={edition.spring}>
+                <motion.div className={cn('msg', mine && 'msg-mine', grouped ? 'mt-1' : 'mt-4')} initial={{ opacity: 0, y: 10 }} animate={{ opacity: 1, y: 0 }} transition={MOTION.spring}>
                   <span className="msg-avatar">{!grouped && <Avatar user={author} size={32} />}</span>
                   <div className="msg-body">
                     {!grouped && <p className="msg-meta"><strong>{mine ? 'You' : author?.name ?? 'Former member'}</strong><span>{fmtTime(m.createdAt)}</span></p>}

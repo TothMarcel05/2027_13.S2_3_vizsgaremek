@@ -2,7 +2,7 @@ import { forwardRef, useId, type ButtonHTMLAttributes, type CSSProperties, type 
 import { motion, useMotionValue, useReducedMotion, useSpring, type HTMLMotionProps } from 'framer-motion'
 import { Loader2, AlertCircle } from 'lucide-react'
 import { cn } from '../../lib/utils'
-import { useEdition } from '../../editions'
+import { MOTION } from '../../lib/motion'
 import type { Priority, ProjectStatus, TaskStatus, User } from '../../api/types'
 
 type ButtonProps = Omit<ButtonHTMLAttributes<HTMLButtonElement>, 'onDrag' | 'onDragStart' | 'onDragEnd' | 'onAnimationStart'> & {
@@ -16,23 +16,22 @@ type ButtonProps = Omit<ButtonHTMLAttributes<HTMLButtonElement>, 'onDrag' | 'onD
 export const Button = forwardRef<HTMLButtonElement, ButtonProps>(function Button(
   { variant = 'soft', size = 'md', icon, loading, className, children, disabled, type = 'button', ...rest }, ref,
 ) {
-  const edition = useEdition()
   const reduce = useReducedMotion()
   const x = useMotionValue(0), y = useMotionValue(0)
   const sx = useSpring(x, { stiffness: 260, damping: 18 }), sy = useSpring(y, { stiffness: 260, damping: 18 })
-  const magnetic = variant === 'primary' && !reduce && edition.magnet > 0
+  const magnetic = variant === 'primary' && !reduce && MOTION.magnet > 0
   const move = (e: PointerEvent<HTMLButtonElement>) => {
     if (!magnetic || e.pointerType !== 'mouse') return
     const r = e.currentTarget.getBoundingClientRect()
-    x.set((e.clientX - r.left - r.width / 2) * edition.magnet)
-    y.set((e.clientY - r.top - r.height / 2) * edition.magnet)
+    x.set((e.clientX - r.left - r.width / 2) * MOTION.magnet)
+    y.set((e.clientY - r.top - r.height / 2) * MOTION.magnet)
   }
   return (
     <motion.button
       ref={ref}
       type={type}
       style={{ x: sx, y: sy }}
-      whileTap={disabled || reduce ? undefined : { scale: edition.press }}
+      whileTap={disabled || reduce ? undefined : { scale: MOTION.press }}
       onPointerMove={move}
       onPointerLeave={() => { x.set(0); y.set(0) }}
       disabled={disabled || loading}
@@ -76,16 +75,14 @@ export function Card({ hover, className, children, ...rest }: HTMLMotionProps<'d
 }
 
 export function Stagger({ className, children }: { className?: string; children: ReactNode }) {
-  const edition = useEdition()
   return (
-    <motion.div className={className} initial="hidden" animate="show" variants={{ hidden: {}, show: { transition: { staggerChildren: edition.stagger } } }}>
+    <motion.div className={className} initial="hidden" animate="show" variants={{ hidden: {}, show: { transition: { staggerChildren: MOTION.stagger } } }}>
       {children}
     </motion.div>
   )
 }
 export function Item({ className, children, ...rest }: HTMLMotionProps<'div'>) {
-  const edition = useEdition()
-  return <motion.div variants={edition.item} className={className} {...rest}>{children}</motion.div>
+  return <motion.div variants={MOTION.item} className={className} {...rest}>{children}</motion.div>
 }
 
 export const hueStyle = (hue: number) => ({ '--h': hue }) as CSSProperties
@@ -139,12 +136,11 @@ export function Segmented<V extends string>({ value, onChange, options, label }:
   options: { value: V; label: ReactNode; count?: number }[]
 }) {
   const id = useId()
-  const edition = useEdition()
   return (
     <div className="tabs" role="group" aria-label={label}>
       {options.map((o) => (
         <button key={o.value} type="button" aria-pressed={value === o.value} onClick={() => onChange(o.value)} className={cn('tab', value === o.value && 'tab-active')}>
-          {value === o.value && <motion.span layoutId={id} className="tab-pill" transition={edition.spring} />}
+          {value === o.value && <motion.span layoutId={id} className="tab-pill" transition={MOTION.spring} />}
           <span className="relative z-10 flex items-center gap-1.5">
             {o.label}
             {o.count !== undefined && <span className="text-[0.7rem] opacity-60">{o.count}</span>}
@@ -156,10 +152,9 @@ export function Segmented<V extends string>({ value, onChange, options, label }:
 }
 
 export function Switch({ checked, onChange, label, disabled }: { checked: boolean; onChange: (v: boolean) => void; label: string; disabled?: boolean }) {
-  const edition = useEdition()
   return (
     <button type="button" role="switch" aria-checked={checked} aria-label={label} disabled={disabled} onClick={() => onChange(!checked)} className={cn('switch', checked && 'switch-on')}>
-      <motion.span layout transition={edition.spring} className="switch-knob" />
+      <motion.span layout transition={MOTION.spring} className="switch-knob" />
     </button>
   )
 }

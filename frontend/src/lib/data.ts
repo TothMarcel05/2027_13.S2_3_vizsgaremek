@@ -1,6 +1,8 @@
 import { createContext, useContext } from 'react'
 import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query'
-import { meApi, workspaceApi } from '../api/services'
+import { workspaceApi } from '../api/services'
+import { profileQueryKey, userApi } from '../api/users'
+import { GLOBAL_ROLE, TWO_FACTOR, type UserResponseDto } from '../api/authTypes'
 import type { Workspace, User, ID } from '../api/types'
 import { useToast } from '../components/ui/overlay'
 
@@ -25,7 +27,24 @@ export function useAction<V = void, R = unknown>(
 export const WorkspaceContext = createContext<{ workspace: Workspace; workspaces: Workspace[]; setWorkspace: (id: ID) => void } | null>(null)
 export const useWorkspace = () => useContext(WorkspaceContext)!
 
-export const useMe = () => useQuery({ queryKey: ['me'], queryFn: meApi.get }).data as User | undefined
+/** The signed-in user's profile, as the backend returns it. */
+export const useProfile = () => useQuery({ queryKey: profileQueryKey, queryFn: userApi.me })
+
+const hueFrom = (id: string) => [...id].reduce((hash, char) => (hash * 31 + char.charCodeAt(0)) % 360, 7)
+
+/** Adapts the profile to the shape the other modules still use. The backend has no title, bio or hue. */
+function toUser(p: UserResponseDto): User {
+  return {
+    id: p.userId, name: p.name, email: p.email, title: '', bio: '', hue: hueFrom(p.userId),
+    systemRole: p.globalRole === GLOBAL_ROLE.systemAdmin ? 'super_admin' : 'user',
+    active: true,
+    twoFactor: p.twoFactorType === TWO_FACTOR.authenticator ? 'totp' : p.twoFactorType === TWO_FACTOR.email ? 'email' : null,
+    createdAt: p.createdAt, lastSeen: p.updatedAt ?? p.createdAt,
+  }
+}
+
+export const useMeQuery = () => useQuery({ queryKey: profileQueryKey, queryFn: userApi.me, select: toUser })
+export const useMe = (): User | undefined => useMeQuery().data
 
 export const useMembers = () => {
   const { workspace } = useWorkspace()

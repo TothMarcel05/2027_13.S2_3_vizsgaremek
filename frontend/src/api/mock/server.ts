@@ -2,8 +2,9 @@
 import { ApiError } from '../client'
 import type * as T from '../types'
 import { ME, seed, type Db } from './db'
+import { registerAuthRoutes } from './auth'
 
-// Persisted per tab so edits survive reloads and switching between editions.
+// Persisted per tab so edits survive reloads.
 const KEY = 'ws.mockdb.v1'
 let db: Db = load()
 function load(): Db {
@@ -46,14 +47,6 @@ const channelView = (c: Db['channels'][number]): T.Channel => {
 const toTrash = (workspaceId: string, type: T.TrashItem['type'], name: string, payload: unknown) =>
   db.trash.unshift({ id: uid('x'), workspaceId, type, name, deletedAt: now(), deletedBy: ME, payload })
 
-const recoveryCodes = () =>
-  Array.from({ length: 10 }, () => `${Math.random().toString(36).slice(2, 7)}-${Math.random().toString(36).slice(2, 7)}`)
-
-function checkCode(code: string) {
-  if (!/^\d{6}$/.test(code)) fail('Enter the 6-digit code.')
-  if (code === '000000') fail('That code is incorrect or has expired.', 401)
-}
-
 /* ---------- live chat ---------- */
 type LiveEvent = { type: 'typing' | 'message'; userId: string }
 const listeners = new Map<string, Set<(e: LiveEvent) => void>>()
@@ -88,48 +81,12 @@ const routes: [string, RegExp, Handler][] = []
 const on = (method: string, pattern: string, handler: Handler) =>
   routes.push([method, new RegExp(`^${pattern.replace(/:\w+/g, '([^/]+)')}$`), handler])
 
-/* auth */
-on('POST', '/auth/login', ({ body }) => {
-  if (!/^\S+@\S+\.\S+$/.test(body.email)) fail('Enter a valid email address.')
-  if ((body.password ?? '').length < 6) fail('Email or password is incorrect.', 401)
-  const user = me()
-  if (user.twoFactor) return { requires2fa: true, method: user.twoFactor, challengeId: uid('ch') }
-  return { token: 'mock-token', user }
-})
-on('POST', '/auth/register', ({ body }) => {
-  if (!body.name?.trim()) fail('Tell us your name.')
-  if (db.users.some((u) => u.email === body.email && u.id !== ME)) fail('An account with this email already exists.', 409)
-  Object.assign(me(), { name: body.name, email: body.email, twoFactor: null })
-  return { token: 'mock-token', user: me() }
-})
-on('POST', '/auth/2fa/verify', ({ body }) => {
-  if (body.kind === 'recovery') {
-    if (!/^[a-z0-9]{5}-[a-z0-9]{5}$/i.test(body.code)) fail('Recovery codes look like abcde-12345.', 401)
-  } else checkCode(body.code)
-  return { token: 'mock-token', user: me() }
-})
-on('POST', '/auth/2fa/email/resend', () => undefined)
-on('POST', '/auth/password/forgot', ({ body }) => { if (!/^\S+@\S+\.\S+$/.test(body.email)) fail('Enter a valid email address.') })
-on('POST', '/auth/password/reset', ({ body }) => { checkCode(body.code); if (body.password.length < 8) fail('Use at least 8 characters.') })
-on('POST', '/auth/logout', () => undefined)
-
-/* me */
-on('GET', '/me', () => me())
-on('PATCH', '/me', ({ body }) => Object.assign(me(), body))
-on('POST', '/me/password', ({ body }) => {
-  if (!body.current) fail('Enter your current password.')
-  if (body.next.length < 8) fail('The new password needs at least 8 characters.')
-})
-on('POST', '/me/2fa/totp/setup', () => {
-  const secret = 'JBSWY3DPEHPK3PXP'
-  return { secret, otpauthUrl: `otpauth://totp/Workspace:${encodeURIComponent(me().email)}?secret=${secret}&issuer=Workspace` }
-})
-on('POST', '/me/2fa/enable', ({ body }) => { checkCode(body.code); me().twoFactor = body.method; return { recoveryCodes: recoveryCodes() } })
-on('DELETE', '/me/2fa', () => { me().twoFactor = null })
-on('POST', '/me/2fa/recovery-codes', () => ({ recoveryCodes: recoveryCodes() }))
-on('GET', '/me/sessions', () => db.sessions)
-on('DELETE', '/me/sessions', () => { db.sessions = db.sessions.filter((s) => s.current) })
-on('DELETE', '/me/sessions/:id', ({ p }) => { db.sessions = without(db.sessions, p[0]) })
+/* auth + own profile */
+registerAuthRoutes(
+  (method, pattern, handler) => on(method, pattern, ({ p, q, body }) => handler({ params: p, query: q, body })),
+  me,
+  (email) => db.users.some((u) => u.email === email && u.id !== ME),
+)
 
 /* workspaces */
 on('GET', '/workspaces', () => db.workspaces.filter((w) => db.members.some((m) => m.workspaceId === w.id && m.userId === ME)))

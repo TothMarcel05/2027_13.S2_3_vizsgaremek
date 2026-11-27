@@ -1,43 +1,40 @@
-# Workspace: three editions
+# Atelier workspace
 
-A collaborative workspace and project management frontend in three designs that share one engine.
+A collaborative workspace and project management frontend: a collapsible sand sidebar, soft cards,
+serif headlines and a terracotta accent.
 
 ```powershell
 npm install
 npm run dev
 ```
 
-Open http://localhost:5173 and pick an edition.
-
-| Edition | URL | Navigation | Look |
-|---|---|---|---|
-| **Atelier** | `/atelier` | Collapsible sand sidebar | Soft cards, serif headlines, terracotta; split-screen sign-in |
-| **Almanac** | `/almanac` | Masthead with top tabs | White paper, hairline rules, sage; broadsheet dashboard, table-style project list |
-| **Studio** | `/studio` | Floating icon dock (bottom dock on phones) | Pill controls, large radii, sans type, amber; floating-card sign-in, springy motion |
-
-All three have every feature. Use the palette button in the header to switch while staying on the same page.
+Open http://localhost:5173.
 
 ## Demo mode
 
-- Sign-in is pre-filled; any email with a 6+ character password works.
-- 2FA and reset codes: any 6 digits except `000000`. Recovery code format: `abcde-12345`.
+- Sign-in is pre-filled; any email with a 5+ character password works.
+- 2FA codes: any 6 digits except `000000`. Recovery code format: `ABCD-2345`.
 - Data is mocked in the browser and kept per tab (`sessionStorage`), so reloads keep your edits. Close the tab to reset.
 - Chat replies are simulated.
 
 ## Connecting the backend
 
-1. Copy `.env.example` to `.env.local`, set `VITE_USE_MOCK=false` and, if needed, `VITE_API_URL`.
-2. For local development, add a `server.proxy` entry for `/api` in `vite.config.ts`.
+1. Copy `.env.example` to `.env.local` and set `VITE_USE_MOCK=false`.
+2. Start the backend with its `http` launch profile (port 5243). `vite.config.ts` proxies `/api` to it.
+3. For password-reset emails, set `FrontendUrl` in the backend settings to this app's address, e.g. `http://localhost:5173`.
 
-- `src/api/services.ts`: every REST call the UI makes.
-- `src/api/types.ts`: the expected response shapes.
-- `src/api/mock/server.ts`: a route table showing the behaviour the UI expects (validation, status codes).
+**Auth, session and profile** are connected and follow the backend's controllers and DTOs. With the real API,
+signed-in users see only the account pages; the workspace modules still use assumed paths and shapes and run in demo mode only.
 
-These paths and shapes are assumptions, since no backend spec was provided. Adjust them to match the real API.
-The real mode has not been tested against a server. It assumes a bearer token (kept in `localStorage`;
-consider an httpOnly cookie for production), JSON errors shaped `{ "message": string }`, multipart file
-uploads, and Server-Sent Events for chat. Chat attachments currently send metadata and a local preview URL
-only, so they need an upload endpoint. Permission checks in the UI are cosmetic: the server must enforce them.
+- `src/api/authClient.ts`: the axios instance, token refresh and logout.
+- `src/api/session.ts`: token storage (`localStorage`, shared across tabs).
+- `src/api/auth.ts`, `src/api/users.ts`, `src/api/authTypes.ts`: the connected endpoints and their DTOs.
+- `src/api/mock/auth.ts`: their demo-mode stand-in.
+- `src/api/services.ts`, `src/api/types.ts`: the remaining, not yet connected modules.
+
+Tokens come back in the response body, so they are readable by scripts on this origin. Permission checks in
+the UI are cosmetic: the server must enforce them. Chat uses Server-Sent Events in the not-yet-connected code,
+while the backend exposes SignalR.
 
 ## Layout
 
@@ -46,7 +43,7 @@ src/
   api/            REST client, services, types, mock server
   features/       one folder per area (auth, projects, chat, calendar, files, ...)
   components/ui/  buttons, forms, modals, drawers, skeletons
-  components/layout/  the three shells and shared header pieces
-  editions.tsx    per-edition motion settings
-  styles/         base.css (shared) and editions.css (per-edition look)
+  components/layout/  the app shell and shared header pieces
+  lib/motion.ts   shared motion settings
+  styles/         base.css (design tokens and component classes)
 ```

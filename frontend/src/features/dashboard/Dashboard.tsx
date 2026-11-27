@@ -2,12 +2,11 @@ import { useState, type ReactNode } from 'react'
 import { Link, useNavigate } from 'react-router'
 import { useQuery } from '@tanstack/react-query'
 import { motion } from 'framer-motion'
-import { ArrowRight, ArrowUpRight, Bookmark, CalendarDays, CheckCircle2, Cloud, FolderKanban, MapPin } from 'lucide-react'
+import { ArrowRight, Bookmark, CalendarDays, CheckCircle2, Cloud, FolderKanban, MapPin } from 'lucide-react'
 import { workspaceApi } from '../../api/services'
 import type { CalendarEvent, DashboardData, Project, Task } from '../../api/types'
 import { useMe, usePeople, useWorkspace } from '../../lib/data'
 import { daysUntil, dueLabel, fmtBytes, fmtDate, fmtTime } from '../../lib/utils'
-import { useEdition } from '../../editions'
 import { AvatarStack, Button, Card, EmptyState, ErrorState, Item, PageHeader, PriorityBadge, Progress, SectionTitle, Skeleton, Stagger, TASK_STATUS, hueStyle } from '../../components/ui/core'
 import { TaskDrawer } from '../projects/TaskDrawer'
 
@@ -129,8 +128,8 @@ function stats(d: DashboardData) {
 
 interface ViewProps { d: DashboardData; first: string; open: (t: Task) => void }
 
-/* Atelier: greeting, stat cards and a two-column bento grid. */
-function AtelierDashboard({ d, first, open }: ViewProps) {
+/** Greeting, stat cards and a two-column bento grid. */
+function Overview({ d, first, open }: ViewProps) {
   const { workspace } = useWorkspace()
   const navigate = useNavigate()
   return (
@@ -161,103 +160,8 @@ function AtelierDashboard({ d, first, open }: ViewProps) {
   )
 }
 
-/* Almanac: a front page. Figures in a ruled strip, then three columns set apart by hairlines. */
-function AlmanacDashboard({ d, first, open }: ViewProps) {
-  const { workspace } = useWorkspace()
-  return (
-    <Stagger>
-      <Item className="border-b-[3px] border-double border-ink pb-5 text-center">
-        <p className="eyebrow">{workspace.name} · {new Date().toLocaleDateString('en-GB', { weekday: 'long', day: 'numeric', month: 'long' })}</p>
-        <h1 className="display mt-2 text-4xl italic sm:text-6xl">{greeting()}, {first}.</h1>
-        <p className="mt-2 text-sm text-muted">{d.tasks.length ? `${d.tasks.length} tasks await you. First up: ${d.tasks[0].title.toLowerCase()}.` : 'Your desk is clear.'}</p>
-      </Item>
-      <Item className="grid grid-cols-2 border-b border-line md:grid-cols-4">
-        {stats(d).map((s) => (
-          <div key={s.label} className="border-line px-4 py-4 text-center md:border-r md:last:border-r-0">
-            <p className="display text-4xl text-accent">{s.value}</p><p className="eyebrow mt-1">{s.label}</p>
-          </div>
-        ))}
-      </Item>
-      <div className="grid lg:grid-cols-[1.1fr_1.5fr_1fr] lg:divide-x lg:divide-line">
-        <Item className="py-6 lg:pr-6">
-          <SectionTitle title="In progress" action={more('/projects', 'Index')} />
-          <ol>
-            {d.projects.map((p, i) => (
-              <li key={p.id} className="border-b border-line last:border-0">
-                <Link to={`/projects/${p.id}`} className="headline-row">
-                  <span className="display text-2xl italic text-muted">{i + 1}</span>
-                  <span className="min-w-0 flex-1">
-                    <span className="display flex items-center gap-1 text-xl">{p.name}<ArrowUpRight size={15} className="headline-arrow" /></span>
-                    <span className="mt-1 block text-sm text-muted">{p.description}</span>
-                    <Progress value={pct(p)} className="mt-3 !h-[3px]" />
-                    <span className="mt-1.5 block text-xs text-muted">{p.doneCount}/{p.taskCount} complete · due {fmtDate(p.dueDate)}</span>
-                  </span>
-                </Link>
-              </li>
-            ))}
-          </ol>
-          {!d.projects.length && <p className="text-sm text-muted">No active projects yet.</p>}
-        </Item>
-        <Item className="py-6 lg:px-6"><SectionTitle title="Your assignments" /><TaskRows tasks={d.tasks} projects={d.projects} onOpen={open} /></Item>
-        <Item className="py-6 lg:pl-6">
-          <SectionTitle title="The diary" action={more('/calendar', 'All dates')} />
-          <EventRows events={d.events} />
-          <div className="mt-6 border-t-2 border-ink pt-4"><SectionTitle title="Storage ledger" /><StorageBar storage={d.storage} /></div>
-        </Item>
-      </div>
-    </Stagger>
-  )
-}
-
-/* Studio: a hero with a completion dial, a swipeable project shelf and floating panels. */
-function StudioDashboard({ d, first, open }: ViewProps) {
-  const total = d.projects.reduce((n, p) => n + p.taskCount, 0)
-  const done = d.projects.reduce((n, p) => n + p.doneCount, 0)
-  const progress = total ? done / total : 0
-  return (
-    <Stagger className="space-y-5">
-      <Item>
-        <section className="hero">
-          <div className="min-w-0 flex-1">
-            <p className="text-sm opacity-70">{new Date().toLocaleDateString('en-GB', { weekday: 'long', day: 'numeric', month: 'long' })}</p>
-            <h1 className="display mt-1 text-3xl sm:text-5xl">{greeting()}, {first}</h1>
-            <div className="mt-5 flex flex-wrap gap-2">
-              {stats(d).map((s) => <span key={s.label} className="hero-chip"><s.icon size={14} /><strong>{s.value}</strong> {s.label.toLowerCase()}</span>)}
-            </div>
-          </div>
-          <div className="relative grid size-36 shrink-0 place-items-center max-sm:hidden">
-            <svg viewBox="0 0 100 100" className="absolute inset-0 -rotate-90" aria-hidden>
-              <circle cx="50" cy="50" r="43" fill="none" stroke="rgb(255 255 255 / .14)" strokeWidth="9" />
-              <motion.circle cx="50" cy="50" r="43" fill="none" stroke="#f0b878" strokeWidth="9" strokeLinecap="round" initial={{ pathLength: 0 }} animate={{ pathLength: progress }} transition={{ duration: 1.3, ease: 'easeOut', delay: 0.2 }} />
-            </svg>
-            <p className="text-center"><span className="display block text-3xl">{Math.round(progress * 100)}%</span><span className="text-xs opacity-70">tasks done</span></p>
-          </div>
-        </section>
-      </Item>
-      <Item>
-        <SectionTitle title="Active projects" action={more('/projects', 'See all')} />
-        {d.projects.length ? (
-          <div className="shelf">{d.projects.map((p) => (
-            <motion.div key={p.id} className="w-72 shrink-0 snap-start" whileHover={{ y: -6, rotate: -0.6 }}><ProjectCard p={p} /></motion.div>
-          ))}</div>
-        ) : <div className="card"><EmptyState icon={<FolderKanban size={18} />} title="No active projects yet" /></div>}
-      </Item>
-      <div className="grid gap-5 lg:grid-cols-[1.6fr_1fr]">
-        <Panel title="On your plate"><TaskRows tasks={d.tasks} projects={d.projects} onOpen={open} /></Panel>
-        <div className="flex flex-col gap-5">
-          <Panel title="Storage" action={more('/files', 'Open files')}><StorageBar storage={d.storage} /></Panel>
-          <Panel title="Coming up" action={more('/calendar', 'Calendar')}><EventRows events={d.events} /></Panel>
-        </div>
-      </div>
-    </Stagger>
-  )
-}
-
-const VIEWS = { atelier: AtelierDashboard, almanac: AlmanacDashboard, studio: StudioDashboard }
-
 export function Dashboard() {
   const { workspace } = useWorkspace()
-  const edition = useEdition()
   const me = useMe()
   const [openTask, setOpenTask] = useState<{ id: string; projectId: string } | null>(null)
   const query = useQuery({ queryKey: ['dashboard', workspace.id], queryFn: () => workspaceApi.dashboard(workspace.id) })
@@ -269,10 +173,9 @@ export function Dashboard() {
       <div className="grid gap-4 lg:grid-cols-3"><Skeleton className="h-72 lg:col-span-2" /><Skeleton className="h-72" /></div>
     </div>
   )
-  const View = VIEWS[edition.id]
   return (
     <>
-      <View d={query.data} first={me?.name.split(' ')[0] ?? ''} open={(t) => setOpenTask(t)} />
+      <Overview d={query.data} first={me?.name.split(' ')[0] ?? ''} open={(t) => setOpenTask(t)} />
       <TaskDrawer taskId={openTask?.id ?? null} projectId={openTask?.projectId ?? null} onClose={() => setOpenTask(null)} />
     </>
   )

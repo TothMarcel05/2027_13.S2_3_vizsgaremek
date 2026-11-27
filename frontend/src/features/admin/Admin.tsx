@@ -6,7 +6,7 @@ import { adminApi } from '../../api/services'
 import type { Role, SystemRole, User } from '../../api/types'
 import { useAction, useMe } from '../../lib/data'
 import { cn, timeAgo } from '../../lib/utils'
-import { useEdition } from '../../editions'
+import { MOTION } from '../../lib/motion'
 import { Avatar, Badge, Button, EmptyState, ErrorState, FormError, Input, PageHeader, Segmented, Select, SkeletonGrid, Switch } from '../../components/ui/core'
 import { Modal, useConfirm } from '../../components/ui/overlay'
 
@@ -166,7 +166,6 @@ function Matrix({ roles, permissions }: { roles: Role[]; permissions: { key: str
 }
 
 export function Admin() {
-  const edition = useEdition()
   const [tab, setTab] = useState<'users' | 'roles'>('users')
   const roles = useQuery({ queryKey: ['admin-roles'], queryFn: adminApi.roles })
   return (
@@ -179,7 +178,7 @@ export function Admin() {
         : !roles.data ? <SkeletonGrid count={6} className="space-y-2" item="h-12" />
         : (
           <AnimatePresence mode="wait">
-            <motion.div key={tab} initial="hidden" animate="show" exit="exit" variants={edition.page}>
+            <motion.div key={tab} initial="hidden" animate="show" exit="exit" variants={MOTION.page}>
               {tab === 'users' ? <UserTable roles={roles.data.roles} /> : <Matrix roles={roles.data.roles} permissions={roles.data.permissions} />}
             </motion.div>
           </AnimatePresence>

@@ -1,17 +1,16 @@
 import type { ReactNode } from 'react'
 import { motion } from 'framer-motion'
-import { CalendarDays, CheckCircle2, FolderKanban, MessagesSquare } from 'lucide-react'
-import { useEdition } from '../../editions'
-import { Brand, EditionSwitcher } from '../../components/layout/shared'
+import { CalendarDays, CheckCircle2, MessagesSquare } from 'lucide-react'
+import { MOTION } from '../../lib/motion'
+import { Brand } from '../../components/layout/shared'
 
-/** Each edition frames the same auth forms differently: split-screen, broadsheet, or floating card. */
+/** Split-screen frame shared by the auth screens. */
 export function AuthFrame({ children }: { children: ReactNode }) {
-  const edition = useEdition()
   const content = (
-    <motion.div initial="hidden" animate="show" variants={edition.page} className="w-full max-w-sm">{children}</motion.div>
+    <motion.div initial="hidden" animate="show" variants={MOTION.page} className="w-full max-w-sm">{children}</motion.div>
   )
 
-  if (edition.id === 'atelier') return (
+  return (
     <div className="grid min-h-dvh lg:grid-cols-[1.05fr_1fr]">
       <aside className="relative hidden flex-col justify-between overflow-hidden border-r border-line bg-sand p-12 lg:flex">
         <Brand />
@@ -37,46 +36,7 @@ export function AuthFrame({ children }: { children: ReactNode }) {
       <main className="flex flex-col items-center justify-center gap-8 px-5 py-10">
         <div className="lg:hidden"><Brand /></div>
         {content}
-        <EditionSwitcher inline />
       </main>
-    </div>
-  )
-
-  if (edition.id === 'almanac') return (
-    <div className="flex min-h-dvh flex-col px-5">
-      <header className="mx-auto w-full max-w-5xl border-b-[3px] border-double border-ink py-5 text-center">
-        <p className="display text-4xl italic sm:text-6xl">The Almanac</p>
-        <p className="eyebrow mt-2">{new Date().toLocaleDateString('en-GB', { weekday: 'long', day: 'numeric', month: 'long', year: 'numeric' })}</p>
-      </header>
-      <main className="mx-auto grid w-full max-w-5xl flex-1 items-center gap-10 py-10 md:grid-cols-[1fr_auto_24rem]">
-        <ul className="hidden divide-y divide-line border-y border-line md:block">
-          {[
-            { icon: FolderKanban, head: 'Projects', text: 'Boards and lists that stay out of your way.' },
-            { icon: MessagesSquare, head: 'Correspondence', text: 'Channels, group rooms and direct notes.' },
-            { icon: CalendarDays, head: 'The diary', text: 'Every date your team is working toward.' },
-          ].map((f, i) => (
-            <motion.li key={f.head} className="flex gap-4 py-5" initial={{ opacity: 0, x: -14 }} animate={{ opacity: 1, x: 0 }} transition={{ delay: 0.1 + i * 0.08 }}>
-              <span className="display text-2xl italic text-accent">{['i', 'ii', 'iii'][i]}.</span>
-              <span><span className="display block text-xl">{f.head}</span><span className="text-sm text-muted">{f.text}</span></span>
-            </motion.li>
-          ))}
-        </ul>
-        <span className="hidden h-full w-px bg-line md:block" />
-        <div className="flex justify-center">{content}</div>
-      </main>
-      <footer className="mx-auto flex w-full max-w-5xl justify-center border-t border-line py-4"><EditionSwitcher inline /></footer>
-    </div>
-  )
-
-  return (
-    <div className="relative flex min-h-dvh flex-col items-center justify-center gap-6 overflow-hidden bg-sand px-4 py-10">
-      {['-left-24 -top-24 size-96 bg-[#f0cfa5]', '-bottom-32 -right-20 size-[28rem] bg-[#d9cdb9]', 'right-[18%] top-[12%] size-40 bg-[#fbe6cb]'].map((pos, i) => (
-        <motion.span key={pos} aria-hidden className={`absolute rounded-full opacity-70 blur-2xl ${pos}`}
-          animate={{ x: [0, 24, 0], y: [0, -18, 0] }} transition={{ duration: 12 + i * 3, repeat: Infinity, ease: 'easeInOut' }} />
-      ))}
-      <div className="relative"><Brand /></div>
-      <main className="card relative flex w-full max-w-md justify-center p-6 sm:p-9">{content}</main>
-      <div className="relative"><EditionSwitcher inline /></div>
     </div>
   )
 }

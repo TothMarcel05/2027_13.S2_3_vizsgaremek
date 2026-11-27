@@ -4,5 +4,6 @@ import tailwindcss from '@tailwindcss/vite'
 
 export default defineConfig({
   plugins: [react(), tailwindcss()],
-  server: { port: 5173 },
+  // Forwards API calls to the .NET backend (the `http` launch profile) when VITE_USE_MOCK=false.
+  server: { port: 5173, proxy: { '/api': 'http://localhost:5243' } },
 })

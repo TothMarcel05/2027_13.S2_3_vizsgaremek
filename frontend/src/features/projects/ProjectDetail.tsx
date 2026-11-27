@@ -8,7 +8,7 @@ import { projectApi, taskApi } from '../../api/services'
 import type { Priority, ProjectStatus, Task, TaskStatus } from '../../api/types'
 import { useAction, useMembers, usePeople } from '../../lib/data'
 import { cn, daysUntil, dueLabel, fmtDate, fromDateInput } from '../../lib/utils'
-import { useEdition } from '../../editions'
+import { MOTION } from '../../lib/motion'
 import { Avatar, AvatarStack, Badge, Button, EmptyState, ErrorState, FormError, Input, PageHeader, PRIORITY, PriorityBadge, PROJECT_STATUS, Progress, Segmented, Select, Skeleton, TASK_STATUS, Textarea } from '../../components/ui/core'
 import { Modal, useConfirm, useToast } from '../../components/ui/overlay'
 import { TaskDrawer } from './TaskDrawer'
@@ -40,11 +40,10 @@ function CardFace({ task, onOpen, handle }: { task: Task; onOpen?: () => void; h
 
 function DraggableCard({ task, onOpen }: { task: Task; onOpen: () => void }) {
   const { setNodeRef, setActivatorNodeRef, attributes, listeners, isDragging } = useDraggable({ id: task.id })
-  const edition = useEdition()
   // The whole card drags with a mouse or long-press; the grip is the keyboard handle.
   const { onKeyDown, ...pointer } = listeners ?? {}
   return (
-    <motion.div ref={setNodeRef} layout layoutId={task.id} transition={edition.spring}
+    <motion.div ref={setNodeRef} layout layoutId={task.id} transition={MOTION.spring}
       initial={{ opacity: 0, y: 12 }} animate={{ opacity: isDragging ? 0.35 : 1, y: 0 }} exit={{ opacity: 0, scale: 0.94 }}
       className="relative cursor-grab touch-manipulation" {...pointer}>
       <CardFace task={task} onOpen={onOpen} handle={
@@ -82,7 +81,6 @@ export function ProjectDetail() {
   const client = useQueryClient()
   const toast = useToast()
   const confirm = useConfirm()
-  const edition = useEdition()
   const people = usePeople()
   const members = useMembers().data ?? []
   const [view, setView] = useState<'board' | 'list'>('board')
@@ -184,7 +182,7 @@ export function ProjectDetail() {
         <div className="grid grid-cols-2 gap-3 lg:grid-cols-4" role="status" aria-label="Loading tasks">{COLUMNS.map((c) => <div key={c} className="space-y-2.5"><Skeleton className="h-6" /><Skeleton className="h-28" /><Skeleton className="h-28" /></div>)}</div>
       ) : (
         <AnimatePresence mode="wait">
-          <motion.div key={view} initial="hidden" animate="show" exit="exit" variants={edition.page}>
+          <motion.div key={view} initial="hidden" animate="show" exit="exit" variants={MOTION.page}>
             {view === 'board' ? (
               <DndContext sensors={sensors} onDragStart={(e) => setDragId(String(e.active.id))} onDragEnd={dragEnd} onDragCancel={() => setDragId(null)}>
                 <LayoutGroup>

@@ -6,7 +6,7 @@ import { workspaceApi } from '../../api/services'
 import type { WorkspaceRole } from '../../api/types'
 import { useAction, useMe, useMembers, useWorkspace } from '../../lib/data'
 import { fmtDate, timeAgo } from '../../lib/utils'
-import { useEdition } from '../../editions'
+import { MOTION } from '../../lib/motion'
 import { Avatar, Badge, Button, EmptyState, FormError, Input, PageHeader, SectionTitle, Segmented, Select, SkeletonGrid } from '../../components/ui/core'
 import { Modal, useConfirm } from '../../components/ui/overlay'
 
@@ -14,7 +14,6 @@ const ASSIGNABLE: WorkspaceRole[] = ['admin', 'member', 'viewer']
 
 export function WorkspaceSettings() {
   const { workspace } = useWorkspace()
-  const edition = useEdition()
   const me = useMe()
   const confirm = useConfirm()
   const members = useMembers()
@@ -48,7 +47,7 @@ export function WorkspaceSettings() {
         ]} />
       </div>
       <AnimatePresence mode="wait">
-        <motion.div key={tab} initial="hidden" animate="show" exit="exit" variants={edition.page} className="space-y-4">
+        <motion.div key={tab} initial="hidden" animate="show" exit="exit" variants={MOTION.page} className="space-y-4">
           {tab === 'members' && (members.isPending ? <SkeletonGrid count={5} className="space-y-2" item="h-14" /> : (
             <section className="card p-5">
               <SectionTitle title="Members" action={<Button size="sm" variant="outline" icon={<Mail size={14} />} onClick={() => setTab('invitations')}>Invite people</Button>} />

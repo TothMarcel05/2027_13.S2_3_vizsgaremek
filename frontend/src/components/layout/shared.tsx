@@ -1,17 +1,17 @@
 /** Pieces every shell reuses: navigation data, workspace switcher, notifications, user menu. */
 import { useState } from 'react'
-import { useLocation, useNavigate } from 'react-router'
+import { useNavigate } from 'react-router'
 import { useQuery } from '@tanstack/react-query'
 import { AnimatePresence, motion } from 'framer-motion'
 import {
   Bell, CalendarDays, Check, ChevronsUpDown, FolderKanban, HardDrive, Home, LogOut, MessagesSquare,
-  Plus, Settings2, ShieldCheck, Trash2, UserRound, AtSign, CheckSquare, Mail, FileText, Info, Palette,
+  Plus, Settings2, ShieldCheck, Trash2, UserRound, AtSign, CheckSquare, Mail, FileText, Info,
 } from 'lucide-react'
 import { chatApi, notificationApi, workspaceApi } from '../../api/services'
 import type { Notification } from '../../api/types'
 import { useAction, useMe, useWorkspace } from '../../lib/data'
 import { cn, timeAgo } from '../../lib/utils'
-import { EDITIONS, useEdition, type EditionId } from '../../editions'
+import { MOTION } from '../../lib/motion'
 import { Avatar, Badge, Button, EmptyState, Input, Skeleton, FormError, hueStyle, initials } from '../ui/core'
 import { Drawer, Modal, Popover } from '../ui/overlay'
 
@@ -41,11 +41,10 @@ export function useUnreadChat() {
 }
 
 export function Brand({ compact }: { compact?: boolean }) {
-  const edition = useEdition()
   return (
     <span className="flex items-center gap-2.5">
-      <span className="brand-mark" aria-hidden>{edition.name[0]}</span>
-      {!compact && <span className="display text-xl">{edition.name}</span>}
+      <span className="brand-mark" aria-hidden>A</span>
+      {!compact && <span className="display text-xl">Atelier</span>}
     </span>
   )
 }
@@ -146,7 +145,6 @@ function NotificationRow({ n, onOpen, onRead }: { n: Notification; onOpen: () =>
 }
 
 export function NotificationBell({ placement = 'bottom', align = 'right' }: { placement?: 'bottom' | 'side'; align?: 'left' | 'right' }) {
-  const edition = useEdition()
   const navigate = useNavigate()
   const [drawer, setDrawer] = useState(false)
   const [filter, setFilter] = useState<'all' | 'unread'>('all')
@@ -177,7 +175,7 @@ export function NotificationBell({ placement = 'bottom', align = 'right' }: { pl
           <button type="button" className="icon-btn" onClick={toggle} aria-expanded={open} aria-label={`Notifications, ${unread} unread`}>
             <motion.span key={unread} animate={unread ? { rotate: [0, -14, 12, -7, 0] } : {}} transition={{ duration: 0.55 }}><Bell size={18} /></motion.span>
             <AnimatePresence>
-              {unread > 0 && <motion.span className="bell-count" initial={{ scale: 0 }} animate={{ scale: 1 }} exit={{ scale: 0 }} transition={edition.spring}>{unread}</motion.span>}
+              {unread > 0 && <motion.span className="bell-count" initial={{ scale: 0 }} animate={{ scale: 1 }} exit={{ scale: 0 }} transition={MOTION.spring}>{unread}</motion.span>}
             </AnimatePresence>
           </button>
         )}
@@ -214,7 +212,7 @@ export function UserMenu({ signOut, placement = 'bottom', align = 'right', detai
       trigger={({ open, toggle }) => (
         <button type="button" onClick={toggle} aria-expanded={open} aria-label="Account menu" className={cn('flex items-center gap-2.5 rounded-full', detailed && 'w-full min-w-0')}>
           <Avatar user={me} size={32} />
-          {detailed && <span className="min-w-0 text-left"><span className="block truncate text-sm font-medium">{me?.name}</span><span className="block truncate text-xs text-muted">{me?.title}</span></span>}
+          {detailed && <span className="min-w-0 text-left"><span className="block truncate text-sm font-medium">{me?.name}</span><span className="block truncate text-xs text-muted">{me?.title || me?.email}</span></span>}
         </button>
       )}
     >
@@ -225,37 +223,6 @@ export function UserMenu({ signOut, placement = 'bottom', align = 'right', detai
         <button type="button" className="menu-item" onClick={() => { close(); navigate('/workspace') }}><Settings2 size={16} /> Workspace settings</button>
         <button type="button" className="menu-item" onClick={signOut}><LogOut size={16} /> Sign out</button>
       </>)}
-    </Popover>
-  )
-}
-
-/** Jumps to the same page in another edition, so the three designs can be compared side by side. */
-export function EditionSwitcher({ inline }: { inline?: boolean }) {
-  const edition = useEdition()
-  const { pathname } = useLocation()
-  const go = (id: EditionId) => {
-    const path = pathname === '/two-factor' ? '/login' : pathname
-    window.location.assign(`/${id}${path === '/' ? '' : path}`)
-  }
-  const buttons = (
-    <>
-      {(Object.keys(EDITIONS) as EditionId[]).map((id) => (
-        <button key={id} type="button" aria-pressed={id === edition.id} onClick={() => id !== edition.id && go(id)} className={cn('edition-opt', id === edition.id && 'edition-on')}>
-          {EDITIONS[id].name}
-        </button>
-      ))}
-      <button type="button" className="edition-opt" onClick={() => window.location.assign('/')} aria-label="Compare all editions">All</button>
-    </>
-  )
-  if (inline) return <div className="edition-bar" role="group" aria-label="Design edition">{buttons}</div>
-  return (
-    <Popover align="right" className="w-40 p-1.5"
-      trigger={({ open, toggle }) => (
-        <button type="button" className="edition-trigger" onClick={toggle} aria-expanded={open} aria-label={`Design edition: ${edition.name}. Switch edition`}>
-          <Palette size={15} /> <span className="max-sm:hidden">{edition.name}</span>
-        </button>
-      )}>
-      {() => <div className="flex flex-col gap-0.5" role="group" aria-label="Design edition">{buttons}</div>}
     </Popover>
   )
 }

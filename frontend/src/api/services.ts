@@ -1,31 +1,5 @@
-import { http, USE_MOCK, API_BASE, tokenStore } from './client'
+import { http, USE_MOCK, API_BASE, sessionStore } from './client'
 import type * as T from './types'
-
-export const authApi = {
-  login: (email: string, password: string) => http.post<T.AuthResult>('/auth/login', { email, password }),
-  register: (name: string, email: string, password: string) =>
-    http.post<T.AuthResult>('/auth/register', { name, email, password }),
-  verify2fa: (challengeId: string, code: string, kind: 'totp' | 'email' | 'recovery') =>
-    http.post<T.AuthResult>('/auth/2fa/verify', { challengeId, code, kind }),
-  resendEmailCode: (challengeId: string) => http.post<void>('/auth/2fa/email/resend', { challengeId }),
-  requestReset: (email: string) => http.post<void>('/auth/password/forgot', { email }),
-  resetPassword: (code: string, password: string) => http.post<void>('/auth/password/reset', { code, password }),
-  logout: () => http.post<void>('/auth/logout'),
-}
-
-export const meApi = {
-  get: () => http.get<T.User>('/me'),
-  update: (patch: Partial<T.User>) => http.patch<T.User>('/me', patch),
-  changePassword: (current: string, next: string) => http.post<void>('/me/password', { current, next }),
-  setupTotp: () => http.post<{ secret: string; otpauthUrl: string }>('/me/2fa/totp/setup'),
-  enable2fa: (method: 'totp' | 'email', code: string) =>
-    http.post<{ recoveryCodes: string[] }>('/me/2fa/enable', { method, code }),
-  disable2fa: () => http.delete<void>('/me/2fa'),
-  recoveryCodes: () => http.post<{ recoveryCodes: string[] }>('/me/2fa/recovery-codes'),
-  sessions: () => http.get<T.Session[]>('/me/sessions'),
-  revokeSession: (id: T.ID) => http.delete<void>(`/me/sessions/${id}`),
-  revokeOtherSessions: () => http.delete<void>('/me/sessions'),
-}
 
 export const workspaceApi = {
   list: () => http.get<T.Workspace[]>('/workspaces'),
@@ -81,7 +55,7 @@ export const chatApi = {
         if (!cancelled) stop = m.subscribeMock(channelId, onEvent)
       })
     } else {
-      const source = new EventSource(`${API_BASE}/channels/${channelId}/stream?token=${tokenStore.get() ?? ''}`)
+      const source = new EventSource(`${API_BASE}/channels/${channelId}/stream?token=${sessionStore.get()?.accessToken ?? ''}`)
       source.onmessage = (ev) => onEvent(JSON.parse(ev.data))
       stop = () => source.close()
     }

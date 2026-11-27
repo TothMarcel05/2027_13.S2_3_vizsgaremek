@@ -7,32 +7,28 @@ import '@fontsource-variable/inter'
 import '@fontsource-variable/fraunces'
 import '@fontsource-variable/fraunces/wght-italic.css'
 import './styles/base.css'
-import './styles/editions.css'
 import { App } from './App'
-import { Chooser } from './Chooser'
-import { EDITIONS, EditionContext, type EditionId } from './editions'
 import { OverlayProvider } from './components/ui/overlay'
+import { sessionStore } from './api/client'
 
 const client = new QueryClient({ defaultOptions: { queries: { staleTime: 15_000, retry: 1, refetchOnWindowFocus: false } } })
-const segment = window.location.pathname.split('/')[1] ?? ''
-const edition = Object.hasOwn(EDITIONS, segment) ? EDITIONS[segment as EditionId] : null
-
-// The edition lives on <html> so portals (modals, drawers, toasts) are themed too.
-document.documentElement.dataset.edition = edition?.id ?? 'atelier'
-if (edition) document.title = `${edition.name} — Workspace`
+// Subscribed before React renders, so one account's cached data is never shown to the next.
+let accountId = sessionStore.get()?.user.id
+sessionStore.subscribe(() => {
+  const next = sessionStore.get()?.user.id
+  if (next === accountId) return
+  accountId = next
+  client.clear()
+})
 
 createRoot(document.getElementById('root')!).render(
   <StrictMode>
-    {edition ? (
-      <QueryClientProvider client={client}>
-        <EditionContext.Provider value={edition}>
-          <MotionConfig reducedMotion="user">
-            <BrowserRouter basename={`/${edition.id}`}>
-              <OverlayProvider><App /></OverlayProvider>
-            </BrowserRouter>
-          </MotionConfig>
-        </EditionContext.Provider>
-      </QueryClientProvider>
-    ) : <Chooser />}
+    <QueryClientProvider client={client}>
+      <MotionConfig reducedMotion="user">
+        <BrowserRouter>
+          <OverlayProvider><App /></OverlayProvider>
+        </BrowserRouter>
+      </MotionConfig>
+    </QueryClientProvider>
   </StrictMode>,
 )

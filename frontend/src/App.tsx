@@ -1,16 +1,20 @@
 import { useState } from 'react'
 import { Navigate, Route, Routes, useLocation, useNavigate } from 'react-router'
-import { useQuery, useQueryClient } from '@tanstack/react-query'
+import { useQuery } from '@tanstack/react-query'
 import { AnimatePresence, motion } from 'framer-motion'
 import { Compass } from 'lucide-react'
-import { tokenStore } from './api/client'
-import { authApi, meApi, workspaceApi } from './api/services'
+import { USE_MOCK } from './api/client'
+import { authApi } from './api/auth'
+import { workspaceApi } from './api/services'
 import type { ID } from './api/types'
-import { WorkspaceContext } from './lib/data'
-import { useEdition } from './editions'
+import { WorkspaceContext, useMeQuery } from './lib/data'
+import { MOTION } from './lib/motion'
 import { Button, EmptyState, ErrorState, Skeleton, SkeletonGrid } from './components/ui/core'
-import { SHELLS } from './components/layout/Shells'
-import { Login, Register, ResetPassword, TwoFactor } from './features/auth/Auth'
+import { Shell } from './components/layout/Shells'
+import { useToast } from './components/ui/overlay'
+import { ForgotPassword, Login, Register, ResetPassword, TwoFactor } from './features/auth/Auth'
+import { useSession } from './features/auth/useSession'
+import { AccountOnly } from './features/settings/AccountOnly'
 import { Dashboard } from './features/dashboard/Dashboard'
 import { Projects } from './features/projects/Projects'
 import { ProjectDetail } from './features/projects/ProjectDetail'
@@ -31,12 +35,11 @@ const Loading = () => (
 function Workspace({ signOut }: { signOut: () => void }) {
   const location = useLocation()
   const navigate = useNavigate()
-  const edition = useEdition()
-  const Shell = SHELLS[edition.id]
   const [selected, setSelected] = useState<ID | null>(() => localStorage.getItem('ws.current'))
   const workspaces = useQuery({ queryKey: ['workspaces'], queryFn: workspaceApi.list })
-  const me = useQuery({ queryKey: ['me'], queryFn: meApi.get })
+  const me = useMeQuery()
 
+  if (me.isError && !me.data) return <ErrorState error={me.error} retry={() => me.refetch()} />
   if (workspaces.isError) return <ErrorState error={workspaces.error} retry={() => workspaces.refetch()} />
   const list = workspaces.data
   if (!list || !me.data) return <Loading />
@@ -50,7 +53,7 @@ function Workspace({ signOut }: { signOut: () => void }) {
     <WorkspaceContext.Provider value={{ workspace, workspaces: list, setWorkspace }}>
       <Shell signOut={signOut}>
         <AnimatePresence mode="wait" initial={false}>
-          <motion.div key={`${workspace.id}:${section}`} initial="hidden" animate="show" exit="exit" variants={edition.page}
+          <motion.div key={`${workspace.id}:${section}`} initial="hidden" animate="show" exit="exit" variants={MOTION.page}
             onAnimationStart={(definition) => { if (definition === 'show') window.scrollTo(0, 0) }}>
             <Routes location={location}>
               <Route path="/" element={<Dashboard />} />
@@ -75,22 +78,27 @@ function Workspace({ signOut }: { signOut: () => void }) {
 const AUTH_PATHS = ['/login', '/register', '/reset', '/two-factor']
 
 export function App() {
-  const [token, setToken] = useState(tokenStore.get)
-  const client = useQueryClient()
+  const session = useSession()
   const navigate = useNavigate()
+  const toast = useToast()
   const { pathname } = useLocation()
-  const signIn = (value: string) => { tokenStore.set(value); client.clear(); setToken(value) }
   const signOut = () => {
-    authApi.logout().catch(() => {})
-    tokenStore.clear(); setToken(null); client.clear(); navigate('/login')
+    authApi.logout().catch(() => toast('Signed out here, but the server couldn’t end the session.', 'error'))
+    navigate('/login')
   }
-  if (token) return AUTH_PATHS.includes(pathname) ? <Navigate to="/" replace /> : <Workspace signOut={signOut} />
+  // Reached from an emailed link, signed in or not. Handled first so it stays mounted if the session ends.
+  if (pathname === '/reset-password') return <ResetPassword />
+  if (session) {
+    if (AUTH_PATHS.includes(pathname)) return <Navigate to="/" replace />
+    // Only auth and profile talk to the real API so far; the workspace screens still expect the mock.
+    return USE_MOCK ? <Workspace signOut={signOut} /> : <AccountOnly signOut={signOut} />
+  }
   return (
     <Routes>
-      <Route path="/login" element={<Login signIn={signIn} />} />
-      <Route path="/register" element={<Register signIn={signIn} />} />
-      <Route path="/reset" element={<ResetPassword />} />
-      <Route path="/two-factor" element={<TwoFactor signIn={signIn} />} />
+      <Route path="/login" element={<Login />} />
+      <Route path="/register" element={<Register />} />
+      <Route path="/reset" element={<ForgotPassword />} />
+      <Route path="/two-factor" element={<TwoFactor />} />
       <Route path="*" element={<Navigate to="/login" replace />} />
     </Routes>
   )

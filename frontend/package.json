@@ -6,6 +6,7 @@
   "scripts": {
     "dev": "vite",
     "typecheck": "tsc --noEmit",
+    "lint": "oxlint",
     "build": "tsc --noEmit && vite build",
     "preview": "vite preview"
   },
@@ -14,6 +15,7 @@
     "@fontsource-variable/fraunces": "^5.3.0",
     "@fontsource-variable/inter": "^5.3.0",
     "@tanstack/react-query": "^5.108.4",
+    "axios": "^1.21.1",
     "framer-motion": "^14.14.0",
     "lucide-react": "^1.81.0",
     "qrcode": "^1.5.4",
@@ -27,6 +29,7 @@
     "@types/react": "^19.3.3",
     "@types/react-dom": "^19.3.0",
     "@vitejs/plugin-react": "^6.3.0",
+    "oxlint": "^1.95.0",
     "tailwindcss": "^4.3.5",
     "typescript": "^7.0.2",
     "vite": "^8.4.0"

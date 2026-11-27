@@ -3,7 +3,7 @@ import { createPortal } from 'react-dom'
 import { AnimatePresence, motion } from 'framer-motion'
 import { X, CheckCircle2, AlertCircle } from 'lucide-react'
 import { cn } from '../../lib/utils'
-import { useEdition } from '../../editions'
+import { MOTION } from '../../lib/motion'
 import { Button } from './core'
 
 /* Only the topmost layer reacts to Escape and traps focus. */
@@ -56,7 +56,6 @@ interface PanelProps {
 
 export function Modal({ open, onClose, title, description, children, footer, wide, onSubmit }: PanelProps & { wide?: boolean; onSubmit?: () => void }) {
   const ref = useRef<HTMLFormElement>(null)
-  const edition = useEdition()
   const titleId = useId()
   useLayer(open, onClose, ref)
   const submit = (e: FormEvent) => { e.preventDefault(); onSubmit?.() }
@@ -69,7 +68,7 @@ export function Modal({ open, onClose, title, description, children, footer, wid
             ref={ref} tabIndex={-1} role="dialog" aria-modal="true" aria-labelledby={titleId} onSubmit={submit} noValidate
             className={cn('modal', wide ? 'sm:max-w-2xl' : 'sm:max-w-md')}
             initial={{ opacity: 0, y: 24, scale: 0.97 }} animate={{ opacity: 1, y: 0, scale: 1 }} exit={{ opacity: 0, y: 16, scale: 0.98, transition: { duration: 0.15 } }}
-            transition={edition.spring}
+            transition={MOTION.spring}
           >
             <div className="flex items-start justify-between gap-4 px-5 pt-5">
               <div>
@@ -90,7 +89,6 @@ export function Modal({ open, onClose, title, description, children, footer, wid
 
 export function Drawer({ open, onClose, title, children, footer, side = 'right' }: PanelProps & { side?: 'right' | 'left' }) {
   const ref = useRef<HTMLDivElement>(null)
-  const edition = useEdition()
   const titleId = useId()
   useLayer(open, onClose, ref)
   const off = side === 'right' ? '105%' : '-105%'
@@ -102,7 +100,7 @@ export function Drawer({ open, onClose, title, children, footer, side = 'right' 
           <motion.div
             ref={ref} tabIndex={-1} role="dialog" aria-modal="true" aria-labelledby={titleId}
             className={cn('drawer', side === 'right' ? 'drawer-right' : 'drawer-left')}
-            initial={{ x: off }} animate={{ x: 0 }} exit={{ x: off }} transition={edition.spring}
+            initial={{ x: off }} animate={{ x: 0 }} exit={{ x: off }} transition={MOTION.spring}
           >
             <div className="flex items-center justify-between gap-3 border-b border-line px-5 py-3.5">
               <div id={titleId} className="section-title min-w-0 truncate">{title}</div>

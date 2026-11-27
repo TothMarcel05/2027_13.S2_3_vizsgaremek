@@ -189,14 +189,6 @@ export interface Paged<T> {
   pageSize: number
 }
 
-export interface AuthResult {
-  token?: string
-  user?: User
-  requires2fa?: boolean
-  method?: Exclude<TwoFactorMethod, null>
-  challengeId?: string
-}
-
 export interface DashboardData {
   projects: Project[]
   tasks: Task[]

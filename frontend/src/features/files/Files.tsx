@@ -6,7 +6,7 @@ import { fileApi } from '../../api/services'
 import type { FileNode, Share, ShareRole } from '../../api/types'
 import { useAction, useMe, useMembers, usePeople, useWorkspace } from '../../lib/data'
 import { cn, fmtBytes, fmtDate, saveBlob } from '../../lib/utils'
-import { useEdition } from '../../editions'
+import { MOTION } from '../../lib/motion'
 import { Avatar, AvatarStack, Badge, Button, EmptyState, ErrorState, FormError, Input, PageHeader, Segmented, Select, SkeletonGrid } from '../../components/ui/core'
 import { Modal, Popover, useConfirm, useToast } from '../../components/ui/overlay'
 
@@ -72,13 +72,12 @@ function ShareModal({ node, onClose }: { node: FileNode | null; onClose: () => v
 
 export function Files() {
   const { workspace } = useWorkspace()
-  const edition = useEdition()
   const people = usePeople()
   const toast = useToast()
   const confirm = useConfirm()
   const client = useQueryClient()
   const [folderId, setFolderId] = useState<string | null>(null)
-  const [view, setView] = useState<'grid' | 'list'>(edition.id === 'almanac' ? 'list' : 'grid')
+  const [view, setView] = useState<'grid' | 'list'>('grid')
   const [tag, setTag] = useState<string | null>(null)
   const [search, setSearch] = useState('')
   const [over, setOver] = useState(false)
@@ -188,7 +187,7 @@ export function Files() {
         : !shown.length ? <div className="card"><EmptyState icon={<Folder size={20} />} title={filtering ? 'No matching files' : 'This folder is empty'}>{filtering ? 'Try another tag or search.' : 'Drop files anywhere on this page.'}</EmptyState></div>
         : (
           <AnimatePresence mode="wait">
-            <motion.div key={`${view}-${current}`} initial="hidden" animate="show" exit="exit" variants={edition.page}>
+            <motion.div key={`${view}-${current}`} initial="hidden" animate="show" exit="exit" variants={MOTION.page}>
               {view === 'grid' ? (
                 <div className="grid grid-cols-2 gap-3 md:grid-cols-3 xl:grid-cols-4">
                   {shown.map((f, i) => {
