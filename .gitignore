@@ -1,5 +1,6 @@
 # Logs
 logs
+logs/
 *.log
 npm-debug.log*
 yarn-debug.log*
@@ -145,3 +146,23 @@ vite.config.ts.timestamp-*
 # CSharp
 .appsettings.json
 appsettings.json
+
+# Visual Studio / C# specifikus ignorálások
+*.user
+*.userosscache
+*.sln.docstates
+*.suo
+
+# Build és átmeneti mappák
+[Bb]in/
+[Oo]bj/
+obj/
+bin/
+.vs/
+[Tt]est[Rr]esult*/
+
+.tmp
+.Backup.tmp
+
+# Beállítások
+appsettings.Development.json
