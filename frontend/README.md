@@ -1,75 +1,52 @@
-# React + TypeScript + Vite
+# Workspace: three editions
 
-This template provides a minimal setup to get React working in Vite with HMR and some ESLint rules.
+A collaborative workspace and project management frontend in three designs that share one engine.
 
-Currently, two official plugins are available:
-
-- [@vitejs/plugin-react](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react) uses [Oxc](https://oxc.rs)
-- [@vitejs/plugin-react-swc](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react-swc) uses [SWC](https://swc.rs/)
-
-## React Compiler
-
-The React Compiler is not enabled on this template because of its impact on dev & build performances. To add it, see [this documentation](https://react.dev/learn/react-compiler/installation).
-
-## Expanding the ESLint configuration
-
-If you are developing a production application, we recommend updating the configuration to enable type-aware lint rules:
-
-```js
-export default defineConfig([
-  globalIgnores(['dist']),
-  {
-    files: ['**/*.{ts,tsx}'],
-    extends: [
-      // Other configs...
-
-      // Remove tseslint.configs.recommended and replace with this
-      tseslint.configs.recommendedTypeChecked,
-      // Alternatively, use this for stricter rules
-      tseslint.configs.strictTypeChecked,
-      // Optionally, add this for stylistic rules
-      tseslint.configs.stylisticTypeChecked,
-
-      // Other configs...
-    ],
-    languageOptions: {
-      parserOptions: {
-        project: ['./tsconfig.node.json', './tsconfig.app.json'],
-        tsconfigRootDir: import.meta.dirname,
-      },
-      // other options...
-    },
-  },
-])
-
+```powershell
+npm install
+npm run dev
 ```
 
-You can also install [eslint-plugin-react-x](https://github.com/Rel1cx/eslint-react/tree/main/packages/plugins/eslint-plugin-react-x) and [eslint-plugin-react-dom](https://github.com/Rel1cx/eslint-react/tree/main/packages/plugins/eslint-plugin-react-dom) for React-specific lint rules:
+Open http://localhost:5173 and pick an edition.
 
-```js
-// eslint.config.js
-import reactX from 'eslint-plugin-react-x'
-import reactDom from 'eslint-plugin-react-dom'
+| Edition | URL | Navigation | Look |
+|---|---|---|---|
+| **Atelier** | `/atelier` | Collapsible sand sidebar | Soft cards, serif headlines, terracotta; split-screen sign-in |
+| **Almanac** | `/almanac` | Masthead with top tabs | White paper, hairline rules, sage; broadsheet dashboard, table-style project list |
+| **Studio** | `/studio` | Floating icon dock (bottom dock on phones) | Pill controls, large radii, sans type, amber; floating-card sign-in, springy motion |
 
-export default defineConfig([
-  globalIgnores(['dist']),
-  {
-    files: ['**/*.{ts,tsx}'],
-    extends: [
-      // Other configs...
-      // Enable lint rules for React
-      reactX.configs['recommended-typescript'],
-      // Enable lint rules for React DOM
-      reactDom.configs.recommended,
-    ],
-    languageOptions: {
-      parserOptions: {
-        project: ['./tsconfig.node.json', './tsconfig.app.json'],
-        tsconfigRootDir: import.meta.dirname,
-      },
-      // other options...
-    },
-  },
-])
+All three have every feature. Use the palette button in the header to switch while staying on the same page.
 
+## Demo mode
+
+- Sign-in is pre-filled; any email with a 6+ character password works.
+- 2FA and reset codes: any 6 digits except `000000`. Recovery code format: `abcde-12345`.
+- Data is mocked in the browser and kept per tab (`sessionStorage`), so reloads keep your edits. Close the tab to reset.
+- Chat replies are simulated.
+
+## Connecting the backend
+
+1. Copy `.env.example` to `.env.local`, set `VITE_USE_MOCK=false` and, if needed, `VITE_API_URL`.
+2. For local development, add a `server.proxy` entry for `/api` in `vite.config.ts`.
+
+- `src/api/services.ts`: every REST call the UI makes.
+- `src/api/types.ts`: the expected response shapes.
+- `src/api/mock/server.ts`: a route table showing the behaviour the UI expects (validation, status codes).
+
+These paths and shapes are assumptions, since no backend spec was provided. Adjust them to match the real API.
+The real mode has not been tested against a server. It assumes a bearer token (kept in `localStorage`;
+consider an httpOnly cookie for production), JSON errors shaped `{ "message": string }`, multipart file
+uploads, and Server-Sent Events for chat. Chat attachments currently send metadata and a local preview URL
+only, so they need an upload endpoint. Permission checks in the UI are cosmetic: the server must enforce them.
+
+## Layout
+
+```
+src/
+  api/            REST client, services, types, mock server
+  features/       one folder per area (auth, projects, chat, calendar, files, ...)
+  components/ui/  buttons, forms, modals, drawers, skeletons
+  components/layout/  the three shells and shared header pieces
+  editions.tsx    per-edition motion settings
+  styles/         base.css (shared) and editions.css (per-edition look)
 ```
