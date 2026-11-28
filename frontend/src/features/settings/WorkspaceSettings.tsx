@@ -4,7 +4,7 @@ import { Crown, Lock, Mail, Send, UserMinus, Users } from 'lucide-react'
 import { workspaceService, type MemberRow, type RoleOption, type SentInvitation } from '../../api/workspaces'
 import type { ID } from '../../api/types'
 import { useAction, useMe, useWorkspace } from '../../lib/data'
-import { fmtDate, timeAgo } from '../../lib/utils'
+import { cn, fmtDate, timeAgo } from '../../lib/utils'
 import { MOTION } from '../../lib/motion'
 import { Avatar, Badge, Button, EmptyState, ErrorState, FormError, Input, PageHeader, SectionTitle, Segmented, Select, SkeletonGrid } from '../../components/ui/core'
 import { useConfirm } from '../../components/ui/overlay'
@@ -38,8 +38,9 @@ function Members({ admin, myId, onInvite }: { admin: Admin; myId: ID | undefined
     if (m.userId === workspace.ownerId) return <Badge tone="accent"><Crown size={11} /> Owner</Badge>
     if (access.isPending || (roles.isFetching && !roles.data)) return <span className="text-xs text-muted">Loading role…</span>
     if (!roles.data) return <Badge>Role hidden</Badge>
+    if (!canManage) return <Badge>{roleName(roles.data, m.roleId) ?? 'Role hidden'}</Badge>
     return (
-      <Select aria-label={`Role of ${m.name}`} className="!w-auto" value={m.roleId} disabled={!canManage || m.userId === myId || setRole.isPending}
+      <Select aria-label={`Role of ${m.name}`} className="!w-auto" value={m.roleId} disabled={m.userId === myId || setRole.isPending}
         onChange={(e) => setRole.mutate({ userId: m.userId, roleId: e.target.value })}>
         <RoleOptions roles={roles.data} current={m.roleId} />
       </Select>
@@ -60,11 +61,15 @@ function Members({ admin, myId, onInvite }: { admin: Admin; myId: ID | undefined
                 <p className="truncate text-xs text-muted">{m.email && `${m.email} · `}joined {fmtDate(m.joinedAt, { month: 'short', year: 'numeric' })}</p>
               </div>
               {roleControl(m)}
-              <Button size="sm" variant="ghost" icon={<UserMinus size={15} />} aria-label={`Remove ${m.name}`}
-                disabled={!canManage || m.userId === workspace.ownerId || m.userId === myId || remove.isPending}
-                onClick={async () => {
-                  if (await confirm({ title: `Remove ${m.name}?`, message: 'They lose access to this workspace.', confirmLabel: 'Remove member', danger: true })) remove.mutate(m.userId)
-                }} />
+              {/* Hidden rather than disabled; the invisible one keeps the role column aligned. */}
+              {canManage && (
+                <Button size="sm" variant="ghost" icon={<UserMinus size={15} />} aria-label={`Remove ${m.name}`}
+                  className={cn((m.userId === workspace.ownerId || m.userId === myId) && 'invisible')}
+                  disabled={m.userId === workspace.ownerId || m.userId === myId || remove.isPending}
+                  onClick={async () => {
+                    if (await confirm({ title: `Remove ${m.name}?`, message: 'They lose access to this workspace.', confirmLabel: 'Remove member', danger: true })) remove.mutate(m.userId)
+                  }} />
+              )}
             </motion.li>
           ))}
         </AnimatePresence>

@@ -418,6 +418,15 @@ namespace PROTOTYPE_backend.Services.Workspaces
             }
 
             _context.WorkspaceMembers.Remove(membership);
+
+            // A munkaterülethez tartozó projekt- és csevegőszoba-tagságok is megszűnnek (egy tranzakcióban).
+            _context.ProjectMembers.RemoveRange(await _context.ProjectMembers
+                .Where(m => m.WorkspaceId == workspaceId && m.UserId == userId)
+                .ToListAsync());
+            _context.ChatRoomMembers.RemoveRange(await _context.ChatRoomMembers
+                .Where(m => m.Room.WorkspaceId == workspaceId && m.UserId == userId)
+                .ToListAsync());
+
             await _context.SaveChangesAsync();
 
             _logger.LogInformation("Tag eltávolítva a munkaterületről. WorkspaceId: {WorkspaceId}, UserId: {UserId}", workspaceId, userId);

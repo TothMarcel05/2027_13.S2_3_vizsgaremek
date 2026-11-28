@@ -56,7 +56,7 @@ export function Shell({ children, signOut }: ShellProps) {
           {!collapsed && <Button variant="ghost" size="sm" icon={<PanelLeftClose size={16} />} aria-label="Collapse sidebar" onClick={toggle} />}
         </div>
         {collapsed && !small && <Button variant="ghost" size="sm" className="mx-auto mb-2" icon={<PanelLeftOpen size={16} />} aria-label="Expand sidebar" onClick={toggle} />}
-        <div className="mb-4"><WorkspaceSwitcher compact={collapsed} placement={collapsed ? 'side' : 'bottom'} /></div>
+        <div className="mb-4"><WorkspaceSwitcher compact={collapsed} placement={collapsed ? 'side-start' : 'bottom'} /></div>
         <SideLinks collapsed={collapsed} group="desktop" />
         <div className={cn('mt-auto flex border-t border-line pt-3', collapsed && 'justify-center')}>
           <UserMenu signOut={signOut} placement={collapsed ? 'side' : 'top'} align="left" detailed={!collapsed} />

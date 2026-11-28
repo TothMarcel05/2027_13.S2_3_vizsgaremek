@@ -172,6 +172,8 @@ namespace PROTOTYPE_backend.Services.Invitations
                 return false;
             }
 
+            await EnsureIsRecipientAsync(currentUserId, invitation);
+
             if (invitation.Status != 1 || invitation.ExpiresAt < DateTime.UtcNow)
             {
                 _logger.LogWarning(
@@ -265,6 +267,9 @@ namespace PROTOTYPE_backend.Services.Invitations
         {
             var invitation = await _context.AppInvitations.FirstOrDefaultAsync(i => i.Token == token);
 
+            if (invitation != null)
+                await EnsureIsRecipientAsync(currentUserId, invitation);
+
             if (invitation == null || invitation.Status != 1)
             {
                 _logger.LogWarning("Meghívó elutasítása sikertelen: érvénytelen vagy nem függőben lévő meghívó. InvitationId: {InvitationId}, UserId: {UserId}",
@@ -283,6 +288,22 @@ namespace PROTOTYPE_backend.Services.Invitations
                 invitation.Id, invitation.TargetId, currentUserId);
 
             return true;
+        }
+
+        // Meghívót csak a meghívott e-mail címhez tartozó fiók fogadhat el vagy utasíthat el
+        private async Task EnsureIsRecipientAsync(Guid userId, AppInvitation invitation)
+        {
+            var email = await _context.AppUsers
+                .Where(u => u.Id == userId)
+                .Select(u => u.Email)
+                .FirstOrDefaultAsync();
+
+            if (!string.Equals(email?.Trim(), invitation.InvitedEmail.Trim(), StringComparison.OrdinalIgnoreCase))
+            {
+                _logger.LogWarning("Jogosulatlan meghívó-kezelési kísérlet: eltérő e-mail cím. InvitationId: {InvitationId}, UserId: {UserId}",
+                    invitation.Id, userId);
+                throw new UnauthorizedAccessException("Ez a meghívó nem a te e-mail címedre szól.");
+            }
         }
 
         // 7. MEGHÍVÓ TÖRLÉSE / VISSZAVONÁSA

@@ -13,6 +13,9 @@ namespace PROTOTYPE_backend.Services.Storage
 {
     public class StorageService : IStorageService
     {
+        // A lemezen a GUID előtaggal (37 karakter) együtt is beleférjen a 255 karakteres korlátba
+        private const int MaxFileNameLength = 200;
+
         private readonly AppDbContext _context;
         private readonly ILogger<StorageService> _logger;
 
@@ -35,6 +38,8 @@ namespace PROTOTYPE_backend.Services.Storage
 
             await EnsureSameWorkspaceAsync(dto.WorkspaceId, dto.ProjectId, dto.ParentId);
 
+            var fileName = GetSafeFileName(dto.File.FileName);
+
             var currentUsedBytes = await _context.StorageNodes
                 .Where(n => n.WorkspaceId == dto.WorkspaceId && n.DeletedAt == null && n.Type == 2)
                 .SumAsync(n => (long)(n.SizeBytes ?? 0));
@@ -54,7 +59,7 @@ namespace PROTOTYPE_backend.Services.Storage
                 _logger.LogInformation("Uploads könyvtár létrehozva: {UploadsFolder}", uploadsFolder);
             }
 
-            var uniqueFileName = $"{Guid.NewGuid()}_{dto.File.FileName}";
+            var uniqueFileName = $"{Guid.NewGuid()}_{ToDiskFileName(fileName)}";
             var filePath = Path.Combine(uploadsFolder, uniqueFileName);
 
             try
@@ -71,7 +76,7 @@ namespace PROTOTYPE_backend.Services.Storage
                     WorkspaceId = dto.WorkspaceId,
                     ProjectId = dto.ProjectId,
                     ParentId = dto.ParentId,
-                    Name = dto.File.FileName,
+                    Name = fileName,
                     Type = 2,
                     MimeType = dto.File.ContentType,
                     StoragePath = filePath,
@@ -175,6 +180,25 @@ namespace PROTOTYPE_backend.Services.Storage
                 new List<string>()
             );
         }
+
+        // A kliens által küldött névből csak a fájlnév marad meg, útvonal-részek nélkül
+        private static string GetSafeFileName(string clientFileName)
+        {
+            // A '\' Linuxon nem elválasztó, ezért egységesítjük
+            var fileName = Path.GetFileName(clientFileName.Replace('\\', '/'));
+
+            if (string.IsNullOrWhiteSpace(fileName) || fileName is "." or "..")
+                throw new ArgumentException("Érvénytelen fájlnév.");
+
+            if (fileName.Length > MaxFileNameLength)
+                throw new ArgumentException($"A fájlnév legfeljebb {MaxFileNameLength} karakter lehet.");
+
+            return fileName;
+        }
+
+        // A lemezen nem használható karakterek cseréje (platformtól függetlenül)
+        private static string ToDiskFileName(string fileName) =>
+            new(fileName.Select(c => char.IsControl(c) || "<>:\"/\\|?*".Contains(c) ? '_' : c).ToArray());
 
         // A megadott projekt és szülőmappa csak a cél munkaterülethez tartozhat
         private async Task EnsureSameWorkspaceAsync(Guid workspaceId, Guid? projectId, Guid? parentId)

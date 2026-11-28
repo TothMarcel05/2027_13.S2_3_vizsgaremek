@@ -53,7 +53,7 @@ export function Brand({ compact }: { compact?: boolean }) {
 
 const WsTile = ({ name, hue }: { name: string; hue: number }) => <span className="ws-tile" style={hueStyle(hue)}>{initials(name)}</span>
 
-export function WorkspaceSwitcher({ compact, placement = 'bottom' }: { compact?: boolean; placement?: 'bottom' | 'side' }) {
+export function WorkspaceSwitcher({ compact, placement = 'bottom' }: { compact?: boolean; placement?: 'bottom' | 'side-start' }) {
   const { workspace, workspaces, setWorkspace } = useWorkspace()
   const navigate = useNavigate()
   const me = useMe()
@@ -66,7 +66,7 @@ export function WorkspaceSwitcher({ compact, placement = 'bottom' }: { compact?:
   return (
     <>
       <Popover
-        placement={placement} className="w-72 p-1.5" wrapClass="min-w-0"
+        placement={placement} className="max-h-[calc(100dvh-10rem)] w-72 overflow-y-auto p-1.5" wrapClass="min-w-0"
         trigger={({ open, toggle }) => (
           <button type="button" onClick={toggle} aria-expanded={open} aria-label={`Workspace: ${workspace.name}. Switch workspace`} className={cn('ws-trigger', compact && 'ws-trigger-compact')}>
             <span className="relative">

@@ -119,7 +119,8 @@ export function Drawer({ open, onClose, title, children, footer, side = 'right' 
 export function Popover({ trigger, children, align = 'left', placement = 'bottom', className, wrapClass }: {
   trigger: (p: { open: boolean; toggle: () => void }) => ReactNode
   children: (close: () => void) => ReactNode
-  align?: 'left' | 'right'; placement?: 'bottom' | 'top' | 'side'; className?: string; wrapClass?: string
+  /** `side` grows upward from the trigger's bottom edge, `side-start` downward from its top edge. */
+  align?: 'left' | 'right'; placement?: 'bottom' | 'top' | 'side' | 'side-start'; className?: string; wrapClass?: string
 }) {
   const [open, setOpen] = useState(false)
   const root = useRef<HTMLDivElement>(null)
@@ -133,7 +134,9 @@ export function Popover({ trigger, children, align = 'left', placement = 'bottom
   }, [open])
   const position = placement === 'side'
     ? 'left-full bottom-0 ml-3'
-    : cn(placement === 'top' ? 'bottom-full mb-2' : 'top-full mt-2', align === 'right' ? 'right-0' : 'left-0')
+    : placement === 'side-start'
+      ? 'left-full top-0 ml-3'
+      : cn(placement === 'top' ? 'bottom-full mb-2' : 'top-full mt-2', align === 'right' ? 'right-0' : 'left-0')
   return (
     <div ref={root} className={cn('relative', wrapClass)}>
       {trigger({ open, toggle: () => setOpen((o) => !o) })}
