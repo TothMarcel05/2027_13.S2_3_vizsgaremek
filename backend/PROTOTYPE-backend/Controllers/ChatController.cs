@@ -2,9 +2,11 @@
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
+using PROTOTYPE_backend.Authorization;
 using PROTOTYPE_backend.DTOs.Chat;
 using PROTOTYPE_backend.Extensions;
 using PROTOTYPE_backend.Services.Chat;
+using PROTOTYPE_backend.Services.Workspaces;
 
 namespace PROTOTYPE_backend.Controllers
 {
@@ -16,8 +18,15 @@ namespace PROTOTYPE_backend.Controllers
         private readonly IChatService _chatService;
         private readonly ILogger<ChatController> _logger;
 
-        public ChatController(IChatService chatService, ILogger<ChatController> logger)
+        private readonly IAuthorizationService _authorizationService;
+
+        private readonly IWorkspaceService _workspaceService;
+
+        public ChatController(IChatService chatService, ILogger<ChatController> logger,
+            IAuthorizationService authorizationService, IWorkspaceService workspaceService)
         {
+            _workspaceService = workspaceService;
+            _authorizationService = authorizationService;
             _chatService = chatService;
             _logger = logger;
         }
@@ -56,6 +65,8 @@ namespace PROTOTYPE_backend.Controllers
                 return BadRequest(new { error = new { message = "A 'WorkspaceId' megadása kötelező.", code = "ERVENYTELEN_KERES" } });
             }
 
+            await _authorizationService.EnsurePermissionOnAsync(User, "chat.room.create", "Workspace", dto.WorkspaceId);
+
             var userId = User.GetUserId();
             var room = await _chatService.CreateRoomAsync(userId, dto);
             return StatusCode(StatusCodes.Status201Created, room);
@@ -80,6 +91,9 @@ namespace PROTOTYPE_backend.Controllers
             {
                 return BadRequest(new { error = new { message = "Önmagaddal nem indíthatsz privát beszélgetést.", code = "ERVENYTELEN_KERES" } });
             }
+
+            if (!User.IsSystemAdmin())
+                await _workspaceService.EnsureWorkspaceAccessAsync(workspaceId, userId);
 
             var room = await _chatService.GetOrCreateDirectRoomAsync(userId, workspaceId, targetUserId);
             return Ok(room);

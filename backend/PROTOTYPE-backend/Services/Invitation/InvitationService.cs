@@ -1,5 +1,6 @@
 ﻿using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Logging;
+using PROTOTYPE_backend.Authorization;
 using PROTOTYPE_backend.Data;
 using PROTOTYPE_backend.DTOs.Invitations;
 using PROTOTYPE_backend.Models;
@@ -97,6 +98,28 @@ namespace PROTOTYPE_backend.Services.Invitations
                 .Where(i => i.TargetId == targetId && i.Type == type && i.Status == 1 && i.ExpiresAt > DateTime.UtcNow)
                 .Select(i => MapToResponseDto(i))
                 .ToListAsync();
+        }
+
+        public async Task<InvitationTargetResource?> GetInvitationTargetAsync(Guid invitationId)
+        {
+            return await _context.AppInvitations
+                .AsNoTracking()
+                .Where(i => i.Id == invitationId)
+                .Select(i => new InvitationTargetResource(i.Type, i.TargetId))
+                .FirstOrDefaultAsync();
+        }
+
+        public async Task EnsureCanGrantRoleAsync(Guid callerId, InvitationTargetResource target, Guid roleId)
+        {
+            Guid? projectId = target.Type == 2 ? target.TargetId : null;
+            var workspaceId = projectId == null
+                ? target.TargetId
+                : await _context.Projects.AsNoTracking()
+                    .Where(p => p.Id == projectId)
+                    .Select(p => p.WorkspaceId)
+                    .FirstOrDefaultAsync();
+
+            await _context.EnsureCallerCoversRolesAsync(callerId, workspaceId, projectId, roleId);
         }
 
         // 4. MEGHÍVÓ ADATAI TOKEN ALAPJÁN (PUBLIKUS/ELŐNÉZET)

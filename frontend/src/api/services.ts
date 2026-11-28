@@ -1,20 +1,16 @@
-import { http, USE_MOCK, API_BASE, sessionStore } from './client'
+/**
+ * The modules that aren't connected yet. `http` answers them from the mock in both modes; their paths
+ * and shapes are assumptions to replace when each is connected. Module 2 lives in `workspaces.ts`.
+ */
+import { http } from './client'
 import type * as T from './types'
 
+/** Sample data only. `members` feeds the names and avatars on the sample screens. */
 export const workspaceApi = {
-  list: () => http.get<T.Workspace[]>('/workspaces'),
-  create: (name: string) => http.post<T.Workspace>('/workspaces', { name }),
-  update: (id: T.ID, patch: Partial<T.Workspace>) => http.patch<T.Workspace>(`/workspaces/${id}`, patch),
   dashboard: (id: T.ID) => http.get<T.DashboardData>(`/workspaces/${id}/dashboard`),
   members: (id: T.ID) => http.get<T.Member[]>(`/workspaces/${id}/members`),
-  setRole: (id: T.ID, userId: T.ID, role: T.WorkspaceRole) =>
-    http.patch<void>(`/workspaces/${id}/members/${userId}`, { role }),
-  removeMember: (id: T.ID, userId: T.ID) => http.delete<void>(`/workspaces/${id}/members/${userId}`),
+  /** Demo mode only. */
   transfer: (id: T.ID, userId: T.ID) => http.post<void>(`/workspaces/${id}/transfer-ownership`, { userId }),
-  sentInvitations: (id: T.ID) => http.get<T.Invitation[]>(`/workspaces/${id}/invitations`),
-  invite: (id: T.ID, email: string, role: T.WorkspaceRole) =>
-    http.post<T.Invitation>(`/workspaces/${id}/invitations`, { email, role }),
-  cancelInvitation: (invId: T.ID) => http.delete<void>(`/invitations/${invId}`),
   myInvitations: () => http.get<T.Invitation[]>('/invitations/pending'),
   respondInvitation: (invId: T.ID, accept: boolean) =>
     http.post<void>(`/invitations/${invId}/${accept ? 'accept' : 'decline'}`),
@@ -43,22 +39,13 @@ export const chatApi = {
   send: (channelId: T.ID, body: string, attachments: T.Attachment[]) =>
     http.post<T.Message>(`/channels/${channelId}/messages`, { body, attachments }),
   markRead: (channelId: T.ID) => http.post<void>(`/channels/${channelId}/read`),
-  /**
-   * Live updates. Mock: an in-memory event bus. Real: Server-Sent Events on
-   * /api/channels/:id/stream (swap for a WebSocket here if the backend uses one).
-   */
+  /** Live updates from the mock's in-memory event bus. The backend will use SignalR. */
   subscribe(channelId: T.ID, onEvent: (e: { type: 'typing' | 'message'; userId: T.ID }) => void): () => void {
     let stop: (() => void) | undefined
     let cancelled = false
-    if (USE_MOCK) {
-      import('./mock/server').then((m) => {
-        if (!cancelled) stop = m.subscribeMock(channelId, onEvent)
-      })
-    } else {
-      const source = new EventSource(`${API_BASE}/channels/${channelId}/stream?token=${sessionStore.get()?.accessToken ?? ''}`)
-      source.onmessage = (ev) => onEvent(JSON.parse(ev.data))
-      stop = () => source.close()
-    }
+    import('./mock/server').then((m) => {
+      if (!cancelled) stop = m.subscribeMock(channelId, onEvent)
+    })
     return () => {
       cancelled = true
       stop?.()
@@ -78,13 +65,8 @@ export const fileApi = {
   list: (ws: T.ID) => http.get<T.FileNode[]>(`/workspaces/${ws}/files`),
   createFolder: (ws: T.ID, name: string, parentId: T.ID | null) =>
     http.post<T.FileNode>(`/workspaces/${ws}/folders`, { name, parentId }),
-  upload(ws: T.ID, file: File, parentId: T.ID | null) {
-    if (USE_MOCK) return http.post<T.FileNode>(`/workspaces/${ws}/files`, { file, parentId })
-    const form = new FormData()
-    form.append('file', file)
-    if (parentId) form.append('parentId', parentId)
-    return http.post<T.FileNode>(`/workspaces/${ws}/files`, form)
-  },
+  upload: (ws: T.ID, file: File, parentId: T.ID | null) =>
+    http.post<T.FileNode>(`/workspaces/${ws}/files`, { file, parentId }),
   update: (id: T.ID, data: Partial<T.FileNode>) => http.patch<T.FileNode>(`/files/${id}`, data),
   share: (id: T.ID, shares: T.Share[]) => http.put<T.FileNode>(`/files/${id}/shares`, { shares }),
   remove: (id: T.ID) => http.delete<void>(`/files/${id}`),

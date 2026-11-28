@@ -2,6 +2,9 @@ import { useEffect, useState } from 'react'
 
 export const cn = (...parts: (string | false | null | undefined)[]) => parts.filter(Boolean).join(' ')
 
+/** A steady avatar or tile colour for records the backend gives no colour. */
+export const hueFrom = (id: string) => [...id].reduce((hash, char) => (hash * 31 + char.charCodeAt(0)) % 360, 7)
+
 const DAY = 86_400_000
 export const fmtDate = (iso: string | null | undefined, opts: Intl.DateTimeFormatOptions = { month: 'short', day: 'numeric' }) =>
   iso ? new Date(iso).toLocaleDateString('en-GB', opts) : '—'

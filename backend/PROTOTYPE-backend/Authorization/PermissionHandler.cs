@@ -41,14 +41,82 @@ public class PermissionHandler : AuthorizationHandler<PermissionRequirement>
             var rolesAndPermissions = JsonSerializer.Deserialize<Dictionary<string, List<string>>>(permissionsJson);
             if (rolesAndPermissions == null) return;
 
+            // Meghívó célja: kizárólag a cél (projekt vagy annak munkaterülete) számít,
+            // sem a fejlécek, sem az aktív munkaterület nem helyettesítheti.
+            if (context.Resource is InvitationTargetResource target)
+            {
+                var targetWorkspaceId = target.Type == 2
+                    ? await _db.Projects.AsNoTracking()
+                        .Where(p => p.Id == target.TargetId)
+                        .Select(p => (Guid?)p.WorkspaceId)
+                        .FirstOrDefaultAsync()
+                    : target.TargetId;
+
+                if (targetWorkspaceId != null
+                    && (HasPermission(target.TargetId) || HasPermission(targetWorkspaceId.Value)))
+                {
+                    context.Succeed(requirement);
+                }
+                return;
+
+                bool HasPermission(Guid key) =>
+                    rolesAndPermissions.TryGetValue(key.ToString(), out var permissions)
+                    && permissions.Contains(requirement.Permission);
+            }
+
             var httpContext = _httpContextAccessor.HttpContext;
             var activeWorkspaceId = context.User.FindFirstValue("active_workspace_id");
 
-            // Az erőforrás kontextusának meghatározása: projekt (route/fejléc) vagy feladat (route) vagy munkaterület
-            string? projectKey = httpContext?.GetRouteValue("projectId")?.ToString()
-                                 ?? httpContext?.Request.Headers["X-Project-Id"].FirstOrDefault();
-            string? resourceWorkspaceId = httpContext?.GetRouteValue("workspaceId")?.ToString()
-                                          ?? httpContext?.Request.Headers["X-Workspace-Id"].FirstOrDefault();
+            // Munkaterülethez tartozó elem: a jogosultság csak az elem saját munkaterületére érvényes.
+            if (context.Resource is WorkspaceOwnedResource owned)
+            {
+                Guid? ownerWorkspaceId = null;
+
+                if (owned.EntityName == "Workspace")
+                {
+                    var workspace = await _db.Workspaces.AsNoTracking()
+                        .Where(w => w.Id == owned.EntityId)
+                        .Select(w => new { w.Id, w.OwnerId })
+                        .FirstOrDefaultAsync();
+
+                    // A tulajdonos a törölt munkaterületébe nem tud belépni, de visszaállíthatja.
+                    if (workspace != null && workspace.OwnerId.ToString() == context.User.FindFirstValue(ClaimTypes.NameIdentifier))
+                    {
+                        context.Succeed(requirement);
+                        return;
+                    }
+                    ownerWorkspaceId = workspace?.Id;
+                }
+                else if (owned.EntityName == "Project")
+                {
+                    ownerWorkspaceId = await _db.Projects.AsNoTracking()
+                        .Where(p => p.Id == owned.EntityId)
+                        .Select(p => (Guid?)p.WorkspaceId)
+                        .FirstOrDefaultAsync();
+                }
+                else if (owned.EntityName == "StorageNode")
+                {
+                    ownerWorkspaceId = await _db.StorageNodes.AsNoTracking()
+                        .Where(n => n.Id == owned.EntityId)
+                        .Select(n => (Guid?)n.WorkspaceId)
+                        .FirstOrDefaultAsync();
+                }
+
+                // Nem létező elemnél az aktív munkaterületre esünk vissza, így a végpont a megfelelő hibát adja.
+                var requiredKey = ownerWorkspaceId?.ToString() ?? activeWorkspaceId;
+                if (!string.IsNullOrEmpty(requiredKey)
+                    && rolesAndPermissions.TryGetValue(requiredKey, out var ownedPermissions)
+                    && ownedPermissions.Contains(requirement.Permission))
+                {
+                    context.Succeed(requirement);
+                }
+                return;
+            }
+
+            // Az erőforrás kontextusának meghatározása: projekt (route) vagy feladat (route) vagy munkaterület (route).
+            // A kliens által küldött fejlécekben nem bízunk, azok nem határozhatják meg a kontextust.
+            string? projectKey = httpContext?.GetRouteValue("projectId")?.ToString();
+            string? resourceWorkspaceId = httpContext?.GetRouteValue("workspaceId")?.ToString();
 
             if (resourceWorkspaceId == null && Guid.TryParse(projectKey, out var projectGuid))
             {

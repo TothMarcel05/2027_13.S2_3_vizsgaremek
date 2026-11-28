@@ -2,6 +2,7 @@
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
+using PROTOTYPE_backend.Authorization;
 using PROTOTYPE_backend.DTOs.SoftDelete;
 using PROTOTYPE_backend.DTOs.Storage;
 using PROTOTYPE_backend.Extensions;
@@ -19,11 +20,15 @@ namespace PROTOTYPE_backend.Controllers
         private readonly ISoftDeleteService _softDeleteService;
         private readonly ILogger<StorageController> _logger;
 
+        private readonly IAuthorizationService _authorizationService;
+
         public StorageController(
             IStorageService storageService,
             ISoftDeleteService softDeleteService,
-            ILogger<StorageController> logger)
+            ILogger<StorageController> logger,
+            IAuthorizationService authorizationService)
         {
+            _authorizationService = authorizationService;
             _storageService = storageService;
             _softDeleteService = softDeleteService;
             _logger = logger;
@@ -44,6 +49,8 @@ namespace PROTOTYPE_backend.Controllers
                 return BadRequest(new { error = new { message = "A 'workspaceId' megadása kötelező.", code = "ERVENYTELEN_KERES" } });
             }
 
+            await _authorizationService.EnsurePermissionOnAsync(User, "storage.read", "Workspace", workspaceId);
+
             var nodes = await _storageService.GetNodesByWorkspaceAsync(workspaceId, tagFilter);
             return Ok(nodes);
             
@@ -59,6 +66,8 @@ namespace PROTOTYPE_backend.Controllers
         [ProducesResponseType(StatusCodes.Status500InternalServerError)]
         public async Task<IActionResult> DownloadFile(Guid id)
         {
+            await _authorizationService.EnsurePermissionOnAsync(User, "storage.read", "StorageNode", id);
+
             var fileData = await _storageService.GetFileStreamAsync(id);
 
             if (fileData == null)
@@ -93,6 +102,8 @@ namespace PROTOTYPE_backend.Controllers
                 return BadRequest(new { error = new { message = "A 'WorkspaceId' megadása kötelező.", code = "ERVENYTELEN_KERES" } });
             }
 
+            await _authorizationService.EnsurePermissionOnAsync(User, "storage.write", "Workspace", dto.WorkspaceId);
+
             var userId = User.GetUserId();
             var updatedDto = dto with { UserId = userId };
 
@@ -115,6 +126,8 @@ namespace PROTOTYPE_backend.Controllers
             {
                 return BadRequest(new { error = new { message = "A munkaterület azonosítója és a mappa neve kötelező.", code = "ERVENYTELEN_KERES" } });
             }
+
+            await _authorizationService.EnsurePermissionOnAsync(User, "storage.write", "Workspace", dto.WorkspaceId);
 
             var userId = User.GetUserId();
             var folder = await _storageService.CreateFolderAsync(
@@ -145,6 +158,8 @@ namespace PROTOTYPE_backend.Controllers
                 return BadRequest(new { error = new { message = "A 'NodeId' megadása kötelező.", code = "ERVENYTELEN_KERES" } });
             }
 
+            await _authorizationService.EnsurePermissionOnAsync(User, "storage.write", "StorageNode", dto.NodeId.GetValueOrDefault());
+
             var result = await _storageService.ChangeNodeData(dto);
             return Ok(result);
             
@@ -160,6 +175,8 @@ namespace PROTOTYPE_backend.Controllers
         [ProducesResponseType(StatusCodes.Status500InternalServerError)]
         public async Task<IActionResult> SoftDeleteNode(Guid id)
         {
+            await _authorizationService.EnsurePermissionOnAsync(User, "storage.delete", "StorageNode", id);
+
             var userId = User.GetUserId();
             var success = await _storageService.SoftDeleteNodeAsync(id, userId);
 
@@ -182,6 +199,8 @@ namespace PROTOTYPE_backend.Controllers
         [ProducesResponseType(StatusCodes.Status500InternalServerError)]
         public async Task<IActionResult> ShareWithRole(Guid id, Guid roleId)
         {
+            await _authorizationService.EnsurePermissionOnAsync(User, "storage.share", "StorageNode", id);
+
             var success = await _storageService.ShareNodeWithRoleAsync(id, roleId);
 
             if (!success)
@@ -203,6 +222,8 @@ namespace PROTOTYPE_backend.Controllers
         [ProducesResponseType(StatusCodes.Status500InternalServerError)]
         public async Task<IActionResult> RestoreNode(Guid id)
         {
+            await _authorizationService.EnsurePermissionOnAsync(User, "trash.manage", "StorageNode", id);
+
             var success = await _storageService.RestoreNodeAsync(id);
 
             if (!success)
@@ -235,6 +256,9 @@ namespace PROTOTYPE_backend.Controllers
             if (dto.EntityName == "AppUser" && !User.IsSystemAdmin())
                 throw new UnauthorizedAccessException("Felhasználói fiókot csak rendszeradminisztrátor helyezhet lomtárba.");
 
+            if (Guid.TryParse(dto.EntityId, out var entityId))
+                await _authorizationService.EnsurePermissionOnAsync(User, "trash.manage", dto.EntityName, entityId);
+
             var success = await _softDeleteService.SoftDeleteAsync(secureDto);
             if (!success)
             {
@@ -262,6 +286,9 @@ namespace PROTOTYPE_backend.Controllers
 
             if (dto.EntityName == "AppUser" && !User.IsSystemAdmin())
                 throw new UnauthorizedAccessException("Felhasználói fiókot csak rendszeradminisztrátor állíthat vissza.");
+
+            if (Guid.TryParse(dto.EntityId, out var entityId))
+                await _authorizationService.EnsurePermissionOnAsync(User, "trash.manage", dto.EntityName, entityId);
 
             var success = await _softDeleteService.RestoreAsync(dto);
             if (!success)

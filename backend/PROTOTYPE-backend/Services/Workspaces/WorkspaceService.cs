@@ -1,5 +1,6 @@
 ﻿using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Logging;
+using PROTOTYPE_backend.Authorization;
 using PROTOTYPE_backend.Data;
 using PROTOTYPE_backend.DTOs.Workspace;
 using PROTOTYPE_backend.Models;
@@ -89,6 +90,24 @@ namespace PROTOTYPE_backend.Services.Workspaces
             return new WorkspaceDataResponseDto(
                 workspace.Id, workspace.Name, workspace.OwnerId, user?.Name ?? "Ismeretlen", workspace.StorageQuotaBytes
             );
+        }
+
+        public async Task EnsureWorkspaceAccessAsync(Guid workspaceId, Guid userId)
+        {
+            var access = await _context.Workspaces
+                .AsNoTracking()
+                .Where(w => w.Id == workspaceId && w.DeletedAt == null)
+                .Select(w => new { IsMember = w.OwnerId == userId || w.WorkspaceMembers.Any(m => m.UserId == userId) })
+                .FirstOrDefaultAsync();
+
+            if (access == null)
+                throw new KeyNotFoundException("A megadott munkaterület nem található.");
+
+            if (!access.IsMember)
+            {
+                _logger.LogWarning("Jogosulatlan munkaterület-lekérdezés! UserId: {UserId}, WorkspaceId: {WorkspaceId}", userId, workspaceId);
+                throw new UnauthorizedAccessException("Nincs hozzáférésed ehhez a munkaterülethez!");
+            }
         }
 
         public async Task<WorkspaceDataResponseDto?> GetWorkspaceDataAsync(Guid workspaceId)
@@ -295,19 +314,52 @@ namespace PROTOTYPE_backend.Services.Workspaces
                 throw new KeyNotFoundException("A megadott új tulajdonos nem található!");
             }
 
+            var membership = await _context.WorkspaceMembers.FirstOrDefaultAsync(m => m.WorkspaceId == workspaceId && m.UserId == dto.newOwnerId);
+            if (membership == null)
+            {
+                _logger.LogWarning("Tulajdonosváltás elutasítva: az új tulajdonos nem tagja a munkaterületnek. WorkspaceId: {WorkspaceId}, NewOwnerId: {NewOwnerId}",
+                    workspaceId, dto.newOwnerId);
+                throw new ArgumentException("Az új tulajdonosnak a munkaterület tagjának kell lennie.");
+            }
+
             var oldOwnerId = workspace.OwnerId;
             workspace.OwnerId = dto.newOwnerId;
+
+            // Az új tulajdonos "Owner", a korábbi tulajdonos "Admin" szerepkört kap.
+            var roles = await _context.AppRoles.AsNoTracking()
+                .Where(r => r.Name == "Owner" || r.Name == "Admin")
+                .ToDictionaryAsync(r => r.Name, r => r.Id);
+
+            membership.RoleId = roles["Owner"];
+
+            if (oldOwnerId != dto.newOwnerId)
+            {
+                var oldMembership = await _context.WorkspaceMembers.FirstOrDefaultAsync(m => m.WorkspaceId == workspaceId && m.UserId == oldOwnerId);
+                if (oldMembership != null) oldMembership.RoleId = roles["Admin"];
+            }
+
             await _context.SaveChangesAsync();
 
             _logger.LogWarning(
                 "Munkaterület tulajdonosa megváltoztatva! WorkspaceId: {WorkspaceId}, RégiTulajdonos: {OldOwnerId}, ÚjTulajdonos: {NewOwnerId}",
                 workspaceId, oldOwnerId, dto.newOwnerId);
 
-            var membership = await _context.WorkspaceMembers.FirstOrDefaultAsync(m => m.WorkspaceId == workspaceId && m.UserId == dto.newOwnerId);
-
             return new WorkspaceOwnerChangeResponseDto(
-                workspace.Id, workspace.Name, newOwner.Id, newOwner.Name, membership?.RoleId ?? Guid.Empty
+                workspace.Id, workspace.Name, newOwner.Id, newOwner.Name, membership.RoleId
             );
+        }
+
+        public async Task EnsureCanManageMemberAsync(Guid callerId, Guid workspaceId, Guid memberId, Guid? newRoleId = null)
+        {
+            // A tag jelenlegi szerepköre is számít. A tulajdonos kivétel: őt a 409-es védelem kezeli.
+            var roleIds = await _context.WorkspaceMembers
+                .Where(m => m.WorkspaceId == workspaceId && m.UserId == memberId && m.Workspace.OwnerId != memberId)
+                .Select(m => m.RoleId)
+                .ToListAsync();
+
+            if (newRoleId.HasValue) roleIds.Add(newRoleId.Value);
+
+            await _context.EnsureCallerCoversRolesAsync(callerId, workspaceId, null, roleIds.ToArray());
         }
 
         public async Task<WorkspaceMemberRoleChangeResponseDto?> UpdateMemberRoleAsync(Guid workspaceId, Guid userId, WorkspaceMemberRoleChangeDto dto)
@@ -322,6 +374,15 @@ namespace PROTOTYPE_backend.Services.Workspaces
                 _logger.LogWarning("Munkaterület-tag szerepkörének módosítása sikertelen: a tagság nem található. WorkspaceId: {WorkspaceId}, UserId: {UserId}",
                     workspaceId, userId);
                 return null;
+            }
+
+            // A tulajdonos szerepköre csak "Owner"-re állítható (pl. tulajdonosváltás után), egyébként nem módosítható.
+            if (membership.Workspace.OwnerId == userId
+                && dto.roleId != membership.RoleId
+                && !await _context.AppRoles.AnyAsync(r => r.Id == dto.roleId && r.Name == "Owner"))
+            {
+                _logger.LogWarning("A tulajdonos szerepkörének módosítása elutasítva. WorkspaceId: {WorkspaceId}, UserId: {UserId}", workspaceId, userId);
+                throw new InvalidOperationException("A munkaterület tulajdonosának szerepköre nem módosítható. Előbb ruházd át a tulajdonjogot.");
             }
 
             var oldRoleId = membership.RoleId;
@@ -340,6 +401,7 @@ namespace PROTOTYPE_backend.Services.Workspaces
         public async Task<bool> RemoveMemberAsync(Guid workspaceId, Guid userId)
         {
             var membership = await _context.WorkspaceMembers
+                .Include(m => m.Workspace)
                 .FirstOrDefaultAsync(m => m.WorkspaceId == workspaceId && m.UserId == userId);
 
             if (membership == null)
@@ -347,6 +409,12 @@ namespace PROTOTYPE_backend.Services.Workspaces
                 _logger.LogWarning("Tag eltávolítása a munkaterületről sikertelen: a tagság nem található. WorkspaceId: {WorkspaceId}, UserId: {UserId}",
                     workspaceId, userId);
                 return false;
+            }
+
+            if (membership.Workspace.OwnerId == userId)
+            {
+                _logger.LogWarning("A tulajdonos eltávolítása elutasítva. WorkspaceId: {WorkspaceId}, UserId: {UserId}", workspaceId, userId);
+                throw new InvalidOperationException("A munkaterület tulajdonosa nem távolítható el. Előbb ruházd át a tulajdonjogot.");
             }
 
             _context.WorkspaceMembers.Remove(membership);

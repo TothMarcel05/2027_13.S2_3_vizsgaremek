@@ -4,6 +4,7 @@ using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
+using PROTOTYPE_backend.Authorization;
 using PROTOTYPE_backend.DTOs.SoftDelete;
 using PROTOTYPE_backend.Extensions;
 using PROTOTYPE_backend.Services.SoftDelete;
@@ -18,8 +19,12 @@ namespace PROTOTYPE_backend.Controllers
         private readonly ISoftDeleteService _softDeleteService;
         private readonly ILogger<SoftDeleteController> _logger;
 
-        public SoftDeleteController(ISoftDeleteService softDeleteService, ILogger<SoftDeleteController> logger)
+        private readonly IAuthorizationService _authorizationService;
+
+        public SoftDeleteController(ISoftDeleteService softDeleteService, ILogger<SoftDeleteController> logger,
+            IAuthorizationService authorizationService)
         {
+            _authorizationService = authorizationService;
             _softDeleteService = softDeleteService;
             _logger = logger;
         }
@@ -44,6 +49,9 @@ namespace PROTOTYPE_backend.Controllers
 
             if (dto.EntityName == "AppUser" && !User.IsSystemAdmin())
                 throw new UnauthorizedAccessException("Felhasználói fiókot csak rendszeradminisztrátor helyezhet lomtárba.");
+
+            if (Guid.TryParse(dto.EntityId, out var entityId))
+                await _authorizationService.EnsurePermissionOnAsync(User, "trash.manage", dto.EntityName, entityId);
 
             var success = await _softDeleteService.SoftDeleteAsync(secureDto);
             if (!success)
@@ -72,6 +80,9 @@ namespace PROTOTYPE_backend.Controllers
 
             if (dto.EntityName == "AppUser" && !User.IsSystemAdmin())
                 throw new UnauthorizedAccessException("Felhasználói fiókot csak rendszeradminisztrátor állíthat vissza.");
+
+            if (Guid.TryParse(dto.EntityId, out var entityId))
+                await _authorizationService.EnsurePermissionOnAsync(User, "trash.manage", dto.EntityName, entityId);
 
             var success = await _softDeleteService.RestoreAsync(dto);
             if (!success)

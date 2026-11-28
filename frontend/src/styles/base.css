@@ -122,9 +122,11 @@
   .bell-count { position: absolute; top: .15rem; right: .1rem; display: grid; place-items: center; min-width: 1.05rem; height: 1.05rem; border-radius: 99px; border: 2px solid var(--surface); background: var(--accent-strong); font-size: .6rem; font-weight: 700; color: var(--on-accent); line-height: 1; }
   .avatar { display: inline-grid; flex-shrink: 0; place-items: center; border-radius: 99px; background: hsl(var(--h) 42% 86%); color: hsl(var(--h) 38% 26%); font-weight: 650; line-height: 1; }
   .avatar-empty { background: transparent; border: 1px dashed #c9bfae; color: #9d958c; }
-  .ws-tile, .brand-mark { display: grid; flex-shrink: 0; place-items: center; width: 2rem; height: 2rem; border-radius: calc(var(--r-ctl) - 1px); font-size: .72rem; font-weight: 700; }
+  .ws-tile { display: grid; flex-shrink: 0; place-items: center; width: 2rem; height: 2rem; border-radius: calc(var(--r-ctl) - 1px); font-size: .72rem; font-weight: 700; }
   .ws-tile { background: hsl(var(--h) 40% 84%); color: hsl(var(--h) 40% 24%); }
-  .brand-mark { background: var(--ink); color: var(--bg); font-family: var(--display); font-size: 1.15rem; font-style: italic; font-weight: 600; }
+  .brand-mark { flex-shrink: 0; width: 2.25rem; height: 2.25rem; object-fit: contain; }
+  /* The stacked logo file has wide transparent margins: cover-cropping to this ratio trims the sides only. */
+  .brand-logo { height: 9rem; aspect-ratio: 620 / 724; object-fit: cover; }
   .project-dot { display: grid; place-items: center; width: 2.1rem; height: 2.1rem; border-radius: var(--r-ctl); background: hsl(var(--h) 45% 90%); color: hsl(var(--h) 42% 34%); }
   .empty-icon { display: inline-grid; flex-shrink: 0; place-items: center; width: 2.75rem; height: 2.75rem; border-radius: var(--r-pop); background: var(--accent-soft); color: var(--accent-strong); }
   .status-ring { width: .7rem; height: .7rem; flex-shrink: 0; border-radius: 99px; border: 2px solid var(--fg-tone); background: var(--bg-tone); }

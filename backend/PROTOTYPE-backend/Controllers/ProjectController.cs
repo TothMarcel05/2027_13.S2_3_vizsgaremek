@@ -4,7 +4,9 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
 using PROTOTYPE_backend.DTOs.Project;
 using PROTOTYPE_backend.DTOs.Workspace;
+using PROTOTYPE_backend.Extensions;
 using PROTOTYPE_backend.Services.Projects;
+using PROTOTYPE_backend.Services.Workspaces;
 using System;
 using System.Threading.Tasks;
 
@@ -18,11 +20,20 @@ namespace PROTOTYPE_backend.Controllers
         private readonly IProjectService _projectService;
         private readonly ILogger<ProjectController> _logger;
 
-        public ProjectController(IProjectService projectService, ILogger<ProjectController> logger)
+        private readonly IWorkspaceService _workspaceService;
+
+        public ProjectController(IProjectService projectService, ILogger<ProjectController> logger, IWorkspaceService workspaceService)
         {
+            _workspaceService = workspaceService;
             _projectService = projectService;
             _logger = logger;
         }
+
+        // Projektet és feladatot a munkaterület tulajdonosa és tagjai, a projekt tagjai és a SystemAdmin olvashatnak
+        private Task EnsureCanReadProjectAsync(Guid projectId) =>
+            User.IsSystemAdmin()
+                ? Task.CompletedTask
+                : _projectService.EnsureProjectAccessAsync(projectId, User.GetUserId());
 
         // 1. MUNKATERÜLET PROJEKTJEINEK LISTÁZÁSA ([Authorize])
         [HttpGet("{workspaceId:guid}/projects")]
@@ -36,6 +47,9 @@ namespace PROTOTYPE_backend.Controllers
             [FromQuery] int limit = 20,
             [FromQuery] sbyte? status = null)
         {
+            if (!User.IsSystemAdmin())
+                await _workspaceService.EnsureWorkspaceAccessAsync(workspaceId, User.GetUserId());
+
             var projects = await _projectService.GetWorkspaceByIdAsync(workspaceId);
             return Ok(projects);
             
@@ -49,6 +63,8 @@ namespace PROTOTYPE_backend.Controllers
         [ProducesResponseType(StatusCodes.Status500InternalServerError)]
         public async Task<IActionResult> GetProjectData(Guid projectId)
         {
+            await EnsureCanReadProjectAsync(projectId);
+
             var project = await _projectService.GetProjectByIdAsync(projectId);
 
             if (project == null)
@@ -70,6 +86,8 @@ namespace PROTOTYPE_backend.Controllers
             [FromQuery] sbyte? status = null,
             [FromQuery] byte? priority = null)
         {
+            await EnsureCanReadProjectAsync(projectId);
+
             var tasks = await _projectService.GetProjectTasksAsync(projectId, status, priority);
             return Ok(tasks);
             
@@ -88,6 +106,8 @@ namespace PROTOTYPE_backend.Controllers
             {
                 return NotFound(new { error = new { message = "A megadott feladat nem található.", code = "NEM_TALALHATO" } });
             }
+
+            await EnsureCanReadProjectAsync(task.projectId);
 
             return Ok(task);
             

@@ -5,6 +5,7 @@ import { profileQueryKey, userApi } from '../api/users'
 import { GLOBAL_ROLE, TWO_FACTOR, type UserResponseDto } from '../api/authTypes'
 import type { Workspace, User, ID } from '../api/types'
 import { useToast } from '../components/ui/overlay'
+import { hueFrom } from './utils'
 
 /** Mutation with the app's standard behaviour: refresh data, toast success, toast failure. */
 export function useAction<V = void, R = unknown>(
@@ -30,8 +31,6 @@ export const useWorkspace = () => useContext(WorkspaceContext)!
 /** The signed-in user's profile, as the backend returns it. */
 export const useProfile = () => useQuery({ queryKey: profileQueryKey, queryFn: userApi.me })
 
-const hueFrom = (id: string) => [...id].reduce((hash, char) => (hash * 31 + char.charCodeAt(0)) % 360, 7)
-
 /** Adapts the profile to the shape the other modules still use. The backend has no title, bio or hue. */
 function toUser(p: UserResponseDto): User {
   return {
@@ -46,6 +45,7 @@ function toUser(p: UserResponseDto): User {
 export const useMeQuery = () => useQuery({ queryKey: profileQueryKey, queryFn: userApi.me, select: toUser })
 export const useMe = (): User | undefined => useMeQuery().data
 
+/** Sample people for the screens that aren't connected yet. Workspace settings uses `workspaceService.members`. */
 export const useMembers = () => {
   const { workspace } = useWorkspace()
   return useQuery({ queryKey: ['members', workspace.id], queryFn: () => workspaceApi.members(workspace.id) })

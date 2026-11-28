@@ -5,6 +5,7 @@ namespace PROTOTYPE_backend.Services.Projects
 {
     public interface IProjectService
     {
+        Task EnsureProjectAccessAsync(Guid projectId, Guid userId);
         Task<ProjectDataDto?> GetProjectByIdAsync(Guid projectId);
         Task<List<ProjectTaskListDto>> GetProjectTasksAsync(Guid projectId, sbyte? status = null, byte? priority = null);
         Task<ProjectTaskResponseDto> GetProjectTaskAsync(Guid taskId);

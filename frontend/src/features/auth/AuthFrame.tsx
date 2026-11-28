@@ -2,9 +2,8 @@ import type { ReactNode } from 'react'
 import { motion } from 'framer-motion'
 import { CalendarDays, CheckCircle2, MessagesSquare } from 'lucide-react'
 import { MOTION } from '../../lib/motion'
-import { Brand } from '../../components/layout/shared'
 
-/** Split-screen frame shared by the auth screens. */
+/** Split-screen frame shared by the auth screens, with the logo above the form. */
 export function AuthFrame({ children }: { children: ReactNode }) {
   const content = (
     <motion.div initial="hidden" animate="show" variants={MOTION.page} className="w-full max-w-sm">{children}</motion.div>
@@ -13,7 +12,7 @@ export function AuthFrame({ children }: { children: ReactNode }) {
   return (
     <div className="grid min-h-dvh lg:grid-cols-[1.05fr_1fr]">
       <aside className="relative hidden flex-col justify-between overflow-hidden border-r border-line bg-sand p-12 lg:flex">
-        <Brand />
+        <span aria-hidden />
         <div className="relative h-72">
           {[
             { icon: CheckCircle2, text: 'Design the editorial grid', meta: 'Reserved by you', pos: 'left-0 top-4 w-72 -rotate-2' },
@@ -33,8 +32,8 @@ export function AuthFrame({ children }: { children: ReactNode }) {
           <p className="mt-3 max-w-sm text-sm text-muted">Projects, conversations, files and plans in one calm workspace.</p>
         </div>
       </aside>
-      <main className="flex flex-col items-center justify-center gap-8 px-5 py-10">
-        <div className="lg:hidden"><Brand /></div>
+      <main className="flex flex-col items-center justify-center gap-6 px-5 py-10">
+        <img src="/OkligonBlackLogoTransparent.png" alt="Okligon" className="brand-logo" />
         {content}
       </main>
     </div>

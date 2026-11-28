@@ -38,6 +38,27 @@ namespace PROTOTYPE_backend.Services.Projects
                 .ToListAsync();
         }
 
+        // Nem létező projektnél nem dob hibát, a végpont a saját válaszát adja
+        public async Task EnsureProjectAccessAsync(Guid projectId, Guid userId)
+        {
+            var project = await _context.Projects
+                .AsNoTracking()
+                .Where(p => p.Id == projectId)
+                .Select(p => new
+                {
+                    HasAccess = p.Workspace.OwnerId == userId
+                        || p.Workspace.WorkspaceMembers.Any(m => m.UserId == userId)
+                        || _context.ProjectMembers.Any(m => m.ProjectId == p.Id && m.UserId == userId)
+                })
+                .FirstOrDefaultAsync();
+
+            if (project != null && !project.HasAccess)
+            {
+                _logger.LogWarning("Jogosulatlan projekt-lekérdezés! UserId: {UserId}, ProjectId: {ProjectId}", userId, projectId);
+                throw new UnauthorizedAccessException("Nincs hozzáférésed ehhez a projekthez!");
+            }
+        }
+
         public async Task<ProjectDataDto?> GetProjectByIdAsync(Guid projectId)
         {
             var project = await _context.Projects

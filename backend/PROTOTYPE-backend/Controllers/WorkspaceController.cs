@@ -23,6 +23,12 @@ namespace PROTOTYPE_backend.Controllers
             _workspaceService = workspaceService;
         }
 
+        // Munkaterület adatait csak a tulajdonos, a tagok és a SystemAdmin olvashatják
+        private Task EnsureCanReadWorkspaceAsync(Guid workspaceId) =>
+            User.IsSystemAdmin()
+                ? Task.CompletedTask
+                : _workspaceService.EnsureWorkspaceAccessAsync(workspaceId, User.GetUserId());
+
         // 1. SAJÁT MUNKATERÜLETEK LISTÁZÁSA
         [HttpGet("my")]
         [ProducesResponseType(StatusCodes.Status200OK)]
@@ -44,6 +50,8 @@ namespace PROTOTYPE_backend.Controllers
         [ProducesResponseType(StatusCodes.Status404NotFound)]
         public async Task<IActionResult> GetWorkspaceData(Guid workspaceId)
         {
+            await EnsureCanReadWorkspaceAsync(workspaceId);
+
             var workspace = await _workspaceService.GetWorkspaceDataAsync(workspaceId)
                 ?? throw new KeyNotFoundException("A megadott munkaterület nem található.");
 
@@ -63,6 +71,8 @@ namespace PROTOTYPE_backend.Controllers
             if (page < 1 || limit < 1 || limit > 100)
                 throw new ArgumentException("Érvénytelen lapozási paraméterek (page >= 1, 1 <= limit <= 100).");
 
+            await EnsureCanReadWorkspaceAsync(workspaceId);
+
             var members = await _workspaceService.GetWorkspaceMembersAsync(workspaceId, page, limit, role);
             return Ok(members);
         }
@@ -73,6 +83,8 @@ namespace PROTOTYPE_backend.Controllers
         [ProducesResponseType(StatusCodes.Status404NotFound)]
         public async Task<IActionResult> GetWorkspaceStorage(Guid workspaceId)
         {
+            await EnsureCanReadWorkspaceAsync(workspaceId);
+
             var storage = await _workspaceService.GetWorkspaceStorageAsync(workspaceId)
                 ?? throw new KeyNotFoundException("A megadott munkaterület nem található.");
 
@@ -91,6 +103,8 @@ namespace PROTOTYPE_backend.Controllers
         {
             if (page < 1 || limit < 1 || limit > 100)
                 throw new ArgumentException("Érvénytelen lapozási paraméterek (page >= 1, 1 <= limit <= 100).");
+
+            await EnsureCanReadWorkspaceAsync(workspaceId);
 
             var projects = await _workspaceService.GetWorkspaceProjectsAsync(workspaceId, page, limit, status);
             return Ok(projects);
@@ -193,6 +207,9 @@ namespace PROTOTYPE_backend.Controllers
         [ProducesResponseType(StatusCodes.Status404NotFound)]
         public async Task<IActionResult> UpdateMemberRole(Guid workspaceId, Guid userId, [FromBody] WorkspaceMemberRoleChangeDto dto)
         {
+            if (!User.IsSystemAdmin())
+                await _workspaceService.EnsureCanManageMemberAsync(User.GetUserId(), workspaceId, userId, dto.roleId);
+
             var result = await _workspaceService.UpdateMemberRoleAsync(workspaceId, userId, dto)
                 ?? throw new KeyNotFoundException("A tag vagy munkaterület nem található.");
 
@@ -208,6 +225,9 @@ namespace PROTOTYPE_backend.Controllers
         [ProducesResponseType(StatusCodes.Status404NotFound)]
         public async Task<IActionResult> RemoveMember(Guid workspaceId, Guid userId)
         {
+            if (!User.IsSystemAdmin())
+                await _workspaceService.EnsureCanManageMemberAsync(User.GetUserId(), workspaceId, userId);
+
             var result = await _workspaceService.RemoveMemberAsync(workspaceId, userId);
             if (!result)
                 throw new KeyNotFoundException("A tag vagy munkaterület nem található.");

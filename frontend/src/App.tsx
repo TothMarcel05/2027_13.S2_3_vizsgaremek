@@ -1,20 +1,19 @@
-import { useState } from 'react'
+import { useEffect, useState } from 'react'
 import { Navigate, Route, Routes, useLocation, useNavigate } from 'react-router'
 import { useQuery } from '@tanstack/react-query'
 import { AnimatePresence, motion } from 'framer-motion'
 import { Compass } from 'lucide-react'
-import { USE_MOCK } from './api/client'
 import { authApi } from './api/auth'
-import { workspaceApi } from './api/services'
+import { workspaceKeys, workspaceService } from './api/workspaces'
 import type { ID } from './api/types'
 import { WorkspaceContext, useMeQuery } from './lib/data'
 import { MOTION } from './lib/motion'
 import { Button, EmptyState, ErrorState, Skeleton, SkeletonGrid } from './components/ui/core'
 import { Shell } from './components/layout/Shells'
+import { CreateWorkspaceModal } from './components/layout/CreateWorkspaceModal'
 import { useToast } from './components/ui/overlay'
 import { ForgotPassword, Login, Register, ResetPassword, TwoFactor } from './features/auth/Auth'
 import { useSession } from './features/auth/useSession'
-import { AccountOnly } from './features/settings/AccountOnly'
 import { Dashboard } from './features/dashboard/Dashboard'
 import { Projects } from './features/projects/Projects'
 import { ProjectDetail } from './features/projects/ProjectDetail'
@@ -32,20 +31,45 @@ const Loading = () => (
   </div>
 )
 
+/** For an account with no workspace yet, such as one that has just registered. */
+function NoWorkspace({ onCreated, signOut }: { onCreated: (id: ID) => void; signOut: () => void }) {
+  const [creating, setCreating] = useState(false)
+  return (
+    <main className="flex min-h-dvh flex-col items-center justify-center">
+      <EmptyState icon={<Compass size={20} />} title="No workspaces yet" action={
+        <div className="flex flex-wrap justify-center gap-2">
+          <Button variant="primary" onClick={() => setCreating(true)}>Create workspace</Button>
+          <Button variant="ghost" onClick={signOut}>Sign out</Button>
+        </div>
+      }>Create one to get started.</EmptyState>
+      <CreateWorkspaceModal open={creating} onClose={() => setCreating(false)} onCreated={onCreated} />
+    </main>
+  )
+}
+
 function Workspace({ signOut }: { signOut: () => void }) {
   const location = useLocation()
   const navigate = useNavigate()
   const [selected, setSelected] = useState<ID | null>(() => localStorage.getItem('ws.current'))
-  const workspaces = useQuery({ queryKey: ['workspaces'], queryFn: workspaceApi.list })
+  const workspaces = useQuery({ queryKey: workspaceKeys.list, queryFn: workspaceService.list })
   const me = useMeQuery()
-
-  if (me.isError && !me.data) return <ErrorState error={me.error} retry={() => me.refetch()} />
-  if (workspaces.isError) return <ErrorState error={workspaces.error} retry={() => workspaces.refetch()} />
   const list = workspaces.data
-  if (!list || !me.data) return <Loading />
-  const workspace = list.find((w) => w.id === selected) ?? list[0]
-  if (!workspace) return <EmptyState icon={<Compass size={20} />} title="No workspaces" action={<Button onClick={signOut}>Sign out</Button>} />
+  // The saved choice, unless it was deleted or this account can't see it.
+  const workspace = list?.find((w) => w.id === selected) ?? list?.[0]
   const setWorkspace = (id: ID) => { localStorage.setItem('ws.current', id); setSelected(id) }
+  const currentId = workspace?.id
+  useEffect(() => { if (currentId) localStorage.setItem('ws.current', currentId) }, [currentId])
+
+  const failed = (error: Error, retry: () => void) => (
+    <div className="flex min-h-dvh flex-col items-center justify-center">
+      <ErrorState error={error} retry={retry} />
+      <Button variant="ghost" onClick={signOut}>Sign out</Button>
+    </div>
+  )
+  if (me.isError && !me.data) return failed(me.error, () => me.refetch())
+  if (workspaces.isError && !list) return failed(workspaces.error, () => workspaces.refetch())
+  if (!list || !me.data) return <Loading />
+  if (!workspace) return <NoWorkspace onCreated={setWorkspace} signOut={signOut} />
   // Moving between two projects keeps the same page; switching section animates.
   const section = location.pathname.split('/').slice(0, 3).join('/')
 
@@ -90,8 +114,7 @@ export function App() {
   if (pathname === '/reset-password') return <ResetPassword />
   if (session) {
     if (AUTH_PATHS.includes(pathname)) return <Navigate to="/" replace />
-    // Only auth and profile talk to the real API so far; the workspace screens still expect the mock.
-    return USE_MOCK ? <Workspace signOut={signOut} /> : <AccountOnly signOut={signOut} />
+    return <Workspace signOut={signOut} />
   }
   return (
     <Routes>

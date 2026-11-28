@@ -98,6 +98,12 @@ on('POST', '/workspaces', ({ body }) => {
   return w
 })
 on('PATCH', '/workspaces/:ws', ({ p, body }) => Object.assign(find(db.workspaces, p[0]), body))
+on('DELETE', '/workspaces/:ws', ({ p }) => {
+  if (find(db.workspaces, p[0]).ownerId !== ME) fail('Only the owner can delete this workspace.', 403)
+  // Its contents stay, as with the backend's soft delete.
+  db.workspaces = without(db.workspaces, p[0])
+  db.members = db.members.filter((m) => m.workspaceId !== p[0])
+})
 on('GET', '/workspaces/:ws/dashboard', ({ p }) => {
   const w = find(db.workspaces, p[0])
   const split = [['Design files', 0.46], ['Documents', 0.21], ['Media', 0.24], ['Other', 0.09]] as const

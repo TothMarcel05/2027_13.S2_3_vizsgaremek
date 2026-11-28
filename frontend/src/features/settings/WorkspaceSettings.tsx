@@ -1,134 +1,169 @@
 import { useState } from 'react'
-import { useQuery } from '@tanstack/react-query'
 import { AnimatePresence, motion } from 'framer-motion'
-import { Crown, Mail, Send, UserMinus, Users } from 'lucide-react'
-import { workspaceApi } from '../../api/services'
-import type { WorkspaceRole } from '../../api/types'
-import { useAction, useMe, useMembers, useWorkspace } from '../../lib/data'
+import { Crown, Lock, Mail, Send, UserMinus, Users } from 'lucide-react'
+import { workspaceService, type MemberRow, type RoleOption, type SentInvitation } from '../../api/workspaces'
+import type { ID } from '../../api/types'
+import { useAction, useMe, useWorkspace } from '../../lib/data'
 import { fmtDate, timeAgo } from '../../lib/utils'
 import { MOTION } from '../../lib/motion'
-import { Avatar, Badge, Button, EmptyState, FormError, Input, PageHeader, SectionTitle, Segmented, Select, SkeletonGrid } from '../../components/ui/core'
-import { Modal, useConfirm } from '../../components/ui/overlay'
+import { Avatar, Badge, Button, EmptyState, ErrorState, FormError, Input, PageHeader, SectionTitle, Segmented, Select, SkeletonGrid } from '../../components/ui/core'
+import { useConfirm } from '../../components/ui/overlay'
+import * as check from '../auth/validation'
+import { GeneralSettings } from './GeneralSettings'
+import { useWorkspaceAdmin } from './useWorkspaceAdmin'
 
-const ASSIGNABLE: WorkspaceRole[] = ['admin', 'member', 'viewer']
+type Admin = ReturnType<typeof useWorkspaceAdmin>
+type Tab = 'members' | 'invitations' | 'general'
+
+const roleName = (roles: RoleOption[] | undefined, id: ID | null) => roles?.find((r) => r.id === id)?.name
+
+/** The assignable roles, plus the member's current one so the list never misstates it. */
+function RoleOptions({ roles, current }: { roles: RoleOption[]; current?: ID }) {
+  return roles.filter((r) => r.assignable || r.id === current).map((r) => <option key={r.id} value={r.id} disabled={!r.assignable}>{r.name}</option>)
+}
+
+function Members({ admin, myId, onInvite }: { admin: Admin; myId: ID | undefined; onInvite: () => void }) {
+  const { workspace } = useWorkspace()
+  const confirm = useConfirm()
+  const { members, roles, access } = admin
+  const canManage = access.data?.manageMembers === true
+  const setRole = useAction((v: { userId: ID; roleId: ID }) => workspaceService.setRole(workspace.id, v.userId, v.roleId), { success: 'Role updated' })
+  const remove = useAction((userId: ID) => workspaceService.removeMember(workspace.id, userId), { success: 'Member removed' })
+
+  if (members.isPending) return <SkeletonGrid count={5} className="space-y-2" item="h-14" />
+  if (members.isError) return <ErrorState error={members.error} retry={() => members.refetch()} />
+
+  const roleControl = (m: MemberRow) => {
+    // The server doesn't stop the owner being demoted or removed, so the screen must.
+    if (m.userId === workspace.ownerId) return <Badge tone="accent"><Crown size={11} /> Owner</Badge>
+    if (access.isPending || (roles.isFetching && !roles.data)) return <span className="text-xs text-muted">Loading role…</span>
+    if (!roles.data) return <Badge>Role hidden</Badge>
+    return (
+      <Select aria-label={`Role of ${m.name}`} className="!w-auto" value={m.roleId} disabled={!canManage || m.userId === myId || setRole.isPending}
+        onChange={(e) => setRole.mutate({ userId: m.userId, roleId: e.target.value })}>
+        <RoleOptions roles={roles.data} current={m.roleId} />
+      </Select>
+    )
+  }
+
+  return (
+    <section className="card p-5">
+      <SectionTitle title="Members" action={access.data?.manageInvitations ? <Button size="sm" variant="outline" icon={<Mail size={14} />} onClick={onInvite}>Invite people</Button> : undefined} />
+      {roles.isError && <div className="mb-3"><FormError error={roles.error} /></div>}
+      <ul className="divide-y divide-line">
+        <AnimatePresence initial={false}>
+          {members.data.map((m) => (
+            <motion.li key={m.userId} layout exit={{ opacity: 0, x: 40 }} className="flex flex-wrap items-center gap-3 py-3">
+              <Avatar user={m} size={36} />
+              <div className="min-w-0 flex-1 basis-40">
+                <p className="truncate text-sm font-medium">{m.name}{m.userId === myId && <span className="text-muted"> (you)</span>}</p>
+                <p className="truncate text-xs text-muted">{m.email && `${m.email} · `}joined {fmtDate(m.joinedAt, { month: 'short', year: 'numeric' })}</p>
+              </div>
+              {roleControl(m)}
+              <Button size="sm" variant="ghost" icon={<UserMinus size={15} />} aria-label={`Remove ${m.name}`}
+                disabled={!canManage || m.userId === workspace.ownerId || m.userId === myId || remove.isPending}
+                onClick={async () => {
+                  if (await confirm({ title: `Remove ${m.name}?`, message: 'They lose access to this workspace.', confirmLabel: 'Remove member', danger: true })) remove.mutate(m.userId)
+                }} />
+            </motion.li>
+          ))}
+        </AnimatePresence>
+      </ul>
+      {members.data.length === 1 && access.data?.manageInvitations && <EmptyState icon={<Users size={18} />} title="It’s just you so far" action={<Button onClick={onInvite}>Invite your team</Button>} />}
+    </section>
+  )
+}
+
+function Invitations({ admin, myId }: { admin: Admin; myId: ID | undefined }) {
+  const { workspace } = useWorkspace()
+  const confirm = useConfirm()
+  const { invitations, members, roles, access } = admin
+  const [email, setEmail] = useState('')
+  const [picked, setPicked] = useState('')
+  const choices = roles.data?.filter((r) => r.assignable) ?? []
+  // A role is required: accepting an invitation without one adds no membership.
+  const roleId = choices.find((r) => r.id === picked)?.id ?? (choices.find((r) => r.name === 'Member') ?? choices[0])?.id
+
+  const invite = useAction(async () => {
+    const address = email.trim()
+    check.assertValid(check.email(address))
+    if (invitations.data?.some((i) => i.email.toLowerCase() === address.toLowerCase())) throw new Error('That address already has a pending invitation.')
+    if (!roleId) throw new Error('Choose a role for the invitation.')
+    await workspaceService.invite(workspace.id, address, roleId)
+  }, { success: 'Invitation created', silentError: true, onSuccess: () => setEmail('') })
+  const cancel = useAction((id: ID) => workspaceService.cancelInvitation(workspace.id, id), { success: 'Invitation cancelled' })
+
+  if (access.isPending) return <SkeletonGrid count={3} className="space-y-2" item="h-14" />
+  if (!access.data?.manageInvitations) return <section className="card p-5"><EmptyState icon={<Lock size={18} />} title="You can’t manage invitations">Your role doesn’t allow seeing or sending them.</EmptyState></section>
+
+  const inviter = (i: SentInvitation) =>
+    i.invitedByName ?? (i.invitedById === myId ? 'you' : members.data?.find((m) => m.userId === i.invitedById)?.name ?? 'a former member')
+
+  return (<>
+    <form className="card p-5" onSubmit={(e) => { e.preventDefault(); if (!invite.isPending) invite.mutate() }} noValidate>
+      <SectionTitle title="Send an invitation" />
+      <div className="flex flex-wrap items-end gap-2">
+        <div className="min-w-52 flex-1"><Input label="Email address" type="email" placeholder="teammate@company.com" value={email} onChange={(e) => setEmail(e.target.value)} /></div>
+        <Select aria-label="Invite role" className="!w-auto" value={roleId ?? ''} onChange={(e) => setPicked(e.target.value)} disabled={!choices.length}>
+          {!choices.length && <option value="">No roles available</option>}
+          <RoleOptions roles={choices} />
+        </Select>
+        <Button type="submit" variant="primary" icon={<Send size={14} />} loading={invite.isPending} disabled={!roleId}>Send invite</Button>
+      </div>
+      <div className="mt-3 space-y-2"><FormError error={invite.error} /><FormError error={roles.error} /></div>
+    </form>
+    <section className="card p-5">
+      <SectionTitle title="Pending invitations" />
+      {invitations.isPending ? <SkeletonGrid count={2} className="space-y-2" item="h-14" />
+        : invitations.isError ? <ErrorState error={invitations.error} retry={() => invitations.refetch()} />
+        : !invitations.data.length && <EmptyState icon={<Mail size={18} />} title="No pending invitations" />}
+      <ul className="divide-y divide-line">
+        <AnimatePresence initial={false}>
+          {invitations.data?.map((i) => (
+            <motion.li key={i.id} layout initial={{ opacity: 0, y: -8 }} animate={{ opacity: 1, y: 0 }} exit={{ opacity: 0, x: 40 }} className="flex flex-wrap items-center gap-3 py-3">
+              <span className="empty-icon !size-9"><Mail size={15} /></span>
+              <div className="min-w-0 flex-1 basis-40"><p className="truncate text-sm font-medium">{i.email}</p><p className="text-xs text-muted">Invited by {inviter(i)} · {timeAgo(i.sentAt)}</p></div>
+              {roleName(roles.data, i.roleId) && <Badge>{roleName(roles.data, i.roleId)}</Badge>}
+              <Button size="sm" variant="ghost" disabled={cancel.isPending} onClick={async () => {
+                if (await confirm({ title: 'Cancel this invitation?', message: `${i.email} will no longer be able to accept it.`, confirmLabel: 'Cancel invitation', danger: true })) cancel.mutate(i.id)
+              }}>Cancel invite</Button>
+            </motion.li>
+          ))}
+        </AnimatePresence>
+      </ul>
+    </section>
+  </>)
+}
 
 export function WorkspaceSettings() {
   const { workspace } = useWorkspace()
-  const me = useMe()
-  const confirm = useConfirm()
-  const members = useMembers()
-  const invites = useQuery({ queryKey: ['invitations', workspace.id], queryFn: () => workspaceApi.sentInvitations(workspace.id) })
-  const [tab, setTab] = useState<'members' | 'invitations' | 'general'>('members')
-  const [email, setEmail] = useState('')
-  const [role, setRole] = useState<WorkspaceRole>('member')
-  const [name, setName] = useState<string | null>(null)
-  const [transferring, setTransferring] = useState(false)
-  const [heir, setHeir] = useState('')
-  const [typed, setTyped] = useState('')
-
-  const myRole = members.data?.find((m) => m.userId === me?.id)?.role
-  const isOwner = myRole === 'owner'
-  const canManage = isOwner || myRole === 'admin'
-
-  const setMemberRole = useAction((v: { id: string; role: WorkspaceRole }) => workspaceApi.setRole(workspace.id, v.id, v.role), { success: 'Role updated' })
-  const removeMember = useAction((id: string) => workspaceApi.removeMember(workspace.id, id), { success: 'Member removed' })
-  const invite = useAction(() => workspaceApi.invite(workspace.id, email.trim(), role), { success: 'Invitation sent', silentError: true, onSuccess: () => setEmail('') })
-  const cancel = useAction((id: string) => workspaceApi.cancelInvitation(id), { success: 'Invitation cancelled' })
-  const rename = useAction(() => workspaceApi.update(workspace.id, { name: name!.trim() }), { success: 'Workspace renamed', onSuccess: () => setName(null) })
-  const transfer = useAction(() => workspaceApi.transfer(workspace.id, heir), { success: 'Ownership transferred', onSuccess: () => { setTransferring(false); setHeir(''); setTyped('') } })
+  const myId = useMe()?.id
+  const admin = useWorkspaceAdmin(workspace.id)
+  const { access, members, invitations } = admin
+  const [tab, setTab] = useState<Tab>('members')
+  const readOnly = access.data && !access.data.rename && !access.data.remove && !access.data.manageMembers && !access.data.manageInvitations
 
   return (
     <div className="max-w-4xl">
       <PageHeader eyebrow={workspace.name} title="Workspace settings" description="People, roles and invitations." />
-      {!canManage && members.data && <p className="demo-hint mb-4 !mt-0">You have {myRole} access. Only owners and admins can make changes here.</p>}
+      {readOnly && <p className="row-card mb-4 p-3 text-sm">You have view-only access to these settings.</p>}
+      {access.isError && (
+        <div className="mb-4 flex flex-wrap items-center gap-2">
+          <FormError error={access.error} /><Button size="sm" variant="outline" onClick={() => access.refetch()}>Check permissions again</Button>
+        </div>
+      )}
       <div className="mb-5">
         <Segmented label="Settings section" value={tab} onChange={setTab} options={[
-          { value: 'members', label: 'Members', count: members.data?.length }, { value: 'invitations', label: 'Invitations', count: invites.data?.length }, { value: 'general', label: 'General' },
+          { value: 'members', label: 'Members', count: members.data?.length }, { value: 'invitations', label: 'Invitations', count: invitations.data?.length }, { value: 'general', label: 'General' },
         ]} />
       </div>
       <AnimatePresence mode="wait">
         <motion.div key={tab} initial="hidden" animate="show" exit="exit" variants={MOTION.page} className="space-y-4">
-          {tab === 'members' && (members.isPending ? <SkeletonGrid count={5} className="space-y-2" item="h-14" /> : (
-            <section className="card p-5">
-              <SectionTitle title="Members" action={<Button size="sm" variant="outline" icon={<Mail size={14} />} onClick={() => setTab('invitations')}>Invite people</Button>} />
-              <ul className="divide-y divide-line">
-                <AnimatePresence initial={false}>
-                  {members.data?.map((m) => (
-                    <motion.li key={m.userId} layout exit={{ opacity: 0, x: 40 }} className="flex flex-wrap items-center gap-3 py-3">
-                      <Avatar user={m.user} size={36} />
-                      <div className="min-w-0 flex-1 basis-40"><p className="truncate text-sm font-medium">{m.user.name}{m.userId === me?.id && <span className="text-muted"> (you)</span>}</p><p className="truncate text-xs text-muted">{m.user.email} · joined {fmtDate(m.joinedAt, { month: 'short', year: 'numeric' })}</p></div>
-                      {m.role === 'owner' ? <Badge tone="accent"><Crown size={11} /> Owner</Badge> : (
-                        <Select aria-label={`Role of ${m.user.name}`} className="!w-auto capitalize" value={m.role} disabled={!canManage || m.userId === me?.id} onChange={(e) => setMemberRole.mutate({ id: m.userId, role: e.target.value as WorkspaceRole })}>
-                          {ASSIGNABLE.map((r) => <option key={r} value={r}>{r[0].toUpperCase() + r.slice(1)}</option>)}
-                        </Select>
-                      )}
-                      <Button size="sm" variant="ghost" icon={<UserMinus size={15} />} aria-label={`Remove ${m.user.name}`} disabled={!canManage || m.role === 'owner' || m.userId === me?.id} onClick={async () => {
-                        if (await confirm({ title: `Remove ${m.user.name}?`, message: 'They lose access to this workspace right away.', confirmLabel: 'Remove member', danger: true })) removeMember.mutate(m.userId)
-                      }} />
-                    </motion.li>
-                  ))}
-                </AnimatePresence>
-              </ul>
-              {members.data?.length === 1 && <EmptyState icon={<Users size={18} />} title="It’s just you so far" action={<Button onClick={() => setTab('invitations')}>Invite your team</Button>} />}
-            </section>
-          ))}
-
-          {tab === 'invitations' && (<>
-            <form className="card p-5" onSubmit={(e) => { e.preventDefault(); invite.mutate() }} noValidate>
-              <SectionTitle title="Send an invitation" />
-              <div className="flex flex-wrap items-end gap-2">
-                <div className="min-w-52 flex-1"><Input label="Email address" type="email" placeholder="teammate@company.com" value={email} onChange={(e) => setEmail(e.target.value)} disabled={!canManage} /></div>
-                <Select aria-label="Invite role" className="!w-auto" value={role} onChange={(e) => setRole(e.target.value as WorkspaceRole)} disabled={!canManage}>
-                  {ASSIGNABLE.map((r) => <option key={r} value={r}>{r[0].toUpperCase() + r.slice(1)}</option>)}
-                </Select>
-                <Button type="submit" variant="primary" icon={<Send size={14} />} loading={invite.isPending} disabled={!canManage}>Send invite</Button>
-              </div>
-              <div className="mt-3"><FormError error={invite.error} /></div>
-            </form>
-            <section className="card p-5">
-              <SectionTitle title="Pending invitations" />
-              {!invites.data?.length && !invites.isPending && <EmptyState icon={<Mail size={18} />} title="No pending invitations" />}
-              <ul className="divide-y divide-line">
-                <AnimatePresence initial={false}>
-                  {invites.data?.map((i) => (
-                    <motion.li key={i.id} layout initial={{ opacity: 0, y: -8 }} animate={{ opacity: 1, y: 0 }} exit={{ opacity: 0, x: 40 }} className="flex flex-wrap items-center gap-3 py-3">
-                      <span className="empty-icon !size-9"><Mail size={15} /></span>
-                      <div className="min-w-0 flex-1 basis-40"><p className="truncate text-sm font-medium">{i.email}</p><p className="text-xs text-muted">Invited by {i.invitedBy} · {timeAgo(i.sentAt)}</p></div>
-                      <Badge>{i.role}</Badge>
-                      <Button size="sm" variant="ghost" disabled={!canManage} onClick={() => cancel.mutate(i.id)}>Cancel invite</Button>
-                    </motion.li>
-                  ))}
-                </AnimatePresence>
-              </ul>
-            </section>
-          </>)}
-
-          {tab === 'general' && (<>
-            <form className="card p-5" onSubmit={(e) => { e.preventDefault(); if (name?.trim()) rename.mutate() }}>
-              <SectionTitle title="Workspace name" />
-              <div className="flex flex-wrap items-end gap-2">
-                <div className="min-w-52 flex-1"><Input aria-label="Workspace name" value={name ?? workspace.name} onChange={(e) => setName(e.target.value)} disabled={!canManage} /></div>
-                <Button type="submit" variant="primary" loading={rename.isPending} disabled={!name?.trim() || name.trim() === workspace.name}>Save</Button>
-              </div>
-            </form>
-            <section className="card danger-zone p-5">
-              <SectionTitle title="Transfer ownership" />
-              <p className="mb-3 text-sm text-muted">Hand this workspace to another member. You’ll become an admin.</p>
-              <Button variant="outline" icon={<Crown size={15} />} disabled={!isOwner || (members.data?.length ?? 0) < 2} onClick={() => setTransferring(true)}>Transfer ownership</Button>
-              {!isOwner && <p className="mt-2 text-xs text-muted">Only the current owner can do this.</p>}
-            </section>
-          </>)}
+          {tab === 'members' && <Members admin={admin} myId={myId} onInvite={() => setTab('invitations')} />}
+          {tab === 'invitations' && <Invitations admin={admin} myId={myId} />}
+          {tab === 'general' && <GeneralSettings access={access.data} members={members.data ?? []} myId={myId} />}
         </motion.div>
       </AnimatePresence>
-
-      <Modal open={transferring} onClose={() => setTransferring(false)} onSubmit={() => heir && typed === workspace.name && transfer.mutate()} title="Transfer ownership" description="Only the new owner will be able to reverse this."
-        footer={<><Button variant="ghost" onClick={() => setTransferring(false)}>Cancel</Button><Button type="submit" variant="danger" disabled={!heir || typed !== workspace.name} loading={transfer.isPending}>Transfer ownership</Button></>}>
-        <Select label="New owner" value={heir} onChange={(e) => setHeir(e.target.value)}>
-          <option value="">Choose a member…</option>
-          {members.data?.filter((m) => m.userId !== me?.id).map((m) => <option key={m.userId} value={m.userId}>{m.user.name} ({m.role})</option>)}
-        </Select>
-        <Input label={`Type “${workspace.name}” to confirm`} value={typed} onChange={(e) => setTyped(e.target.value)} />
-      </Modal>
     </div>
   )
 }

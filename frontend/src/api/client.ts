@@ -1,11 +1,13 @@
 /**
  * The single door to the backend. Every service goes through here.
- * With VITE_USE_MOCK=false requests hit `${VITE_API_URL}/...`; otherwise the
- * in-browser mock answers the same method + path.
+ * `request` serves the connected modules: with VITE_USE_MOCK=false it hits `${VITE_API_URL}/...`,
+ * otherwise the in-browser mock answers the same method + path.
+ * `http` serves the modules that aren't connected yet, which use mock data in both modes.
  */
 import type { AxiosRequestConfig } from 'axios'
 import { createAuthClient, type Lock } from './authClient'
 import { createSessionStore, SESSION_KEY } from './session'
+import { sampleRequest } from './sample'
 
 export { ApiError } from './errors'
 
@@ -28,7 +30,7 @@ const auth = createAuthClient({ baseURL: API_BASE, store, lock })
 type Method = 'GET' | 'POST' | 'PATCH' | 'PUT' | 'DELETE'
 export type Query = Record<string, string | number | undefined | null>
 
-interface RequestOptions {
+export interface RequestOptions {
   method: Method
   path: string
   body?: unknown
@@ -49,20 +51,39 @@ function withQuery(path: string, query?: Query) {
   return s ? `${path}?${s}` : path
 }
 
-export async function request<T>({ method, path, body, query, anonymous, jsonString, blob }: RequestOptions): Promise<T> {
-  const url = withQuery(path, query)
-  if (USE_MOCK) {
-    const { handleMock } = await import('./mock/server')
-    return handleMock(method, url, body) as Promise<T>
+function toConfig({ method, path, body, query, anonymous, jsonString, blob }: RequestOptions): AxiosRequestConfig {
+  const config: AxiosRequestConfig = {
+    method, url: withQuery(path, query), anonymous, data: body, responseType: blob ? 'blob' : 'json',
   }
-  const config: AxiosRequestConfig = { method, url, anonymous, data: body, responseType: blob ? 'blob' : 'json' }
   if (jsonString) {
     // Encode here: axios would send a string like "12345678" unquoted, which parses as a number.
     config.data = JSON.stringify(body)
     config.headers = { 'Content-Type': 'application/json' }
   }
+  return config
+}
+
+async function send<T>(config: AxiosRequestConfig): Promise<T> {
   const response = await auth.client.request<T>(config)
   return (response.status === 204 ? undefined : response.data) as T
+}
+
+export async function request<T>(options: RequestOptions): Promise<T> {
+  if (USE_MOCK) {
+    const { handleMock } = await import('./mock/server')
+    return handleMock(options.method, withQuery(options.path, options.query), options.body) as Promise<T>
+  }
+  return send<T>(toConfig(options))
+}
+
+/**
+ * Real API only: sends `token` in place of the session's access token. `anonymous` keeps the
+ * session out of it, so a rejected token never triggers a session refresh; the caller renews it.
+ */
+export function scopedRequest<T>(options: RequestOptions, token: string): Promise<T> {
+  const config = toConfig({ ...options, anonymous: true })
+  config.headers = { ...config.headers, Authorization: `Bearer ${token}` }
+  return send<T>(config)
 }
 
 export async function logoutSession(): Promise<void> {
@@ -73,11 +94,16 @@ export async function logoutSession(): Promise<void> {
   await auth.logout()
 }
 
+const mocked = <T>(method: Method, path: string, body?: unknown, query?: Query): Promise<T> =>
+  USE_MOCK
+    ? request<T>({ method, path, body, query })
+    : (sampleRequest(method, withQuery(path, query), body, store.get()) as Promise<T>)
+
 export const http = {
-  get: <T>(path: string, query?: Query) => request<T>({ method: 'GET', path, query }),
-  post: <T>(path: string, body?: unknown) => request<T>({ method: 'POST', path, body: body ?? {} }),
-  patch: <T>(path: string, body?: unknown) => request<T>({ method: 'PATCH', path, body: body ?? {} }),
-  put: <T>(path: string, body?: unknown) => request<T>({ method: 'PUT', path, body: body ?? {} }),
-  delete: <T>(path: string) => request<T>({ method: 'DELETE', path }),
-  blob: (path: string) => request<Blob>({ method: 'GET', path, blob: true }),
+  get: <T>(path: string, query?: Query) => mocked<T>('GET', path, undefined, query),
+  post: <T>(path: string, body?: unknown) => mocked<T>('POST', path, body ?? {}),
+  patch: <T>(path: string, body?: unknown) => mocked<T>('PATCH', path, body ?? {}),
+  put: <T>(path: string, body?: unknown) => mocked<T>('PUT', path, body ?? {}),
+  delete: <T>(path: string) => mocked<T>('DELETE', path),
+  blob: (path: string) => mocked<Blob>('GET', path),
 }

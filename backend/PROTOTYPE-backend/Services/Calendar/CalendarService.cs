@@ -39,7 +39,7 @@ namespace PROTOTYPE_backend.Services.Calendar
             // Ha projekthez van kötve, ellenőrizzük a calendar.manage jogosultságot
             if (dto.ProjectId.HasValue)
             {
-                if (!HasProjectCalendarPermission(dto.ProjectId.Value))
+                if (!await HasProjectCalendarPermissionAsync(dto.ProjectId.Value))
                 {
                     _logger.LogWarning(
                         "Jogosulatlan naptáresemény-létrehozási kísérlet projekthez (hiányzó calendar.manage). UserId: {UserId}, ProjectId: {ProjectId}",
@@ -90,12 +90,12 @@ namespace PROTOTYPE_backend.Services.Calendar
             }
 
             // Jogosultság ellenőrzése a meglévő esemény típusa alapján
-            EnsureCanModifyEvent(calendarEvent, userId);
+            await EnsureCanModifyEventAsync(calendarEvent, userId);
 
             // Ha a módosítással másik projekthez rendelik át, az új projektre is kell jogosultság
             if (dto.ProjectId.HasValue && dto.ProjectId != calendarEvent.ProjectId)
             {
-                if (!HasProjectCalendarPermission(dto.ProjectId.Value))
+                if (!await HasProjectCalendarPermissionAsync(dto.ProjectId.Value))
                 {
                     _logger.LogWarning(
                         "Jogosulatlan projekt-áthelyezési kísérlet naptáreseménynél. EventId: {EventId}, TargetProjectId: {ProjectId}, UserId: {UserId}",
@@ -131,7 +131,7 @@ namespace PROTOTYPE_backend.Services.Calendar
                 return false;
             }
 
-            EnsureCanModifyEvent(calendarEvent, userId);
+            await EnsureCanModifyEventAsync(calendarEvent, userId);
 
             var projectId = calendarEvent.ProjectId;
             _context.CalendarEvents.Remove(calendarEvent);
@@ -220,7 +220,7 @@ namespace PROTOTYPE_backend.Services.Calendar
         }
 
         // Jogosultság-ellenőrző segédmetódusok
-        private void EnsureCanModifyEvent(CalendarEvent calendarEvent, Guid userId)
+        private async Task EnsureCanModifyEventAsync(CalendarEvent calendarEvent, Guid userId)
         {
             if (calendarEvent.ProjectId == null)
             {
@@ -234,7 +234,7 @@ namespace PROTOTYPE_backend.Services.Calendar
             }
             else
             {
-                if (!HasProjectCalendarPermission(calendarEvent.ProjectId.Value))
+                if (!await HasProjectCalendarPermissionAsync(calendarEvent.ProjectId.Value))
                 {
                     _logger.LogWarning(
                         "Jogosulatlan projektesemény-módosítási kísérlet (hiányzó calendar.manage). EventId: {EventId}, ProjectId: {ProjectId}, UserId: {UserId}",
@@ -250,7 +250,7 @@ namespace PROTOTYPE_backend.Services.Calendar
             return globalRole == "2" || globalRole == "SystemAdmin";
         }
 
-        private bool HasProjectCalendarPermission(Guid projectId)
+        private async Task<bool> HasProjectCalendarPermissionAsync(Guid projectId)
         {
             var user = _httpContextAccessor.HttpContext?.User;
             if (user == null) return false;
@@ -272,13 +272,15 @@ namespace PROTOTYPE_backend.Services.Calendar
                     return true;
                 }
 
-                // 2. Fallback: aktív munkaterület jogosultsága (Workspace Owner/Admin)
+                // 2. Fallback: aktív munkaterület jogosultsága (Workspace Owner/Admin),
+                //    kizárólag az aktív munkaterülethez tartozó projektre
                 var activeWsId = user.FindFirstValue("active_workspace_id");
                 if (!string.IsNullOrEmpty(activeWsId) &&
                     rolesAndPermissions.TryGetValue(activeWsId, out var wsPerms) &&
-                    wsPerms.Contains("calendar.manage"))
+                    wsPerms.Contains("calendar.manage") &&
+                    Guid.TryParse(activeWsId, out var activeWsGuid))
                 {
-                    return true;
+                    return await _context.Projects.AnyAsync(p => p.Id == projectId && p.WorkspaceId == activeWsGuid);
                 }
             }
             catch

@@ -1,4 +1,5 @@
-﻿using PROTOTYPE_backend.DTOs.Invitations;
+﻿using PROTOTYPE_backend.Authorization;
+using PROTOTYPE_backend.DTOs.Invitations;
 
 namespace PROTOTYPE_backend.Services.Invitations
 {
@@ -12,6 +13,12 @@ namespace PROTOTYPE_backend.Services.Invitations
 
         // Egy célpont (Workspace vagy Project) függőben lévő meghívói
         Task<IEnumerable<InvitationResponseDto>> GetPendingInvitationsByTargetAsync(Guid targetId, sbyte type);
+
+        // A hívó csak a saját jogosultságain belüli szerepkört ajánlhat fel a célon
+        Task EnsureCanGrantRoleAsync(Guid callerId, InvitationTargetResource target, Guid roleId);
+
+        // Egy meghívó célja a jogosultság-ellenőrzéshez (null, ha nem létezik)
+        Task<InvitationTargetResource?> GetInvitationTargetAsync(Guid invitationId);
 
         // Meghívó részleteinek lekérése Token alapján (pl. emailben lévő linkből)
         Task<InvitationDetailDto?> GetInvitationByTokenAsync(string token);

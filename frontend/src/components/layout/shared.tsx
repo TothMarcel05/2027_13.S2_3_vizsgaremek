@@ -7,12 +7,14 @@ import {
   Bell, CalendarDays, Check, ChevronsUpDown, FolderKanban, HardDrive, Home, LogOut, MessagesSquare,
   Plus, Settings2, ShieldCheck, Trash2, UserRound, AtSign, CheckSquare, Mail, FileText, Info,
 } from 'lucide-react'
+import { USE_MOCK } from '../../api/client'
 import { chatApi, notificationApi, workspaceApi } from '../../api/services'
+import { CreateWorkspaceModal } from './CreateWorkspaceModal'
 import type { Notification } from '../../api/types'
 import { useAction, useMe, useWorkspace } from '../../lib/data'
 import { cn, timeAgo } from '../../lib/utils'
 import { MOTION } from '../../lib/motion'
-import { Avatar, Badge, Button, EmptyState, Input, Skeleton, FormError, hueStyle, initials } from '../ui/core'
+import { Avatar, Badge, Button, EmptyState, Skeleton, hueStyle, initials } from '../ui/core'
 import { Drawer, Modal, Popover } from '../ui/overlay'
 
 export const NAV = [
@@ -43,8 +45,8 @@ export function useUnreadChat() {
 export function Brand({ compact }: { compact?: boolean }) {
   return (
     <span className="flex items-center gap-2.5">
-      <span className="brand-mark" aria-hidden>A</span>
-      {!compact && <span className="display text-xl">Atelier</span>}
+      <img src="/OkligonBlackIconTransparent.png" alt={compact ? 'Okligon' : ''} width={36} height={36} className="brand-mark" />
+      {!compact && <span className="display text-xl">Okligon</span>}
     </span>
   )
 }
@@ -54,14 +56,11 @@ const WsTile = ({ name, hue }: { name: string; hue: number }) => <span className
 export function WorkspaceSwitcher({ compact, placement = 'bottom' }: { compact?: boolean; placement?: 'bottom' | 'side' }) {
   const { workspace, workspaces, setWorkspace } = useWorkspace()
   const navigate = useNavigate()
+  const me = useMe()
   const [creating, setCreating] = useState(false)
-  const [name, setName] = useState('')
   const [showInvites, setShowInvites] = useState(false)
-  const invites = useQuery({ queryKey: ['my-invitations'], queryFn: workspaceApi.myInvitations })
-  const create = useAction(() => workspaceApi.create(name), {
-    success: 'Workspace created', silentError: true,
-    onSuccess: (w) => { setCreating(false); setName(''); setWorkspace(w.id); navigate('/') },
-  })
+  // Incoming invitations aren't connected yet, and sample ones would be mistaken for real ones.
+  const invites = useQuery({ queryKey: ['my-invitations'], queryFn: workspaceApi.myInvitations, enabled: USE_MOCK })
   const respond = useAction((v: { id: string; accept: boolean }) => workspaceApi.respondInvitation(v.id, v.accept))
   const pending = invites.data?.length ?? 0
   return (
@@ -77,7 +76,7 @@ export function WorkspaceSwitcher({ compact, placement = 'bottom' }: { compact?:
             {!compact && (<>
               <span className="min-w-0 flex-1 text-left">
                 <span className="block truncate text-sm font-semibold">{workspace.name}</span>
-                <span className="block text-xs text-muted">{workspace.plan} plan</span>
+                <span className="block text-xs text-muted">{workspace.plan ? `${workspace.plan} plan` : workspace.ownerId === me?.id ? 'Owned by you' : 'Shared with you'}</span>
               </span>
               <ChevronsUpDown size={14} className="shrink-0 text-muted" />
             </>)}
@@ -94,17 +93,15 @@ export function WorkspaceSwitcher({ compact, placement = 'bottom' }: { compact?:
           ))}
           <div className="menu-sep" />
           <button type="button" className="menu-item" onClick={() => { setCreating(true); close() }}><Plus size={16} /> Create workspace</button>
-          <button type="button" className="menu-item" onClick={() => { setShowInvites(true); close() }}>
-            <Mail size={16} /><span className="flex-1">Pending invitations</span>{pending > 0 && <span className="count-badge">{pending}</span>}
-          </button>
+          {USE_MOCK && (
+            <button type="button" className="menu-item" onClick={() => { setShowInvites(true); close() }}>
+              <Mail size={16} /><span className="flex-1">Pending invitations</span>{pending > 0 && <span className="count-badge">{pending}</span>}
+            </button>
+          )}
         </>)}
       </Popover>
 
-      <Modal open={creating} onClose={() => { setCreating(false); create.reset() }} onSubmit={() => create.mutate()} title="Create a workspace" description="A separate home for another team or client."
-        footer={<><Button variant="ghost" onClick={() => setCreating(false)}>Cancel</Button><Button type="submit" variant="primary" loading={create.isPending}>Create workspace</Button></>}>
-        <Input label="Workspace name" placeholder="e.g. Harbor Collective" value={name} onChange={(e) => setName(e.target.value)} data-autofocus />
-        <FormError error={create.error} />
-      </Modal>
+      <CreateWorkspaceModal open={creating} onClose={() => setCreating(false)} onCreated={(id) => { setWorkspace(id); navigate('/') }} />
 
       <Modal open={showInvites} onClose={() => setShowInvites(false)} title="Pending invitations" description="Workspaces and projects you’ve been invited to.">
         {!pending && <EmptyState icon={<Mail size={18} />} title="You’re all caught up" />}

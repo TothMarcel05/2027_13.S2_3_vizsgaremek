@@ -1,4 +1,4 @@
-# Atelier workspace
+# Okligon workspace
 
 A collaborative workspace and project management frontend: a collapsible sand sidebar, soft cards,
 serif headlines and a terracotta accent.
@@ -23,18 +23,30 @@ Open http://localhost:5173.
 2. Start the backend with its `http` launch profile (port 5243). `vite.config.ts` proxies `/api` to it.
 3. For password-reset emails, set `FrontendUrl` in the backend settings to this app's address, e.g. `http://localhost:5173`.
 
-**Auth, session and profile** are connected and follow the backend's controllers and DTOs. With the real API,
-signed-in users see only the account pages; the workspace modules still use assumed paths and shapes and run in demo mode only.
+**Connected** (they follow the backend's controllers and DTOs):
+
+- Auth, session and profile.
+- Workspaces (list, create, rename, delete), members and roles, and outgoing workspace invitations.
+
+**Sample data in both modes:** projects, tasks, files, chat, calendar, notifications, trash, the dashboard and
+admin. With the real API every workspace shows the same demo content, kept in the browser; nothing there is sent
+to the server. Incoming invitations and ownership transfer are shown in demo mode only.
 
 - `src/api/authClient.ts`: the axios instance, token refresh and logout.
 - `src/api/session.ts`: token storage (`localStorage`, shared across tabs).
-- `src/api/auth.ts`, `src/api/users.ts`, `src/api/authTypes.ts`: the connected endpoints and their DTOs.
-- `src/api/mock/auth.ts`: their demo-mode stand-in.
-- `src/api/services.ts`, `src/api/types.ts`: the remaining, not yet connected modules.
+- `src/api/auth.ts`, `src/api/users.ts`, `src/api/authTypes.ts`: account endpoints and DTOs.
+- `src/api/workspaces.ts`: the workspace service, with `workspacesApi.ts` (real), `workspacesMock.ts` (demo)
+  and `workspaceTypes.ts` (DTOs).
+- `src/api/workspaceToken.ts`: the workspace-scoped token from `POST /workspaces/{id}/switch`. Permission-protected
+  endpoints need it, and the UI reads its permissions to enable or disable controls.
+- `src/api/sample.ts`: shows demo content under real workspace and user ids.
+- `src/api/services.ts`, `src/api/types.ts`: the not yet connected modules.
+
+Backend limits visible in the UI: the member list has no email addresses; role names are only readable with
+`workspace.roles.manage`; a workspace's description is never returned, so saving workspace details replaces it.
 
 Tokens come back in the response body, so they are readable by scripts on this origin. Permission checks in
-the UI are cosmetic: the server must enforce them. Chat uses Server-Sent Events in the not-yet-connected code,
-while the backend exposes SignalR.
+the UI are cosmetic: the server must enforce them. Chat updates are simulated, while the backend exposes SignalR.
 
 ## Layout
 

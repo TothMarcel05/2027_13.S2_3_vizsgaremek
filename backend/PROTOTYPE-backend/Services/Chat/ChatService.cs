@@ -20,6 +20,13 @@ namespace PROTOTYPE_backend.Services.Chat
         // 1. DIVERZ SZOBÁK LÉTREHOZÁSA (direct, group, project_channel)
         public async Task<ChatRoomDto> CreateRoomAsync(Guid userId, CreateChatRoomDto dto)
         {
+            if (!await _context.Workspaces.AnyAsync(w => w.Id == dto.WorkspaceId))
+                throw new KeyNotFoundException("A megadott munkaterület nem található.");
+
+            if (dto.ProjectId.HasValue
+                && !await _context.Projects.AnyAsync(p => p.Id == dto.ProjectId && p.WorkspaceId == dto.WorkspaceId))
+                throw new ArgumentException("A megadott projekt nem ehhez a munkaterülethez tartozik.");
+
             // Ha direct (1) csevegés, megnézzük létezik-e már a két fél között ebben a workspace-ben
             if (dto.Type == 1 && dto.MemberUserIds?.Count > 0)
             {
@@ -112,6 +119,9 @@ namespace PROTOTYPE_backend.Services.Chat
                     null
                 );
             }
+
+            if (!await _context.Workspaces.AnyAsync(w => w.Id == workspaceId))
+                throw new KeyNotFoundException("A megadott munkaterület nem található.");
 
             var targetUser = await _context.AppUsers.FindAsync(targetUserId);
             var newRoom = new ChatRoom

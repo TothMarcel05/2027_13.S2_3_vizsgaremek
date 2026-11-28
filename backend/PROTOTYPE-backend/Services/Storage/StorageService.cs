@@ -33,6 +33,8 @@ namespace PROTOTYPE_backend.Services.Storage
                 throw new KeyNotFoundException("A megadott munkaterület nem található.");
             }
 
+            await EnsureSameWorkspaceAsync(dto.WorkspaceId, dto.ProjectId, dto.ParentId);
+
             var currentUsedBytes = await _context.StorageNodes
                 .Where(n => n.WorkspaceId == dto.WorkspaceId && n.DeletedAt == null && n.Type == 2)
                 .SumAsync(n => (long)(n.SizeBytes ?? 0));
@@ -137,6 +139,11 @@ namespace PROTOTYPE_backend.Services.Storage
 
         public async Task<StorageNodeResponseDto> CreateFolderAsync(Guid workspaceId, Guid? projectId, Guid? parentId, string folderName, Guid userId)
         {
+            if (!await _context.Workspaces.AnyAsync(w => w.Id == workspaceId))
+                throw new KeyNotFoundException("A megadott munkaterület nem található.");
+
+            await EnsureSameWorkspaceAsync(workspaceId, projectId, parentId);
+
             var folderNode = new StorageNode
             {
                 Id = Guid.NewGuid(),
@@ -167,6 +174,18 @@ namespace PROTOTYPE_backend.Services.Storage
                 folderNode.CreatedAt,
                 new List<string>()
             );
+        }
+
+        // A megadott projekt és szülőmappa csak a cél munkaterülethez tartozhat
+        private async Task EnsureSameWorkspaceAsync(Guid workspaceId, Guid? projectId, Guid? parentId)
+        {
+            if (projectId.HasValue
+                && !await _context.Projects.AnyAsync(p => p.Id == projectId && p.WorkspaceId == workspaceId))
+                throw new ArgumentException("A megadott projekt nem ehhez a munkaterülethez tartozik.");
+
+            if (parentId.HasValue
+                && !await _context.StorageNodes.AnyAsync(n => n.Id == parentId && n.WorkspaceId == workspaceId))
+                throw new ArgumentException("A megadott szülőmappa nem ehhez a munkaterülethez tartozik.");
         }
 
         public async Task<(Stream FileStream, string ContentType, string FileName)?> GetFileStreamAsync(Guid nodeId)
